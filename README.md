@@ -1,7 +1,25 @@
-Cobalt Hybrid Framework
+Cobalt 
 ======
 
-comming soon :)
+Cobalt is a web and native framework to create mobile applications that can mix web technologies and native technologies.
+
+Be sure to read [the intro page first](http://cobaltians.github.io/cobalt/).
 
 
+Get Started
+===========
 
+* download the Simple Wrapper sample app
+* learn the basics
+* read the FAQ
+* learn how to add some Cobalt webviews into your app
+* see roadmap and platforms feature list
+* contribute and dive into the core
+
+Why Cobalt ?
+============
+
+
+We used PhoneGap / Cordova for a whyle. 
+We were frustrated by it. 
+We built our own tool. 
