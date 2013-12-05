@@ -1,0 +1,7 @@
+K 13
+svn:externals
+V 238
+https://pluton.haploid.fr/svn/haploid/svn/Hellocoton/Socle/web/HPNativeBridge/tags/0.2/HPHybridCatalog www
+https://pluton.haploid.fr/svn/haploid/svn/Hellocoton/Socle/web/HPNativeBridge/tags/0.2/HPNativeBridge/dist/iOS www/js/nativeBridge
+
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/haploid/!svn/ver/28521/svn/Externals/HPNativeBridge/Tizen/trunk/Catalog/TestBridge/res/screen-density-high
+END
+cancel_press.png
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/haploid/!svn/ver/28521/svn/Externals/HPNativeBridge/Tizen/trunk/Catalog/TestBridge/res/screen-density-high/cancel_press.png
+END
+goto_press.png
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/haploid/!svn/ver/28521/svn/Externals/HPNativeBridge/Tizen/trunk/Catalog/TestBridge/res/screen-density-high/goto_press.png
+END
+cancel.png
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/haploid/!svn/ver/28521/svn/Externals/HPNativeBridge/Tizen/trunk/Catalog/TestBridge/res/screen-density-high/cancel.png
+END
+goto.png
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/haploid/!svn/ver/28521/svn/Externals/HPNativeBridge/Tizen/trunk/Catalog/TestBridge/res/screen-density-high/goto.png
+END

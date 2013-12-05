@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+    </head>
+    <body class="green">
+
+  		<a href="javascript:;" class="pop">POP</a><br/>
+
+		<p>test du chargement de données</p>
+
+		<p>Cette page charge les données de la liste depuis le natif au chargement de la page</p>
+
+		<p>TEST 01 : si vous avez le temps de vous dire "bah alors?" avant que les données apparaissent c'est mal.</p>
+
+		<div id="list">
+
+		</div>
+
+
+		<br/>
+
+
+		<div id="nativeBridge_logdiv"></div>
+
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="js/utils.storage.js"></script>
+        <script type="text/javascript" src="js/nativeBridge/nativeBridge.js"></script>
+        <script>
+
+            Zepto(function($){
+		        nativeBridge.init({
+		            debug:true,
+		            storage:true
+	            });
+	            nativeBridge.log('Ready!!')
+
+	            $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
+	            $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
+
+	            $('a.push').on('tap',function(){
+	            	if ( ! $(this).hasClass('disabled') ){
+	            		nativeBridge.navigate('push',$(this).attr('href'),$(this).attr('data-classid'))
+	            	}
+		            return false;
+	            });
+
+	            $('a.pop').on('tap click',function(){
+		        	nativeBridge.navigate('pop');
+		            return false;
+	            });
+
+	            nativeBridge.sendEvent('getBigData',{value:100},function(data){
+		            var content="";
+		            $.each(data,function(i,item){
+			            content+='<div class="listItem"><div class="name">'+item.username+'</div><div class="num">'+item.userage+'</div></div>'
+		            });
+		            $('#list').html(content);
+		            nativeBridge.log('data inserted')
+	            });
+
+
+
+
+            })
+
+        </script>
+
+    </body>
+</html>

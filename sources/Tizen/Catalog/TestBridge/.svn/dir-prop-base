@@ -1,0 +1,17 @@
+K 13
+svn:externals
+V 228
+https://pluton.haploid.fr/svn/haploid/svn/Externals/HPNativeBridge/web/trunk/HPHybridCatalog res/www
+https://pluton.haploid.fr/svn/haploid/svn/Externals/HPNativeBridge/web/trunk/HPNativeBridge/dist/Tizen res/www/js/nativeBridge
+
+K 10
+svn:ignore
+V 60
+.rds_delta
+.sdk_delta.info
+.sign
+crash-info
+Debug*
+Release*
+
+END

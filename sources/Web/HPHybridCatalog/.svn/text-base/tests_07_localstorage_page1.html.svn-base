@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
+    </head>
+    <body class="green">
+  		
+  		<a href="javascript:;" class="pop">POP</a><br/>
+
+		<p>test du Local Storage page 1</p>
+
+		<p>TEST 01 - Cliquez sur tous les boutons suivants : </p>
+
+  		<a id="test">Activer localStorage</a><br/>
+  		<a id="store">Enregistrer une valeur</a><br/>
+  		<a id="store2">Enregistrer une autre valeur</a><br/>
+  		<a id="retrieve">Recupérer cette valeur</a><br/>
+  		<a id="clean">Supprimer toute valeur</a><br/>
+
+
+		<p>TEST 02 - Enregistrer à nouveau une valeur et passez à la page suivante</p>
+
+		<a class="push" href="javascript:;" data-href="tests_07_localstorage_page2.html">07. tests localStorage page 2</a>
+
+
+		<p>TEST 03 - Enregistrez une valeur, killez l'appli puis revenez, vérifier qu'elle y est toujours</p>
+
+
+		<p>TEST 04 - Lancer cette batterie des tests automatique. Devrait afficher plein de success et pas de failed dans la console. Si c'est pas le cas, remonter un bug. attention ce test clean le localStorage avant.</p>
+
+		<a id="test4">Test 4</a><br/>
+
+		<p>TEST 05 - Enregistrer 2000 valeurs en moins de 200ms</p>
+
+		<a id="test5">Test 5</a><br/>
+
+		<p>TEST 06 - Récupérer 2000 valeurs en moins de 200ms</p>
+
+		<a id="test6">Test 6</a><br/>
+
+
+		<div id="nativeBridge_logdiv"></div>
+		
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="js/nativeBridge/nativeBridge.js"></script>
+        <script type="text/javascript" src="js/utils.storage.js"></script>
+        <script type="text/javascript" src="js/functions.js"></script>
+        <script>
+            
+            Zepto(function($){
+
+	            nativeBridge.init({
+		            storage:true,
+					debug:true,
+		            //sendingToNative:false,
+
+	            });
+
+                //utils.storage.enable();
+				nativeBridge.log("init dismissInformations : "+utils.storage.getItem("dismissInformations"), false);
+				nativeBridge.log("init testLocalStorageKey : "+utils.storage.getItem("testLocalStorageKey"), false);
+
+	            $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
+                $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
+
+                $('a.pop').on('tap click',function(){
+		        	nativeBridge.navigate('pop');
+		            return false;
+	            });
+	            $('a.push').on('tap click',function(){
+	            	if ( ! $(this).hasClass('disabled') ){
+						nativeBridge.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
+	            	}
+		            return false;
+	            });
+	            $('a.modale').on('tap click',function(){	            	
+					nativeBridge.navigate('modale',$(this).attr('href'));
+		            return false;
+	            });
+	            
+	            
+	            $('a#test').on('tap click',function(){
+	            	nativeBridge.log('Local storage enabled : '+ utils.storage.enable(), false)
+		            return false;
+	            });
+   	            $('a#store').on('tap click',function(){
+		            var obj={ value: "stored"}
+		            nativeBridge.log("Changement de la valeur de l'objet en "+nativeBridge.toString(obj), false)
+					utils.storage.setItem('testLocalStorageKey',obj, "json")
+		            return false;
+	            });
+	            $('a#store2').on('tap click',function(){
+		            var obj={ value: "TOTO"}
+		            nativeBridge.log("Changement de la valeur de l'objet en "+nativeBridge.toString(obj), false)
+					utils.storage.setItem('testLocalStorageKey',obj, "json")
+		            return false;
+	            });
+   	            $('a#retrieve').on('tap click',function(){
+		            var keyvalue=utils.storage.getItem('testLocalStorageKey',"json")
+		            if (keyvalue){
+			            if (keyvalue.value){
+				            nativeBridge.log("La clé value de 'testLocalStorageKey' contient : "+ keyvalue.value, false)
+			            }
+			            else{
+				            nativeBridge.log("La clé value de 'testLocalStorageKey' n'existe pas.", false)
+			            }
+		            }else{
+			            nativeBridge.log("La clé 'testLocalStorageKey' n'existe pas.", false)
+		            }
+
+		            return false;
+	            });
+	           $('a#clean').on('tap click',function(){
+					nativeBridge.log("Vidage du local storage.", false)
+					utils.storage.clear();
+		            return false;
+	            });
+
+
+	            assertEqual=function(testID,func,expectedResult){
+		            try{
+			            var r=func();
+			            if (r===expectedResult){
+				            nativeBridge.log('test #'+testID+" success! ", false)
+			            }else{
+				            nativeBridge.log('test #'+testID+" failed! ", false)
+				            nativeBridge.log(nativeBridge.toString(r)+" != "+nativeBridge.toString(expectedResult))
+			            }
+		            }catch(e){
+			            nativeBridge.log('test #'+testID+" failed! "+e, false)
+		            }
+	            }
+
+	            $('#test4').on('tap click',function(){
+					nativeBridge.log("--lancement des tests auto", false)
+					utils.storage.clear();
+
+
+		            assertEqual('set/get', function(){
+			            utils.storage.setItem("setget","toto");
+			            return utils.storage.getItem("setget");
+		            },"toto");
+
+		            assertEqual('null', function(){
+			            utils.storage.setItem("null",null);
+			            return utils.storage.getItem("toto");
+		            },null);
+
+		            assertEqual('undef', function(){
+			            utils.storage.setItem("undef",undefined);
+			            return utils.storage.getItem("undef");
+		            },"undefined") //nice one ;)
+
+		            assertEqual('set/set', function(){
+			            utils.storage.setItem("setset","toto");
+			            utils.storage.setItem("setset","tata");
+			            return utils.storage.getItem("setset");
+		            },"tata");
+
+		            assertEqual('set/rem', function(){
+			            utils.storage.setItem("setrem","toto");
+			            utils.storage.removeItem("setrem");
+			            return utils.storage.getItem("setrem");
+		            }, null);
+
+
+		            assertEqual('jsonSetGet', function(){
+			            var obj1={a:1, b:"xyz", c:true};
+			            utils.storage.setItem("jsonSetGet",obj1, "json");
+			            var obj2=utils.storage.getItem("jsonSetGet","json");
+			            var result=true;
+			            $.each(obj1,function(index,item){
+				            if (obj1[index]!=obj2[index]){
+					            result=false;
+				            }
+			            });
+			            return result;
+		            }, true);
+
+		            nativeBridge.log("--fin des tests auto", false)
+					return false;
+				});
+
+
+	            $('#test5').on('tap click',function(){
+		            nativeBridge.log('started...',false)
+		            var startTime=new Date().getTime();
+		            for (var i=1;i<=2000;i++){
+						utils.storage.setItem('item_'+i,"splendid value stored")
+		            }
+		            var endTime=new Date().getTime();
+		            nativeBridge.log('ended. done in '+(endTime-startTime)+"ms",false)
+					return false;
+				});
+
+	            $('#test6').on('tap click',function(){
+		            nativeBridge.log('started...',false)
+		            var startTime=new Date().getTime();
+		            var values=[]
+		            for (var i=1;i<=2000;i++){
+						values.push(utils.storage.getItem('item_'+i));
+		            }
+		            var endTime=new Date().getTime();
+		            nativeBridge.log('ended. done in '+(endTime-startTime)+"ms",false)
+					return false;
+				});
+
+
+
+            })
+            
+
+        </script>
+        
+    </body>
+</html>

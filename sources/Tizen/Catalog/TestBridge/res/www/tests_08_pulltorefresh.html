@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+    </head>
+    <body class="green">
+
+  		<a href="javascript:;" class="pop">POP</a><br/>
+
+		<p>Pull to refresh</p>
+
+
+
+		<p>TEST 01 - Faites un pull to refresh, de nouveau elements doivent s'ajouter après un délai à la liste existante</p>
+
+		<p>TEST 02 - Quand l'utilisateur commence à tirer, un texte lui indique qu'il faut tirer + pour recharger les données</p>
+
+		<p>TEST 03 - Quand l'utilisateur relache et que les données chargent, l'utilisateur est prévenu du chargement en cours (texte+ loader qui tourne)</p>
+
+		<p>TEST 04 - Charger cette même vue mais dans un controlleur sans pullToRefresh : verifier que ça ne pull-to-refresh pas.</p>
+
+		<a class="push" href="javascript:;" data-href="tests_08_pulltorefresh.html" data-classid="pullToRefreshNonActive">pull to refresh non activé</a>
+
+		<p>TEST 05 - Charger cette même vue mais avec un pullToRefresh customisé</p>
+
+        <a class="push" href="javascript:;" data-href="tests_08_pulltorefresh.html" data-classid="pullToRefreshCustom">pull to refresh customisé</a>
+
+
+		<div id="list">
+
+		</div>
+
+
+		<br/>
+
+
+		<div id="nativeBridge_logdiv"></div>
+
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="js/utils.storage.js"></script>
+        <script type="text/javascript" src="js/nativeBridge/nativeBridge.js"></script>
+        <script type="text/javascript" src="js/setTimeoutWorkaround.js"></script>
+        <script>
+
+            Zepto(function($){
+		        nativeBridge.init({
+		            debug:true,
+		            //sendingToNative:false,
+                    events:{
+                       "pullToRefreshRefresh" : function(event){
+                               nativeBridge.log('native asked to refresh');
+	                           $('#list').hide();
+	                           setTimeout(function(){
+                                  
+		                            $('#list').append('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>').show();
+		                           nativeBridge.sendCallback(event);
+	                           },1000, true);
+                        }
+                                  
+                    }
+	            });
+
+
+	            $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
+	            $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
+
+	            $('a.push').on('tap',function(){
+	            	if ( ! $(this).hasClass('disabled') ){
+	            		nativeBridge.log('tap')
+	            		nativeBridge.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
+	            	}
+		            return false;
+	            });
+
+	            $('a.pop').on('tap click',function(){
+		        	nativeBridge.navigate('pop');
+		            return false;
+	            });
+
+	            $('#list').html('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>');
+                  
+                  //setTimeout(function(){ alert('coucou')},1000);
+
+            })
+
+        </script>
+
+    </body>
+</html>

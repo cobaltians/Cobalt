@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/haploid/!svn/ver/30278/svn/Externals/HPNativeBridge/Tizen/trunk/MediaPlayer/inc
+END
+MediaPlayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/haploid/!svn/ver/29764/svn/Externals/HPNativeBridge/Tizen/trunk/MediaPlayer/inc/MediaPlayer.h
+END
+IMediaPlayerEventListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/haploid/!svn/ver/29780/svn/Externals/HPNativeBridge/Tizen/trunk/MediaPlayer/inc/IMediaPlayerEventListener.h
+END
+IMediaPlayerEventNotifier.h
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/haploid/!svn/ver/30278/svn/Externals/HPNativeBridge/Tizen/trunk/MediaPlayer/inc/IMediaPlayerEventNotifier.h
+END

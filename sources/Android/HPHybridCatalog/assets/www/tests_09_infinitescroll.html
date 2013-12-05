@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+    </head>
+    <body class="green">
+
+  		<a href="javascript:;" class="pop">POP</a><br/>
+
+		<p>Infinite Scroll</p>
+
+		<p>TEST 01 - Verifier qu'arrivé en bas de page, la liste s'agrandit automatiquement</p>
+
+
+		<p>TEST 02 - Charger cette même vue mais avec un infinite scroll desactivé</p>
+
+        <a class="push" href="javascript:;" data-href="tests_09_infinitescroll.html" data-classid="infiniteScrollNonActive">infinite scroll non activé</a>
+
+		<p>TEST 03 - Charger cette vue qui contient le pull to refresh ET l'infinite scroll</p>
+
+        <a class="push" href="javascript:;" data-href="tests_08_pulltorefresh_infinitescroll.html" data-classid="PTR_and_IfiniteScroll">PullToRefresh and InfiniteScroll</a>
+
+
+		<div id="list">
+
+		</div>
+		<p id="loading"  style="padding:10px; text-align:center; display:none;">Chargement...</p>
+
+		<br/>
+
+
+		<div id="nativeBridge_logdiv"></div>
+
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="js/nativeBridge/nativeBridge.js"></script>
+        <script type="text/javascript" src="js/setTimeoutWorkaround.js"></script>
+        <script>
+
+            Zepto(function($){
+		        nativeBridge.init({
+		            //debug:true,
+		            //sendingToNative:false,
+                    events:{
+                       "infiniteScrollRefresh" : function(event){
+                               nativeBridge.log('native asked to load more content');
+	                           $('#loading').show();
+	                           setTimeout(function(){
+                                   $('#loading').hide();
+		                           $('#list').append('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>');
+		                           nativeBridge.sendCallback(event);
+	                           },1000, true);
+                        }
+                                  
+                    }
+	            });
+
+
+	            $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
+	            $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
+
+	            $('a.push').on('tap',function(){
+	            	if ( ! $(this).hasClass('disabled') ){
+	            		nativeBridge.log('tap')
+	            		nativeBridge.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
+	            	}
+		            return false;
+	            });
+
+	            $('a.pop').on('tap click',function(){
+		        	nativeBridge.navigate('pop');
+		            return false;
+	            });
+
+	            $('#list').html('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>');
+                  
+                  //setTimeout(function(){ alert('coucou')},1000);
+
+            })
+
+        </script>
+
+    </body>
+</html>

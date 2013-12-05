@@ -1,0 +1,141 @@
+html {
+    -webkit-text-size-adjust: 100%;
+	-ms-text-size-adjust:none;
+}
+body{
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size:12px; line-height:1.5;
+}
+body.red
+{
+	background:#FEE;
+}
+body.green
+{
+	background:#EFE;
+}
+body.blue
+{
+	background:#EEF;
+}
+
+body.dark{
+	background:#165C85;
+	color:#fff;
+}
+body.dark a{
+	color: #fff;
+}
+body.dark a.disabled{
+	color: #333;
+}
+
+div.awfull
+{
+	width:100%;
+	height:110px;
+	background:url(../img/ic_launcher.png) repeat 0 0;
+}
+
+#nativeBridge_logdiv{
+	border:1px solid blue;
+	padding: 5px;
+}
+
+
+ul, li{
+	margin:0; padding:0;
+	margin-left:5px;
+	list-style:none;
+}
+a{
+	text-decoration:none;
+	color: #333;
+	font-weight:bold;
+	background: #ccc;
+	line-height:35px;
+	padding: 5px 10px;
+	border-radius:5px;
+}
+a, input{
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	-webkit-focus-ring-color:  rgba(0, 0, 0, 0);
+	outline: none;
+}
+a.disabled{
+	color: #fff;
+}
+a.tapped{
+	background: #888;
+}
+
+input{
+	width:80%;
+}
+
+
+.listItem{
+	clear: both;
+	height:80px;
+	line-height: 80px;
+	background: #D7DBDB;
+	color:#F4921E;
+	border-top: 1px solid #fff;
+	border-bottom: 2px solid #3E6B85;
+	}
+	.listItem .name{
+		width:80%;
+		color:#165C85;
+		font-weight: bold;
+		float:left;
+		padding-left:20px;
+	}
+	.listItem .num{
+		text-align: right;
+		padding-right: 20px;
+	}
+#images img{
+	border:1px solid #ddd;
+}
+
+html.webalert{
+	height: 100%;
+	margin:0; padding:0;
+}
+html.webalert body{
+	height: 100%;
+	margin:0; padding:0;
+	background: rgba(0,0,0,0.7);
+}
+div.webalert{
+	position: absolute;
+	top:50%;
+	left:50%;
+	background: #fff;
+	width:260px;
+	height:200px;
+	margin: -100px 0 0 -130px;
+
+}
+div.webalert h1{
+	text-align: center;
+	background: #ccc;
+	border-bottom: 1px solid #333333;
+	padding: 5px; margin: 0;
+}
+div.webalert p,div.webalert a{
+	margin-left: 10px;
+}
+
+
+div.webalert2{
+	top:0;
+	margin-top: 20px;
+}
+
+div.webalert2 #text{
+	width: 95%;
+	height: 48%;
+	padding: 0;
+	margin: 5px;
+}

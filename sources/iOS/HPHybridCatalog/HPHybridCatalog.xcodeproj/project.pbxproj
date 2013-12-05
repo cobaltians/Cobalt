@@ -1,0 +1,381 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C45C1F25172EA08F002BE836 /* HPHybridDefaultPTRViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C45C1F23172EA08F002BE836 /* HPHybridDefaultPTRViewController.m */; };
+		C45C1F26172EA08F002BE836 /* HPHybridDefaultPTRViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C45C1F24172EA08F002BE836 /* HPHybridDefaultPTRViewController.xib */; };
+		C45C1F29172EA2FB002BE836 /* chaton.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = C45C1F28172EA2FB002BE836 /* chaton.jpeg */; };
+		C49597581717090B006454BA /* HPHybridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C49597561717090B006454BA /* HPHybridViewController.m */; };
+		C49597591717090B006454BA /* HPHybridViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C49597571717090B006454BA /* HPHybridViewController.xib */; };
+		C4A39B341726E464004F7282 /* HPToastAlertViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4A39B321726E464004F7282 /* HPToastAlertViewController.m */; };
+		C4A39B351726E464004F7282 /* HPToastAlertViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4A39B331726E464004F7282 /* HPToastAlertViewController.xib */; };
+		C4A39B4A17281CC9004F7282 /* HPHybridPullToRefreshViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4A39B4817281CC9004F7282 /* HPHybridPullToRefreshViewController.m */; };
+		C4A39B4B17281CC9004F7282 /* HPHybridPullToRefreshViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4A39B4917281CC9004F7282 /* HPHybridPullToRefreshViewController.xib */; };
+		C4A39B63172951EB004F7282 /* HPHybridISViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4A39B61172951EA004F7282 /* HPHybridISViewController.m */; };
+		C4A39B64172951EB004F7282 /* HPHybridISViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4A39B62172951EB004F7282 /* HPHybridISViewController.xib */; };
+		C4D664A2171E8D97009EDE58 /* HPZoomHybridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D664A0171E8D97009EDE58 /* HPZoomHybridViewController.m */; };
+		C4D664A3171E8D97009EDE58 /* HPZoomHybridViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4D664A1171E8D97009EDE58 /* HPZoomHybridViewController.xib */; };
+		C4D664AA171E91D5009EDE58 /* HPSimpleHybridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D664A8171E91D5009EDE58 /* HPSimpleHybridViewController.m */; };
+		C4D664AB171E91D5009EDE58 /* HPSimpleHybridViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4D664A9171E91D5009EDE58 /* HPSimpleHybridViewController.xib */; };
+		F01A5A0C1716EF4C0000DD94 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F01A5A0B1716EF4C0000DD94 /* UIKit.framework */; };
+		F01A5A0E1716EF4C0000DD94 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F01A5A0D1716EF4C0000DD94 /* Foundation.framework */; };
+		F01A5A101716EF4C0000DD94 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F01A5A0F1716EF4C0000DD94 /* CoreGraphics.framework */; };
+		F01A5A161716EF4C0000DD94 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F01A5A141716EF4C0000DD94 /* InfoPlist.strings */; };
+		F01A5A181716EF4D0000DD94 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F01A5A171716EF4D0000DD94 /* main.m */; };
+		F01A5A1C1716EF4D0000DD94 /* HPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F01A5A1B1716EF4D0000DD94 /* HPAppDelegate.m */; };
+		F01A5A1E1716EF4D0000DD94 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = F01A5A1D1716EF4D0000DD94 /* Default.png */; };
+		F01A5A201716EF4D0000DD94 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F01A5A1F1716EF4D0000DD94 /* Default@2x.png */; };
+		F01A5A221716EF4D0000DD94 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F01A5A211716EF4D0000DD94 /* Default-568h@2x.png */; };
+		F01A5A291716EF5E0000DD94 /* libHPNativeBridge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F01A5A281716EF5E0000DD94 /* libHPNativeBridge.a */; };
+		F01A5A2B1716EFB20000DD94 /* www in Resources */ = {isa = PBXBuildFile; fileRef = F01A5A2A1716EFB20000DD94 /* www */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		C45C1F22172EA08F002BE836 /* HPHybridDefaultPTRViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPHybridDefaultPTRViewController.h; sourceTree = "<group>"; };
+		C45C1F23172EA08F002BE836 /* HPHybridDefaultPTRViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPHybridDefaultPTRViewController.m; sourceTree = "<group>"; };
+		C45C1F24172EA08F002BE836 /* HPHybridDefaultPTRViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HPHybridDefaultPTRViewController.xib; sourceTree = "<group>"; };
+		C45C1F28172EA2FB002BE836 /* chaton.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = chaton.jpeg; sourceTree = "<group>"; };
+		C49597551717090B006454BA /* HPHybridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPHybridViewController.h; sourceTree = "<group>"; };
+		C49597561717090B006454BA /* HPHybridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPHybridViewController.m; sourceTree = "<group>"; };
+		C49597571717090B006454BA /* HPHybridViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HPHybridViewController.xib; sourceTree = "<group>"; };
+		C4A39B311726E464004F7282 /* HPToastAlertViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPToastAlertViewController.h; sourceTree = "<group>"; };
+		C4A39B321726E464004F7282 /* HPToastAlertViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPToastAlertViewController.m; sourceTree = "<group>"; };
+		C4A39B331726E464004F7282 /* HPToastAlertViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HPToastAlertViewController.xib; sourceTree = "<group>"; };
+		C4A39B4717281CC9004F7282 /* HPHybridPullToRefreshViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPHybridPullToRefreshViewController.h; sourceTree = "<group>"; };
+		C4A39B4817281CC9004F7282 /* HPHybridPullToRefreshViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPHybridPullToRefreshViewController.m; sourceTree = "<group>"; };
+		C4A39B4917281CC9004F7282 /* HPHybridPullToRefreshViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HPHybridPullToRefreshViewController.xib; sourceTree = "<group>"; };
+		C4A39B60172951EA004F7282 /* HPHybridISViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPHybridISViewController.h; sourceTree = "<group>"; };
+		C4A39B61172951EA004F7282 /* HPHybridISViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPHybridISViewController.m; sourceTree = "<group>"; };
+		C4A39B62172951EB004F7282 /* HPHybridISViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HPHybridISViewController.xib; sourceTree = "<group>"; };
+		C4D6649F171E8D97009EDE58 /* HPZoomHybridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPZoomHybridViewController.h; sourceTree = "<group>"; };
+		C4D664A0171E8D97009EDE58 /* HPZoomHybridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPZoomHybridViewController.m; sourceTree = "<group>"; };
+		C4D664A1171E8D97009EDE58 /* HPZoomHybridViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HPZoomHybridViewController.xib; sourceTree = "<group>"; };
+		C4D664A7171E91D5009EDE58 /* HPSimpleHybridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPSimpleHybridViewController.h; sourceTree = "<group>"; };
+		C4D664A8171E91D5009EDE58 /* HPSimpleHybridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPSimpleHybridViewController.m; sourceTree = "<group>"; };
+		C4D664A9171E91D5009EDE58 /* HPSimpleHybridViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HPSimpleHybridViewController.xib; sourceTree = "<group>"; };
+		F01A5A081716EF4C0000DD94 /* HPHybridCatalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HPHybridCatalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F01A5A0B1716EF4C0000DD94 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		F01A5A0D1716EF4C0000DD94 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		F01A5A0F1716EF4C0000DD94 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		F01A5A131716EF4C0000DD94 /* HPHybridCatalog-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "HPHybridCatalog-Info.plist"; sourceTree = "<group>"; };
+		F01A5A151716EF4C0000DD94 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F01A5A171716EF4D0000DD94 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F01A5A191716EF4D0000DD94 /* HPHybridCatalog-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HPHybridCatalog-Prefix.pch"; sourceTree = "<group>"; };
+		F01A5A1A1716EF4D0000DD94 /* HPAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAppDelegate.h; sourceTree = "<group>"; };
+		F01A5A1B1716EF4D0000DD94 /* HPAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAppDelegate.m; sourceTree = "<group>"; };
+		F01A5A1D1716EF4D0000DD94 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		F01A5A1F1716EF4D0000DD94 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		F01A5A211716EF4D0000DD94 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		F01A5A281716EF5E0000DD94 /* libHPNativeBridge.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libHPNativeBridge.a; path = "../HPNativeBridge/build/Release-iphoneos/libHPNativeBridge.a"; sourceTree = "<group>"; };
+		F01A5A2A1716EFB20000DD94 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F01A5A051716EF4C0000DD94 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F01A5A291716EF5E0000DD94 /* libHPNativeBridge.a in Frameworks */,
+				F01A5A0C1716EF4C0000DD94 /* UIKit.framework in Frameworks */,
+				F01A5A0E1716EF4C0000DD94 /* Foundation.framework in Frameworks */,
+				F01A5A101716EF4C0000DD94 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C45C1F2A172EA300002BE836 /* img */ = {
+			isa = PBXGroup;
+			children = (
+				C45C1F28172EA2FB002BE836 /* chaton.jpeg */,
+			);
+			name = img;
+			sourceTree = "<group>";
+		};
+		F01A59FF1716EF4C0000DD94 = {
+			isa = PBXGroup;
+			children = (
+				C45C1F2A172EA300002BE836 /* img */,
+				F01A5A2A1716EFB20000DD94 /* www */,
+				F01A5A111716EF4C0000DD94 /* HPHybridCatalog */,
+				F01A5A0A1716EF4C0000DD94 /* Frameworks */,
+				F01A5A091716EF4C0000DD94 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F01A5A091716EF4C0000DD94 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F01A5A081716EF4C0000DD94 /* HPHybridCatalog.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F01A5A0A1716EF4C0000DD94 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F01A5A281716EF5E0000DD94 /* libHPNativeBridge.a */,
+				F01A5A0B1716EF4C0000DD94 /* UIKit.framework */,
+				F01A5A0D1716EF4C0000DD94 /* Foundation.framework */,
+				F01A5A0F1716EF4C0000DD94 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F01A5A111716EF4C0000DD94 /* HPHybridCatalog */ = {
+			isa = PBXGroup;
+			children = (
+				C4D664A7171E91D5009EDE58 /* HPSimpleHybridViewController.h */,
+				C4D664A8171E91D5009EDE58 /* HPSimpleHybridViewController.m */,
+				C4D664A9171E91D5009EDE58 /* HPSimpleHybridViewController.xib */,
+				C49597551717090B006454BA /* HPHybridViewController.h */,
+				C49597561717090B006454BA /* HPHybridViewController.m */,
+				C49597571717090B006454BA /* HPHybridViewController.xib */,
+				C4D6649F171E8D97009EDE58 /* HPZoomHybridViewController.h */,
+				C4D664A0171E8D97009EDE58 /* HPZoomHybridViewController.m */,
+				C4D664A1171E8D97009EDE58 /* HPZoomHybridViewController.xib */,
+				C4A39B311726E464004F7282 /* HPToastAlertViewController.h */,
+				C4A39B321726E464004F7282 /* HPToastAlertViewController.m */,
+				C4A39B331726E464004F7282 /* HPToastAlertViewController.xib */,
+				C4A39B4717281CC9004F7282 /* HPHybridPullToRefreshViewController.h */,
+				C4A39B4817281CC9004F7282 /* HPHybridPullToRefreshViewController.m */,
+				C4A39B4917281CC9004F7282 /* HPHybridPullToRefreshViewController.xib */,
+				C45C1F22172EA08F002BE836 /* HPHybridDefaultPTRViewController.h */,
+				C45C1F23172EA08F002BE836 /* HPHybridDefaultPTRViewController.m */,
+				C45C1F24172EA08F002BE836 /* HPHybridDefaultPTRViewController.xib */,
+				C4A39B60172951EA004F7282 /* HPHybridISViewController.h */,
+				C4A39B61172951EA004F7282 /* HPHybridISViewController.m */,
+				C4A39B62172951EB004F7282 /* HPHybridISViewController.xib */,
+				F01A5A1A1716EF4D0000DD94 /* HPAppDelegate.h */,
+				F01A5A1B1716EF4D0000DD94 /* HPAppDelegate.m */,
+				F01A5A121716EF4C0000DD94 /* Supporting Files */,
+			);
+			path = HPHybridCatalog;
+			sourceTree = "<group>";
+		};
+		F01A5A121716EF4C0000DD94 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F01A5A131716EF4C0000DD94 /* HPHybridCatalog-Info.plist */,
+				F01A5A141716EF4C0000DD94 /* InfoPlist.strings */,
+				F01A5A171716EF4D0000DD94 /* main.m */,
+				F01A5A191716EF4D0000DD94 /* HPHybridCatalog-Prefix.pch */,
+				F01A5A1D1716EF4D0000DD94 /* Default.png */,
+				F01A5A1F1716EF4D0000DD94 /* Default@2x.png */,
+				F01A5A211716EF4D0000DD94 /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F01A5A071716EF4C0000DD94 /* HPHybridCatalog */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F01A5A251716EF4D0000DD94 /* Build configuration list for PBXNativeTarget "HPHybridCatalog" */;
+			buildPhases = (
+				F01A5A041716EF4C0000DD94 /* Sources */,
+				F01A5A051716EF4C0000DD94 /* Frameworks */,
+				F01A5A061716EF4C0000DD94 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HPHybridCatalog;
+			productName = HPHybridCatalog;
+			productReference = F01A5A081716EF4C0000DD94 /* HPHybridCatalog.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F01A5A001716EF4C0000DD94 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = HP;
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = Haploid;
+			};
+			buildConfigurationList = F01A5A031716EF4C0000DD94 /* Build configuration list for PBXProject "HPHybridCatalog" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = F01A59FF1716EF4C0000DD94;
+			productRefGroup = F01A5A091716EF4C0000DD94 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F01A5A071716EF4C0000DD94 /* HPHybridCatalog */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F01A5A061716EF4C0000DD94 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F01A5A161716EF4C0000DD94 /* InfoPlist.strings in Resources */,
+				F01A5A1E1716EF4D0000DD94 /* Default.png in Resources */,
+				F01A5A201716EF4D0000DD94 /* Default@2x.png in Resources */,
+				F01A5A221716EF4D0000DD94 /* Default-568h@2x.png in Resources */,
+				F01A5A2B1716EFB20000DD94 /* www in Resources */,
+				C49597591717090B006454BA /* HPHybridViewController.xib in Resources */,
+				C4D664A3171E8D97009EDE58 /* HPZoomHybridViewController.xib in Resources */,
+				C4D664AB171E91D5009EDE58 /* HPSimpleHybridViewController.xib in Resources */,
+				C4A39B351726E464004F7282 /* HPToastAlertViewController.xib in Resources */,
+				C4A39B4B17281CC9004F7282 /* HPHybridPullToRefreshViewController.xib in Resources */,
+				C4A39B64172951EB004F7282 /* HPHybridISViewController.xib in Resources */,
+				C45C1F26172EA08F002BE836 /* HPHybridDefaultPTRViewController.xib in Resources */,
+				C45C1F29172EA2FB002BE836 /* chaton.jpeg in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F01A5A041716EF4C0000DD94 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F01A5A181716EF4D0000DD94 /* main.m in Sources */,
+				F01A5A1C1716EF4D0000DD94 /* HPAppDelegate.m in Sources */,
+				C49597581717090B006454BA /* HPHybridViewController.m in Sources */,
+				C4D664A2171E8D97009EDE58 /* HPZoomHybridViewController.m in Sources */,
+				C4D664AA171E91D5009EDE58 /* HPSimpleHybridViewController.m in Sources */,
+				C4A39B341726E464004F7282 /* HPToastAlertViewController.m in Sources */,
+				C4A39B4A17281CC9004F7282 /* HPHybridPullToRefreshViewController.m in Sources */,
+				C4A39B63172951EB004F7282 /* HPHybridISViewController.m in Sources */,
+				C45C1F25172EA08F002BE836 /* HPHybridDefaultPTRViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		F01A5A141716EF4C0000DD94 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F01A5A151716EF4C0000DD94 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F01A5A231716EF4D0000DD94 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		F01A5A241716EF4D0000DD94 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F01A5A261716EF4D0000DD94 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HPHybridCatalog/HPHybridCatalog-Prefix.pch";
+				INFOPLIST_FILE = "HPHybridCatalog/HPHybridCatalog-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "../HPNativeBridge/HPNativeBridge/**";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		F01A5A271716EF4D0000DD94 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HPHybridCatalog/HPHybridCatalog-Prefix.pch";
+				INFOPLIST_FILE = "HPHybridCatalog/HPHybridCatalog-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "../HPNativeBridge/HPNativeBridge/**";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F01A5A031716EF4C0000DD94 /* Build configuration list for PBXProject "HPHybridCatalog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F01A5A231716EF4D0000DD94 /* Debug */,
+				F01A5A241716EF4D0000DD94 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F01A5A251716EF4D0000DD94 /* Build configuration list for PBXNativeTarget "HPHybridCatalog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F01A5A261716EF4D0000DD94 /* Debug */,
+				F01A5A271716EF4D0000DD94 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F01A5A001716EF4C0000DD94 /* Project object */;
+}

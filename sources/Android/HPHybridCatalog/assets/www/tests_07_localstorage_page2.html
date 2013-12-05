@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
+    </head>
+    <body class="green">
+  		
+  		<a href="javascript:;" class="pop">POP</a> &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;" class="dismiss">Dismiss</a><br/>
+  		
+
+		<p>test du Local Storage page 2</p>
+
+		<p>TEST 01 - Activez puis récupérez la valeur. Cela doit être celle mise par la page 1 </p>
+
+  		<a id="test">Activer localStorage</a><br/>
+  		<a id="retrieve">Recupérer cette valeur</a><br/>
+
+		<p>TEST 02 - Changez la valeur et faites un POP. Sur l'autre page, vérifiez que la valeur a bien changée</p>
+
+		<a id="store">Changer la valeur</a><br/>
+		<a id="clean">Supprimer toute valeur</a><br/>
+
+
+		<p>TEST 03 - Faites le test avec un push qui réouvre la page précédente aussi : </p>
+
+		<li><a class="push" href="javascript:;" data-href="tests_07_localstorage_page1.html">07. tests localStorage page 1</a></li>
+
+
+
+
+		<div id="nativeBridge_logdiv"></div>
+		
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="js/nativeBridge/nativeBridge.js"></script>
+        <script type="text/javascript" src="js/utils.storage.js"></script>
+        <script type="text/javascript" src="js/functions.js"></script>
+        <script>
+            
+            Zepto(function($){
+
+	            nativeBridge.init({
+		            storage:true,
+		            debug:true,
+		            //sendingToNative:false,
+	            });
+
+               	nativeBridge.log("init dismissInformations : "+utils.storage.getItem("dismissInformations"), false);
+				nativeBridge.log("init testLocalStorageKey : "+utils.storage.getItem("testLocalStorageKey"), false);
+                
+				$('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
+                $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
+
+                $('a.pop').on('tap click',function(){
+		        	nativeBridge.navigate('pop');
+		            return false;
+	            });
+	            $('a.push').on('tap click',function(){
+	            	if ( ! $(this).hasClass('disabled') ){
+						nativeBridge.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
+	            	}
+		            return false;
+	            });
+	            $('a.dismiss').on('tap click',function(){	            	
+		        	nativeBridge.navigate('dismiss');
+		            return false;
+	            });
+	            
+	            $('a#test').on('tap click',function(){
+	            	nativeBridge.log('Local storage enabled : '+ utils.storage.enable(), false)
+		            return false;
+	            });
+   	            $('a#store').on('tap click',function(){
+		            var obj={ value: "changed"}
+		            nativeBridge.log("Changement de la valeur de l'objet en "+nativeBridge.toString(obj), false)
+					utils.storage.setItem('testLocalStorageKey',obj, "json")
+		            return false;
+	            });
+   	            $('a#retrieve').on('tap click',function(){
+		            var keyvalue=utils.storage.getItem('testLocalStorageKey',"json")
+		            if (keyvalue){
+			            if (keyvalue.value){
+				            nativeBridge.log("La clé value de 'testLocalStorageKey' contient : "+ keyvalue.value, false)
+			            }
+			            else{
+				            nativeBridge.log("La clé value de 'testLocalStorageKey' n'existe pas.", false)
+			            }
+		            }else{
+			            nativeBridge.log("La clé 'testLocalStorageKey' n'existe pas.", false)
+		            }
+
+		            return false;
+	            });
+	           $('a#clean').on('tap click',function(){
+					nativeBridge.log("Vidage du local storage.", false)
+					utils.storage.clear();
+		            return false;
+	            });
+
+            })
+            
+
+        </script>
+        
+    </body>
+</html>

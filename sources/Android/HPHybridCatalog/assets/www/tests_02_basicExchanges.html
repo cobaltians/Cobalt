@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
+    </head>
+    <body class="green">
+  		
+  		<a href="javascript:;" class="pop">POP</a><br/>
+  		
+  		<p>TEST 01 - Le bouton ci devrait logger les elements suivants dans la console native :</p>
+  		<div class="expected">
+  			JSLOG : tap<br/>
+  			JSLOG : {"hello":"de lu"}<br/>
+  			JSLOG : http://www.haploid.frxyz#ééé@uuu&2=3
+  		</div>
+        <input id="monBouton1" type="button" value="Log Hello 1x"/>
+        
+        
+        <p>TEST 02 - Le bouton ci devrait logger 20 fois "hello" puis afficher un toast "OK"</p>        
+        <input id="monBouton2" type="button" value="Log Hello 20x"/>
+
+        <p>TEST 03 - Les boutons + - natifs en bas de page devraient changer la taille des textes de la page</p>
+
+		<p>Ci dessous le log de la lib d'echange</p>
+        <input id="monBouton3" type="button" value="nettoyage logs"/>
+		<div id="nativeBridge_logdiv"></div>
+
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="js/nativeBridge/nativeBridge.js"></script>
+        <script type="text/javascript" src="js/functions.js"></script>
+        <script>
+            
+            Zepto(function($){
+
+	            nativeBridge.init({
+		            debug:true,
+		            //sendingToNative:false,
+		            events:{
+			            "nameSetZoom":function(event){
+			                nativeBridge.log('received setZoom at '+new Date().getTime())
+                            setZoom(event.value)
+				        }
+		            }
+	            });
+
+				$('a, input').on('touchstart',function(){ 				$(this).addClass('tapped');   })
+                $('a, input').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
+
+				$('#monBouton1').on("tap click",function(){
+                    nativeBridge.log("tap");
+					nativeBridge.log({"hello":"de lu"});
+                    nativeBridge.log("http://www.haploid.frxyz#ééé@uuu&2=3");
+					return false;
+				});
+				
+	            $('#monBouton2').on("tap click",function(){
+					for (var i=1; i<=20;i++){
+						nativeBridge.log("hello "+i);
+					}
+                    nativeBridge.toast("ok");
+		            return false;
+				});
+				$('#monBouton3').on('tap click',function(){
+					nativeBridge.ios_adapter.pipeline=[];
+					nativeBridge.ios_adapter.pipelineRunning=false;
+                    $('#nativeBridge_logdiv').html('');
+					return false;
+				});
+
+                $('a.pop').on('tap click',function(){
+		        	nativeBridge.navigate('pop')
+		            return false;
+	            });
+
+            })
+        </script>
+        
+    </body>
+</html>

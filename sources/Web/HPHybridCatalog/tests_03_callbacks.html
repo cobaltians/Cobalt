@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
+    </head>
+    <body>
+  		
+  		<a href="javascript:;" class="pop">POP</a><br/>
+  		
+  		<p>TEST 01 - Le bouton ci dessous devrait afficher le texte de l'input ci-dessous dans l'input natif en haut de page.<br/>
+  		En retour, le natif envoie un nouveau texte qui devrait apparaitre dans l'input ci dessous.</p>
+  		<input id="input" type="text" value="Robert"/><br/>  		
+  		<input id="monBouton4" type="button" value="change name with CALLBACK"/><br/>
+  		
+  		<p>TEST 02 - Le bouton ci dessous devrait afficher le texte de l'input ci-dessous dans l'input natif en haut de page.<br/> 
+  		En retour, le natif envoie <b>(après un délai variable)</b> un nouveau texte qui devrait apparaitre dans l'input ci dessous.</p>
+		<input id="input2" type="text" value="Robert"/><br/>  		
+		<input id="monBouton5" type="button" value="change name with CALLBACK ASYNC"/>
+		<br/>
+
+		<p>TEST 03 - Refaire les tests 01 et 02 avec des caractères spéciaux, notemment @ &eacute; # € ou des quotes.</p>
+        
+   		<p>TEST 04 - Entrez un texte dans l'input tout en haut. validez. Ce texte devrait apparaitre a l'indentique dans les logs de la lib d'echange ainsi que dans les logs natifs.</p>
+
+   		<p>TEST 05 - Refaire le tests 04 avec des caractères spéciaux, notemment @ &eacute; # € ou des quotes..</p>
+        
+        <p>TEST 06 - cliquez sur le bouton "callback" natif en bas de page. Cela devrait afficher "testCallback : Le resultat est xxx"  dans une popup</p>
+        
+        <p>TEST 07 - cliquez sur le bouton "callback async" natif en bas de page. Cela devrait afficher "Assync WORKED!!" dans une popup</p>
+        
+
+		<p>Ci dessous le log de la lib d'echange</p>
+        <input id="monBouton3" type="button" value="nettoyage logs"/>
+		<div id="nativeBridge_logdiv"></div>
+
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+		<script type="text/javascript" src="js/utils.storage.js"></script>
+        <script type="text/javascript" src="js/nativeBridge/nativeBridge.js"></script>
+        <script type="text/javascript" src="js/functions.js"></script>
+        <script>
+            
+            Zepto(function($){
+
+	            nativeBridge.init({
+		            debug:true,
+		            //sendingToNative:false,
+		            events:{
+			            "nameTestCallback": function(event){
+				            nativeBridge.log('executing nameTestCallback',false)
+				            nativeBridge.sendCallback(event,"testCallback : Le resultat est "+ (parseInt(event.value[0]) + parseInt(event.value[1])) )
+			            },
+			            "nameTestCallbackAsync": function(event){
+				            nativeBridge.log('executing nameTestCallbackAsync',false)
+				            var event=event;
+							$.ajax({url:"http://www.google.fr", type:"GET",
+								success : function(){
+									nativeBridge.log('async call worked')
+									nativeBridge.sendCallback(event,"Assync WORKED!!")
+								},error: function(req,err){
+									nativeBridge.log('async call failed')
+									nativeBridge.sendCallback(event,"Assync WORKED with HTTP error "+err)
+								}
+							});
+			            }
+		            }
+	            });
+
+	            $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
+                $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
+
+				$('#monBouton3').on('tap click',function(){
+					nativeBridge.ios_adapter.pipeline=[];
+					nativeBridge.ios_adapter.pipelineRunning=false;
+                    $('#nativeBridge_logdiv').html('');
+					return false;
+				});
+
+	            $('#monBouton4').on('tap click',function(){
+	            	nativeBridge.sendEvent("nameTestCallback", { value:$('#input').val() },function(newName){
+		            	nativeBridge.log('changeValue called')
+						$('#input').val(newName)
+		            });
+		            //Expect {"type":"typeCallback", callbackID:"0", params:"toto"} from OS
+		            return false;
+	            });
+				exampleObject={
+					changeValue:function(value){
+					    nativeBridge.log('changeValue called')
+					    $('#input2').val(value)
+					}
+				};
+	            $('#monBouton5').on('tap click',function(){
+		            nativeBridge.sendEvent("nameTestCallbackAsync", { value:$('#input2').val() },"exampleObject.changeValue")
+		            //Expect {"type":"typeCallback", callbackID:"exampleObject.changeValue", params:"toto"} from OS
+		            return false;
+	            });
+	            
+				$('a.pop').on('tap click',function(){
+		        	nativeBridge.navigate('pop');
+		            return false;
+	            });
+
+            })
+            
+
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Manifest xmlns="http://schemas.tizen.org/2012/12/manifest">
+    <Id>brXG2sHlhV</Id>
+    <Version>2.0.0</Version>
+    <Type>C++App</Type>
+    <Descriptions>
+        <Description Locale="eng-GB"/>
+    </Descriptions>
+    <Url/>
+    <Requirements>
+        <Feature Name="http://tizen.org/feature/platform.core.cpu.arch">x86</Feature>
+        <Feature Name="http://tizen.org/feature/platform.core.fpu.arch">vfpv3</Feature>
+        <Feature Name="http://tizen.org/feature/screen.coordinate_system.logical">Normal</Feature>
+	<Feature Name="http://tizen.org/feature/screen.size.normal">true</Feature>
+    </Requirements>
+    <Apps>
+        <ApiVersion>2.1</ApiVersion>
+        <Privileges>
+            <Privilege>http://tizen.org/privilege/web.service</Privilege>
+        </Privileges>
+        <UiApp HwAcceleration="On" Main="True" MenuIconVisible="True" Name="TestBridge">
+            <UiScalability BaseScreenSize="Normal" CoordinateSystem="Logical" LogicalCoordinate="720"/>
+            <UiTheme SystemTheme="White"/>
+            <DisplayNames>
+                <DisplayName Locale="eng-GB">TestBridge</DisplayName>
+            </DisplayNames>
+            <Icons>
+                <Icon Section="MainMenu" Type="Xhigh">mainmenu.png</Icon>
+            </Icons>
+            <LaunchConditions/>
+            <Notifications/>
+        </UiApp>
+    </Apps>
+</Manifest>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
+    </head>
+    <body class="green">
+  		
+  		<a href="javascript:;" class="pop">POP</a><br/>
+
+		<p>test des toats et alertes</p>
+
+		<p>TEST 01 - Cliquez sur tous les boutons suivants : </p>
+
+  		<a id="toastA">A\ Afficher un petit toast</a> Ce petit toast doit être centré<br/>
+  		<a id="toastB">B\ Afficher un toast normal</a><br/>
+  		<a id="toastC">C\ Afficher un loooonnnnng toast</a><br/>
+  		<a id="toastD">D\ Afficher un toast avec un \n </a> Les retours à la ligne doivent marcher.<br/>
+  		<a id="toastE">E\ Afficher 20 toats d'un coup</a> Tous les toasts doivent etre lisibles.<br/>
+
+		<p>TEST 02 - Afficher une alerte avec un titre, un texte, un bouton OK</p>
+ 		<a id="test2">Afficher</a><br/>
+
+		<p>TEST 03 - Afficher une alerte avec un titre, un texte, deux boutons paramettrés qui activent une fonction javascript. <br>
+		A la fermeture, le bouton qui a été cliqué devrait appraitre dans un toast déclenché par le web</p>
+ 		<a id="test3">Afficher</a><br/>
+
+		<p>TEST 04 - La même chose avec une callback anonyme. Devrait afficher en + alertId=55</p>
+ 		<a id="test4">Afficher</a><br/>
+
+
+		<p>TEST 05 - Afficher une alerte avec un titre, un texte, deux boutons paramettrés qui activent une fonction <b>native</b><br>
+		A la fermeture, le natif devrait afficher un toast disant quel bouton a été cliqué, et quel callbackId a été défini</p>
+ 		<a id="test5">Afficher</a><br/>
+		<p>TEST 06 - Idem mais sans le texte (uniquement un titre) et avec un autre callbackId</p>
+ 		<a id="test6">Afficher</a><br/>
+
+
+		<p>TEST 07 - Afficher une alerte avec un grand titre et un grand texte</p>
+ 		<a id="test7">Afficher</a><br/>
+
+		<p>TEST 08 - (android) Verifier que cette alerte, contrairement aux autres, ne peut pas être fermée en cliquant à coté ou avec le bouton back.</p>
+ 		<a id="test8">Afficher</a><br/>
+		<br/>
+
+
+		<div id="nativeBridge_logdiv"></div>
+		
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="js/nativeBridge/nativeBridge.js"></script>
+        <script type="text/javascript" src="js/utils.storage.js"></script>
+        <script type="text/javascript" src="js/functions.js"></script>
+        <script>
+            
+            Zepto(function($){
+
+	            nativeBridge.init({
+		            debug:true,
+		            //sendingToNative:false,
+	            });
+
+	            $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
+                $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
+
+                $('a.pop').on('tap click',function(){
+		        	nativeBridge.navigate('pop');
+		            return false;
+	            });
+	            
+	            $('#toastA').on('tap click',function(){
+	            	nativeBridge.toast("Ok!")
+		            return false;
+	            });
+   	            $('#toastB').on('tap click',function(){
+	            	nativeBridge.toast("Salut, ô grand testeur!")
+		            return false;
+	            });
+   	            $('#toastC').on('tap click',function(){
+	            	nativeBridge.toast("On sait depuis longtemps que travailler avec du texte lisible et contenant du sens est source de distractions, et empêche de se concentrer sur la mise en page elle-même. L'avantage du Lorem Ipsum sur un texte générique comme 'Du texte. Du texte. Du texte.' est qu'il possède une distribution de lettres plus ou moins normale, et en tout cas comparable avec celle du français standard. De nombreuses suites logicielles de mise en page ou éditeurs de sites Web ont fait du Lorem Ipsum leur faux texte par défaut, et une recherche pour 'Lorem Ipsum' vous conduira vers de nombreux sites qui n'en sont encore qu'à leur phase de construction. Plusieurs versions sont apparues avec le temps, parfois par accident, souvent intentionnellement (histoire d'y rajouter de petits clins d'oeil, voire des phrases embarassantes).")
+		            return false;
+	            });
+   	            $('#toastD').on('tap click',function(){
+	            	nativeBridge.toast("On sait depuis\n longtemps que travailler avec du texte lisible \nest source\n de\n distractions")
+		            return false;
+	            });
+   	            $('#toastE').on('tap click',function(){
+	            	for (var i=1; i<=20; i++){
+			            nativeBridge.toast("ok #"+ i)
+		            }
+		            return false;
+	            });
+
+	            /*
+
+	            nativeBridge.alert("Texte");
+				nativeBridge.alert("Title", "Texte", ["Ok"], { callback:function(params){console.log('popup dismissed :'+params.index) }});
+				nativeBridge.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", alertIdentifier:12 });
+
+				//native callbacks
+				nativeBridge.alert("Title", "Texte", ["Ok"], { callbackType:"native", alertIdentifier:12 });
+
+	             */
+
+	            $('#test2').on('tap click',function(){
+		            nativeBridge.alert("Titre", "Vous allez devoir refermer cette popup.")
+	            	return false;
+	            });
+	            $('#test3').on('tap click',function(){
+		            var buttons=["Oui", "Non", "Je ne suis pas sûr"];
+		            nativeBridge.alert("Titre", "Vous allez devoir refermer cette popup.", buttons, { callback : function(params){
+			            nativeBridge.toast("alerte refermée. vous avez choisi : "+ buttons[params.index])
+		            }});
+		            return false;
+	            });
+	            window.myApp={
+		            buttons:["Oui", "Non", "Je ne suis pas sûr"],
+		            callMeBack:function(params){
+			            nativeBridge.log('myApp.callMeBack called with params='+params)
+			            nativeBridge.toast("alerte refermée. vous avez choisi "+ myApp.buttons[params.index]+", alertId="+params.alertId)
+		            }
+	            }
+	            $('#test4').on('tap click',function(){
+		            nativeBridge.alert("Titre", "Vous allez devoir refermer cette popup.", myApp.buttons, { callback : 'myApp.callMeBack', alertId:55});
+		            return false;
+	            });
+
+
+	            $('#test5').on('tap click',function(){
+		            nativeBridge.alert("Titre", "Vous allez devoir refermer cette popup.", ["Oui", "Sûrement pas"], { callbackType:"native", alertId: 42});
+		            return false;
+	            });
+	            $('#test6').on('tap click',function(){
+		            nativeBridge.alert("Quel est la couleur du cheval blanc d'Henry 5", undefined, ["Blanc", "Aucune", "Ca dépends"], { callbackType:"native", alertId: 43});
+		            return false;
+	            });
+
+	            $('#test7').on('tap click',function(){
+		            nativeBridge.alert("Quel est la couleur du cheval blanc d'Henry 5?", "Henri V d'Angleterre, né le 9 août 1387 ou le 16 septembre 13871 à Monmouth au Pays de Galles et décédé le 31 août 1422 au château de Vincennes, en France ; duc de Cornouailles et de Lancastre, est roi d'Angleterre de 1413 à 1422.Vainqueur de la bataille d'Azincourt le 25 octobre 1415, il parvient à se faire reconnaître comme héritier du trône de France au traité de Troyes (1420), mais meurt prématurément avant son beau-père Charles VI de France, sans avoir pu ceindre la couronne de France.Fils du roi Henri IV, et de Marie de Bohun, Henri épouse Catherine de Valois et est le père d'Henri VI d'Angleterre, qui lui succèdera à l'âge de neuf mois.", ["Blanc", "Aucune", "Ca dépends"]);
+		            return false;
+	            });
+
+	            $('#test8').on('tap click',function(){
+		            nativeBridge.alert("Obligatoire !", "Cette alerte est obligatoire sur Android, on ne peut pas l'annuler en cliquant dans le vide ou via le bouton back", ["Oui", "Non"], { mandatory:true });
+		            return false;
+	            });
+
+
+            })
+            
+
+        </script>
+        
+    </body>
+</html>
