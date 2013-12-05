@@ -24,5 +24,7 @@ Why Cobalt ?
 
 
 We used PhoneGap / Cordova for a whyle.
+
 We were frustrated by it.
+
 We built our own tool.
