@@ -12,7 +12,7 @@ Be sure to read [the intro page first](http://cobaltians.github.io/cobalt/).
 Get Started
 ===========
 
-* [download the Hello World sample](tree/master/samples/HelloWorld) app for your favourite platform
+* [download the Hello World sample](samples/HelloWorld) app for your favourite platform
 * learn the basics
 * read the FAQ
 * learn how to add some Cobalt webviews into your app
