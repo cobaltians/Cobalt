@@ -16,7 +16,7 @@ Get Started
 * learn the basics
 * read the FAQ
 * learn how to add some Cobalt webviews into your app
-* see roadmap and platforms feature list
+* see [roadmap](wiki/roadmap) and platforms feature list
 * contribute and dive into the core
 
 Why Cobalt ?
