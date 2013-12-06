@@ -11,7 +11,7 @@ There is no all-in-one-with-autodection version yet but we think about it :)
 
 to compile all cobalt.js and cobalt.min.js for each platforms in one time, run this line in a command line :
 
-python compile.py
+    python compile.py
 
 #### requirements for compilation
 
