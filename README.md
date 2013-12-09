@@ -23,7 +23,7 @@ Why Cobalt ?
 ============
 
 
-We used PhoneGap / Cordova for a whyle.
+We used PhoneGap / Cordova for a while.
 
 We were frustrated by it.
 
