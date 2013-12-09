@@ -14,17 +14,9 @@ Get Started
 
 * learn the basics
 * read the FAQ
-* [download the Hello World](samples/HelloWorld) sample app for your favourite platform
+* download [the Hello World](samples/HelloWorld) sample app for your favourite platform
 * learn how to add some Cobalt webviews into your app
 * see [roadmap](https://github.com/cobaltians/cobalt/wiki/roadmap) and platforms [feature list](https://github.com/cobaltians/cobalt/wiki/features)
 * contribute and dive into the core
 
-Why Cobalt ?
-============
 
-
-We used PhoneGap / Cordova for a while.
-
-We were frustrated by it.
-
-We built our own tool.
