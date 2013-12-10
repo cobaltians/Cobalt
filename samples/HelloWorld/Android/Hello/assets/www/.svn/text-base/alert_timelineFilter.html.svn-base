@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html class="webalert">
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/base.css"/>
+	        <link rel="stylesheet" type="text/css" href="css/sprite.css"/>
+	        <link rel="stylesheet" type="text/css" href="css/webAlerts.css"/>
+    </head>
+    <body>
+
+        <div class="webalert timelineFilter">
+	        <a href="javascript:;" class="ui_elem popup_close_button_iphone"></a>
+	        <h1><span class="ui_elem toolsbar_sort_icon"></span>Trier les actus</h1>
+	        <a id="recent" href="javascript:;" class="item"><span class="ui_elem flower_selector"></span>Plus récentes</a><br/>
+	        <a id="popular" href="javascript:;" class="item"><span class="ui_elem flower_selector"></span>Plus populaires</a><br/>
+        </div>
+
+
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="js/utils.storage.js"></script>
+        <script type="text/javascript" src="js/nativeBridge/nativeBridge.min.js"></script>
+
+        <script>
+	        Zepto(function($){
+
+				nativeBridge.init({
+		            storage:true
+		            //,debug:true
+		        });
+
+		        if (nativeBridge.adapter.pipeline){
+			        $('a.popup_close_button_iphone').on('tap click',function(){
+				        nativeBridge.webAlert('dismiss');
+				        return false;
+			        }).show();
+		        }
+		        nativeBridge.sendEvent('getCurrentFilter',{},function(params){
+					var item=$('#'+params);
+			        if (item.length){
+			            item.addClass('selected')
+			        }else{
+				        nativeBridge.log('unknown filter value '+params)
+			        }
+		        });
+
+		        $('body').on('tap click',function(e){
+			        if (e.target==this){
+				        nativeBridge.webAlert('dismiss');
+			        }
+			        return false;
+		        });
+
+		        $("a.item").on('tap click',function(){
+			        $(this).addClass('selected').siblings().removeClass('selected');
+			        var id=this.id;
+			        setTimeout(function(){
+				        nativeBridge.log('sending setCurrentFilter with value ='+id);
+						nativeBridge.sendEvent('setCurrentFilter',{ value : id });
+						nativeBridge.webAlert('dismiss');
+			        },100);
+					return false;
+		        });
+
+		        var post=function(){
+					var text=$('#text').val()
+			        if (text){
+				        nativeBridge.log('postMessage with value='+text);
+				        nativeBridge.sendEvent('postMessage',{ value : text});
+				        nativeBridge.webAlert('dismiss');
+			        }
+			        return false;
+		        }
+		        $('#post').on('tap click',post)
+		        $('#postForm').on('submit',post)
+	        })
+
+
+        </script>
+
+    </body>
+</html>

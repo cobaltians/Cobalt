@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html class="webalert">
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/base.css"/>
+	        <link rel="stylesheet" type="text/css" href="css/sprite.css"/>
+	        <link rel="stylesheet" type="text/css" href="css/webAlerts.css"/>
+    </head>
+    <body>
+
+        <div class="webalert userInfo">
+	        <a href="javascript:;" class="ui_elem popup_close_button_iphone"></a>
+	        <div class="scroller">
+		        <h1>{{#avatar}}<span class="avatar"><img src="{{avatar}}"/></span>{{/avatar}}{{name}}</h1>
+		        {{#firstname}}<p class="item">{{firstname}}</p>{{/firstname}}
+		        {{#city}}<p class="item">{{city}}</p>{{/city}}
+		        {{#category}}<p class="item">{{category}}</p>{{/category}}
+		        {{#description}}<p class="item description">{{description}}</p>{{/description}}
+	        </div>
+        </div>
+
+
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="js/utils.storage.js"></script>
+        <script type="text/javascript" src="js/utils.device.js"></script>
+        <script type="text/javascript" src="js/mustache.min.js"></script>
+        <script type="text/javascript" src="js/nativeBridge/nativeBridge.min.js"></script>
+
+        <script>
+	        Zepto(function($){
+	            nativeBridge.init({
+		            storage:true
+		            //,debug:true
+		        });
+		        $('body').on('tap click',function(e){
+			        if (e.target==this){
+				        nativeBridge.webAlert('dismiss');
+			        }
+			        return false;
+		        });
+		        nativeBridge.log("webAlerte nativeBridge is ready!")
+		        var currentProfile=utils.storage.getItem('currentProfile',"json")
+		        //DEBUG lines, import debugData.js first
+		        //currentProfile=debugProfile;
+
+		        var template=$("div.webalert").html();
+		        $("div.webalert").html(Mustache.render(template, currentProfile));
+
+		        if (nativeBridge.adapter.pipeline){
+			        $('a.popup_close_button_iphone').on('tap click',function(){
+				        nativeBridge.webAlert('dismiss');
+				        return false;
+			        }).show();
+		        }
+
+		        if (utils.device.isAndroid()){
+					if (utils.device.androidVersion()<3){
+						nativeBridge.log("enabling touchscroll for this device");
+						utils.device.enableTouchScroll('div.webalert .scroller');
+					}
+		        }
+	        })
+
+
+        </script>
+
+    </body>
+</html>

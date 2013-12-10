@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/base.css"/>
+	        <link rel="stylesheet" type="text/css" href="css/sprite.css"/>
+	        <link rel="stylesheet" type="text/css" href="css/timelines.css"/>
+	        <script type="text/javascript" src="js/app.js"></script>
+    </head>
+    <body class="pageArticle">
+        <div class="page">
+	        <div id="articleContainer">
+	        </div>
+	        <span class="ui_elem article_separator"></span>
+	        <div id="commentsContainer">
+
+	        </div>
+	        <a href="javascript:;" id="postComment" class="ui_elem article_comment_button_background">
+			        <span class="buttonText"><span class="ui_elem article_comment_icon"></span>Ajouter un commentaire</span>
+		    </a>
+
+        </div>
+
+
+		<script type="text/javascript" src="js/zepto.min.js"></script>
+		<script type="text/javascript" src="js/utils.storage.js"></script>
+        <script type="text/javascript" src="js/mustache.min.js"></script>
+        <script type="text/javascript" src="js/humanDates.min.js"></script>
+        <script type="text/javascript" src="js/nativeBridge/nativeBridge.min.js"></script>
+        
+        <script>
+            
+            Zepto(function($){
+	            app.article={
+		            currentPost:{},
+
+		            tpl_loadArticleDiv:'<div class="loading">Chargement de l\'article...</div>',
+		            tpl_loadCommentsDiv:'<div class="loading">Chargement des commentaires ...</div>',
+		            tpl_comment:'<div class="comment">' +
+				                    '<div class="avatar"><img src="{{author.avatar}}"/></div> ' +
+				                    '<a href="javascript:;" class="name" data-profileID="{{author.profileID}}">{{author.name}}</a>' +
+				                    '<div class="text">{{& content}}</div>' +
+				                    '<div class="date humanDate toEnhance" data-date="{{date}}"></div>' +
+				                '</div>',
+
+		            initPage:function(){
+                        var articleID=utils.storage.getItem('currentArticleID','int');
+                        var messageID=utils.storage.getItem('currentMessageID','int');
+                        var type=utils.storage.getItem('currentContentType');
+
+			            $('#articleContainer').html(app.article.tpl_loadArticleDiv);
+			            $('#commentsContainer').html(app.article.tpl_loadCommentsDiv);
+
+			            if (type=="article"){
+				            nativeBridge.log('getArticle '+articleID);
+				            nativeBridge.sendEvent('getArticle',{articleID:articleID});
+			            }else if(type=="message"){
+				            nativeBridge.log('getMessage '+messageID);
+				            nativeBridge.sendEvent('getMessage',{messageID:messageID});
+			            }
+
+			            $('#postComment').on('tap click',function(){
+				            var connectedUser=app.getConnectedUser();
+			                if (connectedUser){
+				                nativeBridge.log('will show alert_writeComment')
+				                var comment={
+					                contentType : type,
+					                profileID : connectedUser.profileID,
+					                articleID : (type=="article") ? articleID : undefined,
+					                messageID : (type=="message") ? messageID : undefined
+				                }
+				                utils.storage.setItem('writeCommentInfos',comment,'json')
+					            nativeBridge.webAlert("show","alert_writeComment.html");
+			                }else{
+				                app.showConnexionAlert();
+			                }
+				            return false;
+				        });
+
+
+		            },
+		            enhancePost:function(){
+			            $('a.like').unbind('tap click').on('tap click',function(){
+				            app.like(app.article.currentPost,$(this));
+				            return false;
+				        });
+
+			            $('a.share').unbind('tap click').on('tap click',function(){
+				            app.share(app.article.currentPost);
+				            return false;
+				        });
+
+			            $('a.content').unbind('tap click').on('tap click',function(){
+				            var currentPost=app.article.currentPost;
+				            //user can only open articles here
+				            if (currentPost.type=="article"){
+					            utils.storage.setItem('currentContentType','article');
+					            utils.storage.setItem('currentArticleID',currentPost.articleID);
+					            utils.storage.setItem('currentArticleUrl',currentPost.link);
+					            nativeBridge.navigate('push','articleWebview.html','articleWebview');
+				            }
+				            return false;
+				        });
+
+			            $('a.openProfile').on('tap click',function(){
+				            var profileID=$(this).attr('data-profileID');
+                            nativeBridge.log('will open profile '+profileID);
+				            utils.storage.setItem('currentTimelineProfile',profileID)
+					        nativeBridge.navigate('push','timeline.html','profileView');
+				            return false;
+			            });
+		            },
+		            setArticle:function(article){
+			            app.article.currentPost=article;
+			            $('#articleContainer').html(Mustache.render(app.tpl_article, article));
+						app.article.enhancePost();
+
+
+		            },
+		            setMessage:function(message){
+			            app.article.currentPost=message;
+			            $('#articleContainer').html(Mustache.render(app.tpl_article, message));
+			            app.article.enhancePost();
+		            },
+
+		            enhanceComments:function(comment){
+			            if (!comment){
+				            //enhance every comments in the page
+				            comment = $('.comment')
+			            }
+			            comment.find('.humanDate.toEnhance').each(function(i,item){
+				            try{
+					            var date=new Date( parseInt($(this).attr('data-date'))*1000 );
+				                $(this).html(humanDate(date)).removeClass('toEnhance');
+				            }catch (e){
+					            nativeBridge.log('cant prettify date')
+					            $(this).html($(this).attr('data-date'));
+				            }
+			            });
+
+			            comment.find('a.name').unbind('tap click').on('tap click',function(){
+				            var profileID=parseInt($(this).attr('data-profileID'));
+                            nativeBridge.log('will open profile '+profileID);
+				            utils.storage.setItem('currentTimelineProfile',profileID)
+					        nativeBridge.navigate('push','timeline.html','profileView');
+				            return false;
+				        });
+		            },
+
+		            setComments:function(comments){
+						$('#commentsContainer').html(Mustache.render('{{#comments}}' + app.article.tpl_comment + '{{/comments}}', {comments : comments}))
+			            app.article.enhanceComments();
+			            //update comments count
+			            app.article.currentPost.nb_comments=comments.length;
+			            app.article.updateCommentCount();
+		            },
+		            updateCommentCount:function(){
+			            var count=$('.article .comment .count')
+			            var newCount = app.article.currentPost.nb_comments;
+						count.html((newCount>0)? newCount : 0);
+		            },
+		            addComment:function(comment){
+			            $('#commentsContainer').append(Mustache.render(app.article.tpl_comment, comment))
+			            app.article.enhanceComments($('.comment:last-child'));
+			            app.article.currentPost.nb_comments++;
+			            app.article.updateCommentCount();
+		            }
+
+
+	            };
+
+	            nativeBridge.init({
+		            //debug:true,
+		            storage:true,
+		            events:{
+			            "showConnect" : app.showConnexionAlert,
+		                "setArticle" : function(event){
+			                nativeBridge.log('received setArticle');
+			                app.article.setArticle(event.article)
+		                },
+			            "setMessage" : function(event){
+			                nativeBridge.log('received setMessage');
+			                nativeBridge.log(event)
+			                app.article.setMessage(event.message)
+		                },
+			            "setComments" : function(event){
+			                nativeBridge.log('received setComments');
+				            nativeBridge.log(event)
+			                app.article.setComments(event.comments)
+		                },
+			            "onWebAlertDismissed" : function(event){
+			                nativeBridge.log('received onWebAlertDismissed for webalert'+event.value);
+				            if (event.value=="alert_writeComment.html"){
+					            var text = utils.storage.getItem('lastEnteredCommentText');
+					            if (text){
+						            var connectedUser=app.getConnectedUser();
+						            var comment={
+							            author : connectedUser,
+							            content : utils.storage.getItem('lastEnteredCommentText'),
+							            date : new Date().getTime()/1000
+						            }
+						            app.article.addComment(comment)
+					            }
+				            }
+				            if (event.value=="alert_connect.html"){
+					            if (utils.storage.getItem('shouldShowLostPasswordAlert')){
+						            utils.storage.removeItem('shouldShowLostPasswordAlert');
+						            nativeBridge.webAlert("show","alert_lostPassword.html");
+					            }
+				            }
+
+		                }
+
+
+		            }
+	            });
+
+	            app.initPage();
+	            app.article.initPage();
+
+	            //Debug Lines import debugData.js first
+	            //app.article.setArticle(debugArticle);
+	            //app.article.setComments(debugComments);
+
+
+
+	        })
+
+        </script>
+        
+    </body>
+</html>

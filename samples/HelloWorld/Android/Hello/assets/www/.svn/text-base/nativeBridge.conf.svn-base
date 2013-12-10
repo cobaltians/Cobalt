@@ -1,0 +1,22 @@
+{          
+    "default":{
+                "iosClassName":"HCTimelineViewController",
+                "androidClassName":"com.hellocoton.hellocoton.activities.MainActivity",
+                "pullToRefresh":true,
+                "infiniteScroll":true
+            },
+    "articleWebview":{
+                "iosClassName":"HCExternalWebViewController",
+                "androidClassName":"com.hellocoton.hellocoton.activities.ExternalWebViewActivity"
+            },
+    "articleCommentsView":{
+				"iosClassName":"HCCommentsViewController",
+				"androidClassName":"com.hellocoton.hellocoton.activities.CommentsActivity"
+	},
+    "profileView":{
+                "iosClassName":"HCUserViewController",
+                "androidClassName":"com.hellocoton.hellocoton.activities.UserActivity",
+                "pullToRefresh":true,
+                "infiniteScroll":true
+    }
+}

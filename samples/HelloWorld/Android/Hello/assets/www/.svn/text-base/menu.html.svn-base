@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/base.css"/>
+	        <link rel="stylesheet" type="text/css" href="css/sprite.css"/>
+	        <link rel="stylesheet" type="text/css" href="css/menu.css"/>
+
+	        <script type="text/javascript" src="js/app.js"></script>
+    </head>
+    <body>
+  		<h1><span class="ui_elem hellocoton_logo"></span></h1>
+
+		<ul class="connected hidden">
+			<li id="profile">...</li>
+			<li><a id="monActu" href="javascript:;"><span class="unread">0</span> mon fil d'actu</a></li>
+			<li><a id="disconnect" href="javascript:;">Déconnexion</a></li>
+		</ul>
+		<ul class="disconnected">
+			<li><a id="connect" href="javascript:;">Connexion</a></li>
+		</ul>
+
+		<a id="featured" href="javascript:;"><span class="ui_elem sidemenu_home_icon"></span>La Une</a>
+		<ul class="categories">
+		</ul>
+
+
+		<script type="text/javascript" src="js/zepto.min.js"></script>
+		<script type="text/javascript" src="js/utils.storage.js"></script>
+		<script type="text/javascript" src="js/utils.format.string.js"></script>
+        <script type="text/javascript" src="js/nativeBridge/nativeBridge.min.js"></script>
+        
+        <script>
+            
+            Zepto(function($){
+	            app.menu={
+		            tpl_category:'<li><a class="category_{categoryID}" href="javascript:;" data-categoryID="{categoryID}">{categoryName}</a></li>',
+		            tpl_profile:'<a id="monProfil" href="javascript:;"><div class="avatar"><img src="{avatar}"/></div>{name}</a>',
+
+		            reset:function(){
+			            utils.storage.removeItem('currentPage')
+						utils.storage.removeItem('currentCategory')
+						app.menu.update();
+		            },
+					setCategories:function(event){
+						nativeBridge.log('received setCategories')
+						var categories='';
+						//add categories
+						$.each(event.value,function(i,categ){
+							categories+=app.menu.tpl_category.format(categ);
+						});
+						$('ul.categories').html(categories);
+
+						$('ul.categories a').on('tap click',function(){
+				            var categoryID=$(this).attr('data-categoryID');
+							nativeBridge.log('tapped category '+categoryID)
+							if (categoryID){
+								nativeBridge.sendEvent('openCategory',{categoryID : categoryID});
+								utils.storage.setItem('currentPage',"category")
+								utils.storage.setItem('currentCategory',categoryID)
+								app.menu.update();								
+							}
+				            return false;
+				        });
+
+						app.menu.update();
+					},
+					setConnected:function(user){
+						if (user){
+							$('#profile').html(app.menu.tpl_profile.format(user))
+							$('ul.disconnected').addClass('hidden');
+							$('ul.connected').removeClass('hidden');
+
+							$('#profile').unbind('tap click').on('tap click',function(){
+				                var connectedUser=app.getConnectedUser();
+					            if (connectedUser){
+						            utils.storage.setItem('currentPage',"profile")
+						            utils.storage.removeItem('currentCategory')
+						            app.menu.update();
+						            utils.storage.setItem('currentTimelineProfile',connectedUser.profileID)
+						            nativeBridge.sendEvent('openProfile');
+				                }
+				                return false;
+				            });
+						}else{
+							app.menu.setDisconnected();
+						}
+					},
+					setDisconnected:function(){
+						$('ul.disconnected').removeClass('hidden');
+						$('ul.connected').addClass('hidden');
+					},
+		            update:function(){
+			            //check logged in state...
+			            var connectedUser=app.getConnectedUser();
+			            if (connectedUser){
+							app.menu.setConnected(connectedUser);
+						}else{
+							app.menu.setDisconnected();
+						}
+
+			            var count=utils.storage.getItem('unreadCount')
+			            if (count){
+				            $('#monActu .unread').html(count);
+				            if (parseInt(count)>0){
+					            $('#monActu .unread').addClass('highlighted')
+				            }else{
+					            $('#monActu .unread').removeClass('highlighted')
+				            }
+			            }
+
+			            //update current category
+						$('li, a').removeClass('selected');
+			            var currentPage=utils.storage.getItem('currentPage')
+			            switch (currentPage){
+				            case "profile":
+					            $('#profile').addClass('selected');
+					        break;
+				            case "featured":
+					            $('#featured').addClass('selected');
+					        break;
+				            case "monActu":
+					            $('#monActu').addClass('selected');
+					        break;
+				            case "category":
+					            var currentCategory=utils.storage.getItem('currentCategory')
+					            $('ul.categories a.category_'+currentCategory).addClass('selected');
+					        break;
+				            default:
+					            $('#featured').addClass('selected');
+			            }
+
+		            },
+
+
+		            initPage:function(){
+			            $('#connect').on('tap click',function(){
+				            //native will ask current main page to show connect webAlert.
+				            nativeBridge.sendEvent('showConnectOnMainPage');
+				            return false;
+				        });
+			            $('#disconnect').on('tap click',function(){
+				            utils.storage.removeItem('lastCredentials');
+				            var currentPage=utils.storage.getItem('currentPage')
+				            if (currentPage=="monActu"){
+					            //quit private page
+					            utils.storage.setItem('currentPage',"featured")
+					            utils.storage.removeItem('currentCategory')
+					            nativeBridge.sendEvent('openFeatured');
+				            }
+				            app.setDisconnected();
+				            app.menu.update();
+				            nativeBridge.sendEvent('disconnect')
+				            return false;
+				        });
+
+			            $('#featured').on('tap click',function(){
+				            utils.storage.setItem('currentPage',"featured")
+						    utils.storage.removeItem('currentCategory')
+				            app.menu.update();
+				            nativeBridge.log('openFeatured');
+				            nativeBridge.sendEvent('openFeatured');
+				            return false;
+				        });
+
+			            $('#monActu').on('tap click',function(){
+				            utils.storage.setItem('currentPage',"monActu")
+						    utils.storage.removeItem('currentCategory')
+				            utils.storage.setItem('unreadCount',0)
+				            app.menu.update();
+				            nativeBridge.log('openMyFeed');
+				            nativeBridge.sendEvent('openMyFeed');
+				            return false;
+				        });
+
+
+			            app.menu.update();
+		            }
+	            };
+
+	            nativeBridge.init({
+		            //debug:true,
+		            storage:true,
+		            events:{
+                        "reset" : function(){
+                            nativeBridge.log('menu received reset')
+                            app.menu.reset();
+                        },
+			            "refresh" : app.menu.update,
+			            "setCategories" : app.menu.setCategories,
+			            "setConnected" : function(event){
+			                nativeBridge.log("received setConnected. error="+event.error);
+			                if (event.user && !event.error){
+				                app.menu.setConnected(event.user)
+		                	    app.setConnected(event.user)
+			                }else{
+				                app.setDisconnected();
+			                    app.menu.setDisconnected();
+			                }
+		                },
+			            "setUnreadPostsNumber" : function(event){
+				            utils.storage.setItem('unreadCount',event.value || 0);
+				            app.menu.update();
+
+		                }
+		            }
+	            });
+	            nativeBridge.log('initMenu')
+
+	            app.initPage();
+	            app.menu.initPage();
+                  
+	            /* DEBUG Lines, import debugData.js first.
+	            app.menu.setCategories({ value : debugCategories});
+	            //*/
+
+
+	        })
+
+        </script>
+        
+    </body>
+</html>

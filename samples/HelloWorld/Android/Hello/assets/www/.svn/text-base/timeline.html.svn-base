@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/base.css"/>
+	        <link rel="stylesheet" type="text/css" href="css/sprite.css"/>
+	        <link rel="stylesheet" type="text/css" href="css/timelines.css"/>
+
+	        <script type="text/javascript" src="js/app.js"></script>
+    </head>
+    <body class="pageTimeline">
+
+        <div id="profile">
+        </div>
+		<div class="page"></div>
+
+		<script type="text/javascript" src="js/zepto.min.js"></script>
+		<script type="text/javascript" src="js/utils.storage.js"></script>
+        <script type="text/javascript" src="js/utils.format.string.js"></script>
+        <script type="text/javascript" src="js/utils.format.date.js"></script>
+        <script type="text/javascript" src="js/utils.device.js"></script>
+		<script type="text/javascript" src="js/mustache.min.js"></script>
+        <script type="text/javascript" src="js/nativeBridge/nativeBridge.min.js"></script>
+        
+        <script>
+            
+            Zepto(function($){
+
+	            app.timeline={
+		            tpl_loadDiv:'<div class="loading">Chargement ...</div>',
+		            tpl_emptyDiv:'<div class="empty">Aucun article</div>',
+		            tpl_profile:'<div class="userInfosContainer"><div class="avatar"><img src="{{avatar}}"/></div><div class="name">{{name}}</div><a href="javascript:;" class="blog">{{blog}}</a>' +
+				            '<a href="javascript:;" id="popupInfos" class="ui_elem header_more_background">+ d\'infos</a>' +
+				            '<a href="javascript:;" id="follow" class="{{#following}}is_following{{/following}}">' +
+				                '<span class="following">Abonnée<span class="ui_elem header_follow_icon_selected"></span></span>' +
+				                '<span class="not_following">S\'abonner<span class="ui_elem header_follow_icon"></span></span>' +
+				            '</a></div>' +
+				            '<div class="tabsContainer"><div class="tabs">' +
+				                '<a id="postedByProfile" class="tab" href="javascript:;">{{name}}</a>' +
+				                '<a id="postedByOthers" class="tab" href="javascript:;">Les autres</a>' +
+				            '</div></div>',
+		            tpl_articles:'{{#articles}}' + app.tpl_article + '{{/articles}}',
+		            tpl_selection_title:'<div class="selection_title">La sélection du {date}</div>',
+
+		            getPageArticles:function(pageNumber, callbackEvent){
+			            var page=app.timeline.getPage(pageNumber);
+			            if (page){
+				            page.html(app.timeline.tpl_loadDiv);
+			            }else{
+				            pageNumber=0;//just in case...
+			            }
+			            nativeBridge.log('getting page '+pageNumber);
+				        var options={
+					        pageNumber:pageNumber,
+					        lastArticleID: app.timeline.lastArticleID ? app.timeline.lastArticleID : 0,
+					        lastMessageID: app.timeline.lastMessageID ? app.timeline.lastMessageID : 0
+				        };
+				        nativeBridge.sendEvent('getPageArticles',options,function(params){
+					                           nativeBridge.log('callback for getPageArticles received');
+                                               var pageNumber=(params.pageNumber) ? params.pageNumber : 0;
+                                               var articles=(params.articles) ? params.articles : [];
+                                               var sort=(params.sort) ? params.sort : "recent";
+                                               app.timeline.setPageArticles(pageNumber, articles, sort, callbackEvent);
+
+				        });
+
+		            },
+		            formatSelectionTitle:function(articles){
+			            var d=new Date();
+			            var dateString="";//default date string if no populardate
+			            if (articles.length && articles[0].populardate){
+				            d.setTime(parseInt(articles[0].populardate) * 1000)
+				            dateString = d.format('dddd d mmmm')
+				            return app.timeline.tpl_selection_title.format({date:dateString})
+			            }
+			            return "";
+
+		            },
+		            removePage:function(page){
+			            page.empty().remove();
+		            },
+		            resetPages:function(){
+			            // try to avoid ios memory leaks :
+				        $('div.page img').removeAttr('src');
+				        app.timeline.removePage($('div.page'));
+			            $('body').append('<div class="page"></div>');
+			            var page=$('div.page');
+			            app.timeline.lastArticleID=0;
+					    app.timeline.lastMessageID=0;
+			            app.timeline.atBottom=false;
+			            return page;
+		            },
+		            getPage:function(pageNumber){
+			            var page=$( $('div.page').get(pageNumber) )
+			            if(!page.length){
+				            $('body').append('<div class="page"></div>');
+				            page = $( $('div.page').get(pageNumber) );
+			            }
+			            return (page.length) ? page : undefined;
+		            },
+		            setPageArticles:function(pageNumber, articles, sort, callbackEvent){
+			            var pageNumber=pageNumber || 0;
+			            var articles=articles || [];
+			            var sort=sort || "recent";
+			            var page;
+			            nativeBridge.log('received setPageArticles for page '+pageNumber+' with '+articles.length+' posts & sort='+sort);
+			            // if we want to reload the first page we clean up all content.
+			            if (pageNumber==0){
+							page=app.timeline.resetPages()
+			            }else if (pageNumber=="next"){
+				            page=app.timeline.getPage($('div.page').length-1);
+			            }else{
+				            page=app.timeline.getPage(pageNumber);
+			            }
+			            if (page){
+				            if (articles.length){
+					            var pageContent=Mustache.render(app.timeline.tpl_articles, {articles: articles});
+								if (sort=="popular"){
+									pageContent=app.timeline.formatSelectionTitle(articles)+pageContent;
+									page.html(pageContent);
+									$('div.page').first().find('div.selection_title').addClass('first');
+
+								}else{
+									page.html(pageContent);
+								}
+					            page.addClass('page_sort_'+sort);
+					            app.timeline.lastArticleID=$('.type_article').last().attr('data-articleID');
+					            app.timeline.lastMessageID=$('.type_message').last().attr('data-messageID');
+
+					            app.timeline.bindEvents(page);
+				            }else{
+					            if (pageNumber==0){
+						            page.html(app.timeline.tpl_emptyDiv);
+					            }else{
+						            //we hit bottom of the list. stop loading more pages.
+						            app.timeline.atBottom=true;
+						            app.timeline.removePage(page);
+					            }
+				            }
+			            }else{
+				            nativeBridge.log('cant insert! page not here!')
+			            }
+			            // if an event has been passed all the way to here we call its callback (pullToRefresh)
+			            if (callbackEvent){
+				            nativeBridge.sendCallback(callbackEvent);
+			            }
+		            },
+		            selectedTab:null,
+		            setProfile:function(profile){
+			            app.timeline.currentProfile=profile;
+						$('#profile').html(Mustache.render(app.timeline.tpl_profile,profile)).show();
+
+			            $('#popupInfos, #profile .avatar').on('tap click',function(){
+							utils.storage.setItem('currentProfile',app.timeline.currentProfile,"json")
+				            nativeBridge.webAlert('show','alert_userInfo.html');
+				            return false;
+			            })
+
+			            $('#profile .blog').on('tap click',function(){
+				            var url=$(this).html();
+				            nativeBridge.log('should open url '+url);
+				            if (url){
+					            nativeBridge.sendEvent('openExternalUrl',{url:url});
+				            }
+				            return false;
+			            })
+
+			            $('#follow').on('tap click',function(){
+							var link=$(this);
+				            var connectedUser=app.getConnectedUser();
+			                if (connectedUser){
+				                if (link.hasClass('is_following')){
+					                link.removeClass('is_following');
+									nativeBridge.sendEvent('follow',{isFollowing:false});
+					            }else{
+						            link.addClass('is_following');
+						            nativeBridge.sendEvent('follow',{isFollowing:true});
+					            }
+			                }else{
+				                app.showConnexionAlert();
+			                }
+				            return false;
+			            });
+			            $('#postedByOthers').on('tap click',function(){
+				            if ( ! $(this).hasClass('selected')){
+					            $(this).addClass('selected')
+					            $('#postedByProfile').removeClass('selected');
+					            app.timeline.selectedTab="postedByOthers";
+					            var page=app.timeline.resetPages();
+							    if (page){
+						            page.html(app.timeline.tpl_loadDiv);
+					            }
+					            nativeBridge.log('changeMode {mode:"others"}')
+					            nativeBridge.sendEvent('changeMode',{mode:"others"})
+				            }
+				            return false;
+			            });
+			            $('#postedByProfile').on('tap click',function(){
+				            if ( ! $(this).hasClass('selected')){
+					            $(this).addClass('selected')
+					            $('#postedByOthers').removeClass('selected');
+					            app.timeline.selectedTab="postedByProfile";
+					            var page=app.timeline.resetPages();
+							    if (page){
+						            page.html(app.timeline.tpl_loadDiv);
+					            }
+					            nativeBridge.log('changeMode {mode:"user"}')
+					            nativeBridge.sendEvent('changeMode',{mode:"user"})
+				            }
+				            return false;
+			            });
+
+			            //(re)set current selected tab because setProfile is called after a changeMode
+			            if (app.timeline.selectedTab=="postedByOthers"){
+				            $('#postedByOthers').addClass('selected')
+			            }else{
+				            $('#postedByProfile').addClass('selected')
+			            }
+
+			            //hide follow button if i'm looking to my own profile.
+			            var connectedUser=app.getConnectedUser();
+			            if (connectedUser){
+				            if(app.timeline.currentProfile.profileID == connectedUser.profileID){
+					            $('#follow').hide();
+				            }
+			            }
+
+
+		            },
+		            initPage:function(){
+			            var page=$('div.page');
+                  		page.html(app.timeline.tpl_loadDiv);
+
+			            var currentTimelineProfile=utils.storage.getItem('currentTimelineProfile','int')
+			            if (currentTimelineProfile){
+				            nativeBridge.log('WE ASKED FOR PROFILE' +currentTimelineProfile);
+				            utils.storage.removeItem('currentTimelineProfile')
+				            nativeBridge.log('sending getProfile');
+				            nativeBridge.sendEvent('getProfile',{profileID:currentTimelineProfile})
+
+
+			            }else{
+				            nativeBridge.log('NO PROFILE');
+			            }
+
+			            //DEBUG lines, import debugData.js first
+			            //app.setConnected(debugProfile)
+			            //app.timeline.setProfile(debugProfile);
+			            //app.timeline.setPageArticles(0,debugData,'popular');
+			            //app.timeline.setPageArticles(1,debugData,'popular');
+
+			            if (utils.device.isAndroid()){
+							if (utils.device.androidVersion()<3){
+								nativeBridge.log('this device is android 2.x')
+								$('body').addClass('android2x')
+							}
+				        }
+
+
+
+		            },
+		            bindEvents:function(pageElem){
+						pageElem.find('a.like').on('tap click',function(){
+				            var article=$(this).parents('.article');
+				            var link=article.find('a.like');
+							var postObject={
+								type: article.hasClass('type_message') ? "message" : "article",
+								messageID : parseInt(article.attr('data-messageID')),
+								articleID : parseInt(article.attr('data-articleID'))
+							};
+				            app.like(postObject,link);
+				            return false;
+				        });
+
+			            pageElem.find('a.share').on('tap click',function(){
+				            var article=$(this).parents('.article');
+				            var postObject={
+								type: article.hasClass('type_message') ? "message" : "article",
+								messageID : parseInt(article.attr('data-messageID')),
+								articleID : parseInt(article.attr('data-articleID'))
+							};
+				            app.share(postObject);
+				            return false;
+				        });
+
+			            var articleHandler=function(){
+				            var article=$(this).parents('.article');
+				            //things differs if it's an article or a message
+				            if (article.hasClass('type_message')){
+					            utils.storage.setItem('currentContentType','message');
+					            utils.storage.setItem('currentMessageID',article.attr('data-messageID'));
+					            // a message is always loaded in the comments view
+					            nativeBridge.navigate('push','article.html', 'articleCommentsView');
+				            }else{
+					            utils.storage.setItem('currentContentType','article');
+					            utils.storage.setItem('currentArticleID',article.attr('data-articleID'));
+					            utils.storage.setItem('currentArticleUrl',article.attr('data-articleUrl'));
+					            if ($(this).hasClass('comment')){
+						            // if we clicked on comment button we load the comments view
+						            nativeBridge.navigate('push','article.html','articleCommentsView');
+					            }else{
+						            // if we clicked on the content we load the webview
+						            nativeBridge.navigate('push','articleWebview.html','articleWebview');
+					            }
+				            }
+				            return false;
+			            }
+
+			            pageElem.find('a.comment').on('tap click',articleHandler);
+			            pageElem.find('.content').on('click',articleHandler);//only listen to click for sidemenu ios issues.
+			            pageElem.find('.content a').on('tap click',function(){
+							var url=$(this).attr('data-href');
+				            nativeBridge.log('should open url '+url);
+				            if (url){
+					            nativeBridge.sendEvent('openExternalUrl',{url:url});
+				            }
+				            return false
+			            });
+
+			            pageElem.find('a.openProfile').on('tap click',function(){
+				            var profileID=$(this).attr('data-profileID');
+                            nativeBridge.log('will open profile '+profileID);
+				            utils.storage.setItem('currentTimelineProfile',profileID)
+					        nativeBridge.navigate('push','timeline.html','profileView');
+				            return false;
+			            });
+		            }
+	            };
+
+	            nativeBridge.init({
+		            //debug:true,
+		            storage:true,
+		            events:{
+			            "showConnect" : app.showConnexionAlert,
+			            "setPageArticles": function(event){
+				            var pageNumber=(event.pageNumber) ? event.pageNumber : 0;
+			                var articles=(event.articles) ? event.articles : [];
+			                var sort=(event.sort) ? event.sort : "recent";
+				            app.timeline.setPageArticles(pageNumber, articles, sort)
+			            },
+
+			            "setProfile": function(event){
+				            nativeBridge.log('received setProfile')
+				            app.timeline.setProfile(event.profile);
+			            },
+			            "pullToRefreshRefresh": function(event){
+							nativeBridge.log('PullToRefresh Received');
+				            app.timeline.resetPages();
+							app.timeline.getPageArticles(0,event);
+							//nativeBridge.sendCallback(event);
+						},
+			            "infiniteScrollRefresh" : function(event){
+							nativeBridge.log('infiniteScroll Received');
+				            var isLoadingFirstPage=($('div.page').first().find('div.loading').length>0);
+				            if (!app.timeline.atBottom && !isLoadingFirstPage){
+					            var pageNumber=$('div.page').length;
+					            app.timeline.getPageArticles(pageNumber,event);
+				            }else{
+					            nativeBridge.log('skipping it, bottom='+app.timeline.atBottom+" isLoadingFirstPage="+isLoadingFirstPage)
+				            }
+						},
+			            "pullToRefreshCancelled": function(event){
+							nativeBridge.log('PullToRefresh Cancelled received');
+				            app.timeline.resetPages();
+						},
+			            "infiniteScrollCancelled" : function(event){
+							nativeBridge.log('infiniteScroll Cancelled Received');
+				            $('div.loading').parent().remove();
+						},
+			            "showWriteMessagePopup":function(){
+				            var connectedUser=app.getConnectedUser();
+			                if (connectedUser){
+				                nativeBridge.log('will show alert_writeMessage')
+				                var message={
+					                //send 0 as profileID if posting on my own page
+						            profileID : (app.timeline.currentProfile && app.timeline.currentProfile.profileID != connectedUser.profileID) ? app.timeline.currentProfile.profileID : 0
+					            };
+				                utils.storage.setItem('writeMessageInfos',message,'json')
+				                nativeBridge.webAlert("show","alert_writeMessage.html");
+			                }else{
+				                app.showConnexionAlert();
+			                }
+			            },
+			            "onWebAlertDismissed":function(event){
+				            nativeBridge.log('received onWebAlertDismissed with filename='+event.value);
+				            if (event.value=="alert_connect.html"){
+					            if (utils.storage.getItem('shouldShowLostPasswordAlert')){
+						            utils.storage.removeItem('shouldShowLostPasswordAlert');
+						            nativeBridge.webAlert("show","alert_lostPassword.html");
+					            }
+				            }
+
+			            },
+			            "addMessage":function(event){
+							nativeBridge.log('received addMessage with message='+JSON.stringify(event.message));
+				            var article=event.message;
+				            if (article){
+					            $($('div.page').get(0)).prepend(Mustache.render(app.tpl_article, article));
+				            }
+			            },
+			            "showFilterMessagesPopup":function(){
+				            nativeBridge.webAlert("show","alert_timelineFilter.html");
+			            }
+
+		            }
+	            });
+
+               	nativeBridge.log('timeline is ready');
+	            app.initPage();
+	            app.timeline.initPage();
+
+
+	        })
+
+        </script>
+        
+    </body>
+</html>
