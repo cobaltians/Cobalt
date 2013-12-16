@@ -1,10 +1,6 @@
 package com.example.hello.fragments;
 
 import com.example.hello.R;
-
-import fr.haploid.androidnativebridge.customviews.OverScrollingWebView;
-import fr.haploid.androidnativebridge.fragments.HTMLFragment;
-import fr.haploid.androidnativebridge.fragments.HTMLPullToRefreshFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +14,7 @@ public class MainFragment extends HTMLPullToRefreshFragment {
 			Bundle savedInstanceState) {
 
 		View view = super.onCreateView(inflater, container, savedInstanceState);
-		
+		//Getting the first web page fromm assets
 		this.ressourcePath = "www/";
 		if(!webviewContentHasBeenLoaded)
 		{
@@ -37,7 +33,7 @@ public class MainFragment extends HTMLPullToRefreshFragment {
 	@Override
 	public void onStart() {
 		super.onStart();
-		
+		//Enabling pull to refresh on start
 		if (getArguments() == null) {
 			enablePullToRefresh();
 		}

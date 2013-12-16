@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		677CE30C185F026A00CB5887 /* AbstractViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 677CE30B185F026A00CB5887 /* AbstractViewController.m */; };
 		BEA274D41755F2B70081903C /* PullToRefreshTableHeaderView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C4A39B4017280F2D004F7282 /* PullToRefreshTableHeaderView.h */; };
 		BEA274D51755F2B70081903C /* HPToast.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C4A39B74172A88D1004F7282 /* HPToast.h */; };
 		BEA274D61755F2B70081903C /* HPNativeBridgeViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C4A39B3717280F04004F7282 /* HPNativeBridgeViewController.h */; };
@@ -47,6 +48,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		677CE30A185F026A00CB5887 /* AbstractViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AbstractViewController.h; path = Controllers/AbstractViewController.h; sourceTree = "<group>"; };
+		677CE30B185F026A00CB5887 /* AbstractViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AbstractViewController.m; path = Controllers/AbstractViewController.m; sourceTree = "<group>"; };
 		C4060B2A171D850B001B393E /* iToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iToast.h; sourceTree = "<group>"; };
 		C4060B2B171D850B001B393E /* iToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iToast.m; sourceTree = "<group>"; };
 		C4A39B3717280F04004F7282 /* HPNativeBridgeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPNativeBridgeViewController.h; path = Controllers/HPNativeBridgeViewController.h; sourceTree = "<group>"; };
@@ -94,6 +97,8 @@
 		C4A39B3E17280F1B004F7282 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				677CE30A185F026A00CB5887 /* AbstractViewController.h */,
+				677CE30B185F026A00CB5887 /* AbstractViewController.m */,
 				C4A39B3717280F04004F7282 /* HPNativeBridgeViewController.h */,
 				C4A39B3817280F04004F7282 /* HPNativeBridgeViewController.m */,
 				C4A39B3917280F04004F7282 /* PullToRefreshScrollViewController.h */,
@@ -219,6 +224,7 @@
 				C4A39B4D17281EBB004F7282 /* iToast.m in Sources */,
 				F01A59F41716EDB50000DD94 /* HPNativeBridge.m in Sources */,
 				C4A39B3C17280F04004F7282 /* PullToRefreshScrollViewController.m in Sources */,
+				677CE30C185F026A00CB5887 /* AbstractViewController.m in Sources */,
 				C4A39B4217280F2D004F7282 /* PullToRefreshTableHeaderView.m in Sources */,
 				C4A39B461728112B004F7282 /* HPNativeBridgePullToRefreshViewController.m in Sources */,
 				C4A39B5F172927D9004F7282 /* HPPtrIsViewController.m in Sources */,

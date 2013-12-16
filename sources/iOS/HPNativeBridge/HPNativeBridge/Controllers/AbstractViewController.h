@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface AbstractViewController : UIViewController {
-@private
 	BOOL _refreshing;
 }
 

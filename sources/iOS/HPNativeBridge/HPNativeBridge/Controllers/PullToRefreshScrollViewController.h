@@ -17,9 +17,7 @@
  @abstract		Base class for pull to refresh table view controllers.
  */
 @interface PullToRefreshScrollViewController : UIViewController <UIScrollViewDelegate> {
-  PullToRefreshTableHeaderView *pullToRefreshTableHeaderView;
-@private
-    
+    PullToRefreshTableHeaderView *pullToRefreshTableHeaderView;
 	BOOL _refreshing;
 }
 
@@ -38,8 +36,13 @@
  @property		scrollView
  @abstract		The scrollView
  */
-
 @property (nonatomic, strong) IBOutlet UIScrollView * scrollView;
+
+/*!
+ @property		refreshing
+ @abstract		The Boolean to know if PTR is refreshing
+ */
+@property (atomic) BOOL _refreshing;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
