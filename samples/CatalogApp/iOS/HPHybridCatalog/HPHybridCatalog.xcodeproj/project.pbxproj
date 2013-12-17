@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		67D8625C1860B2DB00878F9A /* www in Resources */ = {isa = PBXBuildFile; fileRef = 67D8625B1860B2DB00878F9A /* www */; };
 		C45C1F25172EA08F002BE836 /* HPHybridDefaultPTRViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C45C1F23172EA08F002BE836 /* HPHybridDefaultPTRViewController.m */; };
 		C45C1F26172EA08F002BE836 /* HPHybridDefaultPTRViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C45C1F24172EA08F002BE836 /* HPHybridDefaultPTRViewController.xib */; };
 		C45C1F29172EA2FB002BE836 /* chaton.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = C45C1F28172EA2FB002BE836 /* chaton.jpeg */; };
@@ -32,10 +33,10 @@
 		F01A5A201716EF4D0000DD94 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F01A5A1F1716EF4D0000DD94 /* Default@2x.png */; };
 		F01A5A221716EF4D0000DD94 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F01A5A211716EF4D0000DD94 /* Default-568h@2x.png */; };
 		F01A5A291716EF5E0000DD94 /* libHPNativeBridge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F01A5A281716EF5E0000DD94 /* libHPNativeBridge.a */; };
-		F01A5A2B1716EFB20000DD94 /* www in Resources */ = {isa = PBXBuildFile; fileRef = F01A5A2A1716EFB20000DD94 /* www */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		67D8625B1860B2DB00878F9A /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = HPHybridCatalog/www; sourceTree = "<group>"; };
 		C45C1F22172EA08F002BE836 /* HPHybridDefaultPTRViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPHybridDefaultPTRViewController.h; sourceTree = "<group>"; };
 		C45C1F23172EA08F002BE836 /* HPHybridDefaultPTRViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPHybridDefaultPTRViewController.m; sourceTree = "<group>"; };
 		C45C1F24172EA08F002BE836 /* HPHybridDefaultPTRViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HPHybridDefaultPTRViewController.xib; sourceTree = "<group>"; };
@@ -72,7 +73,6 @@
 		F01A5A1F1716EF4D0000DD94 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		F01A5A211716EF4D0000DD94 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		F01A5A281716EF5E0000DD94 /* libHPNativeBridge.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libHPNativeBridge.a; path = "../HPNativeBridge/build/Release-iphoneos/libHPNativeBridge.a"; sourceTree = "<group>"; };
-		F01A5A2A1716EFB20000DD94 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,8 +101,8 @@
 		F01A59FF1716EF4C0000DD94 = {
 			isa = PBXGroup;
 			children = (
+				67D8625B1860B2DB00878F9A /* www */,
 				C45C1F2A172EA300002BE836 /* img */,
-				F01A5A2A1716EFB20000DD94 /* www */,
 				F01A5A111716EF4C0000DD94 /* HPHybridCatalog */,
 				F01A5A0A1716EF4C0000DD94 /* Frameworks */,
 				F01A5A091716EF4C0000DD94 /* Products */,
@@ -229,11 +229,11 @@
 				F01A5A1E1716EF4D0000DD94 /* Default.png in Resources */,
 				F01A5A201716EF4D0000DD94 /* Default@2x.png in Resources */,
 				F01A5A221716EF4D0000DD94 /* Default-568h@2x.png in Resources */,
-				F01A5A2B1716EFB20000DD94 /* www in Resources */,
 				C49597591717090B006454BA /* HPHybridViewController.xib in Resources */,
 				C4D664A3171E8D97009EDE58 /* HPZoomHybridViewController.xib in Resources */,
 				C4D664AB171E91D5009EDE58 /* HPSimpleHybridViewController.xib in Resources */,
 				C4A39B351726E464004F7282 /* HPToastAlertViewController.xib in Resources */,
+				67D8625C1860B2DB00878F9A /* www in Resources */,
 				C4A39B4B17281CC9004F7282 /* HPHybridPullToRefreshViewController.xib in Resources */,
 				C4A39B64172951EB004F7282 /* HPHybridISViewController.xib in Resources */,
 				C45C1F26172EA08F002BE836 /* HPHybridDefaultPTRViewController.xib in Resources */,
