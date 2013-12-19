@@ -126,7 +126,7 @@ public class HTMLFragment extends Fragment {
 	/**
 	 * type's value => callback
 	 */
-	private static String JSTypeNativeBridgeReady = "nativeBridgeIsReady";
+	protected static String JSTypeNativeBridgeReady = "nativeBridgeIsReady";
 	//EVENTS
 	/**
 	 * the key "name" to specify the event
