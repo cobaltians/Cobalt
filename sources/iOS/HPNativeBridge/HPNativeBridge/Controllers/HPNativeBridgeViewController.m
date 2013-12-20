@@ -84,7 +84,7 @@ NSString *popupPageName;
     {
         self.pageName = @"index.html";
     }
-    [self loadContentInWebView:self.webView FromFileNamed:self.pageName atPath:[self ressourcePath] withRessourcesAtPath:[self ressourcePath]];
+    [self loadContentInWebView:self.webView FromFileNamed:self.pageName atPath:RESSOURCE_PATH withRessourcesAtPath:RESSOURCE_PATH];
 }
 
 - (void)viewDidUnload {
@@ -102,9 +102,7 @@ NSString *popupPageName;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
--(NSString *)ressourcePath {
-    return RESSOURCE_PATH;
-}
+
 
 -(void) customWebView
 {
@@ -364,7 +362,7 @@ NSString *popupPageName;
 -(HPNativeBridgeViewController *) getControllerFromId:(NSString *) viewControllerId
 {
 #warning ERROR... -> impossible to preload the webview from here since RESSOURCE_PATH (defined in this prefix) is not the same as RESSOURCE_PATH (defined in app's prefix) and this prefix is used here... :/
-    NSString *confToParse = [self getStringFromFileNamed:confFileName atPath: [self ressourcePath]];
+    NSString *confToParse = [self getStringFromFileNamed:confFileName atPath: RESSOURCE_PATH];
     NSString *className,*nibName;
     BOOL pullToRefreshActive,infiniteScrollActive;
     
@@ -595,7 +593,7 @@ NSString *popupPageName;
     if([self.popUpWebview respondsToSelector:@selector(setKeyboardDisplayRequiresUserAction:)])
         [self.popUpWebview setKeyboardDisplayRequiresUserAction:NO];
     
-    [self loadContentInWebView:self.popUpWebview FromFileNamed:popupPageName atPath:[self ressourcePath] withRessourcesAtPath: [self ressourcePath]];
+    [self loadContentInWebView:self.popUpWebview FromFileNamed:popupPageName atPath:RESSOURCE_PATH withRessourcesAtPath: RESSOURCE_PATH];
     self.popUpWebview.opaque = NO;
     [self.popUpWebview setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     [self.popUpWebview setAlpha:0.0];

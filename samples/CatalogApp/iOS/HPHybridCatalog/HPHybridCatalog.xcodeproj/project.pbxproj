@@ -32,7 +32,6 @@
 		F01A5A1E1716EF4D0000DD94 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = F01A5A1D1716EF4D0000DD94 /* Default.png */; };
 		F01A5A201716EF4D0000DD94 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F01A5A1F1716EF4D0000DD94 /* Default@2x.png */; };
 		F01A5A221716EF4D0000DD94 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F01A5A211716EF4D0000DD94 /* Default-568h@2x.png */; };
-		F01A5A291716EF5E0000DD94 /* libHPNativeBridge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F01A5A281716EF5E0000DD94 /* libHPNativeBridge.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,7 +71,6 @@
 		F01A5A1D1716EF4D0000DD94 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		F01A5A1F1716EF4D0000DD94 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		F01A5A211716EF4D0000DD94 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		F01A5A281716EF5E0000DD94 /* libHPNativeBridge.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libHPNativeBridge.a; path = "../HPNativeBridge/build/Release-iphoneos/libHPNativeBridge.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,7 +78,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F01A5A291716EF5E0000DD94 /* libHPNativeBridge.a in Frameworks */,
 				F01A5A0C1716EF4C0000DD94 /* UIKit.framework in Frameworks */,
 				F01A5A0E1716EF4C0000DD94 /* Foundation.framework in Frameworks */,
 				F01A5A101716EF4C0000DD94 /* CoreGraphics.framework in Frameworks */,
@@ -120,7 +117,6 @@
 		F01A5A0A1716EF4C0000DD94 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F01A5A281716EF5E0000DD94 /* libHPNativeBridge.a */,
 				F01A5A0B1716EF4C0000DD94 /* UIKit.framework */,
 				F01A5A0D1716EF4C0000DD94 /* Foundation.framework */,
 				F01A5A0F1716EF4C0000DD94 /* CoreGraphics.framework */,

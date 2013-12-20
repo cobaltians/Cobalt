@@ -1,6 +1,8 @@
 package com.example.hello.fragments;
 
 import com.example.hello.R;
+
+import fr.haploid.androidnativebridge.fragments.HTMLPullToRefreshFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;

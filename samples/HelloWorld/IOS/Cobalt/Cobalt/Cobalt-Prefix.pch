@@ -1,5 +1,7 @@
 //
-// Prefix header for all source files of the 'HPNativeBridge' target in the 'HPNativeBridge' project
+//  Prefix header
+//
+//  The contents of this file are implicitly included at the beginning of every source file.
 //
 
 #import <Availability.h>
@@ -9,8 +11,8 @@
 #endif
 
 #ifdef __OBJC__
-#import <UIKit/UIKit.h>
-#import <Foundation/Foundation.h>
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
 #endif
 
 #define RESSOURCE_PATH [NSString stringWithFormat:@"%@%@",[[NSBundle mainBundle] resourcePath],@"/www/"]

@@ -121,7 +121,7 @@
  @abstract		this method returns the ressource path
  @return        a string representing the ressource path to be used in the webview
  */
--(NSString *)ressourcePath;
+//-(NSString *)ressourcePath;
 
 /*!
  @method		-(void) customView
