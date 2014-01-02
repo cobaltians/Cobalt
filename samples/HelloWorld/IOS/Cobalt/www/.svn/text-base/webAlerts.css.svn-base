@@ -1,0 +1,153 @@
+/* styles for web alerts (popups) */
+
+
+html.webalert{
+	height: 100%;
+	margin:0; padding:0;
+}
+html.webalert body{
+	height: 100%;
+	margin:0; padding:0;
+	background: rgba(0,0,0,0.5);
+}
+div.webalert{
+	position: absolute;
+	top:50%;
+	left:50%;
+	background: rgb(245, 245, 245);
+	width:260px;
+	height:200px;
+	margin: -100px 0 0 -130px;
+	box-shadow: 0 0 13px #000;
+	overflow: hidden;
+}
+div.webalert h1{
+	text-align: left;
+	border-bottom: 2px solid #d30d66;
+	font-size: 16px;
+	margin: 10px 7px;
+	padding-bottom: 5px;
+	font-weight: bold;
+	color: #353535;
+}
+
+div.webalert input{
+	width: 222px;
+}
+
+div.webalert .item{
+	display: inline-block;
+	margin: 5px 7px;
+	padding: 10px;
+	line-height: 20px;
+	color: #535353;
+	background: #fff;
+	font-weight: bold;
+	font-size: 16px;
+	border: 0;
+}
+html.webalert p{
+	margin: 5px 8px;
+}
+div.webalert p.item{
+	display: block;
+}
+div.webalert .item.down{
+	background: #eee;
+	color: #ccc;
+}
+
+.popup_close_button_iphone{
+	position: absolute;
+	top:-1px;
+	right: -2px;
+	display: none;
+}
+.scroller{
+	height: 100%;
+	overflow: scroll;
+}
+
+
+/* connection alert */
+div.connectWebAlert{
+	height: 236px;
+	margin-top: -118px;
+}
+#lostPassword{
+	position: relative;
+	display: block;
+	text-align: center;
+	padding: 4px 4px 2px;
+}
+
+#FBconnect{
+	position: relative;
+	margin: 0 10px;
+	float: left;
+}
+
+#connect{
+	position: relative;
+	height: 23px;
+    line-height: 25px;
+    margin: 5px 0 0;
+    text-align: center;
+    width: 156px;
+}
+h1 .ui_elem{
+	margin-bottom: -5px;
+}
+/* lost password */
+
+div.lostPasswordWebAlert #send{
+	position: relative;
+	display: block;
+	width: 222px;
+	text-align: center;
+}
+
+
+/* user infos */
+div.webalert.userInfo{
+	height: 270px;
+	margin-top:-135px;
+}
+.avatar{
+	width: 22px;
+	height: 22px;
+}
+
+/* write comments and posts */
+div.webalert textarea{
+	width: 225px;
+	height: 70px;
+}
+div.webalert #post{
+	position: absolute;
+	bottom: 5px;
+	right: 5px;
+	left: 5px;
+	text-align: center;
+}
+
+/* timeline filter */
+
+div.timelineFilter{
+	height: 160px;
+	margin-top: -80px;
+}
+div.timelineFilter a.item{
+	width: 190px;
+	line-height: 28px;
+	padding-left: 45px;
+	margin-top: 0;
+}
+div.timelineFilter a.item .ui_elem{
+	display: none;
+}
+div.timelineFilter a.selected .ui_elem{
+	display: block;
+	float: left;
+	margin-left: -35px;
+}

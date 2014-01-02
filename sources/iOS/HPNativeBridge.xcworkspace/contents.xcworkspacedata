@@ -4,7 +4,4 @@
    <FileRef
       location = "group:HPNativeBridge/HPNativeBridge.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:HPHybridCatalog/HPHybridCatalog.xcodeproj">
-   </FileRef>
 </Workspace>

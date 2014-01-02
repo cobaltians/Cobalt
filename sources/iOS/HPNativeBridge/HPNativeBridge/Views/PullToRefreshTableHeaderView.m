@@ -126,11 +126,11 @@
  @abstract		Deallocates the memory occupied by the receiver.
  */
 - (void)dealloc {
-    [progressView release]; progressView = nil;
-    [arrowImageView release]; arrowImageView = nil;
-    [lastUpdatedLabel release]; lastUpdatedLabel = nil;
-    [statusLabel release]; statusLabel = nil;
-    [super dealloc];
+   // [progressView release]; progressView = nil;
+    //[arrowImageView release]; arrowImageView = nil;
+    //[lastUpdatedLabel release]; lastUpdatedLabel = nil;
+    //[statusLabel release]; statusLabel = nil;
+    //[super dealloc];
 }
 
 @end

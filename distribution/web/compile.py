@@ -2,7 +2,7 @@ import os
 
 libName = "nativeBridge"
 distrib_path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(__file__))))
-web_sources_path = os.path.abspath(os.path.join(os.pardir, 'sources','Web'))
+web_sources_path = os.path.abspath(os.path.join(os.pardir, os.pardir, 'sources','Web'))
 common_file_path=os.path.abspath(os.path.join(web_sources_path, 'common', "%s.js" % libName ))
 
 

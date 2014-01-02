@@ -8,6 +8,7 @@ import fr.haploid.androidnativebridge.fragments.HTMLFragment;
 
 
 
+
 public class MainActivity extends HTMLActivity {
 
 	
