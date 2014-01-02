@@ -9,7 +9,7 @@ nativeBridge.tizen_adapter={
 		nativeBridge.navigate=this.navigate;
 		nativeBridge.defaultBehaviors.initStorage(); //cause we need it for push !
 
-
+		nativeBridge.platform="Tizen";
 	},
 	//Navigate to an other page or do some special navigation actions
 	//See doc for guidelines.

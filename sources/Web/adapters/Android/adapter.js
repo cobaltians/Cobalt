@@ -2,6 +2,9 @@ nativeBridge.android_adapter={
 	//
 	//ANDROID ADAPTER
 	//
+	init:function(){
+		nativeBridge.platform="Android";
+	},
 	// handle events sent by native side
     handleEvent:function(event){
 		nativeBridge.log("----received : "+JSON.stringify(event), false)
