@@ -356,6 +356,8 @@ nativeBridge.bb10_adapter={
 	            });
 			}
 		}
+		
+		nativeBridge.platform="BB10";
 	},
 	
 	// handle events sent by native side

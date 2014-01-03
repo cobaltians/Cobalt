@@ -334,6 +334,9 @@ nativeBridge.ios_adapter={
     pipeline:[], //array of sends waiting to go to native
     pipelineRunning:false,//bool to knwow if new sends should go to pipe or go to native
 
+	init:function(){
+		nativeBridge.platform="iOs";
+	},
 	// handle events sent by native side
     handleEvent:function(event){
 		nativeBridge.log("<b>received</b> : "+JSON.stringify(event), false)
