@@ -19,7 +19,8 @@
         <script>
             Zepto(function($){
                 
-                nativeBridge.init({                    	
+                nativeBridge.init({  
+                    //sendingToNative:false,                  	
                     events:{
                         "pullToRefreshRefresh" : function(event){
                             nativeBridge.log('Refresh');                           
