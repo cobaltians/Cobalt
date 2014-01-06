@@ -7,14 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		677BC1C31864B2AB004A0D8A /* HPNativeBridgePullToRefreshViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 677BC1B21864B2AB004A0D8A /* HPNativeBridgePullToRefreshViewController.m */; };
-		677BC1C41864B2AB004A0D8A /* HPNativeBridgeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 677BC1B41864B2AB004A0D8A /* HPNativeBridgeViewController.m */; };
-		677BC1C51864B2AB004A0D8A /* HPPtrIsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 677BC1B61864B2AB004A0D8A /* HPPtrIsViewController.m */; };
-		677BC1C61864B2AB004A0D8A /* PullToRefreshScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 677BC1B81864B2AB004A0D8A /* PullToRefreshScrollViewController.m */; };
-		677BC1C71864B2AB004A0D8A /* HPNativeBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 677BC1BB1864B2AB004A0D8A /* HPNativeBridge.m */; };
-		677BC1C81864B2AB004A0D8A /* iToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 677BC1BD1864B2AB004A0D8A /* iToast.m */; };
-		677BC1C91864B2AB004A0D8A /* HPToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 677BC1C01864B2AB004A0D8A /* HPToast.m */; };
-		677BC1CA1864B2AB004A0D8A /* PullToRefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 677BC1C21864B2AB004A0D8A /* PullToRefreshTableHeaderView.m */; };
+		6742CD10187AACF300FCBF8D /* AbstractViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6742CCFD187AACF300FCBF8D /* AbstractViewController.m */; };
+		6742CD11187AACF300FCBF8D /* HPNativeBridgePullToRefreshViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6742CCFF187AACF300FCBF8D /* HPNativeBridgePullToRefreshViewController.m */; };
+		6742CD12187AACF300FCBF8D /* HPNativeBridgeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6742CD01187AACF300FCBF8D /* HPNativeBridgeViewController.m */; };
+		6742CD13187AACF300FCBF8D /* HPPtrIsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6742CD03187AACF300FCBF8D /* HPPtrIsViewController.m */; };
+		6742CD14187AACF300FCBF8D /* PullToRefreshScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6742CD05187AACF300FCBF8D /* PullToRefreshScrollViewController.m */; };
+		6742CD15187AACF300FCBF8D /* HPNativeBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 6742CD08187AACF300FCBF8D /* HPNativeBridge.m */; };
+		6742CD16187AACF300FCBF8D /* iToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 6742CD0A187AACF300FCBF8D /* iToast.m */; };
+		6742CD17187AACF300FCBF8D /* HPToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 6742CD0D187AACF300FCBF8D /* HPToast.m */; };
+		6742CD18187AACF300FCBF8D /* PullToRefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6742CD0F187AACF300FCBF8D /* PullToRefreshTableHeaderView.m */; };
 		67A4430E18649B3400F5C301 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A4430D18649B3400F5C301 /* Foundation.framework */; };
 		67A4431018649B3400F5C301 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A4430F18649B3400F5C301 /* CoreGraphics.framework */; };
 		67A4431218649B3400F5C301 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A4431118649B3400F5C301 /* UIKit.framework */; };
@@ -44,23 +45,25 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		677BC1B11864B2AB004A0D8A /* HPNativeBridgePullToRefreshViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPNativeBridgePullToRefreshViewController.h; sourceTree = "<group>"; };
-		677BC1B21864B2AB004A0D8A /* HPNativeBridgePullToRefreshViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPNativeBridgePullToRefreshViewController.m; sourceTree = "<group>"; };
-		677BC1B31864B2AB004A0D8A /* HPNativeBridgeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPNativeBridgeViewController.h; sourceTree = "<group>"; };
-		677BC1B41864B2AB004A0D8A /* HPNativeBridgeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPNativeBridgeViewController.m; sourceTree = "<group>"; };
-		677BC1B51864B2AB004A0D8A /* HPPtrIsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPPtrIsViewController.h; sourceTree = "<group>"; };
-		677BC1B61864B2AB004A0D8A /* HPPtrIsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPPtrIsViewController.m; sourceTree = "<group>"; };
-		677BC1B71864B2AB004A0D8A /* PullToRefreshScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullToRefreshScrollViewController.h; sourceTree = "<group>"; };
-		677BC1B81864B2AB004A0D8A /* PullToRefreshScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullToRefreshScrollViewController.m; sourceTree = "<group>"; };
-		677BC1B91864B2AB004A0D8A /* HPNativeBridge-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HPNativeBridge-Prefix.pch"; sourceTree = "<group>"; };
-		677BC1BA1864B2AB004A0D8A /* HPNativeBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPNativeBridge.h; sourceTree = "<group>"; };
-		677BC1BB1864B2AB004A0D8A /* HPNativeBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPNativeBridge.m; sourceTree = "<group>"; };
-		677BC1BC1864B2AB004A0D8A /* iToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iToast.h; sourceTree = "<group>"; };
-		677BC1BD1864B2AB004A0D8A /* iToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iToast.m; sourceTree = "<group>"; };
-		677BC1BF1864B2AB004A0D8A /* HPToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPToast.h; sourceTree = "<group>"; };
-		677BC1C01864B2AB004A0D8A /* HPToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPToast.m; sourceTree = "<group>"; };
-		677BC1C11864B2AB004A0D8A /* PullToRefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullToRefreshTableHeaderView.h; sourceTree = "<group>"; };
-		677BC1C21864B2AB004A0D8A /* PullToRefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullToRefreshTableHeaderView.m; sourceTree = "<group>"; };
+		6742CCFC187AACF300FCBF8D /* AbstractViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractViewController.h; sourceTree = "<group>"; };
+		6742CCFD187AACF300FCBF8D /* AbstractViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractViewController.m; sourceTree = "<group>"; };
+		6742CCFE187AACF300FCBF8D /* HPNativeBridgePullToRefreshViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPNativeBridgePullToRefreshViewController.h; sourceTree = "<group>"; };
+		6742CCFF187AACF300FCBF8D /* HPNativeBridgePullToRefreshViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPNativeBridgePullToRefreshViewController.m; sourceTree = "<group>"; };
+		6742CD00187AACF300FCBF8D /* HPNativeBridgeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPNativeBridgeViewController.h; sourceTree = "<group>"; };
+		6742CD01187AACF300FCBF8D /* HPNativeBridgeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPNativeBridgeViewController.m; sourceTree = "<group>"; };
+		6742CD02187AACF300FCBF8D /* HPPtrIsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPPtrIsViewController.h; sourceTree = "<group>"; };
+		6742CD03187AACF300FCBF8D /* HPPtrIsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPPtrIsViewController.m; sourceTree = "<group>"; };
+		6742CD04187AACF300FCBF8D /* PullToRefreshScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullToRefreshScrollViewController.h; sourceTree = "<group>"; };
+		6742CD05187AACF300FCBF8D /* PullToRefreshScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullToRefreshScrollViewController.m; sourceTree = "<group>"; };
+		6742CD06187AACF300FCBF8D /* HPNativeBridge-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HPNativeBridge-Prefix.pch"; sourceTree = "<group>"; };
+		6742CD07187AACF300FCBF8D /* HPNativeBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPNativeBridge.h; sourceTree = "<group>"; };
+		6742CD08187AACF300FCBF8D /* HPNativeBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPNativeBridge.m; sourceTree = "<group>"; };
+		6742CD09187AACF300FCBF8D /* iToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iToast.h; sourceTree = "<group>"; };
+		6742CD0A187AACF300FCBF8D /* iToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iToast.m; sourceTree = "<group>"; };
+		6742CD0C187AACF300FCBF8D /* HPToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPToast.h; sourceTree = "<group>"; };
+		6742CD0D187AACF300FCBF8D /* HPToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPToast.m; sourceTree = "<group>"; };
+		6742CD0E187AACF300FCBF8D /* PullToRefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullToRefreshTableHeaderView.h; sourceTree = "<group>"; };
+		6742CD0F187AACF300FCBF8D /* PullToRefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullToRefreshTableHeaderView.m; sourceTree = "<group>"; };
 		67A4430A18649B3400F5C301 /* Cobalt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cobalt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		67A4430D18649B3400F5C301 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		67A4430F18649B3400F5C301 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -108,43 +111,45 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		677BC1AF1864B2AB004A0D8A /* HPNativeBridge */ = {
+		6742CCFA187AACF300FCBF8D /* HPNativeBridge */ = {
 			isa = PBXGroup;
 			children = (
-				677BC1B01864B2AB004A0D8A /* Controllers */,
-				677BC1B91864B2AB004A0D8A /* HPNativeBridge-Prefix.pch */,
-				677BC1BA1864B2AB004A0D8A /* HPNativeBridge.h */,
-				677BC1BB1864B2AB004A0D8A /* HPNativeBridge.m */,
-				677BC1BC1864B2AB004A0D8A /* iToast.h */,
-				677BC1BD1864B2AB004A0D8A /* iToast.m */,
-				677BC1BE1864B2AB004A0D8A /* Views */,
+				6742CCFB187AACF300FCBF8D /* Controllers */,
+				6742CD06187AACF300FCBF8D /* HPNativeBridge-Prefix.pch */,
+				6742CD07187AACF300FCBF8D /* HPNativeBridge.h */,
+				6742CD08187AACF300FCBF8D /* HPNativeBridge.m */,
+				6742CD09187AACF300FCBF8D /* iToast.h */,
+				6742CD0A187AACF300FCBF8D /* iToast.m */,
+				6742CD0B187AACF300FCBF8D /* Views */,
 			);
 			name = HPNativeBridge;
-			path = ../../../../../../Downloads/HelloCobalt/HPNativeBridge;
+			path = ../../../../sources/iOS/HPNativeBridge/HPNativeBridge;
 			sourceTree = "<group>";
 		};
-		677BC1B01864B2AB004A0D8A /* Controllers */ = {
+		6742CCFB187AACF300FCBF8D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				677BC1B11864B2AB004A0D8A /* HPNativeBridgePullToRefreshViewController.h */,
-				677BC1B21864B2AB004A0D8A /* HPNativeBridgePullToRefreshViewController.m */,
-				677BC1B31864B2AB004A0D8A /* HPNativeBridgeViewController.h */,
-				677BC1B41864B2AB004A0D8A /* HPNativeBridgeViewController.m */,
-				677BC1B51864B2AB004A0D8A /* HPPtrIsViewController.h */,
-				677BC1B61864B2AB004A0D8A /* HPPtrIsViewController.m */,
-				677BC1B71864B2AB004A0D8A /* PullToRefreshScrollViewController.h */,
-				677BC1B81864B2AB004A0D8A /* PullToRefreshScrollViewController.m */,
+				6742CCFC187AACF300FCBF8D /* AbstractViewController.h */,
+				6742CCFD187AACF300FCBF8D /* AbstractViewController.m */,
+				6742CCFE187AACF300FCBF8D /* HPNativeBridgePullToRefreshViewController.h */,
+				6742CCFF187AACF300FCBF8D /* HPNativeBridgePullToRefreshViewController.m */,
+				6742CD00187AACF300FCBF8D /* HPNativeBridgeViewController.h */,
+				6742CD01187AACF300FCBF8D /* HPNativeBridgeViewController.m */,
+				6742CD02187AACF300FCBF8D /* HPPtrIsViewController.h */,
+				6742CD03187AACF300FCBF8D /* HPPtrIsViewController.m */,
+				6742CD04187AACF300FCBF8D /* PullToRefreshScrollViewController.h */,
+				6742CD05187AACF300FCBF8D /* PullToRefreshScrollViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		677BC1BE1864B2AB004A0D8A /* Views */ = {
+		6742CD0B187AACF300FCBF8D /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				677BC1BF1864B2AB004A0D8A /* HPToast.h */,
-				677BC1C01864B2AB004A0D8A /* HPToast.m */,
-				677BC1C11864B2AB004A0D8A /* PullToRefreshTableHeaderView.h */,
-				677BC1C21864B2AB004A0D8A /* PullToRefreshTableHeaderView.m */,
+				6742CD0C187AACF300FCBF8D /* HPToast.h */,
+				6742CD0D187AACF300FCBF8D /* HPToast.m */,
+				6742CD0E187AACF300FCBF8D /* PullToRefreshTableHeaderView.h */,
+				6742CD0F187AACF300FCBF8D /* PullToRefreshTableHeaderView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -172,7 +177,7 @@
 		67A4430C18649B3400F5C301 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				677BC1AF1864B2AB004A0D8A /* HPNativeBridge */,
+				6742CCFA187AACF300FCBF8D /* HPNativeBridge */,
 				67A4430D18649B3400F5C301 /* Foundation.framework */,
 				67A4430F18649B3400F5C301 /* CoreGraphics.framework */,
 				67A4431118649B3400F5C301 /* UIKit.framework */,
@@ -324,17 +329,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				677BC1C81864B2AB004A0D8A /* iToast.m in Sources */,
-				677BC1C91864B2AB004A0D8A /* HPToast.m in Sources */,
-				677BC1C31864B2AB004A0D8A /* HPNativeBridgePullToRefreshViewController.m in Sources */,
+				6742CD18187AACF300FCBF8D /* PullToRefreshTableHeaderView.m in Sources */,
+				6742CD15187AACF300FCBF8D /* HPNativeBridge.m in Sources */,
 				67A4432718649B3400F5C301 /* ViewController.m in Sources */,
-				677BC1C61864B2AB004A0D8A /* PullToRefreshScrollViewController.m in Sources */,
-				677BC1C41864B2AB004A0D8A /* HPNativeBridgeViewController.m in Sources */,
 				67A4431E18649B3400F5C301 /* AppDelegate.m in Sources */,
+				6742CD16187AACF300FCBF8D /* iToast.m in Sources */,
+				6742CD12187AACF300FCBF8D /* HPNativeBridgeViewController.m in Sources */,
+				6742CD14187AACF300FCBF8D /* PullToRefreshScrollViewController.m in Sources */,
+				6742CD17187AACF300FCBF8D /* HPToast.m in Sources */,
+				6742CD10187AACF300FCBF8D /* AbstractViewController.m in Sources */,
+				6742CD11187AACF300FCBF8D /* HPNativeBridgePullToRefreshViewController.m in Sources */,
+				6742CD13187AACF300FCBF8D /* HPPtrIsViewController.m in Sources */,
 				67A4431A18649B3400F5C301 /* main.m in Sources */,
-				677BC1C51864B2AB004A0D8A /* HPPtrIsViewController.m in Sources */,
-				677BC1CA1864B2AB004A0D8A /* PullToRefreshTableHeaderView.m in Sources */,
-				677BC1C71864B2AB004A0D8A /* HPNativeBridge.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
