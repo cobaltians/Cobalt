@@ -1,14 +1,14 @@
 /* helper object to communicate with native */
-var nativeBridge={
+var cobalt={
     
     userEvents:{}, //objects of events defined by the user
-	debug:false, //disable stuff for all nativeBridge. dont send logs to native
+	debug:false, //disable stuff for all cobalt. dont send logs to native
 	sendingToNative:true, //enable or disable native calls
 
 	callbacks:{},//array of all callbacks by callbackID
 	lastCallbackId:0,
 
-	/*	nativeBridge.init(options)
+	/*	cobalt.init(options)
 		see doc for options
 	*/
 	init:function(options){
@@ -27,45 +27,45 @@ var nativeBridge={
 		        this.userEvents=options.events
 	        }
 		    if (options.storage===true){
-			    nativeBridge.initStorage();
+			    cobalt.initStorage();
 		    }
 		}
-		if (nativeBridge.adapter.init){
-			nativeBridge.adapter.init();
+		if (cobalt.adapter.init){
+			cobalt.adapter.init();
 		}
-		//send nativeBridge is ready event to native
-		nativeBridge.send({'type':'nativeBridgeIsReady'})
+		//send cobalt is ready event to native
+		cobalt.send({'type':'cobaltIsReady'})
     },
 
 
-	/*	nativeBridge.log(stuff,sendLogToNative)
+	/*	cobalt.log(stuff,sendLogToNative)
 		stuff : a string or an object. object will be json-ised
 		sendLogToNative : boolean to call native log function. default to true.
 			be carefull of looping calls !
 	*/
 	log:function( stuff, sendLogToNative ){
-	    if ( nativeBridge.debug ){
+	    if ( cobalt.debug ){
 		    if (sendLogToNative === undefined) sendLogToNative=true;
-		 	stuff=nativeBridge.toString(stuff)
-		    var logdiv=$('#nativeBridge_logdiv')
+		 	stuff=cobalt.toString(stuff)
+		    var logdiv=$('#cobalt_logdiv')
 		   	if (logdiv.length){
 				try{
-                    logdiv.append("<br/>"+nativeBridge.HTMLEncode(stuff));
+                    logdiv.append("<br/>"+cobalt.HTMLEncode(stuff));
                 }catch(e){
-                    logdiv.append("<br/><b>nativeBridge.log failed on something.</b>");
+                    logdiv.append("<br/><b>cobalt.log failed on something.</b>");
                 }
 			}
 		    if( sendLogToNative ){
-			    nativeBridge.send({"type":"typeLog","value":stuff})
+			    cobalt.send({"type":"typeLog","value":stuff})
 	        }
 	    }
     },
 	/* internal, create log div if needed */
 	createLogDiv:function(){
-		if ($('#nativeBridge_logdiv').length==0){
+		if ($('#cobalt_logdiv').length==0){
 			//create usefull log div:
-			$('body').append('<div id="nativeBridge_logdiv" style="position: absolute; top:10px; right: 10px; padding:10px; width:10px; height: 10px; border:1px solid blue; overflow: hidden; "></div>')
-			$('#nativeBridge_logdiv').on('tap',nativeBridge.toggleLogDiv).on('click',nativeBridge.toggleLogDiv);
+			$('body').append('<div id="cobalt_logdiv" style="position: absolute; top:10px; right: 10px; padding:10px; width:10px; height: 10px; border:1px solid blue; overflow: hidden; "></div>')
+			$('#cobalt_logdiv').on('tap',cobalt.toggleLogDiv).on('click',cobalt.toggleLogDiv);
 		}
 	},
 	/* internal, toggle visibility of log div if log div was created by the lib */
@@ -81,13 +81,13 @@ var nativeBridge={
 	send:function(obj, callback){
 		if (callback){
 			if (typeof callback==="function"){
-				obj.callbackID = nativeBridge.lastCallbackId++;
-				nativeBridge.callbacks[obj.callbackID]=callback;
+				obj.callbackID = cobalt.lastCallbackId++;
+				cobalt.callbacks[obj.callbackID]=callback;
 			}else if (typeof callback==="string"){
 				obj.callbackID = ""+callback;
 			}
 	    }
-		nativeBridge.adapter.send(obj, callback)
+		cobalt.adapter.send(obj, callback)
 	},
 	//Sends an event to native side.
 	//See doc for guidelines.
@@ -96,7 +96,7 @@ var nativeBridge={
 		    var obj = params || {};
 		    obj.type = "typeEvent";
 		    obj.name = eventName;
-		    nativeBridge.send(obj, callback);
+		    cobalt.send(obj, callback);
 	    }
 	},
 	//Sends a callback to native side.
@@ -104,8 +104,8 @@ var nativeBridge={
     sendCallback:function(originalEvent, params){
 		var event=originalEvent;
 		if (typeof event.callbackID ==="string" && event.callbackID.length > 0){
-			//nativeBridge.log("calling callback with "+JSON.stringify({type:"typeCallback", callbackID:event.callbackID, params: params}))
-			nativeBridge.send({type:"typeCallback", callbackID:event.callbackID, params: params})
+			//cobalt.log("calling callback with "+JSON.stringify({type:"typeCallback", callbackID:event.callbackID, params: params}))
+			cobalt.send({type:"typeCallback", callbackID:event.callbackID, params: params})
 	    }
 	},
 	//Navigate to an other page or do some special navigation actions
@@ -114,37 +114,37 @@ var nativeBridge={
 		switch (navigationType){
 			case "push":
 				if (navigationPageName){
-					nativeBridge.send({ "type":"typeNavigation", "navigationType":"push", "navigationPageName":navigationPageName, "navigationClassId": navigationClassId});
+					cobalt.send({ "type":"typeNavigation", "navigationType":"push", "navigationPageName":navigationPageName, "navigationClassId": navigationClassId});
 				}
 			break;
 			case "pop":
-				nativeBridge.send({ "type":"typeNavigation", "navigationType":"pop"});
+				cobalt.send({ "type":"typeNavigation", "navigationType":"pop"});
 			break;
 			case "modale":
 				if (navigationPageName){
-					nativeBridge.adapter.navigateToModale(navigationPageName, navigationClassId);
+					cobalt.adapter.navigateToModale(navigationPageName, navigationClassId);
 				}
 			break;
 			case "dismiss":
-				nativeBridge.adapter.dismissFromModale();
+				cobalt.adapter.dismissFromModale();
 			break;
 		}
 	},
 	/* sends a toast request to native */
 	toast:function(text){
-		nativeBridge.sendEvent("nameToast", { "value" : nativeBridge.toString(text) });
+		cobalt.sendEvent("nameToast", { "value" : cobalt.toString(text) });
 	},
 
 	/*  Raise a native alert with options
 		See doc for guidelines.
 
 		//full web
-		nativeBridge.alert("Texte");
-		nativeBridge.alert("Title", "Texte", ["Ok"], { callback:function(index){console.log('popup dismissed') }});
-		nativeBridge.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", alertId:12 });
+		cobalt.alert("Texte");
+		cobalt.alert("Title", "Texte", ["Ok"], { callback:function(index){console.log('popup dismissed') }});
+		cobalt.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", alertId:12 });
 
 		//native callbacks
-		nativeBridge.alert("Title", "Texte", ["Ok"], { callbackType:"native", alertId:12 });
+		cobalt.alert("Title", "Texte", ["Ok"], { callbackType:"native", alertId:12 });
 
 	 */
 	alert:function(title, text, buttons, options){
@@ -155,7 +155,7 @@ var nativeBridge={
 			if (title) obj.alertTitle = title;
 
 			//Add buttons if any
-			if (buttons && nativeBridge.isArray(buttons) && buttons.length){
+			if (buttons && cobalt.isArray(buttons) && buttons.length){
 				obj.alertButtons=buttons;
 			}
 			//check options
@@ -171,7 +171,7 @@ var nativeBridge={
 				if (options.callbackType === "native"){
 					obj.alertReceiver="native";
 					if (callback){
-						nativeBridge.log("warning : alert callback has been set to native, web callback won't be called.");
+						cobalt.log("warning : alert callback has been set to native, web callback won't be called.");
 					}
 					callback=undefined;
 				}
@@ -180,33 +180,33 @@ var nativeBridge={
 				}
 			}
 			//enforce alertId presence :
-			if (!obj.alertId || !nativeBridge.isNumber(obj.alertId)){
+			if (!obj.alertId || !cobalt.isNumber(obj.alertId)){
 				obj.alertId=0;
 			}
-			nativeBridge.send(obj, callback);
+			cobalt.send(obj, callback);
 		}
 	},
 	/*
 		show a web page as an alert.
 		//see doc for guidelines.
-		//nativeBridge.webAlert("show","tests_12_webAlertContent.html",1.2);
-		//nativeBridge.webAlert("dismiss");
+		//cobalt.webAlert("show","tests_12_webAlertContent.html",1.2);
+		//cobalt.webAlert("dismiss");
 	 */
 	webAlert:function(action, pageName, fadeDuration){
 		switch (action){
 			case "dismiss":
-				nativeBridge.send({type:"typeWebAlert", name:"dismiss"});
+				cobalt.send({type:"typeWebAlert", name:"dismiss"});
 			break;
 			case "show":
 				if (pageName){
-					nativeBridge.send({type:"typeWebAlert", name:"show", pageName:pageName, fadeDuration:fadeDuration})
+					cobalt.send({type:"typeWebAlert", name:"show", pageName:pageName, fadeDuration:fadeDuration})
 				}
 			break;
 		}
 	},
     /* internal, called from native */
     execute:function(data){
-    	//nativeBridge.log(data,false)
+    	//cobalt.log(data,false)
         /*test if data.type exists, otherwise parse data or die silently */
         if (data && ! data.type){
         	try{
@@ -218,28 +218,28 @@ var nativeBridge={
         try{
 	        switch (data.type){
 	        	case "typeEvent":
-                    nativeBridge.adapter.handleEvent(data)
+                    cobalt.adapter.handleEvent(data)
 	            break
 	            case "typeCallback":
-                    nativeBridge.adapter.handleCallback(data)
+                    cobalt.adapter.handleCallback(data)
                     break;
                 case "typeLog":
-                    nativeBridge.log('LOG '+decodeURIComponent(data.value), data.logBack)
+                    cobalt.log('LOG '+decodeURIComponent(data.value), data.logBack)
                 break
 	        	default:
-	        		nativeBridge.log('received unhandled data type : '+data.type)        		
+	        		cobalt.log('received unhandled data type : '+data.type)        		
 	        }
 	    }catch(e){
-            nativeBridge.log('nativeBridge.execute failed : '+e)
+            cobalt.log('cobalt.execute failed : '+e)
         }
     },
 	//internal function to try calling callbackID if it's representing a string or a function.
 	tryToCallCallback:function(callback){
-		//nativeBridge.log('trying to call web callback')
+		//cobalt.log('trying to call web callback')
 		var callbackfunction=null;
-        if (nativeBridge.isNumber(callback.callbackID) && typeof nativeBridge.callbacks[callback.callbackID]==="function"){
-	        //if it's a number, a real JS callback should exist in nativeBridge.callbacks
-	        callbackfunction=nativeBridge.callbacks[callback.callbackID]
+        if (cobalt.isNumber(callback.callbackID) && typeof cobalt.callbacks[callback.callbackID]==="function"){
+	        //if it's a number, a real JS callback should exist in cobalt.callbacks
+	        callbackfunction=cobalt.callbacks[callback.callbackID]
 
 		}else if (typeof callback.callbackID === "string"){
 	        //if it's a string, check if function exists
@@ -249,22 +249,22 @@ var nativeBridge={
 	        try{
 		        callbackfunction(callback.params)
 	        }catch(e){
-		        nativeBridge.log('Failed calling callback #'+callback.callbackID+'.')
+		        cobalt.log('Failed calling callback #'+callback.callbackID+'.')
 	        }
         }
 	},
 	//internal, call adapter.initStorage.
 	initStorage:function(){
 		//only enable once if ok.
-		if (! nativeBridge.localStorageEnabled){
+		if (! cobalt.localStorageEnabled){
 			//init from adapter
-			nativeBridge.localStorageEnabled=nativeBridge.adapter.initStorage();
+			cobalt.localStorageEnabled=cobalt.adapter.initStorage();
 			//if wrong state
-			if (! nativeBridge.localStorageEnabled){
-				nativeBridge.log("LocalStorage ERROR : localStorage not available !")
+			if (! cobalt.localStorageEnabled){
+				cobalt.log("LocalStorage ERROR : localStorage not available !")
 			}
 		}
-		return nativeBridge.localStorageEnabled;
+		return cobalt.localStorageEnabled;
 	},
 
 	// usefull functions
@@ -294,11 +294,11 @@ var nativeBridge={
 		switch(dependency){
 			case "storage":
 				if ( ! window.utils || ! window.utils.storage){
-					nativeBridge.log('WARNING : window.utils.storage is not set. it is required for some navigate calls')
+					cobalt.log('WARNING : window.utils.storage is not set. it is required for some navigate calls')
 					return false;
 
 				}
-				return nativeBridge.initStorage();
+				return cobalt.initStorage();
 			break;
 		}
 	},
@@ -307,79 +307,82 @@ var nativeBridge={
 		handleCallback:function(callback){
 	        switch(callback.callbackID){
 	            default:
-				    nativeBridge.tryToCallCallback(callback)
+				    cobalt.tryToCallCallback(callback)
 			    break;
 	        }
 	    },
 		navigateToModale:function(navigationPageName, navigationClassId){
-			nativeBridge.send({ "type":"typeNavigation", "navigationType":"modale", "navigationPageName":navigationPageName, "navigationClassId": navigationClassId});
+			cobalt.send({ "type":"typeNavigation", "navigationType":"modale", "navigationPageName":navigationPageName, "navigationClassId": navigationClassId});
 		},
 		dismissFromModale:function(){
-			nativeBridge.send({ "type":"typeNavigation", "navigationType":"dismiss"});
+			cobalt.send({ "type":"typeNavigation", "navigationType":"dismiss"});
 		},
 		initStorage:function(){
 			if (window.utils && utils.storage){
 				return utils.storage.enable();
 			}else{
-				nativeBridge.log('WARNING : you should include utils.storage to use storage')
+				cobalt.log('WARNING : you should include utils.storage to use storage')
 			}
 			return false;
 		}
 	}
 };
-nativeBridge.ios_adapter={
+cobalt.ios_adapter={
 	//
 	//IOS ADAPTER
 	//
     pipeline:[], //array of sends waiting to go to native
     pipelineRunning:false,//bool to knwow if new sends should go to pipe or go to native
 
+	init:function(){
+		cobalt.platform="iOs";
+	},
 	// handle events sent by native side
     handleEvent:function(event){
-		nativeBridge.log("<b>received</b> : "+JSON.stringify(event), false)
-	    if (nativeBridge.userEvents && typeof nativeBridge.userEvents[event.name] === "function"){
-			nativeBridge.userEvents[event.name](event);
+		cobalt.log("<b>received</b> : "+JSON.stringify(event), false)
+	    if (cobalt.userEvents && typeof cobalt.userEvents[event.name] === "function"){
+			cobalt.userEvents[event.name](event);
 	    }
     },
     // handle callbacks sent by native side
     handleCallback:function(callback){
         switch(callback.callbackID){
             case "callbackSimpleAcquitment":
-                //nativeBridge.log("received callbackSimpleAcquitment", false)
-                nativeBridge.adapter.unpipe();
+                //cobalt.log("received callbackSimpleAcquitment", false)
+                cobalt.adapter.unpipe();
                 
-                if (nativeBridge.adapter.pipeline.length==0){
-                    nativeBridge.log('set pipe running=false', false)
-                    nativeBridge.adapter.pipelineRunning=false;
+                if (cobalt.adapter.pipeline.length==0){
+                    cobalt.log('set pipe running=false', false)
+                    cobalt.adapter.pipelineRunning=false;
                 }
                 
                 break;
 	        default:
-			    nativeBridge.tryToCallCallback(callback)
+			    cobalt.tryToCallCallback(callback)
 		    break;
         }
     },
     //send native stuff
     send:function(obj){
-	    nativeBridge.log('adding to pipe', false)
-        nativeBridge.adapter.pipeline.push(obj);
-        if (!nativeBridge.adapter.pipelineRunning){
-            nativeBridge.adapter.unpipe()
+	    cobalt.log('adding to pipe', false)
+        cobalt.adapter.pipeline.push(obj);
+        if (!cobalt.adapter.pipelineRunning){
+            cobalt.adapter.unpipe()
         }
     },
     //unpipe elements when receiving a ACK from ios.
     unpipe:function(){
-        nativeBridge.adapter.pipelineRunning=true;
-        var objToSend=nativeBridge.adapter.pipeline.shift();
-	    if (objToSend && nativeBridge.sendingToNative){
-            nativeBridge.log('----sending : '+JSON.stringify(objToSend), false)
+        cobalt.adapter.pipelineRunning=true;
+        var objToSend=cobalt.adapter.pipeline.shift();
+	    if (objToSend && cobalt.sendingToNative){
+            cobalt.log('----sending : '+JSON.stringify(objToSend), false)
             document.location.href=encodeURIComponent("h@ploid#k&y"+JSON.stringify(objToSend));
         }
     },
 	//default behaviours
-	navigateToModale : nativeBridge.defaultBehaviors.navigateToModale,
-	dismissFromModale : nativeBridge.defaultBehaviors.dismissFromModale,
-	initStorage : nativeBridge.defaultBehaviors.initStorage
+	navigateToModale : cobalt.defaultBehaviors.navigateToModale,
+	dismissFromModale : cobalt.defaultBehaviors.dismissFromModale,
+	initStorage : cobalt.defaultBehaviors.initStorage
 
 };
-nativeBridge.adapter=nativeBridge.ios_adapter;
+cobalt.adapter=cobalt.ios_adapter;
