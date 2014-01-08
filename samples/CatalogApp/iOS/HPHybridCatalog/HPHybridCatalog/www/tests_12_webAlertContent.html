@@ -18,39 +18,39 @@
         </div>
 
 
-  		<div id="nativeBridge_logdiv" style="display:none;"></div>
+  		<div id="cobalt_logdiv" style="display:none;"></div>
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/utils.storage.js"></script>
-        <script type="text/javascript" src="js/nativeBridge/nativeBridge.js"></script>
+        <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
 
         <script>
 
 	        Zepto(function($){
 
-	            nativeBridge.init({
+	            cobalt.init({
 		            debug:true,
 		            //sendingToNative:false,
 		        });
-                nativeBridge.log("webAlerte nativeBridge is ready!")
+                cobalt.log("webAlerte cobalt is ready!")
 
                 $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
                 $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
 
 		       $('#test1').on('tap click',function(){
-			       nativeBridge.webAlert("dismiss");
+			       cobalt.webAlert("dismiss");
 		           return false;
 	            });
 
 	            $('#monBouton3').on('tap click',function(){
-					nativeBridge.ios_adapter.pipeline=[];
-					nativeBridge.ios_adapter.pipelineRunning=false;
-                    $('#nativeBridge_logdiv').html('');
+					cobalt.ios_adapter.pipeline=[];
+					cobalt.ios_adapter.pipelineRunning=false;
+                    $('#cobalt_logdiv').html('');
                     return false;
 				});
 
 	            $('a.pop').on('tap click',function(){
-		        	nativeBridge.navigate('pop');
+		        	cobalt.navigate('pop');
 		            return false;
 	            });
 
