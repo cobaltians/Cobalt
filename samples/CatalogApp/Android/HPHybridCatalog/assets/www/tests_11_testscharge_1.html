@@ -20,20 +20,21 @@
 
   		<p>Ci dessous le log de la lib d'echange</p>
   		<input id="monBouton3" type="button" value="nettoyage logs"/>
-  		<div id="nativeBridge_logdiv"></div>
+  		<div id="cobalt_logdiv"></div>
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
-        <script type="text/javascript" src="js/nativeBridge/nativeBridge.js"></script>
+        <script type="text/javascript" src="js/utils.storage.js"></script>
+        <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
 
         <script>
 			var count=0;
 			addContent=function(){
-				nativeBridge.log('chargement...')
+				cobalt.log('chargement...')
 				var url="https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=test&imgsz=medium&start="+count*8;
 				$.ajax({url:url, type:"GET", dataType:"json",
 					success : function(data){
 						if (data && data.responseData && data.responseData.results){
-							nativeBridge.log('ok')
+							cobalt.log('ok')
 							var images="";
 							$.each(data.responseData.results,function(index,item){
 								images+='<img src="'+item.url+'" width="300" height="200" /><br>';
@@ -42,13 +43,13 @@
 							count++;
 
 						}else{
-							nativeBridge.log('Google API error : '+data.responseDetails, false)
-							nativeBridge.log('duplicating webview images content ! ', false)
+							cobalt.log('Google API error : '+data.responseDetails, false)
+							cobalt.log('duplicating webview images content ! ', false)
 							$('#images').append($('#images').html());
 						}
 
 					},error: function(req,err){
-						nativeBridge.log('ajax call failed')
+						cobalt.log('ajax call failed')
 					}
 				});
 			}
@@ -56,7 +57,7 @@
 
             Zepto(function($){
 
-	            nativeBridge.init({
+	            cobalt.init({
 		            debug:true,
 		            //sendingToNative:false,
 		        });
@@ -70,14 +71,14 @@
 	            });
 
 	            $('#monBouton3').on('tap click',function(){
-					nativeBridge.ios_adapter.pipeline=[];
-					nativeBridge.ios_adapter.pipelineRunning=false;
-                    $('#nativeBridge_logdiv').html('');
+					cobalt.ios_adapter.pipeline=[];
+					cobalt.ios_adapter.pipelineRunning=false;
+                    $('#cobalt_logdiv').html('');
                     return false;
 				});
 
 	            $('a.pop').on('tap click',function(){
-		        	nativeBridge.navigate('pop');
+		        	cobalt.navigate('pop');
 		            return false;
 	            });
 

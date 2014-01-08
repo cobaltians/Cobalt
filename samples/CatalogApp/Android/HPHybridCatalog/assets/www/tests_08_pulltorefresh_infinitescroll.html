@@ -25,34 +25,35 @@
 		<br/>
 
 
-		<div id="nativeBridge_logdiv" style="display:none;"></div>
+		<div id="cobalt_logdiv" style="display:none;"></div>
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
-        <script type="text/javascript" src="js/nativeBridge/nativeBridge.js"></script>
+        <script type="text/javascript" src="js/utils.storage.js"></script>
+        <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
         <script type="text/javascript" src="js/setTimeoutWorkaround.js"></script>
         <script>
 
             Zepto(function($){
-		        nativeBridge.init({
+		        cobalt.init({
 		            debug:true,
 		            //sendingToNative:false,
                     events:{
                        "pullToRefreshRefresh" : function(event){
-                               nativeBridge.log('native asked to refresh');
+                               cobalt.log('native asked to refresh');
 	                           $('#list').hide();
 	                           setTimeout(function(){
                                   
 		                            $('#list').append('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>').show();
-		                           nativeBridge.sendCallback(event);
+		                           cobalt.sendCallback(event);
 	                           },1000, true);
                         },
                           "infiniteScrollRefresh" : function(event){
-                                  nativeBridge.log('native asked to load more content');
+                                  cobalt.log('native asked to load more content');
                                   $('#loading').show();
                                   setTimeout(function(){
                                      $('#loading').hide();
                                      $('#list').append('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>');
-                                     nativeBridge.sendCallback(event);
+                                     cobalt.sendCallback(event);
                                   },1000, true);
                           }
                                   
@@ -65,14 +66,14 @@
 
 	            $('a.push').on('tap',function(){
 	            	if ( ! $(this).hasClass('disabled') ){
-	            		nativeBridge.log('tap')
-	            		nativeBridge.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
+	            		cobalt.log('tap')
+	            		cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
 	            	}
 		            return false;
 	            });
 
 	            $('a.pop').on('tap click',function(){
-		        	nativeBridge.navigate('pop');
+		        	cobalt.navigate('pop');
 		            return false;
 	            });
 
