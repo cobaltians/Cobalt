@@ -1,56 +1,59 @@
-nativeBridge.ios_adapter={
+cobalt.ios_adapter={
 	//
 	//IOS ADAPTER
 	//
     pipeline:[], //array of sends waiting to go to native
     pipelineRunning:false,//bool to knwow if new sends should go to pipe or go to native
 
+	init:function(){
+		cobalt.platform="iOs";
+	},
 	// handle events sent by native side
     handleEvent:function(event){
-		nativeBridge.log("<b>received</b> : "+JSON.stringify(event), false)
-	    if (nativeBridge.userEvents && typeof nativeBridge.userEvents[event.name] === "function"){
-			nativeBridge.userEvents[event.name](event);
+		cobalt.log("<b>received</b> : "+JSON.stringify(event), false)
+	    if (cobalt.userEvents && typeof cobalt.userEvents[event.name] === "function"){
+			cobalt.userEvents[event.name](event);
 	    }
     },
     // handle callbacks sent by native side
     handleCallback:function(callback){
         switch(callback.callbackID){
             case "callbackSimpleAcquitment":
-                //nativeBridge.log("received callbackSimpleAcquitment", false)
-                nativeBridge.adapter.unpipe();
+                //cobalt.log("received callbackSimpleAcquitment", false)
+                cobalt.adapter.unpipe();
                 
-                if (nativeBridge.adapter.pipeline.length==0){
-                    nativeBridge.log('set pipe running=false', false)
-                    nativeBridge.adapter.pipelineRunning=false;
+                if (cobalt.adapter.pipeline.length==0){
+                    cobalt.log('set pipe running=false', false)
+                    cobalt.adapter.pipelineRunning=false;
                 }
                 
                 break;
 	        default:
-			    nativeBridge.tryToCallCallback(callback)
+			    cobalt.tryToCallCallback(callback)
 		    break;
         }
     },
     //send native stuff
     send:function(obj){
-	    nativeBridge.log('adding to pipe', false)
-        nativeBridge.adapter.pipeline.push(obj);
-        if (!nativeBridge.adapter.pipelineRunning){
-            nativeBridge.adapter.unpipe()
+	    cobalt.log('adding to pipe', false)
+        cobalt.adapter.pipeline.push(obj);
+        if (!cobalt.adapter.pipelineRunning){
+            cobalt.adapter.unpipe()
         }
     },
     //unpipe elements when receiving a ACK from ios.
     unpipe:function(){
-        nativeBridge.adapter.pipelineRunning=true;
-        var objToSend=nativeBridge.adapter.pipeline.shift();
-	    if (objToSend && nativeBridge.sendingToNative){
-            nativeBridge.log('----sending : '+JSON.stringify(objToSend), false)
+        cobalt.adapter.pipelineRunning=true;
+        var objToSend=cobalt.adapter.pipeline.shift();
+	    if (objToSend && cobalt.sendingToNative){
+            cobalt.log('----sending : '+JSON.stringify(objToSend), false)
             document.location.href=encodeURIComponent("h@ploid#k&y"+JSON.stringify(objToSend));
         }
     },
 	//default behaviours
-	navigateToModale : nativeBridge.defaultBehaviors.navigateToModale,
-	dismissFromModale : nativeBridge.defaultBehaviors.dismissFromModale,
-	initStorage : nativeBridge.defaultBehaviors.initStorage
+	navigateToModale : cobalt.defaultBehaviors.navigateToModale,
+	dismissFromModale : cobalt.defaultBehaviors.dismissFromModale,
+	initStorage : cobalt.defaultBehaviors.initStorage
 
 };
-nativeBridge.adapter=nativeBridge.ios_adapter;
+cobalt.adapter=cobalt.ios_adapter;

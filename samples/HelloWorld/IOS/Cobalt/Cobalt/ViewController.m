@@ -21,10 +21,14 @@
 
     	// Do any additional setup after loading the view, typically from a nib.
     self.isPullToRefreshActive=YES;
+<<<<<<< HEAD
     // Do any additional setup after loading the view from its nib.
     [self.navigationController setNavigationBarHidden:YES];
     
     
+=======
+    self.pageName=@"index.html";
+>>>>>>> 0.3
     
     [super viewDidLoad];
 
@@ -34,6 +38,11 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (NSString *)ressourcePath
+{
+    return [NSString stringWithFormat:@"%@%@",[[NSBundle mainBundle] resourcePath],@"/www/"];
 }
 
 @end

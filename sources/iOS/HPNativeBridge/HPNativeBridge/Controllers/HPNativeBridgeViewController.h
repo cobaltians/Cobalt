@@ -96,13 +96,6 @@
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 /*!
- @property		ressourcePath
- @abstract		the path where all the webRessources can be found
- @discussion    Default value : mainBundle
- */
-//@property (strong, nonatomic) NSString *ressourcePath;
-
-/*!
  @property		pageName
  @abstract		the name of the HTML file with the content to display in the webview
  @discussion    the file must be located at ressourcePath
@@ -120,8 +113,9 @@
  @method		-(NSString *)ressourcePath
  @abstract		this method returns the ressource path
  @return        a string representing the ressource path to be used in the webview
+ @discussion    must be subclassed in subclasses
  */
-//-(NSString *)ressourcePath;
+-(NSString *)ressourcePath;
 
 /*!
  @method		-(void) customView
