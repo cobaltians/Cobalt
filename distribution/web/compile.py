@@ -1,6 +1,6 @@
 import os
 
-libName = "nativeBridge"
+libName = "cobalt"
 distrib_path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(__file__))))
 web_sources_path = os.path.abspath(os.path.join(os.pardir, os.pardir, 'sources','Web'))
 common_file_path=os.path.abspath(os.path.join(web_sources_path, 'common', "%s.js" % libName ))
@@ -11,7 +11,7 @@ if not os.path.isfile(common_file_path):
     exit()
 
 
-for str_os in ['iOs', 'Android', 'BB10', 'Tizen', 'paf']:
+for str_os in ['iOs', 'Android', 'BB10', 'Tizen']:
     print "\n---building %s file" % str_os
     #print os.getcwd()
     

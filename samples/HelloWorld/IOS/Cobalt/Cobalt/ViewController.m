@@ -21,10 +21,7 @@
 
     	// Do any additional setup after loading the view, typically from a nib.
     self.isPullToRefreshActive=YES;
-    // Do any additional setup after loading the view from its nib.
-    [self.navigationController setNavigationBarHidden:YES];
-    
-    [self loadContentInWebView:self.webView FromFileNamed:self.pageName atPath:RESSOURCE_PATH withRessourcesAtPath:RESSOURCE_PATH];
+    self.pageName=@"index.html";
     
     [super viewDidLoad];
 
@@ -34,6 +31,11 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (NSString *)ressourcePath
+{
+    return [NSString stringWithFormat:@"%@%@",[[NSBundle mainBundle] resourcePath],@"/www/"];
 }
 
 @end
