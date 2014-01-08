@@ -1,10 +1,10 @@
-package fr.haploid.androidnativebridge.customviews;
+package fr.cobaltians.cobalt.customviews;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.webkit.WebView;
-import fr.haploid.androidnativebridge.fragments.HTMLFragment;
+import fr.cobaltians.cobalt.fragments.HTMLFragment;
 
 public class OverScrollingWebView extends WebView {
 

@@ -1,4 +1,4 @@
-package fr.haploid.androidnativebridge.customviews;
+package fr.cobaltians.cobalt.customviews;
 
 /**
  * Interface that provides a method to listen to the swipe of an SwipeWebView

@@ -1,9 +1,9 @@
-package fr.haploid.androidnativebridge.webViewClients;
+package fr.cobaltians.cobalt.webViewClients;
 
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import fr.haploid.androidnativebridge.fragments.HTMLFragment;
-import fr.haploid.androidnativebridge.fragments.HTMLPullToRefreshFragment;
+import fr.cobaltians.cobalt.fragments.HTMLFragment;
+import fr.cobaltians.cobalt.fragments.HTMLPullToRefreshFragment;
 
 public class ScaleWebViewClient extends WebViewClient {
 

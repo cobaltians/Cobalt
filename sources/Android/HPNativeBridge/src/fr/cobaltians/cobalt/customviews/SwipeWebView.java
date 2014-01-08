@@ -1,12 +1,11 @@
-package fr.haploid.androidnativebridge.customviews;
+package fr.cobaltians.cobalt.customviews;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
-
-import fr.haploid.androidnativebridge.fragments.HTMLFragment;
+import fr.cobaltians.cobalt.fragments.HTMLFragment;
 
 public class SwipeWebView extends OverScrollingWebView implements OnGestureListener {
 

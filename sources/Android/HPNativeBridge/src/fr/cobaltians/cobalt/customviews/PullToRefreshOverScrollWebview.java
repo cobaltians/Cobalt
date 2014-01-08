@@ -1,4 +1,4 @@
-package fr.haploid.androidnativebridge.customviews;
+package fr.cobaltians.cobalt.customviews;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -12,7 +12,7 @@ import android.webkit.WebView;
 import com.handmark.pulltorefresh.library.OverscrollHelper;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
-import fr.haploid.androidnativebridge.R;
+import fr.cobaltians.cobalt.R;
 
 /**
  * {@link PullToRefreshBase<T>} that uses a customized webView to handle the pullToRefresh and the InfiniteScroll.

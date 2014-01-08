@@ -1,11 +1,11 @@
-package fr.haploid.androidnativebridge.fragments;
+package fr.cobaltians.cobalt.fragments;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
-import fr.haploid.androidnativebridge.customviews.ISwipeListener;
-import fr.haploid.androidnativebridge.customviews.SwipeWebView;
+import fr.cobaltians.cobalt.customviews.ISwipeListener;
+import fr.cobaltians.cobalt.customviews.SwipeWebView;
 
 /**
  * {@link HTMLFragment} that may have Swipe features if those are activated.

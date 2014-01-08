@@ -1,4 +1,4 @@
-package fr.haploid.androidnativebridge.fragments;
+package fr.cobaltians.cobalt.fragments;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -37,11 +37,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.Toast;
-import fr.haploid.androidnativebridge.R;
-import fr.haploid.androidnativebridge.activities.HTMLActivity;
-import fr.haploid.androidnativebridge.customviews.OverScrollingWebView;
-import fr.haploid.androidnativebridge.database.LocalStorage;
-import fr.haploid.androidnativebridge.webViewClients.ScaleWebViewClient;
+import fr.cobaltians.cobalt.activities.HTMLActivity;
+import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
+import fr.cobaltians.cobalt.database.LocalStorage;
+import fr.cobaltians.cobalt.webViewClients.ScaleWebViewClient;
+import fr.cobaltians.cobalt.R;
 
 /**
  * {@link Fragment} that allows webview's interactions between Java (native side) and JavaScript (web side)
@@ -85,7 +85,7 @@ public class HTMLFragment extends Fragment {
 	private static String ASSETS_PATH = "file:///android_asset/";
 
 	//CONF FILE
-	private static String CONF_FILE = "nativeBridge.conf";
+	private static String CONF_FILE = "cobalt.conf";
 	private static String kAndroidClassName = "androidClassName";
 
 	/**
@@ -126,7 +126,7 @@ public class HTMLFragment extends Fragment {
 	/**
 	 * type's value => callback
 	 */
-	protected static String JSTypeNativeBridgeReady = "nativeBridgeIsReady";
+	protected static String JSTypeCobaltReady = "cobaltIsReady";
 	//EVENTS
 	/**
 	 * the key "name" to specify the event
@@ -331,7 +331,7 @@ public class HTMLFragment extends Fragment {
 
 	private ArrayList<JSONObject> waitingJavaScriptCallsList;
 	private boolean webViewLoaded;
-	private boolean nativeBridgeIsReady;
+	private boolean cobaltIsReady;
 	private boolean preloadOnCreateView;
 
 	@Override
@@ -351,7 +351,7 @@ public class HTMLFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		nativeBridgeIsReady = false;
+		cobaltIsReady = false;
 		View view = inflater.inflate(getLayoutToInflate(), container,false);
 		setUpViews(view);
 		setUpListeners();
@@ -543,14 +543,14 @@ public class HTMLFragment extends Fragment {
 	{
 		if(jsonObj != null)
 		{
-			if(webViewLoaded || nativeBridgeIsReady)
+			if(webViewLoaded || cobaltIsReady)
 			{
 				mHandler.post(new Runnable() {
 
 					@Override
 					public void run() {
 						String jsonMessage = jsonObj.toString().replaceAll("[\u2028\u2029]", "");
-						String url = "javascript:nativeBridge.execute("+jsonMessage+");";
+						String url = "javascript:cobalt.execute("+jsonMessage+");";
 						if(webView != null)
 						{
 							//Log.e(getClass().getSimpleName(), "load url "+jsonMessage);
@@ -723,11 +723,11 @@ public class HTMLFragment extends Fragment {
 					{
 						showAlertDialogWithJSON(jsonObj);
 					}
-					else if(type != null && type.length() >0 && type.equals(JSTypeNativeBridgeReady))
+					else if(type != null && type.length() >0 && type.equals(JSTypeCobaltReady))
 					{
-						if(mDebug) Log.i(getClass().getSimpleName(), "native bridge is ready. waiting calls : "+waitingJavaScriptCallsList.size());
+						if(mDebug) Log.i(getClass().getSimpleName(), "cobalt is ready. waiting calls : "+waitingJavaScriptCallsList.size());
 
-						nativeBridgeIsReady = true;
+						cobaltIsReady = true;
 						executeWaitingCalls();
 					}
 				}
@@ -890,7 +890,7 @@ public class HTMLFragment extends Fragment {
 		}
 		else
 		{
-			if(mDebug) Log.e(getClass().getSimpleName(),"ERROR : check your nativeBridge.conf... File is missing or not at this.ressourcePath in assets ?");
+			if(mDebug) Log.e(getClass().getSimpleName(),"ERROR : check your cobalt.conf... File is missing or not at this.ressourcePath in assets ?");
 		}
 		return new JSONObject();
 	}

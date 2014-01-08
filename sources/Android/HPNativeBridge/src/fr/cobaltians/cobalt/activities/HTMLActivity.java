@@ -1,13 +1,13 @@
-package fr.haploid.androidnativebridge.activities;
+package fr.cobaltians.cobalt.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
-import fr.haploid.androidnativebridge.R;
-import fr.haploid.androidnativebridge.fragments.HTMLFragment;
-import fr.haploid.androidnativebridge.fragments.HTMLPopUpWebview;
+import fr.cobaltians.cobalt.fragments.HTMLFragment;
+import fr.cobaltians.cobalt.fragments.HTMLPopUpWebview;
+import fr.cobaltians.cobalt.R;
 
 /**
  * {@link Activity} that will contain a {@link HTMLFragment}.

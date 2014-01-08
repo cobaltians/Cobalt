@@ -1,4 +1,4 @@
-package fr.haploid.androidnativebridge.fragments;
+package fr.cobaltians.cobalt.fragments;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -7,7 +7,7 @@ import android.app.FragmentTransaction;
 import android.graphics.Color;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
-import fr.haploid.androidnativebridge.activities.HTMLActivity;
+import fr.cobaltians.cobalt.activities.HTMLActivity;
 
 /**
  * A special {@link HTMLFragment} that is presented over the current HTMLFragment as a webAlert.

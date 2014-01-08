@@ -1,4 +1,4 @@
-package fr.haploid.androidnativebridge.fragments;
+package fr.cobaltians.cobalt.fragments;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,11 +15,11 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 
-import fr.haploid.androidnativebridge.R;
-import fr.haploid.androidnativebridge.customviews.IScrollListener;
-import fr.haploid.androidnativebridge.customviews.OverScrollingWebView;
-import fr.haploid.androidnativebridge.customviews.PullToRefreshOverScrollWebview;
-import fr.haploid.androidnativebridge.webViewClients.ScaleWebViewClient;
+import fr.cobaltians.cobalt.customviews.IScrollListener;
+import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
+import fr.cobaltians.cobalt.customviews.PullToRefreshOverScrollWebview;
+import fr.cobaltians.cobalt.webViewClients.ScaleWebViewClient;
+import fr.cobaltians.cobalt.R;
 
 /**
  * {@link HTMLFragment} that may have Pull To Refresh or/and InfiniteScroll features if those are activated.
