@@ -21,12 +21,12 @@ cobalt.tizen_adapter={
 						var pushNumber= utils.storage.getItem('cobalt_pushNumber','int') || 0;
 						pushNumber++;
 						utils.storage.setItem('cobalt_pushNumber',pushNumber)
-						cobalt.send({ "type":"typeNavigation", "navigationType":"push", "navigationPageName":navigationPageName, "navigationClassId": navigationClassId, 'pushNumber':pushNumber});
+						cobalt.send({ type:"navigation", action:"push", data : { page  : navigationPageName, controller: navigationClassId, pushNumber :pushNumber} });
 					}
 				}
 			break;
 			case "pop":
-				cobalt.send({ "type":"typeNavigation", "navigationType":"pop"});
+				cobalt.send({ type: "navigation", action : "pop"});
 			break;
 			case "modale":
 				if (navigationPageName){
