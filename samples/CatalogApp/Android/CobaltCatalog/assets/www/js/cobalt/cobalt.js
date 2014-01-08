@@ -145,9 +145,6 @@ var cobalt={
 		cobalt.alert("Title", "Texte", ["Ok"], { callback:function(index){console.log('popup dismissed') }});
 		cobalt.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", alertId:12 });
 
-		//native callbacks
-		cobalt.alert("Title", "Texte", ["Ok"], { callbackType:"native", alertId:12 });
-
 	 */
 	alert:function(title, text, buttons, options){
 		if (title || text){
@@ -155,41 +152,27 @@ var cobalt={
 				message : text,
 				title : title
 			}};
+			var callback;
 
 			if (buttons && cobalt.isArray(buttons) && buttons.length){
 				obj.data.buttons=buttons;
 			}
 
-
-
-			if (title) obj.alertTitle = title;
-
-			//Add buttons if any
-
 			//check options
 			if ( options ){
 				//add web callback if any
 				if (typeof options.callback === "string" || typeof options.callback === "function"){
-					obj.alertReceiver="web";
 					callback=options.callback;
 				}
 				//add alertIdentifier
-				obj.alertId=parseInt(options.alertId);
-				//set callbacks as native if asked
-				if (options.callbackType === "native"){
-					obj.alertReceiver="native";
-					if (callback){
-						cobalt.log("warning : alert callback has been set to native, web callback won't be called.");
-					}
-					callback=undefined;
-				}
+				obj.data.alertId=parseInt(options.alertId);
 				if ( options.mandatory === true ){
 					obj.alertIsCancelable=false;
 				}
 			}
 			//enforce alertId presence :
-			if (!obj.alertId || !cobalt.isNumber(obj.alertId)){
-				obj.alertId=0;
+			if (!obj.data.alertId || !cobalt.isNumber(obj.data.alertId)){
+				obj.data.alertId=0;
 			}
 			cobalt.send(obj, callback);
 		}
@@ -197,17 +180,17 @@ var cobalt={
 	/*
 		show a web page as an alert.
 		//see doc for guidelines.
-		//cobalt.webAlert("show","tests_12_webAlertContent.html",1.2);
-		//cobalt.webAlert("dismiss");
+		//cobalt.webLayer("show","tests_12_webAlertContent.html",1.2);
+		//cobalt.webLayer("dismiss");
 	 */
-	webAlert:function(action, pageName, fadeDuration){
+	webLayer:function(action, page, fadeDuration){
 		switch (action){
 			case "dismiss":
 				cobalt.send({type:"webLayer", action:"dismiss"});
 			break;
 			case "show":
-				if (pageName){
-					cobalt.send({type:"webLayer", action:"show", pageName:pageName, fadeDuration:fadeDuration})
+				if (page){
+					cobalt.send({type:"webLayer", action:"show", page:page, fadeDuration:fadeDuration})
 				}
 			break;
 		}
@@ -225,15 +208,15 @@ var cobalt={
         }
         try{
 	        switch (data.type){
-	        	case "typeEvent":
+	        	case "event":
                     cobalt.adapter.handleEvent(data)
-	            break
-	            case "typeCallback":
+	                break;
+	            case "callback":
                     cobalt.adapter.handleCallback(data)
                     break;
-                case "typeLog":
+		        case "log": //TODO : is it needed?
                     cobalt.log('LOG '+decodeURIComponent(data.value), data.logBack)
-                break
+                    break;
 	        	default:
 	        		cobalt.log('received unhandled data type : '+data.type)        		
 	        }
@@ -245,19 +228,19 @@ var cobalt={
 	tryToCallCallback:function(callback){
 		//cobalt.log('trying to call web callback')
 		var callbackfunction=null;
-        if (cobalt.isNumber(callback.callbackID) && typeof cobalt.callbacks[callback.callbackID]==="function"){
+        if (cobalt.isNumber(callback.callback) && typeof cobalt.callbacks[callback.callback]==="function"){
 	        //if it's a number, a real JS callback should exist in cobalt.callbacks
-	        callbackfunction=cobalt.callbacks[callback.callbackID]
+	        callbackfunction=cobalt.callbacks[callback.callback]
 
-		}else if (typeof callback.callbackID === "string"){
+		}else if (typeof callback.callback === "string"){
 	        //if it's a string, check if function exists
-	        callbackfunction=eval(callback.callbackID)
+	        callbackfunction=eval(callback.callback)
 		}
 		if (typeof callbackfunction === "function"){
 	        try{
 		        callbackfunction(callback.params)
 	        }catch(e){
-		        cobalt.log('Failed calling callback #'+callback.callbackID+'.')
+		        cobalt.log('Failed calling callback #'+callback.callback+'.')
 	        }
         }
 	},
@@ -313,17 +296,17 @@ var cobalt={
 
 	defaultBehaviors:{
 		handleCallback:function(callback){
-	        switch(callback.callbackID){
+	        switch(callback.callback){
 	            default:
 				    cobalt.tryToCallCallback(callback)
 			    break;
 	        }
 	    },
-		navigateToModale:function(navigationPageName, navigationClassId){
-			cobalt.send({ "type":"typeNavigation", "navigationType":"modale", "navigationPageName":navigationPageName, "navigationClassId": navigationClassId});
+		navigateToModale:function(page, controller){
+			cobalt.send({ "type":"navigation", "action":"modale", data : { page :page, controller: controller }});
 		},
 		dismissFromModale:function(){
-			cobalt.send({ "type":"typeNavigation", "navigationType":"dismiss"});
+			cobalt.send({ "type":"typeNavigation", "action":"dismiss"});
 		},
 		initStorage:function(){
 			if (window.utils && utils.storage){
@@ -369,20 +352,16 @@ cobalt.android_adapter={
         }
     },
 	//modale stuffs. really basic on ios, more complex on android.
-	navigateToModale:function(navigationPageName, navigationClassId){
+	navigateToModale:function(page, controller){
 		if ( cobalt.checkDependency('storage') ){
-			cobalt.send({ "type":"typeNavigation", "navigationType":"modale", "navigationPageName":navigationPageName, 
-								"navigationClassId": navigationClassId, "callbackID":"cobalt.adapter.storeModaleInformations"});
+			cobalt.send({ "type":"navigation", "action":"modale", data : { page :page, controller: controller }}, 'cobalt.adapter.storeModaleInformations');
 		}
 	},
 	dismissFromModale:function(){
 		if ( cobalt.checkDependency('storage') ){
 			var dismissInformations= utils.storage.getItem("dismissInformations","json");
 			if (dismissInformations && dismissInformations.navigationPageName && dismissInformations.navigationClassName){
-				cobalt.send({  "type":"typeNavigation","navigationType":"dismiss",
-					                  navigationPageName : dismissInformations.navigationPageName,
-					                  navigationClassName:dismissInformations.navigationClassName
-				                  });
+				cobalt.send({ "type":"navigation", "action":"dismiss", data : { navigationPageName : dismissInformations.navigationPageName, navigationClassName:dismissInformations.navigationClassName }});
 				utils.storage.removeItem("dismissInformations");
 			}else{
 				cobalt.log("dismissInformations are not available in storage")
