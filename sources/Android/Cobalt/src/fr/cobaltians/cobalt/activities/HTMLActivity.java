@@ -5,111 +5,131 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
+
 import fr.cobaltians.cobalt.fragments.HTMLFragment;
 import fr.cobaltians.cobalt.fragments.HTMLPopUpWebview;
 import fr.cobaltians.cobalt.R;
 
 /**
- * {@link Activity} that will contain a {@link HTMLFragment}.
+ * {@link Activity} containing a {@link HTMLFragment}.
  * 
  * @author Diane
  */
 public class HTMLActivity extends FragmentActivity {
 
+	protected final static boolean sDebug = false;
 
+	/**************************************************************************************************************************
+	 * LIFECYCLE
+	 *************************************************************************************************************************/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(getLayoutToInflate());
 
 		if (savedInstanceState == null) {
+			HTMLFragment fragment = getFragment();
 
-			HTMLFragment myFragment = getFragment();
-			
-			Bundle b = getIntent().getExtras();
-			if(b != null && b.containsKey(HTMLFragment.kExtras))
-			{	
-				myFragment.setArguments(b.getBundle(HTMLFragment.kExtras));
+			Bundle bundle = getIntent().getExtras();
+			if (bundle != null 
+				&& bundle.containsKey(HTMLFragment.kExtras)) {
+				fragment.setArguments(bundle.getBundle(HTMLFragment.kExtras));
 			}
 
 			if (findViewById(getFragmentContainerId()) != null) {
-				android.support.v4.app.FragmentTransaction fTransition;
-				fTransition = getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), myFragment);
-				fTransition.commit();
+				android.support.v4.app.FragmentTransaction fragmentTransition;
+				fragmentTransition = getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), fragment);
+				fragmentTransition.commit();
+			} 
+			else {
+				if (sDebug) Log.e(getClass().getSimpleName(), "onCreate: fragment container not found");
 			}
-			else Log.e(getClass().getSimpleName(), "ERROR : Fragment container not found");
 		}
 	}
 
-	/**
-	 * This method returns a new instance of the fragment that will be added in HTMLActivity.
-	 * This method should be overridden in subclasses.
-	 * @return a new instance of the fragment that should be added in this {@link HTMLActivity}
-	 */
-	protected HTMLFragment getFragment()
-	{
-		return new HTMLFragment();
-	}
-	
-	protected int getLayoutToInflate()
-	{
-		return R.layout.activity_html;
-	}
-	
-	public int getFragmentContainerId()
-	{
-		return R.id.fragment_container;
-	}
-
+	/*********************************************************
+	 * MENU
+	 ********************************************************/
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
+		// Adds items to the action bar if it's present.
 		getMenuInflater().inflate(R.menu.activity_html, menu);
 		return true;
 	}
-	
+
+	/*************************************
+	 * COBALT
+	 ************************************/
+
+	/*************************************
+	 * Ui
+	 ************************************/
+
 	/**
-	 * The default method called by Android when the backButton is pressed.
-	 * This method should NOT be overridden in subclasses.
+	 * Returns a new instance of the contained fragment. This method should be
+	 * overridden in subclasses.
+	 * 
+	 * @return a new instance of the fragment contained.
+	 */
+	protected HTMLFragment getFragment() {
+		return new HTMLFragment();
+	}
+
+	protected int getLayoutToInflate() {
+		return R.layout.activity_html;
+	}
+
+	public int getFragmentContainerId() {
+		return R.id.fragment_container;
+	}
+
+	/*****************************************************************************************************************
+	 * Back
+	 ****************************************************************************************************************/
+
+	/**
+	 * Called when back button is pressed. This method should NOT be overridden
+	 * in subclasses.
 	 */
 	@Override
 	public void onBackPressed() {
-		HTMLFragment f = (HTMLFragment) getSupportFragmentManager().findFragmentById(getFragmentContainerId());
-		if(f != null)
-		{
-			f.askWebViewForBackPermission();
+		HTMLFragment fragment = (HTMLFragment) getSupportFragmentManager().findFragmentById(getFragmentContainerId());
+		if (fragment != null) {
+			fragment.askWebViewForBackPermission();
 		}
 	}
-	
+
 	/**
-	 * This method is called from the corresponding {@link HTMLFragment} when the webview has agreed to enable the backButton.
-	 * This method should NOT be overridden in subclasses.
+	 * Called from the contained {@link HTMLFragment} when the webview has
+	 * authorized the back event. This method should NOT be overridden in
+	 * subclasses.
 	 */
-	public void goBack()
-	{
+	public void goBack() {
 		runOnUiThread(new Runnable() {
-								public void run() {
-									goBackWithSuper();
-								}
-							});
+			@Override
+			public void run() {
+				goBackWithSuper();
+			}
+		});
 	}
-	
-	/**
-	 * This method is called from the corresponding {@link HTMLPopUpWebview} when the popup has been dismissed.
-	 * This method may be overridden in subclasses.
-	 */
-	public void onWebPopupDismiss(String fileName,Object additionalParams)
-	{
-		HTMLFragment f = (HTMLFragment) getSupportFragmentManager().findFragmentById(getFragmentContainerId());
-		if(f != null)
-		{
-			f.onWebPopupDismiss(fileName, additionalParams);
-		}
-	}
-	
-	
-	private void goBackWithSuper()
-	{
+
+	private void goBackWithSuper() {
 		super.onBackPressed();
+	}
+
+	/*****************************************************************************************************************
+	 * Back
+	 ****************************************************************************************************************/
+
+	/**
+	 * Called when a {@link HTMLPopUpWebview} has been dismissed. This method
+	 * may be overridden in subclasses.
+	 */
+	public void onWebPopupDismiss(String fileName, Object additionalParams) {
+		HTMLFragment fragment = (HTMLFragment) getSupportFragmentManager().findFragmentById(getFragmentContainerId());
+		if (fragment != null) {
+			fragment.onWebPopupDismiss(fileName, additionalParams);
+		}
 	}
 }
