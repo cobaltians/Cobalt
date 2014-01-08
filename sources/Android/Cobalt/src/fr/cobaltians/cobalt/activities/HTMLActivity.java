@@ -17,7 +17,7 @@ import fr.cobaltians.cobalt.R;
  */
 public class HTMLActivity extends FragmentActivity {
 
-	protected final static boolean sDebug = false;
+	protected final boolean mDebug = false;
 
 	/**************************************************************************************************************************
 	 * LIFECYCLE
@@ -43,7 +43,7 @@ public class HTMLActivity extends FragmentActivity {
 				fragmentTransition.commit();
 			} 
 			else {
-				if (sDebug) Log.e(getClass().getSimpleName(), "onCreate: fragment container not found");
+				if (mDebug) Log.e(getClass().getSimpleName(), "onCreate: fragment container not found");
 			}
 		}
 	}
