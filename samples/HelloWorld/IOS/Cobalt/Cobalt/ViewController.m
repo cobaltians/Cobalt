@@ -21,14 +21,7 @@
 
     	// Do any additional setup after loading the view, typically from a nib.
     self.isPullToRefreshActive=YES;
-<<<<<<< HEAD
-    // Do any additional setup after loading the view from its nib.
-    [self.navigationController setNavigationBarHidden:YES];
-    
-    
-=======
     self.pageName=@"index.html";
->>>>>>> 0.3
     
     [super viewDidLoad];
 
