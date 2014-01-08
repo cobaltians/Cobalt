@@ -23,42 +23,42 @@
 		<br/>
 
 
-		<div id="nativeBridge_logdiv"></div>
+		<div id="cobalt_logdiv"></div>
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/utils.storage.js"></script>
-        <script type="text/javascript" src="js/nativeBridge/nativeBridge.js"></script>
+        <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
         <script>
 
             Zepto(function($){
-		        nativeBridge.init({
+		        cobalt.init({
 		            debug:true,
 		            storage:true
 	            });
-	            nativeBridge.log('Ready!!')
+	            cobalt.log('Ready!!')
 
 	            $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
 	            $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
 
 	            $('a.push').on('tap',function(){
 	            	if ( ! $(this).hasClass('disabled') ){
-	            		nativeBridge.navigate('push',$(this).attr('href'),$(this).attr('data-classid'))
+	            		cobalt.navigate('push',$(this).attr('href'),$(this).attr('data-classid'))
 	            	}
 		            return false;
 	            });
 
 	            $('a.pop').on('tap click',function(){
-		        	nativeBridge.navigate('pop');
+		        	cobalt.navigate('pop');
 		            return false;
 	            });
 
-	            nativeBridge.sendEvent('getBigData',{value:100},function(data){
+	            cobalt.sendEvent('getBigData',{value:100},function(data){
 		            var content="";
 		            $.each(data,function(i,item){
 			            content+='<div class="listItem"><div class="name">'+item.username+'</div><div class="num">'+item.userage+'</div></div>'
 		            });
 		            $('#list').html(content);
-		            nativeBridge.log('data inserted')
+		            cobalt.log('data inserted')
 	            });
 
 
