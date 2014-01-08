@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -283,6 +284,29 @@ public class HTMLFragment extends Fragment {
 	 * the key for specifying the fade duration for the webAlert to be shown or dismissed
 	 */
 	protected static String kJSWebAlertfadeDuration = "fadeDuration";
+
+	
+	//UI
+	
+	protected static final String JSTypeUi = "ui";
+	
+	/**
+	 * The key for datePicker
+	 */
+	protected static final String kJSControl = "control";
+	
+	protected static final String kJSDate = "date";
+		
+	protected static final String kJSYear = "year";
+	
+	protected static final String kJSMonth = "month";
+	
+	protected static final String kJSDay = "day";
+	
+	protected static final String JSControlPicker = "picker";
+	
+	protected static final String JSDate = "date";
+
 
 	//ACTIVITY'S FEATURES
 	/**
@@ -719,6 +743,47 @@ public class HTMLFragment extends Fragment {
 							return true;
 						}
 					}
+					
+					// UI
+			    	else if (type != null && type.length() >0 && type.equals(JSTypeUi)) {
+				    	final String control = jsonObj.optString(kJSControl);
+				    	if (control != null  
+				    		&& control.length() > 0) {
+				    		if (control.equals(JSControlPicker)) {
+						    	JSONObject params = jsonObj.optJSONObject(kJSParams);
+						    	if (params != null) {
+						    		final String typeParams = params.optString(kJSType);
+						    		if (typeParams != null 
+									    && typeParams.length() > 0) {
+						    			if (typeParams.equals(JSDate)) {
+						    				JSONObject date = params.optJSONObject(kJSDate);
+						    				
+						    				Calendar cal = Calendar.getInstance();
+						    				int year = cal.get(Calendar.YEAR);
+						    		        int month = cal.get(Calendar.MONTH);
+						    		        int day = cal.get(Calendar.DAY_OF_MONTH);
+						    		        
+						    				if (date != null) {
+						    					if (date.has(kJSYear)
+						    						&& date.has(kJSMonth)
+						    						&& date.has(kJSDay)) {
+						    						year = date.getInt(kJSYear);
+						    						month = date.getInt(kJSMonth);
+						    						month--;
+						    						day = date.getInt(kJSDay);
+						    					}
+						    				}
+						    				String callbackID = jsonObj.optString(kJSCallbackID);
+								    		if (callbackID != null
+									    			&& callbackID.length() > 0) {
+												showDatePickerDialog(year, month, day, callbackID);	
+								    		}
+						    			} 						
+						    		}
+						    	}
+				    		}
+				    	}
+			    	}
 					else if(type != null && type.length() >0 && type.equals(JSTypeAlert))
 					{
 						showAlertDialogWithJSON(jsonObj);
@@ -1383,4 +1448,41 @@ public class HTMLFragment extends Fragment {
 			database.close();
 		}
 	}
+	
+	/********************************************************
+     * DatePicker
+     ********************************************************/
+    protected void showDatePickerDialog(int year, int month, int day, String callbackID) {
+    	Bundle args = new Bundle();
+    	args.putInt(HTMLDatePickerFragment.ARG_YEAR, year);
+    	args.putInt(HTMLDatePickerFragment.ARG_MONTH, month);
+    	args.putInt(HTMLDatePickerFragment.ARG_DAY, day);
+    	args.putString(HTMLDatePickerFragment.ARG_CALLBACK_ID, callbackID);
+    	
+    	HTMLDatePickerFragment newFragment = new HTMLDatePickerFragment();
+        newFragment.setArguments(args);
+        newFragment.setListener(this);
+        
+        newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+    }
+    
+    protected void sendDate(int year, int month, int day, String callbackID) {
+    	try {
+    		JSONObject jsonDate = new JSONObject();
+    		jsonDate.put(kJSYear, year);
+    		month++;
+    		jsonDate.put(kJSMonth, month);
+    		jsonDate.put(kJSDay, day);
+    		
+			JSONObject jsonResponse = new JSONObject();
+			jsonResponse.put(kJSType, JSTypeCallBack);
+			jsonResponse.put(kJSCallbackID, callbackID);
+			jsonResponse.put(kJSParams, jsonDate);
+			Log.d(getClass().getName(), "sendDate + : " + jsonResponse);
+			executeScriptInWebView(jsonResponse);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 }
