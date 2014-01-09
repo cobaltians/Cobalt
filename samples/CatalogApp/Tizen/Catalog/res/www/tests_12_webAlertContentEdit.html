@@ -14,21 +14,21 @@
         </div>
 
 
-  		<div id="nativeBridge_logdiv" style="display:none;"></div>
+  		<div id="cobalt_logdiv" style="display:none;"></div>
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/utils.storage.js"></script>
-        <script type="text/javascript" src="js/nativeBridge/nativeBridge.js"></script>
+        <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
 
         <script>
 
 	        Zepto(function($){
 
-	            nativeBridge.init({
+	            cobalt.init({
 		            debug:true,
 		            //sendingToNative:false,
 		        });
-                nativeBridge.log("webAlerte nativeBridge is ready!")
+                cobalt.log("webAlerte cobalt is ready!")
 
                   setTimeout(function(){
                              $('#text').focus();
@@ -41,14 +41,14 @@
 		       		$('#text').blur();
 		       		setTimeout(function(){
 		       			//using setTimeout because otherwise, android kills the webview too fast
-		       			nativeBridge.webAlert("dismiss");
+		       			cobalt.webAlert("dismiss");
 		       		},500)
 			       
 	            	return false;
 	            });
 	            
 	            $('a.pop').on('tap click',function(){
-		        	nativeBridge.navigate('pop');
+		        	cobalt.navigate('pop');
 		            return false;
 	            });
 

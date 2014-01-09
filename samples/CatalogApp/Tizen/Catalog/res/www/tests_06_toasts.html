@@ -45,17 +45,17 @@
 		<br/>
 
 
-		<div id="nativeBridge_logdiv"></div>
+		<div id="cobalt_logdiv"></div>
 		
         <script type="text/javascript" src="js/zepto.min.js"></script>
-        <script type="text/javascript" src="js/nativeBridge/nativeBridge.js"></script>
+        <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
         <script type="text/javascript" src="js/utils.storage.js"></script>
         <script type="text/javascript" src="js/functions.js"></script>
         <script>
             
             Zepto(function($){
 
-	            nativeBridge.init({
+	            cobalt.init({
 		            debug:true,
 		            //sendingToNative:false,
 	            });
@@ -64,84 +64,84 @@
                 $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
 
                 $('a.pop').on('tap click',function(){
-		        	nativeBridge.navigate('pop');
+		        	cobalt.navigate('pop');
 		            return false;
 	            });
 	            
 	            $('#toastA').on('tap click',function(){
-	            	nativeBridge.toast("Ok!")
+	            	cobalt.toast("Ok!")
 		            return false;
 	            });
    	            $('#toastB').on('tap click',function(){
-	            	nativeBridge.toast("Salut, ô grand testeur!")
+	            	cobalt.toast("Salut, ô grand testeur!")
 		            return false;
 	            });
    	            $('#toastC').on('tap click',function(){
-	            	nativeBridge.toast("On sait depuis longtemps que travailler avec du texte lisible et contenant du sens est source de distractions, et empêche de se concentrer sur la mise en page elle-même. L'avantage du Lorem Ipsum sur un texte générique comme 'Du texte. Du texte. Du texte.' est qu'il possède une distribution de lettres plus ou moins normale, et en tout cas comparable avec celle du français standard. De nombreuses suites logicielles de mise en page ou éditeurs de sites Web ont fait du Lorem Ipsum leur faux texte par défaut, et une recherche pour 'Lorem Ipsum' vous conduira vers de nombreux sites qui n'en sont encore qu'à leur phase de construction. Plusieurs versions sont apparues avec le temps, parfois par accident, souvent intentionnellement (histoire d'y rajouter de petits clins d'oeil, voire des phrases embarassantes).")
+	            	cobalt.toast("On sait depuis longtemps que travailler avec du texte lisible et contenant du sens est source de distractions, et empêche de se concentrer sur la mise en page elle-même. L'avantage du Lorem Ipsum sur un texte générique comme 'Du texte. Du texte. Du texte.' est qu'il possède une distribution de lettres plus ou moins normale, et en tout cas comparable avec celle du français standard. De nombreuses suites logicielles de mise en page ou éditeurs de sites Web ont fait du Lorem Ipsum leur faux texte par défaut, et une recherche pour 'Lorem Ipsum' vous conduira vers de nombreux sites qui n'en sont encore qu'à leur phase de construction. Plusieurs versions sont apparues avec le temps, parfois par accident, souvent intentionnellement (histoire d'y rajouter de petits clins d'oeil, voire des phrases embarassantes).")
 		            return false;
 	            });
    	            $('#toastD').on('tap click',function(){
-	            	nativeBridge.toast("On sait depuis\n longtemps que travailler avec du texte lisible \nest source\n de\n distractions")
+	            	cobalt.toast("On sait depuis\n longtemps que travailler avec du texte lisible \nest source\n de\n distractions")
 		            return false;
 	            });
    	            $('#toastE').on('tap click',function(){
 	            	for (var i=1; i<=20; i++){
-			            nativeBridge.toast("ok #"+ i)
+			            cobalt.toast("ok #"+ i)
 		            }
 		            return false;
 	            });
 
 	            /*
 
-	            nativeBridge.alert("Texte");
-				nativeBridge.alert("Title", "Texte", ["Ok"], { callback:function(params){console.log('popup dismissed :'+params.index) }});
-				nativeBridge.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", alertIdentifier:12 });
+	            cobalt.alert("Texte");
+				cobalt.alert("Title", "Texte", ["Ok"], { callback:function(params){console.log('popup dismissed :'+params.index) }});
+				cobalt.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", alertIdentifier:12 });
 
 				//native callbacks
-				nativeBridge.alert("Title", "Texte", ["Ok"], { callbackType:"native", alertIdentifier:12 });
+				cobalt.alert("Title", "Texte", ["Ok"], { callbackType:"native", alertIdentifier:12 });
 
 	             */
 
 	            $('#test2').on('tap click',function(){
-		            nativeBridge.alert("Titre", "Vous allez devoir refermer cette popup.")
+		            cobalt.alert("Titre", "Vous allez devoir refermer cette popup.")
 	            	return false;
 	            });
 	            $('#test3').on('tap click',function(){
 		            var buttons=["Oui", "Non", "Je ne suis pas sûr"];
-		            nativeBridge.alert("Titre", "Vous allez devoir refermer cette popup.", buttons, { callback : function(params){
-			            nativeBridge.toast("alerte refermée. vous avez choisi : "+ buttons[params.index])
+		            cobalt.alert("Titre", "Vous allez devoir refermer cette popup.", buttons, { callback : function(params){
+			            cobalt.toast("alerte refermée. vous avez choisi : "+ buttons[params.index])
 		            }});
 		            return false;
 	            });
 	            window.myApp={
 		            buttons:["Oui", "Non", "Je ne suis pas sûr"],
 		            callMeBack:function(params){
-			            nativeBridge.log('myApp.callMeBack called with params='+params)
-			            nativeBridge.toast("alerte refermée. vous avez choisi "+ myApp.buttons[params.index]+", alertId="+params.alertId)
+			            cobalt.log('myApp.callMeBack called with params='+params)
+			            cobalt.toast("alerte refermée. vous avez choisi "+ myApp.buttons[params.index]+", alertId="+params.alertId)
 		            }
 	            }
 	            $('#test4').on('tap click',function(){
-		            nativeBridge.alert("Titre", "Vous allez devoir refermer cette popup.", myApp.buttons, { callback : 'myApp.callMeBack', alertId:55});
+		            cobalt.alert("Titre", "Vous allez devoir refermer cette popup.", myApp.buttons, { callback : 'myApp.callMeBack', alertId:55});
 		            return false;
 	            });
 
 
 	            $('#test5').on('tap click',function(){
-		            nativeBridge.alert("Titre", "Vous allez devoir refermer cette popup.", ["Oui", "Sûrement pas"], { callbackType:"native", alertId: 42});
+		            cobalt.alert("Titre", "Vous allez devoir refermer cette popup.", ["Oui", "Sûrement pas"], { callbackType:"native", alertId: 42});
 		            return false;
 	            });
 	            $('#test6').on('tap click',function(){
-		            nativeBridge.alert("Quel est la couleur du cheval blanc d'Henry 5", undefined, ["Blanc", "Aucune", "Ca dépends"], { callbackType:"native", alertId: 43});
+		            cobalt.alert("Quel est la couleur du cheval blanc d'Henry 5", undefined, ["Blanc", "Aucune", "Ca dépends"], { callbackType:"native", alertId: 43});
 		            return false;
 	            });
 
 	            $('#test7').on('tap click',function(){
-		            nativeBridge.alert("Quel est la couleur du cheval blanc d'Henry 5?", "Henri V d'Angleterre, né le 9 août 1387 ou le 16 septembre 13871 à Monmouth au Pays de Galles et décédé le 31 août 1422 au château de Vincennes, en France ; duc de Cornouailles et de Lancastre, est roi d'Angleterre de 1413 à 1422.Vainqueur de la bataille d'Azincourt le 25 octobre 1415, il parvient à se faire reconnaître comme héritier du trône de France au traité de Troyes (1420), mais meurt prématurément avant son beau-père Charles VI de France, sans avoir pu ceindre la couronne de France.Fils du roi Henri IV, et de Marie de Bohun, Henri épouse Catherine de Valois et est le père d'Henri VI d'Angleterre, qui lui succèdera à l'âge de neuf mois.", ["Blanc", "Aucune", "Ca dépends"]);
+		            cobalt.alert("Quel est la couleur du cheval blanc d'Henry 5?", "Henri V d'Angleterre, né le 9 août 1387 ou le 16 septembre 13871 à Monmouth au Pays de Galles et décédé le 31 août 1422 au château de Vincennes, en France ; duc de Cornouailles et de Lancastre, est roi d'Angleterre de 1413 à 1422.Vainqueur de la bataille d'Azincourt le 25 octobre 1415, il parvient à se faire reconnaître comme héritier du trône de France au traité de Troyes (1420), mais meurt prématurément avant son beau-père Charles VI de France, sans avoir pu ceindre la couronne de France.Fils du roi Henri IV, et de Marie de Bohun, Henri épouse Catherine de Valois et est le père d'Henri VI d'Angleterre, qui lui succèdera à l'âge de neuf mois.", ["Blanc", "Aucune", "Ca dépends"]);
 		            return false;
 	            });
 
 	            $('#test8').on('tap click',function(){
-		            nativeBridge.alert("Obligatoire !", "Cette alerte est obligatoire sur Android, on ne peut pas l'annuler en cliquant dans le vide ou via le bouton back", ["Oui", "Non"], { mandatory:true });
+		            cobalt.alert("Obligatoire !", "Cette alerte est obligatoire sur Android, on ne peut pas l'annuler en cliquant dans le vide ou via le bouton back", ["Oui", "Non"], { mandatory:true });
 		            return false;
 	            });
 

@@ -33,34 +33,34 @@
 
 		<p>Ci dessous le log de la lib d'echange</p>
         <input id="monBouton3" type="button" value="nettoyage logs"/>
-		<div id="nativeBridge_logdiv"></div>
+		<div id="cobalt_logdiv"></div>
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
 		<script type="text/javascript" src="js/utils.storage.js"></script>
-        <script type="text/javascript" src="js/nativeBridge/nativeBridge.js"></script>
+        <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
         <script type="text/javascript" src="js/functions.js"></script>
         <script>
             
             Zepto(function($){
 
-	            nativeBridge.init({
+	            cobalt.init({
 		            debug:true,
 		            //sendingToNative:false,
 		            events:{
 			            "nameTestCallback": function(event){
-				            nativeBridge.log('executing nameTestCallback',false)
-				            nativeBridge.sendCallback(event,"testCallback : Le resultat est "+ (parseInt(event.value[0]) + parseInt(event.value[1])) )
+				            cobalt.log('executing nameTestCallback',false)
+				            cobalt.sendCallback(event,"testCallback : Le resultat est "+ (parseInt(event.value[0]) + parseInt(event.value[1])) )
 			            },
 			            "nameTestCallbackAsync": function(event){
-				            nativeBridge.log('executing nameTestCallbackAsync',false)
+				            cobalt.log('executing nameTestCallbackAsync',false)
 				            var event=event;
 							$.ajax({url:"http://www.google.fr", type:"GET",
 								success : function(){
-									nativeBridge.log('async call worked')
-									nativeBridge.sendCallback(event,"Assync WORKED!!")
+									cobalt.log('async call worked')
+									cobalt.sendCallback(event,"Assync WORKED!!")
 								},error: function(req,err){
-									nativeBridge.log('async call failed')
-									nativeBridge.sendCallback(event,"Assync WORKED with HTTP error "+err)
+									cobalt.log('async call failed')
+									cobalt.sendCallback(event,"Assync WORKED with HTTP error "+err)
 								}
 							});
 			            }
@@ -71,15 +71,15 @@
                 $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
 
 				$('#monBouton3').on('tap click',function(){
-					nativeBridge.ios_adapter.pipeline=[];
-					nativeBridge.ios_adapter.pipelineRunning=false;
-                    $('#nativeBridge_logdiv').html('');
+					cobalt.ios_adapter.pipeline=[];
+					cobalt.ios_adapter.pipelineRunning=false;
+                    $('#cobalt_logdiv').html('');
 					return false;
 				});
 
 	            $('#monBouton4').on('tap click',function(){
-	            	nativeBridge.sendEvent("nameTestCallback", { value:$('#input').val() },function(newName){
-		            	nativeBridge.log('changeValue called')
+	            	cobalt.sendEvent("nameTestCallback", { value:$('#input').val() },function(newName){
+		            	cobalt.log('changeValue called')
 						$('#input').val(newName)
 		            });
 		            //Expect {"type":"typeCallback", callbackID:"0", params:"toto"} from OS
@@ -87,18 +87,18 @@
 	            });
 				exampleObject={
 					changeValue:function(value){
-					    nativeBridge.log('changeValue called')
+					    cobalt.log('changeValue called')
 					    $('#input2').val(value)
 					}
 				};
 	            $('#monBouton5').on('tap click',function(){
-		            nativeBridge.sendEvent("nameTestCallbackAsync", { value:$('#input2').val() },"exampleObject.changeValue")
+		            cobalt.sendEvent("nameTestCallbackAsync", { value:$('#input2').val() },"exampleObject.changeValue")
 		            //Expect {"type":"typeCallback", callbackID:"exampleObject.changeValue", params:"toto"} from OS
 		            return false;
 	            });
 	            
 				$('a.pop').on('tap click',function(){
-		        	nativeBridge.navigate('pop');
+		        	cobalt.navigate('pop');
 		            return false;
 	            });
 

@@ -56,7 +56,7 @@ var cobalt={
                 }
 			}
 		    if( sendLogToNative ){
-			    cobalt.send({"type":"typeLog","value":stuff})
+			    cobalt.send({ type : "log", value : stuff })
 	        }
 	    }
     },
@@ -81,10 +81,10 @@ var cobalt={
 	send:function(obj, callback){
 		if (callback){
 			if (typeof callback==="function"){
-				obj.callbackID = cobalt.lastCallbackId++;
-				cobalt.callbacks[obj.callbackID]=callback;
+				obj.callback = cobalt.lastCallbackId++;
+				cobalt.callbacks[obj.callback]=callback;
 			}else if (typeof callback==="string"){
-				obj.callbackID = ""+callback;
+				obj.callback = ""+callback;
 			}
 	    }
 		cobalt.adapter.send(obj, callback)
@@ -93,36 +93,38 @@ var cobalt={
 	//See doc for guidelines.
     sendEvent:function(eventName, params, callback){
 	    if (eventName){
-		    var obj = params || {};
-		    obj.type = "typeEvent";
-		    obj.name = eventName;
+		    var obj = {
+			    type : "event",
+			    name : eventName,
+			    data : params || {}
+		    };
 		    cobalt.send(obj, callback);
 	    }
 	},
 	//Sends a callback to native side.
 	//See doc for guidelines.
-    sendCallback:function(originalEvent, params){
+    sendCallback:function(originalEvent, data){
 		var event=originalEvent;
-		if (typeof event.callbackID ==="string" && event.callbackID.length > 0){
-			//cobalt.log("calling callback with "+JSON.stringify({type:"typeCallback", callbackID:event.callbackID, params: params}))
-			cobalt.send({type:"typeCallback", callbackID:event.callbackID, params: params})
+		if (typeof event.callback ==="string" && event.callback.length > 0){
+			//cobalt.log("calling callback with "+JSON.stringify({type:"typeCallback", callbackID:event.callbackID, data: data}))
+			cobalt.send({type:"callback", callback :event.callback, data: data})
 	    }
 	},
 	//Navigate to an other page or do some special navigation actions
 	//See doc for guidelines.
-	navigate:function(navigationType, navigationPageName, navigationClassId){
+	navigate:function(navigationType, page, controller){
 		switch (navigationType){
 			case "push":
-				if (navigationPageName){
-					cobalt.send({ "type":"typeNavigation", "navigationType":"push", "navigationPageName":navigationPageName, "navigationClassId": navigationClassId});
+				if (page){
+					cobalt.send({ "type":"navigation", "action":"push", data : { page :page, controller: controller }});
 				}
 			break;
 			case "pop":
-				cobalt.send({ "type":"typeNavigation", "navigationType":"pop"});
+				cobalt.send({ "type":"navigation", "action":"pop"});
 			break;
 			case "modale":
-				if (navigationPageName){
-					cobalt.adapter.navigateToModale(navigationPageName, navigationClassId);
+				if (page){
+					cobalt.adapter.navigateToModale(page, controller);
 				}
 			break;
 			case "dismiss":
@@ -132,7 +134,7 @@ var cobalt={
 	},
 	/* sends a toast request to native */
 	toast:function(text){
-		cobalt.sendEvent("nameToast", { "value" : cobalt.toString(text) });
+		cobalt.send({ type : "ui", control : "toast", data : { message : cobalt.toString(text) } } );
 	},
 
 	/*  Raise a native alert with options
@@ -143,45 +145,34 @@ var cobalt={
 		cobalt.alert("Title", "Texte", ["Ok"], { callback:function(index){console.log('popup dismissed') }});
 		cobalt.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", alertId:12 });
 
-		//native callbacks
-		cobalt.alert("Title", "Texte", ["Ok"], { callbackType:"native", alertId:12 });
-
 	 */
 	alert:function(title, text, buttons, options){
 		if (title || text){
-			var obj={ type:"typeAlert"}
+			var obj={ type : "ui", control : "alert", data : {
+				message : text,
+				title : title
+			}};
 			var callback;
-			if (text) obj.alertMessage = text;
-			if (title) obj.alertTitle = title;
 
-			//Add buttons if any
 			if (buttons && cobalt.isArray(buttons) && buttons.length){
-				obj.alertButtons=buttons;
+				obj.data.buttons=buttons;
 			}
+
 			//check options
 			if ( options ){
 				//add web callback if any
 				if (typeof options.callback === "string" || typeof options.callback === "function"){
-					obj.alertReceiver="web";
 					callback=options.callback;
 				}
 				//add alertIdentifier
-				obj.alertId=parseInt(options.alertId);
-				//set callbacks as native if asked
-				if (options.callbackType === "native"){
-					obj.alertReceiver="native";
-					if (callback){
-						cobalt.log("warning : alert callback has been set to native, web callback won't be called.");
-					}
-					callback=undefined;
-				}
+				obj.data.id=parseInt(options.id);
 				if ( options.mandatory === true ){
-					obj.alertIsCancelable=false;
+					obj.cancelable=false;
 				}
 			}
 			//enforce alertId presence :
-			if (!obj.alertId || !cobalt.isNumber(obj.alertId)){
-				obj.alertId=0;
+			if (!obj.data.id || !cobalt.isNumber(obj.data.id)){
+				obj.data.id=0;
 			}
 			cobalt.send(obj, callback);
 		}
@@ -189,17 +180,17 @@ var cobalt={
 	/*
 		show a web page as an alert.
 		//see doc for guidelines.
-		//cobalt.webAlert("show","tests_12_webAlertContent.html",1.2);
-		//cobalt.webAlert("dismiss");
+		//cobalt.webLayer("show","tests_12_webAlertContent.html",1.2);
+		//cobalt.webLayer("dismiss");
 	 */
-	webAlert:function(action, pageName, fadeDuration){
+	webLayer:function(action, page, fadeDuration){
 		switch (action){
 			case "dismiss":
-				cobalt.send({type:"typeWebAlert", name:"dismiss"});
+				cobalt.send({type:"webLayer", action:"dismiss"});
 			break;
 			case "show":
-				if (pageName){
-					cobalt.send({type:"typeWebAlert", name:"show", pageName:pageName, fadeDuration:fadeDuration})
+				if (page){
+					cobalt.send({type:"webLayer", action:"show", data :{ page:page, fadeDuration:fadeDuration }})
 				}
 			break;
 		}
@@ -217,15 +208,15 @@ var cobalt={
         }
         try{
 	        switch (data.type){
-	        	case "typeEvent":
+	        	case "event":
                     cobalt.adapter.handleEvent(data)
-	            break
-	            case "typeCallback":
+	                break;
+	            case "callback":
                     cobalt.adapter.handleCallback(data)
                     break;
-                case "typeLog":
+		        case "log": //TODO : is it needed?
                     cobalt.log('LOG '+decodeURIComponent(data.value), data.logBack)
-                break
+                    break;
 	        	default:
 	        		cobalt.log('received unhandled data type : '+data.type)        		
 	        }
@@ -237,19 +228,19 @@ var cobalt={
 	tryToCallCallback:function(callback){
 		//cobalt.log('trying to call web callback')
 		var callbackfunction=null;
-        if (cobalt.isNumber(callback.callbackID) && typeof cobalt.callbacks[callback.callbackID]==="function"){
+        if (cobalt.isNumber(callback.callback) && typeof cobalt.callbacks[callback.callback]==="function"){
 	        //if it's a number, a real JS callback should exist in cobalt.callbacks
-	        callbackfunction=cobalt.callbacks[callback.callbackID]
+	        callbackfunction=cobalt.callbacks[callback.callback]
 
-		}else if (typeof callback.callbackID === "string"){
+		}else if (typeof callback.callback === "string"){
 	        //if it's a string, check if function exists
-	        callbackfunction=eval(callback.callbackID)
+	        callbackfunction=eval(callback.callback)
 		}
 		if (typeof callbackfunction === "function"){
 	        try{
 		        callbackfunction(callback.params)
 	        }catch(e){
-		        cobalt.log('Failed calling callback #'+callback.callbackID+'.')
+		        cobalt.log('Failed calling callback #'+callback.callback+'.')
 	        }
         }
 	},
@@ -305,17 +296,17 @@ var cobalt={
 
 	defaultBehaviors:{
 		handleCallback:function(callback){
-	        switch(callback.callbackID){
+	        switch(callback.callback){
 	            default:
 				    cobalt.tryToCallCallback(callback)
 			    break;
 	        }
 	    },
-		navigateToModale:function(navigationPageName, navigationClassId){
-			cobalt.send({ "type":"typeNavigation", "navigationType":"modale", "navigationPageName":navigationPageName, "navigationClassId": navigationClassId});
+		navigateToModale:function(page, controller){
+			cobalt.send({ "type":"navigation", "action":"modale", data : { page :page, controller: controller }});
 		},
 		dismissFromModale:function(){
-			cobalt.send({ "type":"typeNavigation", "navigationType":"dismiss"});
+			cobalt.send({ "type":"typeNavigation", "action":"dismiss"});
 		},
 		initStorage:function(){
 			if (window.utils && utils.storage){

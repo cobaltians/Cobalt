@@ -32,20 +32,16 @@ cobalt.android_adapter={
         }
     },
 	//modale stuffs. really basic on ios, more complex on android.
-	navigateToModale:function(navigationPageName, navigationClassId){
+	navigateToModale:function(page, controller){
 		if ( cobalt.checkDependency('storage') ){
-			cobalt.send({ "type":"typeNavigation", "navigationType":"modale", "navigationPageName":navigationPageName, 
-								"navigationClassId": navigationClassId, "callbackID":"cobalt.adapter.storeModaleInformations"});
+			cobalt.send({ "type":"navigation", "action":"modale", data : { page :page, controller: controller }}, 'cobalt.adapter.storeModaleInformations');
 		}
 	},
 	dismissFromModale:function(){
 		if ( cobalt.checkDependency('storage') ){
 			var dismissInformations= utils.storage.getItem("dismissInformations","json");
-			if (dismissInformations && dismissInformations.navigationPageName && dismissInformations.navigationClassName){
-				cobalt.send({  "type":"typeNavigation","navigationType":"dismiss",
-					                  navigationPageName : dismissInformations.navigationPageName,
-					                  navigationClassName:dismissInformations.navigationClassName
-				                  });
+			if (dismissInformations && dismissInformations.page && dismissInformations.controller){
+				cobalt.send({ "type":"navigation", "action":"dismiss", data : { page : dismissInformations.page, controller:dismissInformations.controller }});
 				utils.storage.removeItem("dismissInformations");
 			}else{
 				cobalt.log("dismissInformations are not available in storage")
