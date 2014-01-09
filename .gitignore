@@ -48,3 +48,5 @@ sources/Android/Cobalt/bin/cobalt.jar
 sources/Android/Cobalt/bin/cobalt.jar
 
 samples/CatalogApp/Android/CobaltCatalog/bin/jarlist.cache
+
+sources/Android/Cobalt/bin/jarlist.cache

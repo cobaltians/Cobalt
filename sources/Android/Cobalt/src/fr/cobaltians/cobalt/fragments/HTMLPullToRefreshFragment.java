@@ -434,4 +434,8 @@ public class HTMLPullToRefreshFragment extends HTMLFragment implements IScrollLi
 		mPullRefreshWebView.setWebviewScale(newScale);
 	}
 
+	@Override
+	protected void onUnhandledMessage(JSONObject message) {
+		
+	}
 }

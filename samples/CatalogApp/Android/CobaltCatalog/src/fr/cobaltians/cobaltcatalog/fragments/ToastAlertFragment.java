@@ -1,5 +1,7 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
+import org.json.JSONObject;
+
 import android.view.View;
 import android.widget.Toast;
 import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
@@ -23,5 +25,10 @@ public class ToastAlertFragment extends HTMLFragment {
 	public void alertDialogClickedButton(long tag,int buttonIndex)
 	{
 		Toast.makeText(mContext, "tag = "+tag+" || buttonIndex = "+(-1-buttonIndex), Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	protected void onUnhandledMessage(JSONObject message) {
+		
 	}
 }

@@ -15,7 +15,7 @@ import fr.cobaltians.cobalt.R;
  * 
  * @author Diane
  */
-public class HTMLActivity extends FragmentActivity {
+public abstract class HTMLActivity extends FragmentActivity {
 
 	protected final boolean mDebug = false;
 
@@ -72,9 +72,7 @@ public class HTMLActivity extends FragmentActivity {
 	 * 
 	 * @return a new instance of the fragment contained.
 	 */
-	protected HTMLFragment getFragment() {
-		return new HTMLFragment();
-	}
+	protected abstract HTMLFragment getFragment();
 
 	protected int getLayoutToInflate() {
 		return R.layout.activity_html;

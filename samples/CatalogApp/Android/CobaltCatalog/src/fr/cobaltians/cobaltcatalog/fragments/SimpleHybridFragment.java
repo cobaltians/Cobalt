@@ -104,5 +104,9 @@ public class SimpleHybridFragment extends HTMLFragment {
 		}
 		return a;
 	}
-	
+
+	@Override
+	protected void onUnhandledMessage(JSONObject message) {
+		
+	}
 }

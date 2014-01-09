@@ -119,4 +119,8 @@ public class HTMLPopUpWebview extends HTMLFragment {
 		return null;
 	}
 
+	@Override
+	protected void onUnhandledMessage(JSONObject message) {
+		
+	}
 }

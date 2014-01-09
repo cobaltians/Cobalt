@@ -94,4 +94,10 @@ public class ZoomHybridFragment extends HTMLFragment {
 		}
 		*/
 	}
+
+
+	@Override
+	protected void onUnhandledMessage(JSONObject message) {
+		
+	}
 }

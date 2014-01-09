@@ -25,8 +25,6 @@ public class MainFragment extends HTMLFragment {
 	private Button callBackButton,callbackAsyncButton,validButton;
 	private EditText nativeEditText;
 
-
-
 	@Override
 	protected int getLayoutToInflate() {
 		return R.layout.main_fragment;
@@ -188,5 +186,10 @@ public class MainFragment extends HTMLFragment {
 		String nValue = "Je m'appelle "+value;
 
 		new GoogleAsyncTask(this,callbackId,nValue).execute("http://google.fr");
+	}
+
+	@Override
+	protected void onUnhandledMessage(JSONObject message) {
+		
 	}
 }

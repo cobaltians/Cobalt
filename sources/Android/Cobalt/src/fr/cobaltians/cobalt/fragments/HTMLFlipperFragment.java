@@ -135,4 +135,10 @@ public class HTMLFlipperFragment extends HTMLFragment implements ISwipeListener 
 		SwipeWebView(direction);
 		Log.i("Swipe ", direction ? "next" : "previous");
 	}
+
+
+	@Override
+	protected void onUnhandledMessage(JSONObject message) {
+		
+	}
 }

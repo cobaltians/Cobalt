@@ -50,7 +50,7 @@ import fr.cobaltians.cobalt.R;
  * 
  * @author Diane Moebs
  */
-public class HTMLFragment extends Fragment {
+public abstract class HTMLFragment extends Fragment {
 	
 	protected boolean mDebug = false;
 	
@@ -196,7 +196,13 @@ public class HTMLFragment extends Fragment {
 		preloadOnCreateView = false;
 		removeWebviewFromPlaceholder();
 	}
-
+	
+	/**************************************************************
+	 * NOTIFIER
+	 *************************************************************/
+	
+	protected abstract void onUnhandledMessage(JSONObject message);
+	
 	/**
 	 * This method is called to add the webview in the placeholder (and create it if necessary)
 	 * This method SHOULD NOT be overridden in subclasses.
@@ -206,7 +212,7 @@ public class HTMLFragment extends Fragment {
 			webView = new OverScrollingWebView(mContext);
 			setWebViewSettings(this);
 		}
-
+		
 		if(webViewPlaceholder != null) {
 			webViewPlaceholder.addView(webView);
 		}
@@ -430,6 +436,9 @@ public class HTMLFragment extends Fragment {
 								Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
 								return true;
 							}
+						}
+						else {
+							onUnhandledMessage(jsonObj);
 						}
 					}
 					//LOG
