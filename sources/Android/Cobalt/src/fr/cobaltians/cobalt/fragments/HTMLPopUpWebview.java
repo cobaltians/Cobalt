@@ -19,8 +19,8 @@ public class HTMLPopUpWebview extends HTMLFragment {
 	@Override
 	public void onStart() {
 		super.onStart();
-		if(webView != null)
-			webView.setBackgroundColor(Color.TRANSPARENT);
+		if(mWebView != null)
+			mWebView.setBackgroundColor(Color.TRANSPARENT);
 	}
 
 	@Override

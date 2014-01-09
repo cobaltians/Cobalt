@@ -86,10 +86,9 @@ public class HTMLPullToRefreshFragment extends HTMLFragment implements IScrollLi
 		{
 			//Create the webview since it has not been created before.
 			mPullRefreshWebView = new PullToRefreshOverScrollWebview(mContext);
-			if(webView == null)
-			{
+			if(mWebView == null) {
 				//set webview as the refreshableView of mPullRefreshWebView.
-				webView = mPullRefreshWebView.getRefreshableView();
+				mWebView = mPullRefreshWebView.getRefreshableView();
 			}
 			setWebViewSettings(this);
 		}
@@ -375,9 +374,9 @@ public class HTMLPullToRefreshFragment extends HTMLFragment implements IScrollLi
 		if(density > 1)
 			density = (float) (Math.floor(density*10)/10.0);
 		//Log.i("", "density after "+density+" "+webView.getHeight()/density+" "+webView.getMeasuredHeight());
-		int yPos = (int)((webView.getScrollY()+webView.getHeight())/density);
+		int yPos = (int)((mWebView.getScrollY() + mWebView.getHeight())/density);
 		//Log.i("overscroll", yPos+" "+webView.getContentHeight());
-		if(yPos >= webView.getContentHeight())
+		if(yPos >= mWebView.getContentHeight())
 		{
 			infiniteScrollRefresh();
 		}

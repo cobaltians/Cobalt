@@ -23,9 +23,9 @@ public class HTMLFlipperFragment extends HTMLFragment implements ISwipeListener 
 	public void onStart() {
 		super.onStart();
 		//WebView has been added, set up its listener
-		if(webView != null)
+		if(mWebView != null)
 		{
-			((SwipeWebView)webView).setSwipeListener(this);
+			((SwipeWebView) mWebView).setSwipeListener(this);
 		}
 		
 		setFeaturesWantedActive();
@@ -33,13 +33,13 @@ public class HTMLFlipperFragment extends HTMLFragment implements ISwipeListener 
 	
 	@Override
 	protected void addWebview() {
-		if(webView == null) {
-			webView = new SwipeWebView(mContext);
+		if(mWebView == null) {
+			mWebView = new SwipeWebView(mContext);
 			setWebViewSettings(this);
 		}
 
 		if(webViewPlaceholder != null) {
-			webViewPlaceholder.addView(webView);
+			webViewPlaceholder.addView(mWebView);
 		}
 		else if(mDebug) {
 			Log.e(getClass().getSimpleName(), "ERROR : you must set up webViewPlaceholder in setUpViews !");
@@ -49,9 +49,9 @@ public class HTMLFlipperFragment extends HTMLFragment implements ISwipeListener 
 	@Override
 	protected void removeWebviewFromPlaceholder() {
 		if (webViewPlaceholder != null) {
-			if(webView != null) {
+			if(mWebView != null) {
 				// Remove the WebView from the old placeholder
-				webViewPlaceholder.removeView(webView);
+				webViewPlaceholder.removeView(mWebView);
 			}
 		}
 		else if(mDebug) {
@@ -64,7 +64,7 @@ public class HTMLFlipperFragment extends HTMLFragment implements ISwipeListener 
 	 * The mSwipeWebView must have been set before 
 	 */
 	public void enableSwipe() {
-		if(webView != null) {
+		if(mWebView != null) {
 			swipeActive = true;
 		}
 		else if(mDebug) {
@@ -77,7 +77,7 @@ public class HTMLFlipperFragment extends HTMLFragment implements ISwipeListener 
 	 * The mSwipeWebView must have been set before 
 	 */
 	public void disableSwipe() {
-		if(webView != null) {
+		if(mWebView != null) {
 			swipeActive = false;
 		}
 		else if(mDebug) {
@@ -95,7 +95,7 @@ public class HTMLFlipperFragment extends HTMLFragment implements ISwipeListener 
 	
 	private void setFeaturesWantedActive()
 	{
-		if(webView != null) {
+		if(mWebView != null) {
 			if(getArguments() != null && getArguments().containsKey(kSwipe)) {
 				if(getArguments().getBoolean(kSwipe)) {
 					enableSwipe();

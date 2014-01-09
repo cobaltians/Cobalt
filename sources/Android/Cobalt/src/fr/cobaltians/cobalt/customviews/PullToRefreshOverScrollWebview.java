@@ -15,22 +15,21 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import fr.cobaltians.cobalt.R;
 
 /**
- * {@link PullToRefreshBase<T>} that uses a customized webView to handle the pullToRefresh and the InfiniteScroll.
+ * {@link PullToRefreshBase<T>} using a customized Web view to handle pull to refresh and the infinite scroll.
  * @author Diane
  *
  */
 public class PullToRefreshOverScrollWebview extends PullToRefreshBase<OverScrollingWebView> {
-
-	private float mWebviewScale = 1;
 	
-	private static final OnRefreshListener<OverScrollingWebView> defaultOnRefreshListener = new OnRefreshListener<OverScrollingWebView>() {
+	private static final OnRefreshListener<OverScrollingWebView> mRefreshListener = new OnRefreshListener<OverScrollingWebView>() {
 		@Override
 		public void onRefresh(PullToRefreshBase<OverScrollingWebView> refreshView) {
 			refreshView.getRefreshableView().reload();
 		}
 	};
 
-	private final WebChromeClient defaultWebChromeClient = new WebChromeClient() {
+	private float mWebviewScale = 1;
+	private final WebChromeClient mWebChromeClient = new WebChromeClient() {
 
 		@Override
 		public void onProgressChanged(WebView view, int newProgress) {
@@ -40,38 +39,40 @@ public class PullToRefreshOverScrollWebview extends PullToRefreshBase<OverScroll
 		}
 	};
 	
-	
-	/*
+	/********************************************************************************************************************************
 	 * CONSTRUCTORS
-	 */
+	 *******************************************************************************************************************************/
 	
 	public PullToRefreshOverScrollWebview(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		setOnRefreshListener(defaultOnRefreshListener);
-		getRefreshableView().setWebChromeClient(defaultWebChromeClient);
+		
+		setOnRefreshListener(mRefreshListener);
+		getRefreshableView().setWebChromeClient(mWebChromeClient);
 	}
 
-	public PullToRefreshOverScrollWebview(Context context,com.handmark.pulltorefresh.library.PullToRefreshBase.Mode mode,com.handmark.pulltorefresh.library.PullToRefreshBase.AnimationStyle animStyle) {
+	public PullToRefreshOverScrollWebview(Context context, PullToRefreshBase.Mode mode, PullToRefreshBase.AnimationStyle animStyle) {
 		super(context, mode, animStyle);
-		setOnRefreshListener(defaultOnRefreshListener);
-		getRefreshableView().setWebChromeClient(defaultWebChromeClient);
+		
+		setOnRefreshListener(mRefreshListener);
+		getRefreshableView().setWebChromeClient(mWebChromeClient);
 	}
 
-	public PullToRefreshOverScrollWebview(Context context,
-			com.handmark.pulltorefresh.library.PullToRefreshBase.Mode mode) {
+	public PullToRefreshOverScrollWebview(Context context, PullToRefreshBase.Mode mode) {
 		super(context, mode);
-		setOnRefreshListener(defaultOnRefreshListener);
-		getRefreshableView().setWebChromeClient(defaultWebChromeClient);
+		
+		setOnRefreshListener(mRefreshListener);
+		getRefreshableView().setWebChromeClient(mWebChromeClient);
 	}
 
 	public PullToRefreshOverScrollWebview(Context context) {
 		super(context);
-		setOnRefreshListener(defaultOnRefreshListener);
-		getRefreshableView().setWebChromeClient(defaultWebChromeClient);
+		
+		setOnRefreshListener(mRefreshListener);
+		getRefreshableView().setWebChromeClient(mWebChromeClient);
 	}
 
 	@Override
-	public com.handmark.pulltorefresh.library.PullToRefreshBase.Orientation getPullToRefreshScrollDirection() {
+	public PullToRefreshBase.Orientation getPullToRefreshScrollDirection() {
 		return Orientation.VERTICAL;
 	}
 
@@ -88,6 +89,10 @@ public class PullToRefreshOverScrollWebview extends PullToRefreshBase<OverScroll
 		return webView;
 	}
 
+	/********************************************************************************************************************************
+	 * PULL TO REFRESH
+	 *******************************************************************************************************************************/
+	
 	@Override
 	protected boolean isReadyForPullStart() {
 		return getRefreshableView().getScrollY() == 0;
@@ -95,9 +100,9 @@ public class PullToRefreshOverScrollWebview extends PullToRefreshBase<OverScroll
 
 	@Override
 	protected boolean isReadyForPullEnd() {
-		//TODO -> scale problem...
-		float exactContentHeight = (float) Math.floor(getRefreshableView().getContentHeight()  /* * getRefreshableView().getScale()*/);
-		return getRefreshableView().getScrollY() >= (exactContentHeight - getRefreshableView().getHeight());
+		// TODO: scaling problem
+		float contentHeight = (float) Math.floor(getRefreshableView().getContentHeight() /* * getRefreshableView().getScale()*/);
+		return getRefreshableView().getScrollY() >= (contentHeight - getRefreshableView().getHeight());
 	}
 
 	@Override
@@ -112,6 +117,9 @@ public class PullToRefreshOverScrollWebview extends PullToRefreshBase<OverScroll
 		getRefreshableView().saveState(saveState);
 	}
 
+	/*************************************************
+	 * WEB VIEW SCALE
+	 ************************************************/
 	public float getWebviewScale() {
 		return mWebviewScale;
 	}
@@ -119,16 +127,14 @@ public class PullToRefreshOverScrollWebview extends PullToRefreshBase<OverScroll
 	public void setWebviewScale(float mWebviewScale) {
 		this.mWebviewScale = mWebviewScale;
 	}
-
-	@TargetApi(9)
+	
+	@TargetApi(VERSION_CODES.GINGERBREAD)
 	final class MInternalWebViewSDK9 extends OverScrollingWebView {
 
-		// WebView doesn't always scroll back to it's edge so we add some
-		// fuzziness
+		// Web view doesn't always scroll back to its edge, so we add some fuzziness
 		static final int OVERSCROLL_FUZZY_THRESHOLD = 2;
 
-		// WebView seems quite reluctant to overscroll so we use the scale
-		// factor to scale it's value
+		// Web view seems quite reluctant to overscroll, so we use a scale factor to increase its value
 		static final float OVERSCROLL_SCALE_FACTOR = 1.5f;
 
 		public MInternalWebViewSDK9(Context context, AttributeSet attrs) {
@@ -136,43 +142,31 @@ public class PullToRefreshOverScrollWebview extends PullToRefreshBase<OverScroll
 		}
 
 		@Override
-		protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX,
-				int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
-
-			final boolean returnValue = super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX,
-					scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
-
-			// Does all of the hard work...
-			OverscrollHelper.overScrollBy(PullToRefreshOverScrollWebview.this, deltaX, scrollX, deltaY, scrollY,
-					getScrollRange(), OVERSCROLL_FUZZY_THRESHOLD, OVERSCROLL_SCALE_FACTOR, isTouchEvent);
+		protected boolean overScrollBy(	int deltaX, int deltaY, 
+										int scrollX, int scrollY, 
+										int scrollRangeX, int scrollRangeY, 
+										int maxOverScrollX, int maxOverScrollY, 
+										boolean isTouchEvent) {
+			final boolean returnValue = super.overScrollBy(	deltaX, deltaY, 
+															scrollX, scrollY, 
+															scrollRangeX, scrollRangeY, 
+															maxOverScrollX, maxOverScrollY, 
+															isTouchEvent);
+			
+			// Does the hard work...
+			OverscrollHelper.overScrollBy(	PullToRefreshOverScrollWebview.this, 
+											deltaX, scrollX, 
+											deltaY, scrollY, 
+											getScrollRange(), 
+											OVERSCROLL_FUZZY_THRESHOLD, OVERSCROLL_SCALE_FACTOR, 
+											isTouchEvent);
 
 			return returnValue;
 		}
 
 		private int getScrollRange() {
-			//TODO -> scale problem...
-			return (int) Math.max(0, Math.floor(getRefreshableView().getContentHeight() /* * getRefreshableView().getScale()*/)
-					- (getHeight() - getPaddingBottom() - getPaddingTop()));
+			// TODO: scaling problem
+			return (int) Math.max(0, Math.floor(getRefreshableView().getContentHeight() /* * getRefreshableView().getScale()*/) - (getHeight() - getPaddingBottom() - getPaddingTop()));
 		}
-		
-//		@Override
-//		protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY)
-//		{
-//			super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
-//			if(mScrollListener != null && IScrollListener.class.isAssignableFrom(mScrollListener.getClass()))
-//			{
-//				((IScrollListener) mScrollListener).onOverScrolled(scrollX, scrollY, clampedX, clampedY);
-//			}
-//		}
-		
-		@Override
-		protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-			super.onScrollChanged(l, t, oldl, oldt);
-			if(mScrollListener != null && IScrollListener.class.isAssignableFrom(mScrollListener.getClass()))
-			{
-				((IScrollListener) mScrollListener).onOverScrolled(l, t, oldl, oldt);
-			}
-		}	
 	}
-
 }

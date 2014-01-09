@@ -139,7 +139,7 @@ public abstract class HTMLFragment extends Fragment {
 	protected String mRessourcePath;
 	protected String pageName;
 	
-	protected OverScrollingWebView webView;
+	protected OverScrollingWebView mWebView;
 	protected FrameLayout webViewPlaceholder;
 
 	protected Context mContext;
@@ -182,6 +182,18 @@ public abstract class HTMLFragment extends Fragment {
 		return view;
 	}	
 
+	/**
+	 * Restores webView state.
+	 */
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		
+		if (mWebView != null) {
+			mWebView.restoreState(savedInstanceState);
+		}
+	}
+	
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -208,13 +220,13 @@ public abstract class HTMLFragment extends Fragment {
 	 * This method SHOULD NOT be overridden in subclasses.
 	 */
 	protected void addWebview() {
-		if(webView == null) {
-			webView = new OverScrollingWebView(mContext);
+		if(mWebView == null) {
+			mWebView = new OverScrollingWebView(mContext);
 			setWebViewSettings(this);
 		}
 		
 		if(webViewPlaceholder != null) {
-			webViewPlaceholder.addView(webView);
+			webViewPlaceholder.addView(mWebView);
 		}
 		else  {
 			if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : you must set up webViewPlaceholder in setUpViews !");
@@ -227,9 +239,9 @@ public abstract class HTMLFragment extends Fragment {
 	 */
 	protected void removeWebviewFromPlaceholder() {
 		if (webViewPlaceholder != null) {
-			if(webView != null) {
+			if(mWebView != null) {
 				// Remove the WebView from the old placeholder
-				webViewPlaceholder.removeView(webView);
+				webViewPlaceholder.removeView(mWebView);
 			}
 		}
 		else {
@@ -244,20 +256,8 @@ public abstract class HTMLFragment extends Fragment {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		
-		if(webView != null) {
-			webView.saveState(outState);
-		}
-	}
-
-	/**
-	 * In this method, the webView state is restored.
-	 */
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		
-		if(webView != null) {
-			webView.restoreState(savedInstanceState);
+		if(mWebView != null) {
+			mWebView.saveState(outState);
 		}
 	}
 
@@ -298,7 +298,7 @@ public abstract class HTMLFragment extends Fragment {
 
 	private void preloadContent() {
 		if(preloadOnCreateView) {
-			if(webView != null) {
+			if(mWebView != null) {
 				if(	getArguments() != null 
 					&& getArguments().containsKey(kResourcePath)) {
 					mRessourcePath = getArguments().getString(kResourcePath);
@@ -330,12 +330,12 @@ public abstract class HTMLFragment extends Fragment {
 	 * @warning All the HTML Files of the whole applications should be found in the same place at the root of this.ressourcePath
 	 */
 	public void loadFileContentFromAssets(String pathInAssets,String fileName) {
-		if(webView != null) {
+		if(mWebView != null) {
 			//String hTMLStructure = getFileContentFromAssets(pathInAssets+fileName);
 			String baseUrl = ASSETS_PATH+pathInAssets+fileName;
 			//webView.loadDataWithBaseURL(baseUrl,hTMLStructure,"text/html","UTF-8",baseUrl);
 			//Log.e(getClass().getSimpleName(), "load url "+baseUrl);
-			webView.loadUrl(baseUrl);
+			mWebView.loadUrl(baseUrl);
 		}
 	}
 
@@ -353,9 +353,9 @@ public abstract class HTMLFragment extends Fragment {
 						String jsonMessage = jsonObj.toString().replaceAll("[\u2028\u2029]", "");
 						String url = "javascript:cobalt.execute(" + jsonMessage + ");";
 						
-						if(webView != null) {
+						if(mWebView != null) {
 							//Log.e(getClass().getSimpleName(), "load url "+jsonMessage);
-							webView.loadUrl(url);		
+							mWebView.loadUrl(url);		
 						}
 						else {
 							if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : message cannot been sent to empty webview : " + jsonMessage);
@@ -966,13 +966,13 @@ public abstract class HTMLFragment extends Fragment {
 
 	protected void setWebViewSettings(Object jsInterface)
 	{
-		if(webView != null)
+		if(mWebView != null)
 		{		
 
-			webView.setScrollListener(this);
-			webView.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
+			mWebView.setScrollListener(this);
+			mWebView.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
 			//allows JS to be called from native
-			WebSettings webSettings = webView.getSettings();
+			WebSettings webSettings = mWebView.getSettings();
 			webSettings.setJavaScriptEnabled(true);
 
 			//Enable and setup JS localStorage
@@ -991,8 +991,8 @@ public abstract class HTMLFragment extends Fragment {
 
 			//fix some focus problems on old devices like HTC Wildfire
 			//keyboard was not properly showed on input touch.
-			webView.requestFocus(View.FOCUS_DOWN);
-			webView.setOnTouchListener(new View.OnTouchListener() {
+			mWebView.requestFocus(View.FOCUS_DOWN);
+			mWebView.setOnTouchListener(new View.OnTouchListener() {
 				@Override
 				public boolean onTouch(View v, MotionEvent event) {
 					switch (event.getAction()) {
@@ -1008,8 +1008,8 @@ public abstract class HTMLFragment extends Fragment {
 			});
 
 			//add JS interface so that JS can call native functions.
-			webView.addJavascriptInterface(jsInterface, "Android");
-			webView.addJavascriptInterface(new LocalStorageJavaScriptInterface(mContext), "LocalStorage");
+			mWebView.addJavascriptInterface(jsInterface, "Android");
+			mWebView.addJavascriptInterface(new LocalStorageJavaScriptInterface(mContext), "LocalStorage");
 
 			ScaleWebViewClient wvc = new ScaleWebViewClient() {
 				@Override
@@ -1030,7 +1030,7 @@ public abstract class HTMLFragment extends Fragment {
 				wvc.setScaleListener((HTMLPullToRefreshFragment) this);
 			}
 
-			webView.setWebViewClient(wvc);
+			mWebView.setWebViewClient(wvc);
 		}
 		else
 		{
@@ -1067,7 +1067,7 @@ public abstract class HTMLFragment extends Fragment {
 	@TargetApi(16)
 	private void allowAjaxForNewAndroid() {
 		try {
-			webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
+			mWebView.getSettings().setAllowUniversalAccessFromFileURLs(true);
 		} 
 		catch(NullPointerException e) {
 		}

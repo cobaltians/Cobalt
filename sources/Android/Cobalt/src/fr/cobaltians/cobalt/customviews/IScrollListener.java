@@ -1,9 +1,8 @@
 package fr.cobaltians.cobalt.customviews;
 
 /**
- * Interface that provides a method to listen to the scroll of an OverScrollingWebview
+ * Interface providing a method to listen to the scroll of an OverScrollingWebview
  * @author Diane
- *
  */
 public interface IScrollListener {
 
