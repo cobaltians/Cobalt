@@ -82,6 +82,7 @@ public class ZoomHybridFragment extends HTMLFragment {
 
 	private void setZoomLevelInWebView(int nZoomLevel)
 	{
+		/*
 		JSONObject obj = new JSONObject();
 		try {
 			obj.put(kJSType, JSTypeEvent);
@@ -91,5 +92,6 @@ public class ZoomHybridFragment extends HTMLFragment {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		*/
 	}
 }

@@ -2,10 +2,11 @@ package fr.cobaltians.cobalt.fragments;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +38,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
 import fr.cobaltians.cobalt.activities.HTMLActivity;
 import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
 import fr.cobaltians.cobalt.database.LocalStorage;
@@ -44,12 +46,89 @@ import fr.cobaltians.cobalt.webViewClients.ScaleWebViewClient;
 import fr.cobaltians.cobalt.R;
 
 /**
- * {@link Fragment} that allows webview's interactions between Java (native side) and JavaScript (web side)
+ * {@link Fragment} allowing interactions between native and Web
  * 
  * @author Diane Moebs
  */
-
 public class HTMLFragment extends Fragment {
+<<<<<<< HEAD
+	
+	protected boolean mDebug = false;
+	
+	// RESOURCES
+	private final static String ASSETS_PATH = "file:///android_asset/";
+	private final static String kResourcePath = "resourcePath";
+		
+	// CONFIGURATION FILE
+	private final static String CONF_FILE = "cobalt.conf";
+	private final static String kAndroidController = "androidController";
+	public final static String kExtras = "extras";
+	private final static String kPage = "page";
+	protected final static String kPullToRefresh = "pullToRefresh";
+	protected final static String kInfiniteScroll = "infiniteScroll";
+	protected final static String kSwipe = "swipe";
+	
+	/***************
+	 * JS MESSAGES
+	 **************/
+	
+	// GENERAL
+	protected final static String kJSAction = "action";
+	protected final static String kJSCallback = "callback";
+	protected final static String kJSData = "data";
+	protected final static String kJSPage = "page";
+	protected final static String kJSType = "type";
+	protected final static String kJSValue = "value";
+	
+	// CALLBACKS
+	protected final static String JSTypeCallBack = "callback";
+	private final static String JSCallbackOnBackButtonPressed = "onBackButtonPressed";
+	
+	// COBALT IS READY
+	protected final static String JSTypeCobaltIsReady = "cobaltIsReady";
+	
+	// EVENTS
+	protected final static String JSTypeEvent = "event";
+	protected final static String kJSEvent = "name"; // TODO: DISCUSS WITH GUILLAUME
+
+	// LOG
+	protected final static String JSTypeLog = "log";
+	
+	// NAVIGATION
+	protected final static String JSTypeNavigation = "navigation";
+	protected final static String JSActionNavigationPush = "push";
+	protected final static String JSActionNavigationPop ="pop";
+	protected final static String JSActionNavigationModale = "modale";
+	protected final static String JSActionNavigationDismiss = "dismiss";
+	protected final static String kJSNavigationController = "controller";
+	protected final static String JSNavigationControllerDefault = "default";
+
+	// UI
+	protected final static String JSTypeUI = "ui";
+	protected final static String kJSUIControl = "control";
+		
+	// ALERT
+	protected final static String JSControlAlert = "alert";
+	protected final static String kJSAlertID = "id";
+	protected final static String kJSAlertTitle = "title";
+	protected final static String kJSAlertMessage = "message";
+	protected final static String kJSAlertButtons = "buttons";
+	protected final static String kJSAlertCancelable = "cancelable";
+	protected final static String kJSAlertButtonIndex  = "index";
+	
+	// TOAST
+	protected final static String JSControlToast = "toast";
+
+	// WEB LAYER
+	protected final static String JSTypeWebLayer = "webLayer";
+	protected final static String JSActionWebLayerShow = "show";
+	protected final static String JSActionWebLayerDismiss = "dismiss";
+	protected final static String kJSWebLayerFadeDuration = "fadeDuration";
+	protected final static String JSCallbackWebLayerOnDismiss = "onWebLayerDismissed";
+	
+	// TODO: FROM HERE
+	
+=======
 
 	protected boolean mDebug;
 	/**
@@ -284,6 +363,29 @@ public class HTMLFragment extends Fragment {
 	 */
 	protected static String kJSWebAlertfadeDuration = "fadeDuration";
 
+	
+	//UI
+	
+	protected static final String JSTypeUi = "ui";
+	
+	/**
+	 * The key for datePicker
+	 */
+	protected static final String kJSControl = "control";
+	
+	protected static final String kJSDate = "date";
+		
+	protected static final String kJSYear = "year";
+	
+	protected static final String kJSMonth = "month";
+	
+	protected static final String kJSDay = "day";
+	
+	protected static final String JSControlPicker = "picker";
+	
+	protected static final String JSDate = "date";
+
+
 	//ACTIVITY'S FEATURES
 	/**
 	 * use this key to specify if the activity that will be shown should have the pullToRefreshFeature active
@@ -296,36 +398,16 @@ public class HTMLFragment extends Fragment {
 	protected static String kJSInfiniteScrollActive ="infiniteScroll";
 
 
+>>>>>>> fdeffaaba60f0ad171ee5651897f40fb53d68cb7
 	//PROPERTIES
-	/**
-	 * the path where to find the all the resources of the HTML code, the JavaScript libraries and the configuration file
-	 */
-	protected String ressourcePath;
-
-	/**
-	 * the pageName that will be loaded in webView
-	 */
+	protected String mRessourcePath;
 	protected String pageName;
-
-	/**
-	 * the webView where pageName is loaded
-	 */
+	
 	protected OverScrollingWebView webView;
-
-
-	/**
-	 * the frameLayout containing the webView
-	 */
 	protected FrameLayout webViewPlaceholder;
 
-	/**
-	 * the application Context
-	 */
 	protected Context mContext;
 
-	/**
-	 * a boolean to know if a content has already been loaded in the webview (just after onCreate) or if the webview is still empty
-	 */
 	protected boolean webviewContentHasBeenLoaded;
 	protected Handler mHandler;
 
@@ -333,12 +415,17 @@ public class HTMLFragment extends Fragment {
 	private boolean webViewLoaded;
 	private boolean cobaltIsReady;
 	private boolean preloadOnCreateView;
-
+	
+	/**************************************************************************************************************************
+	 * LIFECYCLE
+	 *************************************************************************************************************************/
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.setRetainInstance(true);
-		mDebug = false;
+		
+		setRetainInstance(true);
+		
 		mContext = (Context) getActivity().getApplicationContext();
 		waitingJavaScriptCallsList = new ArrayList<JSONObject>();
 		webViewLoaded = false;
@@ -348,10 +435,11 @@ public class HTMLFragment extends Fragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
+		
 		cobaltIsReady = false;
+		
 		View view = inflater.inflate(getLayoutToInflate(), container,false);
 		setUpViews(view);
 		setUpListeners();
@@ -366,16 +454,6 @@ public class HTMLFragment extends Fragment {
 	}
 
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-	}
-
-	@Override
 	public void onStop() {
 		super.onStop();
 		//fragment will rotate (or been destroyed) so we don't preload again the content defined in fragment's arguments
@@ -387,20 +465,16 @@ public class HTMLFragment extends Fragment {
 	 * This method is called to add the webview in the placeholder (and create it if necessary)
 	 * This method SHOULD NOT be overridden in subclasses.
 	 */
-	protected void addWebview()
-	{
-		if(webView == null)
-		{
+	protected void addWebview() {
+		if(webView == null) {
 			webView = new OverScrollingWebView(mContext);
 			setWebViewSettings(this);
 		}
 
-		if(webViewPlaceholder != null)
-		{
+		if(webViewPlaceholder != null) {
 			webViewPlaceholder.addView(webView);
 		}
-		else 
-		{
+		else  {
 			if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : you must set up webViewPlaceholder in setUpViews !");
 		}		
 	}
@@ -409,32 +483,28 @@ public class HTMLFragment extends Fragment {
 	 * This method is called when the fragment is about to rotate. 
 	 * This method SHOULD NOT be overridden in subclasses.
 	 */
-	protected void removeWebviewFromPlaceholder()
-	{
-		if (webViewPlaceholder != null)
-		{
-			if(webView != null)
-			{
+	protected void removeWebviewFromPlaceholder() {
+		if (webViewPlaceholder != null) {
+			if(webView != null) {
 				// Remove the WebView from the old placeholder
 				webViewPlaceholder.removeView(webView);
 			}
 		}
-		else 
-		{
+		else {
 			if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : you must set up webViewPlaceholder in setUpViews !");
 		}
 	}
-
 
 	/**
 	 * In this method, the webView state is saved.
 	 */
 	@Override
-	public void onSaveInstanceState(Bundle outState)
-	{
+	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if(webView != null)
+		
+		if(webView != null) {
 			webView.saveState(outState);
+		}
 	}
 
 	/**
@@ -443,16 +513,17 @@ public class HTMLFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if(webView != null)
-			webView.restoreState(savedInstanceState);		
+		
+		if(webView != null) {
+			webView.restoreState(savedInstanceState);
+		}
 	}
 
 	/**
 	 * This method should be overridden in subclasses
 	 * @return the identifier of the layout that will be inflated in this fragment
 	 */
-	protected int getLayoutToInflate()
-	{
+	protected int getLayoutToInflate() {
 		return R.layout.html_fragment;
 	}
 
@@ -461,17 +532,15 @@ public class HTMLFragment extends Fragment {
 	 * Here, you set up the fragment's properties depending on the layout that has been inflated
 	 * @param rootView the root of the views that has been inflated
 	 */
-	protected void setUpViews(View rootView)
-	{
-		webViewPlaceholder = ((FrameLayout)rootView.findViewById(R.id.webViewPlaceholder));
+	protected void setUpViews(View rootView) {
+		webViewPlaceholder = ((FrameLayout) rootView.findViewById(R.id.webViewPlaceholder));
 	}
 
 	/**
 	 * This method should be overridden in subclasses. 
 	 * Here you set up the listeners for the components that were inflated in the given layout (from layoutToInflate) and set up in setUpViews(View rootView)
 	 */
-	protected void setUpListeners()
-	{
+	protected void setUpListeners() {
 
 	}
 
@@ -481,37 +550,32 @@ public class HTMLFragment extends Fragment {
 	 * @param fileName : the filename that will be displayed in the {@link HTMLPopUpWebview}
 	 * @return a new instance of the {@link HTMLPopUpWebview} that should be added in this {@link HTMLActivity}
 	 */
-	protected HTMLPopUpWebview getPopUpWebview(String fileName)
-	{
+	protected HTMLPopUpWebview getPopUpWebview(String fileName) {
 		return new HTMLPopUpWebview();
 	}
 
-	private void preloadContent()
-	{
-		if(preloadOnCreateView)
-		{
-			if(this.webView != null)
-			{
-				if(this.getArguments() != null && this.getArguments().containsKey(kResourcePath))
-				{
-					this.ressourcePath = this.getArguments().getString(kResourcePath);
+	private void preloadContent() {
+		if(preloadOnCreateView) {
+			if(webView != null) {
+				if(	getArguments() != null 
+					&& getArguments().containsKey(kResourcePath)) {
+					mRessourcePath = getArguments().getString(kResourcePath);
 				}
 
-				if(this.getArguments() != null && this.getArguments().containsKey(kPageName))
-				{
-					this.pageName = this.getArguments().getString(kPageName);
+				if(	getArguments() != null 
+					&& getArguments().containsKey(kPage)) {
+					pageName = getArguments().getString(kPage);
 				}
 
-				if(this.pageName != null && this.ressourcePath != null)
-				{
-					loadFileContentFromAssets(this.ressourcePath, this.pageName);
+				if(	pageName != null 
+					&& mRessourcePath != null) {
+					loadFileContentFromAssets(mRessourcePath, pageName);
 					webviewContentHasBeenLoaded = true;
 				}
-				else
-				{
-					this.ressourcePath = (this.ressourcePath == null) ?"www/" : this.ressourcePath;
-					this.pageName = (this.pageName != null) ? this.pageName : "index.html";
-					loadFileContentFromAssets(this.ressourcePath, this.pageName);
+				else {
+					mRessourcePath = (mRessourcePath == null) ? "www/" : mRessourcePath;
+					pageName = (pageName != null) ? pageName : "index.html";
+					loadFileContentFromAssets(mRessourcePath, pageName);
 				}
 			}
 		}
@@ -523,10 +587,8 @@ public class HTMLFragment extends Fragment {
 	 * @param fileName : the filenName to load in this.webView
 	 * @warning All the HTML Files of the whole applications should be found in the same place at the root of this.ressourcePath
 	 */
-	public void loadFileContentFromAssets(String pathInAssets,String fileName)
-	{
-		if(webView != null)
-		{
+	public void loadFileContentFromAssets(String pathInAssets,String fileName) {
+		if(webView != null) {
 			//String hTMLStructure = getFileContentFromAssets(pathInAssets+fileName);
 			String baseUrl = ASSETS_PATH+pathInAssets+fileName;
 			//webView.loadDataWithBaseURL(baseUrl,hTMLStructure,"text/html","UTF-8",baseUrl);
@@ -539,32 +601,27 @@ public class HTMLFragment extends Fragment {
 	 * sends jsonObj to the JavaScript in this.webView
 	 * @param jsonObj : the JSONObject that will be sent to the webView and handled in the JavaScript code.
 	 */
-	public void executeScriptInWebView(final JSONObject jsonObj)
-	{
-		if(jsonObj != null)
-		{
-			if(webViewLoaded || cobaltIsReady)
-			{
+	public void executeScriptInWebView(final JSONObject jsonObj) {
+		if(jsonObj != null) {
+			if(	webViewLoaded 
+				|| cobaltIsReady) {
 				mHandler.post(new Runnable() {
-
 					@Override
 					public void run() {
 						String jsonMessage = jsonObj.toString().replaceAll("[\u2028\u2029]", "");
-						String url = "javascript:cobalt.execute("+jsonMessage+");";
-						if(webView != null)
-						{
+						String url = "javascript:cobalt.execute(" + jsonMessage + ");";
+						
+						if(webView != null) {
 							//Log.e(getClass().getSimpleName(), "load url "+jsonMessage);
 							webView.loadUrl(url);		
 						}
-						else
-						{
-							if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : message cannot been sent to empty webview : "+jsonMessage);
+						else {
+							if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : message cannot been sent to empty webview : " + jsonMessage);
 						}						
 					}
 				});
 			}
-			else
-			{
+			else {
 				waitingJavaScriptCallsList.add(jsonObj);
 			}
 		}
@@ -577,11 +634,8 @@ public class HTMLFragment extends Fragment {
 	 * @param tag : the alertId of the alert
 	 * @param buttonIndex : the clicked button
 	 */
-	public void alertDialogClickedButton(long tag,int buttonIndex)
-	{
-		/*
-		 * Default implementation
-		 */
+	public void alertDialogClickedButton(long tag, int buttonIndex) {
+		
 	}
 
 	/**
@@ -589,18 +643,18 @@ public class HTMLFragment extends Fragment {
 	 * @param callbackId : the callbackId to call back after having handled native instructions.
 	 * @param objectToSend : the params to pass when calling the callback named callbackId
 	 */
-	public void sendCallbackResponse(final String callbackId, final Object objectToSend)
-	{
-		if(callbackId != null && callbackId.length() > 0)
-		{
+	public void sendCallbackResponse(final String callbackId, final Object objectToSend) {
+		if(	callbackId != null 
+			&& callbackId.length() > 0) {
 			JSONObject obj = new JSONObject();
 			try {
 				obj.put(kJSType,JSTypeCallBack);
-				obj.put(kJSCallbackID, callbackId);
-				obj.put(kJSParams, objectToSend);	
+				obj.put(kJSCallback, callbackId);
+				obj.put(kJSData, objectToSend);	
 				executeScriptInWebView(obj);
-			} catch (JSONException e) {
-				e.printStackTrace();
+			} 
+			catch (JSONException exception) {
+				exception.printStackTrace();
 			}
 		}
 	}
@@ -631,8 +685,8 @@ public class HTMLFragment extends Fragment {
 					//EVENT
 					if(type != null && type.length() >0 && type.equals(JSTypeEvent))
 					{
-						String name = jsonObj.optString(kJSName);
-						if(name != null && name.length() >0 && name.equals(JSNameToast))
+						String name = jsonObj.optString(kJSEvent);
+						if(name != null && name.length() >0 && name.equals(JSControlToast))
 						{
 							String message = jsonObj.optString(kJSValue);
 							if(message != null)
@@ -655,47 +709,47 @@ public class HTMLFragment extends Fragment {
 					//NAVIGATE
 					else if(type != null && type.length() >0 && type.equals(JSTypeNavigation))
 					{
-						if(jsonObj.has(kJSNavigationType))
+						if(jsonObj.has(kJSAction))
 						{
-							String navType = jsonObj.optString(kJSNavigationType);
+							String navType = jsonObj.optString(kJSAction);
 							//PUSH
-							if(navType != null && navType.length() >0 && navType.equals(JSNavigationTypePush))
+							if(navType != null && navType.length() >0 && navType.equals(JSActionNavigationPush))
 							{
-								String activityId = jsonObj.optString(kJSNavigationClassId);
-								String pageNamed = jsonObj.optString(kJSNavigationPageName);
+								String activityId = jsonObj.optString(kJSNavigationController);
+								String pageNamed = jsonObj.optString(kJSPage);
 								pushWebView(activityId,pageNamed);
 								return true;
 							}
 							//POP
-							else if(navType != null && navType.length() >0 && navType.equals(JSNavigationTypePop))
+							else if(navType != null && navType.length() >0 && navType.equals(JSActionNavigationPop))
 							{
 								popWebViewActivity();
 								return true;
 							}
 							//MODALE
-							else if(navType != null && navType.length() >0 && navType.equals(JSNavigationTypeModale))
+							else if(navType != null && navType.length() >0 && navType.equals(JSActionNavigationModale))
 							{
-								String activityId = jsonObj.optString(kJSNavigationClassId);
-								String pageNamed = jsonObj.optString(kJSNavigationPageName);
-								String callBackId = jsonObj.optString(kJSCallbackID);
+								String activityId = jsonObj.optString(kJSNavigationController);
+								String pageNamed = jsonObj.optString(kJSPage);
+								String callBackId = jsonObj.optString(kJSCallback);
 								presentWebView(activityId, pageNamed, callBackId);
 								return true;
 							}
 							//DISMISS
-							else if(navType != null && navType.length() >0 && navType.equals(JSNavigationTypeDismiss))
+							else if(navType != null && navType.length() >0 && navType.equals(JSActionNavigationDismiss))
 							{
-								String className = jsonObj.optString(kJSNavigationClassName);
-								String pageNamed = jsonObj.optString(kJSNavigationPageName);
+								String className = jsonObj.optString(kJSNavigationController);
+								String pageNamed = jsonObj.optString(kJSPage);
 								dismissWebViewWithActivity(className, pageNamed);
 								return true;
 							}
 						}
 					}
 					//WEB ALERT
-					else if(type != null && type.length() >0 && type.equals(JSTypeWebAlert))
+					else if(type != null && type.length() >0 && type.equals(JSTypeWebLayer))
 					{
-						String name = jsonObj.optString(kJSName);
-						if(name != null && name.length() > 0 && name.equals(JSWebAlertShow))
+						String name = jsonObj.optString(kJSAction);
+						if(name != null && name.length() > 0 && name.equals(JSActionWebLayerShow))
 						{
 							mHandler.post(new Runnable() {
 
@@ -711,19 +765,64 @@ public class HTMLFragment extends Fragment {
 					//CALLBACK
 					else if(type != null && type.length() >0 && type.equals(JSTypeCallBack))
 					{
-						String callbackID = jsonObj.optString(kJSCallbackID);
-						if(callbackID != null && callbackID.length() >0 && callbackID.equals(JSCallbackBackButtonPressed))
+						String callbackID = jsonObj.optString(kJSCallback);
+						if(callbackID != null && callbackID.length() >0 && callbackID.equals(JSCallbackOnBackButtonPressed))
 						{
-							boolean allowToGoBack = jsonObj.optBoolean(kJSParams);
+							boolean allowToGoBack = jsonObj.optBoolean(kJSData);
 							handleBackButtonPressed(allowToGoBack);
 							return true;
 						}
 					}
+<<<<<<< HEAD
+					else if(type != null && type.length() >0 && type.equals(JSControlAlert))
+=======
+					
+					// UI
+			    	else if (type != null && type.length() >0 && type.equals(JSTypeUi)) {
+				    	final String control = jsonObj.optString(kJSControl);
+				    	if (control != null  
+				    		&& control.length() > 0) {
+				    		if (control.equals(JSControlPicker)) {
+						    	JSONObject params = jsonObj.optJSONObject(kJSParams);
+						    	if (params != null) {
+						    		final String typeParams = params.optString(kJSType);
+						    		if (typeParams != null 
+									    && typeParams.length() > 0) {
+						    			if (typeParams.equals(JSDate)) {
+						    				JSONObject date = params.optJSONObject(kJSDate);
+						    				
+						    				Calendar cal = Calendar.getInstance();
+						    				int year = cal.get(Calendar.YEAR);
+						    		        int month = cal.get(Calendar.MONTH);
+						    		        int day = cal.get(Calendar.DAY_OF_MONTH);
+						    		        
+						    				if (date != null) {
+						    					if (date.has(kJSYear)
+						    						&& date.has(kJSMonth)
+						    						&& date.has(kJSDay)) {
+						    						year = date.getInt(kJSYear);
+						    						month = date.getInt(kJSMonth);
+						    						month--;
+						    						day = date.getInt(kJSDay);
+						    					}
+						    				}
+						    				String callbackID = jsonObj.optString(kJSCallbackID);
+								    		if (callbackID != null
+									    			&& callbackID.length() > 0) {
+												showDatePickerDialog(year, month, day, callbackID);	
+								    		}
+						    			} 						
+						    		}
+						    	}
+				    		}
+				    	}
+			    	}
 					else if(type != null && type.length() >0 && type.equals(JSTypeAlert))
+>>>>>>> fdeffaaba60f0ad171ee5651897f40fb53d68cb7
 					{
 						showAlertDialogWithJSON(jsonObj);
 					}
-					else if(type != null && type.length() >0 && type.equals(JSTypeCobaltReady))
+					else if(type != null && type.length() >0 && type.equals(JSTypeCobaltIsReady))
 					{
 						if(mDebug) Log.i(getClass().getSimpleName(), "cobalt is ready. waiting calls : "+waitingJavaScriptCallsList.size());
 
@@ -751,8 +850,8 @@ public class HTMLFragment extends Fragment {
 		JSONObject j = new JSONObject();
 		try {
 			j.put(kJSType, JSTypeEvent);
-			j.put(kJSName, JSCallbackBackButtonPressed);
-			j.put(kJSCallbackID, JSCallbackBackButtonPressed);
+			j.put(kJSEvent, JSCallbackOnBackButtonPressed);
+			j.put(kJSCallback, JSCallbackOnBackButtonPressed);
 			executeScriptInWebView(j);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -771,7 +870,7 @@ public class HTMLFragment extends Fragment {
 				JSONObject obj = new JSONObject();
 				try {
 					obj.put(kJSType,JSTypeEvent);
-					obj.put(kJSName, JSOnWebAlertDismissed);
+					obj.put(kJSEvent, JSCallbackWebLayerOnDismiss);
 					obj.put(kJSValue, fileName);
 					executeScriptInWebView(obj);
 				} catch (JSONException e) {
@@ -838,8 +937,8 @@ public class HTMLFragment extends Fragment {
 			//send callback to store this.className and HTMLPage to dismiss later !
 			JSONObject objectToSend = new JSONObject();
 			try {
-				objectToSend.put(kJSNavigationPageName, this.pageName);
-				objectToSend.put(kJSNavigationClassName, getActivity() != null ? getActivity().getClass().getName() : "ERROR : activity's className couldn't be found.");		
+				objectToSend.put(kJSPage, this.pageName);
+				objectToSend.put(kJSNavigationController, getActivity() != null ? getActivity().getClass().getName() : "ERROR : activity's className couldn't be found.");		
 				sendCallbackResponse(callBackID, objectToSend);
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -856,8 +955,8 @@ public class HTMLFragment extends Fragment {
 			if(Activity.class.isAssignableFrom(myClass))
 			{
 				Bundle bundleToAdd = new Bundle();
-				bundleToAdd.putString(kPageName, pageNamed);
-				bundleToAdd.putString(kResourcePath, this.ressourcePath);
+				bundleToAdd.putString(kPage, pageNamed);
+				bundleToAdd.putString(kResourcePath, mRessourcePath);
 
 				Intent i = new Intent(mContext,myClass);
 				i.putExtra(kExtras, bundleToAdd);
@@ -876,7 +975,7 @@ public class HTMLFragment extends Fragment {
 
 	private JSONObject getConfFileContent()
 	{
-		String confToParse = getFileContentFromAssets(this.ressourcePath+CONF_FILE);
+		String confToParse = getFileContentFromAssets(mRessourcePath+CONF_FILE);
 		JSONObject jsonObj;
 
 		if(confToParse != null && confToParse.length() > 0)
@@ -909,18 +1008,18 @@ public class HTMLFragment extends Fragment {
 				if(classId != null && confs.has(classId))
 				{
 
-					className = confs.getJSONObject(classId).optString(kAndroidClassName);
-					pullToRefresh = confs.getJSONObject(classId).optBoolean(kJSPullToRefreshActive);
-					infiniteScroll = confs.getJSONObject(classId).optBoolean(kJSInfiniteScrollActive);
+					className = confs.getJSONObject(classId).optString(kAndroidController);
+					pullToRefresh = confs.getJSONObject(classId).optBoolean(kPullToRefresh);
+					infiniteScroll = confs.getJSONObject(classId).optBoolean(kInfiniteScroll);
 				}
 
 				if(className == null || className.length() == 0)
 				{
 					Log.w(getClass().getSimpleName(), "WARNING : className for ID "+classId != null ?classId :"(null)"+"not found. Looking for default class ID");
-					if(confs.has(JSNavigationDefaultClassId)){
-						className = confs.getJSONObject(JSNavigationDefaultClassId).optString(kAndroidClassName);
-						pullToRefresh = confs.getJSONObject(JSNavigationDefaultClassId).optBoolean(kJSPullToRefreshActive);
-						infiniteScroll = confs.getJSONObject(JSNavigationDefaultClassId).optBoolean(kJSInfiniteScrollActive);
+					if(confs.has(JSNavigationControllerDefault)){
+						className = confs.getJSONObject(JSNavigationControllerDefault).optString(kAndroidController);
+						pullToRefresh = confs.getJSONObject(JSNavigationControllerDefault).optBoolean(kPullToRefresh);
+						infiniteScroll = confs.getJSONObject(JSNavigationControllerDefault).optBoolean(kInfiniteScroll);
 					}	
 					else Log.w(getClass().getSimpleName(), "WARNING : No default key is present in conf file...");
 				}
@@ -930,8 +1029,8 @@ public class HTMLFragment extends Fragment {
 
 			//CREATE INTENT 
 			Bundle bundleToAdd = new Bundle();
-			bundleToAdd.putString(kPageName, pageNamed);
-			bundleToAdd.putString(kResourcePath, this.ressourcePath);
+			bundleToAdd.putString(kPage, pageNamed);
+			bundleToAdd.putString(kResourcePath, mRessourcePath);
 			bundleToAdd.putBoolean(kPullToRefresh, pullToRefresh);
 			bundleToAdd.putBoolean(kInfiniteScroll, infiniteScroll);
 
@@ -980,8 +1079,7 @@ public class HTMLFragment extends Fragment {
 			try {
 				String title = jsonObj.optString(kJSAlertTitle);
 				String message = jsonObj.optString(kJSAlertMessage);
-				String receiverType = jsonObj.optString(kJSAlertCallbackReceiver);
-				boolean isCancellable =jsonObj.optBoolean(kJSAlertIsCancelable,true);
+				boolean isCancellable =jsonObj.optBoolean(kJSAlertCancelable,true);
 				final int alertId = jsonObj.optInt(kJSAlertID);
 
 				JSONArray buttons = jsonObj.has(kJSAlertButtons) ? jsonObj.getJSONArray(kJSAlertButtons) : new JSONArray();
@@ -994,17 +1092,35 @@ public class HTMLFragment extends Fragment {
 
 				AlertDialog mAlert = alert.create();
 
-				//WebCallback
-				if(receiverType.length() > 0)
-				{
-					if(receiverType.equals(JSAlertCallbackReceiverWeb))
+				// Callback
+				if (jsonObj.has(kJSCallback)) {
+					final String callbackId = jsonObj.getString(kJSCallback);
 
+					if(buttons.length() == 0)
 					{
-						final String callbackId = jsonObj.optString(kJSCallbackID);
-
-						if(buttons.length() == 0)
+						mAlert.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {	
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								if(callbackId.length() > 0)
+								{
+									JSONObject j = new JSONObject();
+									try {
+										j.put(kJSAlertID, alertId);
+										j.put(kJSAlertButtonIndex,0);
+										sendCallbackResponse(callbackId, j);
+									} catch (JSONException e) {
+										e.printStackTrace();
+									}								
+								}
+							}
+						});
+					}
+					else
+					{
+						int realSize = Math.min(buttons.length(), 3);
+						for(int i = 1 ;i <= realSize ;i++)
 						{
-							mAlert.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {	
+							mAlert.setButton(-i, buttons.getString(i-1), new DialogInterface.OnClickListener() {	
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
 									if(callbackId.length() > 0)
@@ -1012,69 +1128,19 @@ public class HTMLFragment extends Fragment {
 										JSONObject j = new JSONObject();
 										try {
 											j.put(kJSAlertID, alertId);
-											j.put(kJSAlertButtonIndex,0);
-											sendCallbackResponse(callbackId, j);
+											j.put(kJSAlertButtonIndex,-1-which);
+											sendCallbackResponse(callbackId,j);
 										} catch (JSONException e) {
 											e.printStackTrace();
-										}								
+										}
+
 									}
 								}
 							});
-						}
-						else
-						{
-							int realSize = Math.min(buttons.length(), 3);
-							for(int i = 1 ;i <= realSize ;i++)
-							{
-								mAlert.setButton(-i, buttons.getString(i-1), new DialogInterface.OnClickListener() {	
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										if(callbackId.length() > 0)
-										{
-											JSONObject j = new JSONObject();
-											try {
-												j.put(kJSAlertID, alertId);
-												j.put(kJSAlertButtonIndex,-1-which);
-												sendCallbackResponse(callbackId,j);
-											} catch (JSONException e) {
-												e.printStackTrace();
-											}
-
-										}
-									}
-								});
-							}
 						}
 					}
-					//Native Callback
-					else if(receiverType.equals(JSAlertCallbackReceiverNative))
-					{
-						if(buttons.length() == 0)
-						{
-							mAlert.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {	
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									alertDialogClickedButton(alertId, DialogInterface.BUTTON_POSITIVE);
-								}
-							});
-						}
-						else
-						{
-
-							int realSize = Math.min(buttons.length(), 3);
-							for(int i = 1 ;i <= realSize ;i++)
-							{
-								mAlert.setButton(-i, buttons.getString(i-1), new DialogInterface.OnClickListener() {	
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										alertDialogClickedButton(alertId, which);
-									}
-								});
-							}
-						}
-					}					
 				}
-				//NO CallBack
+				// NO Callback
 				else
 				{
 					if(buttons.length() == 0)
@@ -1113,13 +1179,13 @@ public class HTMLFragment extends Fragment {
 		{
 			if(getActivity() != null)
 			{
-				String pageNamed = obj.optString(kJSWebAlertPageName);
-				double fadeDuration = obj.optDouble(kJSWebAlertfadeDuration,0.3);
+				String pageNamed = obj.optString(kJSPage);
+				double fadeDuration = obj.optDouble(kJSWebLayerFadeDuration,0.3);
 
 				HTMLPopUpWebview popUpWebview = getPopUpWebview(pageNamed);
 				Bundle bundleToAdd = new Bundle();
-				bundleToAdd.putString(kPageName, pageNamed);
-				bundleToAdd.putString(kResourcePath, this.ressourcePath);
+				bundleToAdd.putString(kPage, pageNamed);
+				bundleToAdd.putString(kResourcePath, mRessourcePath);
 				popUpWebview.setArguments(bundleToAdd);
 
 				android.support.v4.app.FragmentTransaction fTransition;
@@ -1274,19 +1340,19 @@ public class HTMLFragment extends Fragment {
 			int size = waitingJavaScriptCallsList.size();
 			for(int i = 0 ; i < size ; i++)
 			{
-				if(mDebug) Log.e(getClass().getSimpleName(), "execute "+waitingJavaScriptCallsList.get(i).optString(kJSName));
+				if(mDebug) Log.i(getClass().getSimpleName(), "executeWaitingCalls: execute " + waitingJavaScriptCallsList.get(i).toString());
 				executeScriptInWebView(waitingJavaScriptCallsList.get(i));
 			}
 			waitingJavaScriptCallsList.clear();
 		}
 	}
 
-	public boolean isDebugLogsActivated() {
+	public boolean isDebugLoggingEnabled() {
 		return mDebug;
 	}
 
-	public void setDebugActivated(boolean mDebug) {
-		this.mDebug = mDebug;
+	public void enableDebugLogging(boolean debug) {
+		mDebug = debug;
 	}
 
 	/**
@@ -1383,4 +1449,41 @@ public class HTMLFragment extends Fragment {
 			database.close();
 		}
 	}
+	
+	/********************************************************
+     * DatePicker
+     ********************************************************/
+    protected void showDatePickerDialog(int year, int month, int day, String callbackID) {
+    	Bundle args = new Bundle();
+    	args.putInt(HTMLDatePickerFragment.ARG_YEAR, year);
+    	args.putInt(HTMLDatePickerFragment.ARG_MONTH, month);
+    	args.putInt(HTMLDatePickerFragment.ARG_DAY, day);
+    	args.putString(HTMLDatePickerFragment.ARG_CALLBACK_ID, callbackID);
+    	
+    	HTMLDatePickerFragment newFragment = new HTMLDatePickerFragment();
+        newFragment.setArguments(args);
+        newFragment.setListener(this);
+        
+        newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+    }
+    
+    protected void sendDate(int year, int month, int day, String callbackID) {
+    	try {
+    		JSONObject jsonDate = new JSONObject();
+    		jsonDate.put(kJSYear, year);
+    		month++;
+    		jsonDate.put(kJSMonth, month);
+    		jsonDate.put(kJSDay, day);
+    		
+			JSONObject jsonResponse = new JSONObject();
+			jsonResponse.put(kJSType, JSTypeCallBack);
+			jsonResponse.put(kJSCallbackID, callbackID);
+			jsonResponse.put(kJSParams, jsonDate);
+			Log.d(getClass().getName(), "sendDate + : " + jsonResponse);
+			executeScriptInWebView(jsonResponse);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 }
