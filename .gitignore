@@ -42,3 +42,9 @@ sources/Android/HPNativeBridge/bin/res/crunch/drawable-xhdpi/ic_launcher.png
 sources/Android/HPNativeBridge/bin/res/crunch/drawable-xxhdpi/ic_launcher.png
 
 sources/Android/HPNativeBridge/gen/.gitignore
+
+sources/Android/Cobalt/bin/cobalt.jar
+
+sources/Android/Cobalt/bin/cobalt.jar
+
+samples/CatalogApp/Android/CobaltCatalog/bin/jarlist.cache

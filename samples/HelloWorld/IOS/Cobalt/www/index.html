@@ -9,7 +9,7 @@
     </head>
     <body>
         <script type="text/javascript" src="js/zepto.js"></script>
-        <script type="text/javascript" src="js/nativeBridge/nativeBridge.js"></script>
+        <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
             
         
             
@@ -19,11 +19,11 @@
         <script>
             Zepto(function($){
                 
-                nativeBridge.init({                    	
+                cobalt.init({                    	
                     events:{
                         "pullToRefreshRefresh" : function(event){
-                            nativeBridge.log('Refresh');                           
-                            nativeBridge.sendCallback(event);
+                            cobalt.log('Refresh');                           
+                            cobalt.sendCallback(event);
                             var hellos=new Array("Hello !","Refreshing !","Great !","Fast !", ";-)");
                             var elemlength = hellos.length;
                             var randomnum = Math.floor(Math.random()*elemlength);
@@ -38,7 +38,12 @@
             
             
         </script>
+<<<<<<< HEAD
         
+=======
+        <div id="cobalt_logdiv"></div> 
+            
+>>>>>>> 33403b97c4615da9360081d97db8c8399a591743
             
             
             
