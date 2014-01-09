@@ -36,10 +36,10 @@ public class HTMLPopUpWebview extends HTMLFragment {
 				if(jsonObj.has(kJSType))
 				{
 					String type = jsonObj.optString(kJSType);
-					if(type != null && type.length() >0 && type.equals(JSTypeWebAlert))
+					if(type != null && type.length() >0 && type.equals(JSTypeWebLayer))
 					{
-						String name = jsonObj.optString(kJSName);
-						if(name != null && name.length() > 0 && name.equals(JSWebAlertDismiss))
+						String name = jsonObj.optString(kJSAction);
+						if(name != null && name.length() > 0 && name.equals(JSActionWebLayerDismiss))
 						{
 							mHandler.post(new Runnable() {
 
@@ -65,7 +65,7 @@ public class HTMLPopUpWebview extends HTMLFragment {
 	{
 		if(obj != null)
 		{
-			double fadeDuration = obj.optDouble(kJSWebAlertfadeDuration,0);
+			double fadeDuration = obj.optDouble(kJSWebLayerFadeDuration,0);
 			android.support.v4.app.FragmentTransaction fTransition;
 			fTransition = getActivity().getSupportFragmentManager().beginTransaction();
 			if(fadeDuration >0)

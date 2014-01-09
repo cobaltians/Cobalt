@@ -252,7 +252,7 @@ public class HTMLPullToRefreshFragment extends HTMLFragment implements IScrollLi
 				//TYPE = EVENT
 				if(type != null && type.length() >0 && type.equals(JSTypeCallBack))
 				{
-					String callbackID = jsonObj.optString(kJSCallbackID);
+					String callbackID = jsonObj.optString(kJSCallback);
 					if(callbackID != null && callbackID.length() >0 && callbackID.equals(JSNamePullToRefreshDidRefresh))
 					{
 						mHandler.post(new Runnable() {
@@ -292,8 +292,8 @@ public class HTMLPullToRefreshFragment extends HTMLFragment implements IScrollLi
 				JSONObject obj = new JSONObject();
 				try {
 					obj.put(kJSType,JSTypeEvent);
-					obj.put(kJSName, JSNamePullToRefreshRefresh);
-					obj.put(kJSCallbackID, JSNamePullToRefreshDidRefresh);
+					obj.put(kJSEvent, JSNamePullToRefreshRefresh);
+					obj.put(kJSCallback, JSNamePullToRefreshDidRefresh);
 					executeScriptInWebView(obj);
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -333,7 +333,7 @@ public class HTMLPullToRefreshFragment extends HTMLFragment implements IScrollLi
 					JSONObject obj = new JSONObject();
 					try {
 						obj.put(kJSType,JSTypeEvent);
-						obj.put(kJSName, JSNamePullToRefreshCancelled);
+						obj.put(kJSEvent, JSNamePullToRefreshCancelled);
 						executeScriptInWebView(obj);
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -357,7 +357,7 @@ public class HTMLPullToRefreshFragment extends HTMLFragment implements IScrollLi
 					JSONObject obj = new JSONObject();
 					try {
 						obj.put(kJSType,JSTypeEvent);
-						obj.put(kJSName, JSNameInfiniteScrollCancelled);
+						obj.put(kJSEvent, JSNameInfiniteScrollCancelled);
 						executeScriptInWebView(obj);
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -395,8 +395,8 @@ public class HTMLPullToRefreshFragment extends HTMLFragment implements IScrollLi
 					JSONObject obj = new JSONObject();
 					try {
 						obj.put(kJSType,JSTypeEvent);
-						obj.put(kJSName, JSNameInfiniteScrollRefresh);
-						obj.put(kJSCallbackID, JSNameInfiniteScrollDidRefresh);
+						obj.put(kJSEvent, JSNameInfiniteScrollRefresh);
+						obj.put(kJSCallback, JSNameInfiniteScrollDidRefresh);
 						executeScriptInWebView(obj);
 
 					} catch (JSONException e) {

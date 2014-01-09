@@ -117,7 +117,7 @@ public class HTMLFlipperFragment extends HTMLFragment implements ISwipeListener 
 				JSONObject obj = new JSONObject();
 				try {
 					obj.put(kJSType,JSTypeEvent);
-					obj.put(kJSName, direction ? JSNameSwipeRight : JSNameSwipeLeft);
+					obj.put(kJSEvent, direction ? JSNameSwipeRight : JSNameSwipeLeft);
 					executeScriptInWebView(obj);
 				}
 				catch (JSONException e) {
