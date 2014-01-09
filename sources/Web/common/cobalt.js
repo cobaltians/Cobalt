@@ -143,7 +143,7 @@ var cobalt={
 		//full web
 		cobalt.alert("Texte");
 		cobalt.alert("Title", "Texte", ["Ok"], { callback:function(index){console.log('popup dismissed') }});
-		cobalt.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", alertId:12 });
+		cobalt.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", id:12 });
 
 	 */
 	alert:function(title, text, buttons, options){
