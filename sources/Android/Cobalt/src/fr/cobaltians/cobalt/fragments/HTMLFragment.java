@@ -51,7 +51,6 @@ import fr.cobaltians.cobalt.R;
  * @author Diane Moebs
  */
 public class HTMLFragment extends Fragment {
-<<<<<<< HEAD
 	
 	protected boolean mDebug = false;
 	
@@ -116,6 +115,14 @@ public class HTMLFragment extends Fragment {
 	protected final static String kJSAlertCancelable = "cancelable";
 	protected final static String kJSAlertButtonIndex  = "index";
 	
+	// DATE PICKER
+	protected static final String JSControlPicker = "picker";
+	protected static final String JSPickerDate = "date";
+	protected static final String kJSDate = "date";
+	protected static final String kJSDay = "day";
+	protected static final String kJSMonth = "month";
+	protected static final String kJSYear = "year";
+	
 	// TOAST
 	protected final static String JSControlToast = "toast";
 
@@ -128,277 +135,6 @@ public class HTMLFragment extends Fragment {
 	
 	// TODO: FROM HERE
 	
-=======
-
-	protected boolean mDebug;
-	/**
-	 * the bundle key where the all the informations related to the {@link HTMLFragment} are stored
-	 */
-	public static String kExtras = "kExtras";
-
-	/**
-	 * the bundle key where the pageName to load of the {@link HTMLFragment} is stored
-	 */
-	public static String kPageName = "kPageName";
-
-	/**
-	 * the bundle key where the resourcePath of the {@link HTMLFragment} is stored
-	 */
-	public static String kResourcePath = "kResourcePath";
-
-	/**
-	 * the bundle key where the boolean to enable the pullToRefresh feature of the {@link HTMLFragment} is stored
-	 */
-	public static String kPullToRefresh = "kPullToRefresh";
-
-	/**
-	 * the bundle key where the boolean to enable the infiniteScroll feature of the {@link HTMLFragment} is stored
-	 */
-	public static String kInfiniteScroll = "kInfiniteScroll";
-
-	/**
-	 * the bundle key where the boolean to enable the swipe feature of the {@link HTMLFragment} is stored
-	 */
-	public static String kSwipe = "kSwipe";
-
-	private static String ASSETS_PATH = "file:///android_asset/";
-
-	//CONF FILE
-	private static String CONF_FILE = "cobalt.conf";
-	private static String kAndroidClassName = "androidClassName";
-
-	/**
-	 * the key "type" to specify the type of interaction
-	 */
-	protected static String kJSType = "type";
-
-	/**
-	 * type's value => event
-	 */
-	protected static String JSTypeEvent = "typeEvent";
-
-	/**
-	 * type's value => log (for debug use)
-	 */
-	protected static String JSTypeLog = "typeLog";
-
-	/**
-	 * type's value => callback
-	 */
-	protected static String JSTypeCallBack = "typeCallback";
-
-	/**
-	 * type's value => navigation
-	 */
-	protected static String JSTypeNavigation = "typeNavigation";
-
-	/**
-	 * type's value => native alert
-	 */
-	protected static String JSTypeAlert = "typeAlert";
-
-	/**
-	 * type's value => web alert
-	 */
-	protected static String JSTypeWebAlert = "typeWebAlert";
-
-	/**
-	 * type's value => callback
-	 */
-	protected static String JSTypeCobaltReady = "cobaltIsReady";
-	//EVENTS
-	/**
-	 * the key "name" to specify the event
-	 */
-	protected static String kJSName = "name";
-
-	/**
-	 * name's value => toast
-	 */
-	protected static String JSNameToast = "nameToast";
-
-	/**
-	 * name's value => set zoom
-	 */
-	protected static String JSNameSetZoom = "nameSetZoom";
-
-	/**
-	 * name's value => when a webalert has been dismissed
-	 */
-	protected static String JSOnWebAlertDismissed = "onWebAlertDismissed";
-
-	/**
-	 * the key "value" used to pass a value to JavaScript
-	 */
-	protected static String kJSValue = "value";
-
-	//CALLBACKS
-	/**
-	 * the key "callbackID" used to pass the callBackId that must be called by JavaScript after the treatments handled by the current request 
-	 */
-	protected static String kJSCallbackID = "callbackID";
-
-	/**
-	 * the key "params" used to pass some datas with the given callback (in type "typeCallback")
-	 */
-	protected static String kJSParams = "params";
-
-	private static String JSCallbackBackButtonPressed = "onBackButtonPressed";
-
-
-	//NAVIGATION
-	/**
-	 * the key "navigationType" to specify the type of navigation that shall be executed
-	 */
-	protected static String kJSNavigationType = "navigationType";
-
-	/**
-	 * a value of "navigationType" => push : next view will be pushed on the stack
-	 */
-	protected static String JSNavigationTypePush = "push";
-
-	/**
-	 * a value of "navigationType" => pop : ask for a pop on the back stack
-	 */
-	protected static String JSNavigationTypePop ="pop";
-
-	/**
-	 * a value of "navigationType" => modale : simulates an iOS kind of navigation with modal views (see documentation for further informations)
-	 */
-	protected static String JSNavigationTypeModale = "modale";
-
-	/**
-	 * a value of "navigationType" => dismiss : simulates an iOS kind of navigation with modal views (see documentation for further informations)
-	 */
-	protected static String JSNavigationTypeDismiss = "dismiss";
-
-	/**
-	 * the key "navigationPageName" => used to pass the page name to be loaded in the webview on the creation of the view
-	 */
-	protected static String kJSNavigationPageName = "navigationPageName";
-
-	/**
-	 * the key "navigationClassId" => used to pass the class name (from the configuration file) to be instantiated on the creation of the view
-	 */
-	protected static String kJSNavigationClassId = "navigationClassId";
-
-	/**
-	 * the key "navigationClassName" => used to store the className to allow the "dismiss" operation on Android
-	 */
-	protected static String kJSNavigationClassName = "navigationClassName";
-
-	/**
-	 * the key "default" => the default class Id where the default className to instantiate will be looked for in the configuration's file.
-	 */
-	protected static String JSNavigationDefaultClassId = "default";
-
-	//ALERT
-	/**
-	 * the key "alertTitle" is used to specify the title of the native alert to generate
-	 */
-	protected static String kJSAlertTitle ="alertTitle";
-
-	/**
-	 * the key "alertMessage" is used to specify the message of the native alert to generate
-	 */
-	protected static String kJSAlertMessage ="alertMessage";
-
-	/**
-	 * the key "alertButtons" is used to specify the titles of the buttons of the native alert to generate
-	 *  You can give up to three buttons, but should not give more than two for aesthetic reason.
-	 */
-	protected static String kJSAlertButtons ="alertButtons";
-
-	/**
-	 * the key "alertReceiver" is used to specify if the receiver of the result of the button clicked should be either :
-	 * the native side -> the callback method alertDialogClickedButton(alertId,indexOfClickedButton) will be called
-	 * the web side -> a callback method will be called on web side (depending on the callbackId) with the index of the clicked button and the id of the alert
-	 */
-	protected static String kJSAlertCallbackReceiver ="alertReceiver";
-
-	/**
-	 * the key "alertId" is used to specify which alert is displayed or clicked (useful when several different alerts are due to be displayed in a same activity)
-	 */
-	protected static String kJSAlertID  ="alertId";
-
-	/**
-	 * the key "index" is used to specify which button was clicked in the given alert.
-	 */
-	protected static String kJSAlertButtonIndex  ="index";
-
-	/**
-	 * the key "alertIsCancelable" is used to specify whether the alert should be cancelable when user clicks on back button
-	 */
-	protected static String kJSAlertIsCancelable ="alertIsCancelable";
-
-	/**
-	 * the value for the key "alertReceiver" => a web callback will be called (with the given Id)
-	 */
-	protected static String JSAlertCallbackReceiverWeb ="web";
-
-	/**
-	 * the value for the key "alertReceiver" => a native callback (the method alertDialogClickedButton(alertId,indexOfClickedButton) will be called)
-	 */
-	protected static String JSAlertCallbackReceiverNative ="native";
-
-
-	//WEBALERT
-	/**
-	 * use the name "show" in the typeWebAlert to show the given webAlert
-	 */
-	protected static String JSWebAlertShow = "show";
-
-	/**
-	 * use the name "dismiss" in the typeWebAlert to dismiss the given webAlert
-	 */
-	protected static String JSWebAlertDismiss = "dismiss";
-
-	/**
-	 * the key for specifying which page should be loaded in the alertWebView
-	 */
-	protected static String kJSWebAlertPageName = "pageName";
-
-	/**
-	 * the key for specifying the fade duration for the webAlert to be shown or dismissed
-	 */
-	protected static String kJSWebAlertfadeDuration = "fadeDuration";
-
-	
-	//UI
-	
-	protected static final String JSTypeUi = "ui";
-	
-	/**
-	 * The key for datePicker
-	 */
-	protected static final String kJSControl = "control";
-	
-	protected static final String kJSDate = "date";
-		
-	protected static final String kJSYear = "year";
-	
-	protected static final String kJSMonth = "month";
-	
-	protected static final String kJSDay = "day";
-	
-	protected static final String JSControlPicker = "picker";
-	
-	protected static final String JSDate = "date";
-
-
-	//ACTIVITY'S FEATURES
-	/**
-	 * use this key to specify if the activity that will be shown should have the pullToRefreshFeature active
-	 */
-	protected static String kJSPullToRefreshActive ="pullToRefresh";
-
-	/**
-	 * use this key to specify if the activity that will be shown should have the infiniteScroll active
-	 */
-	protected static String kJSInfiniteScrollActive ="infiniteScroll";
-
-
->>>>>>> fdeffaaba60f0ad171ee5651897f40fb53d68cb7
 	//PROPERTIES
 	protected String mRessourcePath;
 	protected String pageName;
@@ -773,22 +509,18 @@ public class HTMLFragment extends Fragment {
 							return true;
 						}
 					}
-<<<<<<< HEAD
-					else if(type != null && type.length() >0 && type.equals(JSControlAlert))
-=======
-					
 					// UI
-			    	else if (type != null && type.length() >0 && type.equals(JSTypeUi)) {
-				    	final String control = jsonObj.optString(kJSControl);
+			    	else if (type != null && type.length() >0 && type.equals(JSTypeUI)) {
+				    	final String control = jsonObj.optString(kJSUIControl);
 				    	if (control != null  
 				    		&& control.length() > 0) {
 				    		if (control.equals(JSControlPicker)) {
-						    	JSONObject params = jsonObj.optJSONObject(kJSParams);
+						    	JSONObject params = jsonObj.optJSONObject(kJSData);
 						    	if (params != null) {
 						    		final String typeParams = params.optString(kJSType);
 						    		if (typeParams != null 
 									    && typeParams.length() > 0) {
-						    			if (typeParams.equals(JSDate)) {
+						    			if (typeParams.equals(JSPickerDate)) {
 						    				JSONObject date = params.optJSONObject(kJSDate);
 						    				
 						    				Calendar cal = Calendar.getInstance();
@@ -806,7 +538,7 @@ public class HTMLFragment extends Fragment {
 						    						day = date.getInt(kJSDay);
 						    					}
 						    				}
-						    				String callbackID = jsonObj.optString(kJSCallbackID);
+						    				String callbackID = jsonObj.optString(kJSCallback);
 								    		if (callbackID != null
 									    			&& callbackID.length() > 0) {
 												showDatePickerDialog(year, month, day, callbackID);	
@@ -817,8 +549,7 @@ public class HTMLFragment extends Fragment {
 				    		}
 				    	}
 			    	}
-					else if(type != null && type.length() >0 && type.equals(JSTypeAlert))
->>>>>>> fdeffaaba60f0ad171ee5651897f40fb53d68cb7
+					else if(type != null && type.length() >0 && type.equals(JSControlAlert))
 					{
 						showAlertDialogWithJSON(jsonObj);
 					}
@@ -1477,8 +1208,8 @@ public class HTMLFragment extends Fragment {
     		
 			JSONObject jsonResponse = new JSONObject();
 			jsonResponse.put(kJSType, JSTypeCallBack);
-			jsonResponse.put(kJSCallbackID, callbackID);
-			jsonResponse.put(kJSParams, jsonDate);
+			jsonResponse.put(kJSCallback, callbackID);
+			jsonResponse.put(kJSData, jsonDate);
 			Log.d(getClass().getName(), "sendDate + : " + jsonResponse);
 			executeScriptInWebView(jsonResponse);
 		} catch (JSONException e) {
