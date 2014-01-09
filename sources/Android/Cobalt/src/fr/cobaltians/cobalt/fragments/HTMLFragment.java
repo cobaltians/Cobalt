@@ -445,11 +445,9 @@ public abstract class HTMLFragment extends Fragment {
 					else if(type != null && type.length() >0 && type.equals(JSTypeLog))
 					{
 						String message = jsonObj.optString(kJSValue);
-						if(message != null)
-						{
-							Log.w("JS Logs", message);
-							return true;
-						}
+						Log.w("JS Logs", message);
+						return true;
+
 					}
 					//NAVIGATE
 					else if(type != null && type.length() >0 && type.equals(JSTypeNavigation))
@@ -460,8 +458,12 @@ public abstract class HTMLFragment extends Fragment {
 							//PUSH
 							if(navType != null && navType.length() >0 && navType.equals(JSActionNavigationPush))
 							{
-								String activityId = jsonObj.optString(kJSNavigationController);
-								String pageNamed = jsonObj.optString(kJSPage);
+								String params = jsonObj.getString(kJSData);
+								JSONObject jsonParams = new JSONObject(params);
+								
+								String pageNamed = jsonParams.getString(kJSPage);	
+								String activityId = jsonParams.optString(kJSNavigationController);
+
 								pushWebView(activityId,pageNamed);
 								return true;
 							}
@@ -474,62 +476,99 @@ public abstract class HTMLFragment extends Fragment {
 							//MODALE
 							else if(navType != null && navType.length() >0 && navType.equals(JSActionNavigationModale))
 							{
-								String activityId = jsonObj.optString(kJSNavigationController);
-								String pageNamed = jsonObj.optString(kJSPage);
-								String callBackId = jsonObj.optString(kJSCallback);
+								String params = jsonObj.optString(kJSData);
+								JSONObject jsonParams = new JSONObject(params);
+								
+								String pageNamed = jsonParams.getString(kJSPage);	
+								String activityId = jsonParams.optString(kJSNavigationController);
+								String callBackId = jsonParams.optString(kJSCallback);
+								
 								presentWebView(activityId, pageNamed, callBackId);
 								return true;
 							}
 							//DISMISS
 							else if(navType != null && navType.length() >0 && navType.equals(JSActionNavigationDismiss))
 							{
-								String className = jsonObj.optString(kJSNavigationController);
-								String pageNamed = jsonObj.optString(kJSPage);
+								String params = jsonObj.optString(kJSData);
+								JSONObject jsonParams = new JSONObject(params);
+
+								String className = jsonParams.optString(kJSNavigationController);
+								String pageNamed = jsonParams.optString(kJSPage);
+								
 								dismissWebViewWithActivity(className, pageNamed);
 								return true;
 							}
+							else 
+							{
+								onUnhandledMessage(jsonObj);
+							}
 						}
 					}
-					//WEB ALERT
+					//WEB LAYER
 					else if(type != null && type.length() >0 && type.equals(JSTypeWebLayer))
 					{
-						String name = jsonObj.optString(kJSAction);
-						if(name != null && name.length() > 0 && name.equals(JSActionWebLayerShow))
+						String name = jsonObj.getString(kJSAction);
+						if(name != null && name.length() > 0)
 						{
-							mHandler.post(new Runnable() {
+							if (name.equals(JSActionWebLayerShow))
+							{
+								String params = jsonObj.getString(kJSData);
+								final JSONObject jsonParams = new JSONObject(params);
+								
+								mHandler.post(new Runnable() {
 
-								@Override
-								public void run() {
-									showWebAlertWithJSON(jsonObj);
-								}
-							});
-							return true;
+									@Override
+									public void run() {
+										showWebAlertWithJSON(jsonParams);
+									}
+								});
+								return true;
+							}
+							if (name.equals(JSActionWebLayerDismiss))
+							{
+								//TODO something
+							}
+						}
+
+						else {
+							onUnhandledMessage(jsonObj);
 						}
 					}
 
 					//CALLBACK
 					else if(type != null && type.length() >0 && type.equals(JSTypeCallBack))
 					{
-						String callbackID = jsonObj.optString(kJSCallback);
+						String callbackID = jsonObj.getString(kJSCallback);
 						if(callbackID != null && callbackID.length() >0 && callbackID.equals(JSCallbackOnBackButtonPressed))
 						{
-							boolean allowToGoBack = jsonObj.optBoolean(kJSData);
-							handleBackButtonPressed(allowToGoBack);
+							String params = jsonObj.getString(kJSData);
+							JSONObject jsonParams = new JSONObject(params);
+							
+							//TODO find the name of the key for the boolean 
+							//boolean allowToGoBack = jsonParams.optBoolean();
+							//handleBackButtonPressed(allowToGoBack);
 							return true;
+						}
+						else {
+							onUnhandledMessage(jsonObj);
 						}
 					}
 					// UI
-			    	else if (type != null && type.length() >0 && type.equals(JSTypeUI)) {
+			    	else if (type != null && type.length() >0 && type.equals(JSTypeUI)) 
+			    	{
 				    	final String control = jsonObj.optString(kJSUIControl);
-				    	if (control != null  
-				    		&& control.length() > 0) {
-				    		if (control.equals(JSControlPicker)) {
+				    	if (control != null && control.length() > 0) 
+				    	{
+				    		if (control.equals(JSControlPicker)) 
+				    		{
 						    	JSONObject params = jsonObj.optJSONObject(kJSData);
-						    	if (params != null) {
+						    	if (params != null) 
+						    	{
 						    		final String typeParams = params.optString(kJSType);
 						    		if (typeParams != null 
 									    && typeParams.length() > 0) {
-						    			if (typeParams.equals(JSPickerDate)) {
+						    			if (typeParams.equals(JSPickerDate)) 
+						    			{
 						    				JSONObject date = params.optJSONObject(kJSDate);
 						    				
 						    				Calendar cal = Calendar.getInstance();
@@ -548,26 +587,39 @@ public abstract class HTMLFragment extends Fragment {
 						    					}
 						    				}
 						    				String callbackID = jsonObj.optString(kJSCallback);
-								    		if (callbackID != null
-									    			&& callbackID.length() > 0) {
+								    		if (callbackID != null && callbackID.length() > 0) 
+								    		{
 												showDatePickerDialog(year, month, day, callbackID);	
 								    		}
-						    			} 						
+						    			}
+						    			else 
+						    			{
+											onUnhandledMessage(jsonObj);
+										}
 						    		}
 						    	}
 				    		}
+				    		else if(control.equals(JSControlAlert))
+							{
+				    			String params = jsonObj.optString(kJSData);
+								JSONObject jsonParams = new JSONObject(params);
+								final String callbackId = jsonObj.getString(kJSCallback);
+
+								showAlertDialogWithJSON(jsonParams, callbackId);
+							}
 				    	}
 			    	}
-					else if(type != null && type.length() >0 && type.equals(JSControlAlert))
-					{
-						showAlertDialogWithJSON(jsonObj);
-					}
+					
 					else if(type != null && type.length() >0 && type.equals(JSTypeCobaltIsReady))
 					{
 						if(mDebug) Log.i(getClass().getSimpleName(), "cobalt is ready. waiting calls : "+waitingJavaScriptCallsList.size());
 
 						cobaltIsReady = true;
 						executeWaitingCalls();
+					}
+					else 
+					{
+						onUnhandledMessage(jsonObj);
 					}
 				}
 
@@ -811,18 +863,19 @@ public abstract class HTMLFragment extends Fragment {
 	}
 
 
-	private void showAlertDialogWithJSON(JSONObject jsonObj)
+	private void showAlertDialogWithJSON(JSONObject jsonParams, final String callbackId)
 	{
-		if(jsonObj != null)
+		if(jsonParams != null)
 		{
 
 			try {
-				String title = jsonObj.optString(kJSAlertTitle);
-				String message = jsonObj.optString(kJSAlertMessage);
-				boolean isCancellable =jsonObj.optBoolean(kJSAlertCancelable,true);
-				final int alertId = jsonObj.optInt(kJSAlertID);
+				
+				String title = jsonParams.optString(kJSAlertTitle);
+				String message = jsonParams.optString(kJSAlertMessage);
+				boolean isCancellable =jsonParams.optBoolean(kJSAlertCancelable,true);
+				final int alertId = jsonParams.getInt(kJSAlertID);
 
-				JSONArray buttons = jsonObj.has(kJSAlertButtons) ? jsonObj.getJSONArray(kJSAlertButtons) : new JSONArray();
+				JSONArray buttons = jsonParams.has(kJSAlertButtons) ? jsonParams.getJSONArray(kJSAlertButtons) : new JSONArray();
 
 				//AlertDialog.Builder alert = new AlertDialog.Builder(mContext);    
 				AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
@@ -833,9 +886,8 @@ public abstract class HTMLFragment extends Fragment {
 				AlertDialog mAlert = alert.create();
 
 				// Callback
-				if (jsonObj.has(kJSCallback)) {
-					final String callbackId = jsonObj.getString(kJSCallback);
-
+				if (callbackId.length() != 0) {
+				
 					if(buttons.length() == 0)
 					{
 						mAlert.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {	
@@ -919,44 +971,51 @@ public abstract class HTMLFragment extends Fragment {
 		{
 			if(getActivity() != null)
 			{
-				String pageNamed = obj.optString(kJSPage);
-				double fadeDuration = obj.optDouble(kJSWebLayerFadeDuration,0.3);
-
-				HTMLPopUpWebview popUpWebview = getPopUpWebview(pageNamed);
-				Bundle bundleToAdd = new Bundle();
-				bundleToAdd.putString(kPage, pageNamed);
-				bundleToAdd.putString(kResourcePath, mRessourcePath);
-				popUpWebview.setArguments(bundleToAdd);
-
-				android.support.v4.app.FragmentTransaction fTransition;
-				fTransition = getActivity().getSupportFragmentManager().beginTransaction();
-
-				if(fadeDuration > 0)
+				try 
 				{
-					fTransition.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out,android.R.anim.fade_in,android.R.anim.fade_out);
-				}
-				else 
-				{
-					fTransition.setTransition(FragmentTransaction.TRANSIT_NONE);
-				}
+					String pageNamed = obj.getString(kJSPage);
+					double fadeDuration = obj.optDouble(kJSWebLayerFadeDuration,0.3);
 
-				if(HTMLActivity.class.isAssignableFrom(getActivity().getClass()))
-				{
-					//dismiss a popup if a one is shown before displaying the new popup.
-					HTMLActivity activity = (HTMLActivity)getActivity();
-					Fragment currentDisplayedFragment = activity.getSupportFragmentManager().findFragmentById(activity.getFragmentContainerId());
-					if(HTMLPopUpWebview.class.isAssignableFrom(currentDisplayedFragment.getClass()))
+					HTMLPopUpWebview popUpWebview = getPopUpWebview(pageNamed);
+					Bundle bundleToAdd = new Bundle();
+					bundleToAdd.putString(kPage, pageNamed);
+					bundleToAdd.putString(kResourcePath, mRessourcePath);
+					popUpWebview.setArguments(bundleToAdd);
+
+					android.support.v4.app.FragmentTransaction fTransition;
+					fTransition = getActivity().getSupportFragmentManager().beginTransaction();
+
+					if(fadeDuration > 0)
 					{
-						HTMLPopUpWebview popUpToDismiss = (HTMLPopUpWebview) currentDisplayedFragment;
-						popUpToDismiss.dismissWebAlert();
+						fTransition.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out,android.R.anim.fade_in,android.R.anim.fade_out);
+					}
+					else 
+					{
+						fTransition.setTransition(FragmentTransaction.TRANSIT_NONE);
 					}
 
-					//show the newly created popup.
-					if (activity.findViewById(activity.getFragmentContainerId()) != null) {
-						fTransition.add(activity.getFragmentContainerId(),popUpWebview);
-						fTransition.commit();
+					if(HTMLActivity.class.isAssignableFrom(getActivity().getClass()))
+					{
+						//dismiss a popup if a one is shown before displaying the new popup.
+						HTMLActivity activity = (HTMLActivity)getActivity();
+						Fragment currentDisplayedFragment = activity.getSupportFragmentManager().findFragmentById(activity.getFragmentContainerId());
+						if(HTMLPopUpWebview.class.isAssignableFrom(currentDisplayedFragment.getClass()))
+						{
+							HTMLPopUpWebview popUpToDismiss = (HTMLPopUpWebview) currentDisplayedFragment;
+							popUpToDismiss.dismissWebAlert();
+						}
+
+						//show the newly created popup.
+						if (activity.findViewById(activity.getFragmentContainerId()) != null) {
+							fTransition.add(activity.getFragmentContainerId(),popUpWebview);
+							fTransition.commit();
+						}
+						else if(mDebug)  Log.e(getClass().getSimpleName(), "ERROR : Fragment container not found");
 					}
-					else if(mDebug)  Log.e(getClass().getSimpleName(), "ERROR : Fragment container not found");
+				} 
+				catch (JSONException e) 
+				{
+					e.printStackTrace();
 				}
 			}
 			else if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : Impossible to show a webAlert from a Fragment that has been detached !");
