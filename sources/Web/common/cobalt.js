@@ -56,7 +56,7 @@ var cobalt={
                 }
 			}
 		    if( sendLogToNative ){
-			    cobalt.send({"type":"typeLog","value":stuff})
+			    cobalt.send({ type : "log", value : stuff })
 	        }
 	    }
     },
@@ -165,14 +165,14 @@ var cobalt={
 					callback=options.callback;
 				}
 				//add alertIdentifier
-				obj.data.alertId=parseInt(options.alertId);
+				obj.data.id=parseInt(options.id);
 				if ( options.mandatory === true ){
-					obj.alertIsCancelable=false;
+					obj.cancelable=false;
 				}
 			}
 			//enforce alertId presence :
-			if (!obj.data.alertId || !cobalt.isNumber(obj.data.alertId)){
-				obj.data.alertId=0;
+			if (!obj.data.id || !cobalt.isNumber(obj.data.id)){
+				obj.data.id=0;
 			}
 			cobalt.send(obj, callback);
 		}
@@ -190,7 +190,7 @@ var cobalt={
 			break;
 			case "show":
 				if (page){
-					cobalt.send({type:"webLayer", action:"show", page:page, fadeDuration:fadeDuration})
+					cobalt.send({type:"webLayer", action:"show", data :{ page:page, fadeDuration:fadeDuration }})
 				}
 			break;
 		}
