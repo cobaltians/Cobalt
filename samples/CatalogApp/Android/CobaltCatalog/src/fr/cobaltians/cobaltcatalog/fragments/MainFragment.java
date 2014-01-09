@@ -53,8 +53,8 @@ public class MainFragment extends HTMLFragment {
 					l.add(51);
 					l.add(42);
 					j.put(kJSType, JSTypeEvent);
-					j.put(kJSName, JSNameTestCallback);
-					j.put(kJSCallbackID, JSNameTestCallback);
+					j.put(kJSEvent, JSNameTestCallback);
+					j.put(kJSCallback, JSNameTestCallback);
 					j.put(kJSValue,new JSONArray(l));
 					executeScriptInWebView(j);
 				} catch (JSONException e) {
@@ -72,8 +72,8 @@ public class MainFragment extends HTMLFragment {
 					l.add("Bonjour");
 					l.add("Guillaume");
 					j.put(kJSType, JSTypeEvent);
-					j.put(kJSName, JSNameTestCallbackAsync);
-					j.put(kJSCallbackID, JSNameTestCallbackAsync);
+					j.put(kJSEvent, JSNameTestCallbackAsync);
+					j.put(kJSCallback, JSNameTestCallbackAsync);
 					j.put(kJSValue,new JSONArray(l));
 					executeScriptInWebView(j);
 				} catch (JSONException e) {
@@ -113,7 +113,7 @@ public class MainFragment extends HTMLFragment {
 				//TYPE = EVENT
 				if(type != null && type.length() >0 && type.equals(JSTypeEvent))
 				{
-					String name = jsonObj.optString(kJSName);
+					String name = jsonObj.optString(kJSEvent);
 					if(name != null && name.length() >0 && name.equals(JSNameTestCallback))
 					{
 
@@ -124,7 +124,7 @@ public class MainFragment extends HTMLFragment {
 									nativeEditText.setText(value);
 								}
 							});
-						String callbackId = jsonObj.optString(kJSCallbackID);
+						String callbackId = jsonObj.optString(kJSCallback);
 
 						if(callbackId != null && callbackId.length() >0)
 						{
@@ -142,7 +142,7 @@ public class MainFragment extends HTMLFragment {
 								}
 							});
 
-						String callbackId = jsonObj.optString(kJSCallbackID);
+						String callbackId = jsonObj.optString(kJSCallback);
 						if(callbackId != null && callbackId.length() >0)
 						{
 							changeNameForWebCallBackAsync(callbackId,value);
@@ -154,17 +154,17 @@ public class MainFragment extends HTMLFragment {
 				//CALLBACKS
 				else if(type != null && type.length () >0 && type.equals(JSTypeCallBack))
 				{
-					String callbackID = jsonObj.optString(kJSCallbackID);
+					String callbackID = jsonObj.optString(kJSCallback);
 					if(callbackID != null && callbackID.length() >0 && callbackID.equals(JSNameTestCallback))
 					{
-						String value = jsonObj.optString(kJSParams);
+						String value = jsonObj.optString(kJSData);
 						if(value != null)
 							Toast.makeText(mContext, "Callback with value "+value, Toast.LENGTH_SHORT).show();
 						return true;
 					}
 					else if(callbackID != null && callbackID.length() >0 && callbackID.equals(JSNameTestCallbackAsync))
 					{
-						String value = jsonObj.optString(kJSParams);
+						String value = jsonObj.optString(kJSData);
 						if(value != null)
 							Toast.makeText(mContext, "Callback ASYNC with value "+value, Toast.LENGTH_SHORT).show();
 						return true;

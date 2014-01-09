@@ -58,12 +58,12 @@ public class SimpleHybridFragment extends HTMLFragment {
 				//TYPE = EVENT
 				if(type != null && type.length() >0 && type.equals(JSTypeEvent))
 				{
-					String name = jsonObj.optString(kJSName);
+					String name = jsonObj.optString(kJSEvent);
 					if(name != null && name.length() >0 && name.equals("getBigData"))
 					{
 						final int value = jsonObj.optInt(kJSValue);
 
-						String callbackId = jsonObj.optString(kJSCallbackID);
+						String callbackId = jsonObj.optString(kJSCallback);
 						if(callbackId != null && callbackId.length() >0)
 						{
 							JSONArray a = generateBigData(value);
