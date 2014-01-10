@@ -10,9 +10,9 @@ import android.webkit.JavascriptInterface;
 import fr.cobaltians.cobalt.activities.HTMLActivity;
 
 /**
- * A special {@link HTMLFragment} that is presented over the current HTMLFragment as a webAlert.
+ * Special {@link HTMLFragment} presented over the current HTMLFragment as a Web layer.
  * @author Diane
- * @details This class should not be instantiated directly. {@link HTMLFragment} manages it directly with webAlert messages.
+ * @details This class should not be instantiated directly. {@link HTMLFragment} manages it directly with Web layer messages.
  */
 public class HTMLPopUpWebview extends HTMLFragment {	
 
@@ -46,6 +46,7 @@ public class HTMLPopUpWebview extends HTMLFragment {
 		try {
 			jsonObj = new JSONObject(message);
 			if (jsonObj != null) {
+				// TODO: catch data to pass to Web when onDismiss event is fired
 				String type = jsonObj.optString(kJSType);
 				if (type.equals(JSTypeWebLayer)) {
 					String action = jsonObj.optString(kJSAction);
@@ -114,9 +115,8 @@ public class HTMLPopUpWebview extends HTMLFragment {
 			activity.onWebPopupDismiss(pageName, getDataForDismiss());
 		}
 	}
-
-	// TODO: discuss with Guillaume about data passed to Web with onDismissWebLayer event
-	public Object getDataForDismiss() {
+	
+	public JSONObject getDataForDismiss() {
 		return null;
 	}
 }

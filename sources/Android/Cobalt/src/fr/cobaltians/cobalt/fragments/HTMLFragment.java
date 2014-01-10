@@ -650,19 +650,22 @@ public abstract class HTMLFragment extends Fragment {
 	 * This method is called from the corresponding {@link HTMLPopUpWebview} when the popup has been dismissed.
 	 * This method may be overridden in subclasses.
 	 */
-	public void onWebPopupDismiss(final String fileName,Object additionalParams)
-	{
+	public void onWebPopupDismiss(final String page, final JSONObject data) {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				JSONObject obj = new JSONObject();
+				JSONObject jsonObj = new JSONObject();
 				try {
-					obj.put(kJSType,JSTypeEvent);
-					obj.put(kJSEvent, JSCallbackWebLayerOnDismiss);
-					obj.put(kJSValue, fileName);
-					executeScriptInWebView(obj);
-				} catch (JSONException e) {
-					e.printStackTrace();
+					jsonObj.put(kJSType, JSTypeEvent);
+					jsonObj.put(kJSEvent, JSCallbackWebLayerOnDismiss);
+					jsonObj.put(kJSValue, page);
+					if (data != null) {
+						jsonObj.put(kJSData, data);
+					}
+					executeScriptInWebView(jsonObj);
+				} 
+				catch (JSONException exception) {
+					exception.printStackTrace();
 				}
 			}
 		});
