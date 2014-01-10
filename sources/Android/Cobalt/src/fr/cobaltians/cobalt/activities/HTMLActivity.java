@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import fr.cobaltians.cobalt.fragments.HTMLFragment;
-import fr.cobaltians.cobalt.fragments.HTMLPopUpWebview;
+import fr.cobaltians.cobalt.fragments.HTMLWebLayerFragment;
 import fr.cobaltians.cobalt.R;
 
 /**
@@ -122,10 +122,10 @@ public abstract class HTMLActivity extends FragmentActivity {
 	 * Called when a {@link HTMLPopUpWebview} has been dismissed. 
 	 * This method may be overridden in subclasses.
 	 */
-	public void onWebPopupDismiss(String page, JSONObject data) {
+	public void onWebLayerDismiss(String page, JSONObject data) {
 		HTMLFragment fragment = (HTMLFragment) getSupportFragmentManager().findFragmentById(getFragmentContainerId());
 		if (fragment != null) {
-			fragment.onWebPopupDismiss(page, data);
+			fragment.onWebLayerDismiss(page, data);
 		}
 	}
 }

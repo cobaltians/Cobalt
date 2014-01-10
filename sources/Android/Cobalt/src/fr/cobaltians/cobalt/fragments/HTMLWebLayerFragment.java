@@ -14,8 +14,10 @@ import fr.cobaltians.cobalt.activities.HTMLActivity;
  * @author Diane
  * @details This class should not be instantiated directly. {@link HTMLFragment} manages it directly with Web layer messages.
  */
-public class HTMLPopUpWebview extends HTMLFragment {	
+public class HTMLWebLayerFragment extends HTMLFragment {	
 
+	private JSONObject mData = null;
+	
 	/******************************************************
 	 * LIFECYCLE
 	 *****************************************************/
@@ -46,7 +48,6 @@ public class HTMLPopUpWebview extends HTMLFragment {
 		try {
 			jsonObj = new JSONObject(message);
 			if (jsonObj != null) {
-				// TODO: catch data to pass to Web when onDismiss event is fired
 				String type = jsonObj.optString(kJSType);
 				if (type.equals(JSTypeWebLayer)) {
 					String action = jsonObj.optString(kJSAction);
@@ -55,7 +56,7 @@ public class HTMLPopUpWebview extends HTMLFragment {
 						mHandler.post(new Runnable() {
 							@Override
 							public void run() {
-								dismissWebAlert(data);
+								dismissWebLayer(data);
 							}
 						});
 						return true;
@@ -79,18 +80,20 @@ public class HTMLPopUpWebview extends HTMLFragment {
 	@Override
 	protected void handleBackButtonPressed(boolean allowedToGoBack) {
 		if(allowedToGoBack) {
-			dismissWebAlert(null);
+			dismissWebLayer(null);
 		}
 	}
 	
 	/********************************************************************************************
 	 * DISMISS
 	 *******************************************************************************************/
-	protected void dismissWebAlert(JSONObject jsonObject) {
+	protected void dismissWebLayer(JSONObject jsonObject) {
 		android.support.v4.app.FragmentTransaction fTransition;
 		fTransition = getActivity().getSupportFragmentManager().beginTransaction();
 		
 		if(jsonObject != null) {
+			mData = jsonObject.optJSONObject(kJSData);
+			
 			double fadeDuration = jsonObject.optDouble(kJSWebLayerFadeDuration, 0);
 			
 			if(fadeDuration > 0) {
@@ -112,11 +115,11 @@ public class HTMLPopUpWebview extends HTMLFragment {
 	private void onDismiss() {
 		if (HTMLActivity.class.isAssignableFrom(getActivity().getClass())) {
 			HTMLActivity activity = (HTMLActivity) getActivity();
-			activity.onWebPopupDismiss(pageName, getDataForDismiss());
+			activity.onWebLayerDismiss(pageName, getDataForDismiss());
 		}
 	}
 	
 	public JSONObject getDataForDismiss() {
-		return null;
+		return mData;
 	}
 }
