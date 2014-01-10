@@ -4,8 +4,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
-import fr.cobaltians.cobalt.customviews.ISwipeListener;
-import fr.cobaltians.cobalt.customviews.SwipeWebView;
+import fr.cobaltians.cobalt.customviews.IGestureListener;
+import fr.cobaltians.cobalt.customviews.GestureWebView;
 
 /**
  * {@link HTMLFragment} that may have Swipe features if those are activated.
@@ -13,7 +13,7 @@ import fr.cobaltians.cobalt.customviews.SwipeWebView;
  * @implements IScrollListener
  * @author Sebastien
  */
-public class HTMLFlipperFragment extends HTMLFragment implements ISwipeListener {
+public class HTMLFlipperFragment extends HTMLFragment implements IGestureListener {
 	
 	private static String JSNameSwipeLeft = "swipeLeft";
 	private static String JSNameSwipeRight = "swipeRight";
@@ -25,7 +25,7 @@ public class HTMLFlipperFragment extends HTMLFragment implements ISwipeListener 
 		//WebView has been added, set up its listener
 		if(mWebView != null)
 		{
-			((SwipeWebView) mWebView).setSwipeListener(this);
+			((GestureWebView) mWebView).setGestureListener(this);
 		}
 		
 		setFeaturesWantedActive();
@@ -34,7 +34,7 @@ public class HTMLFlipperFragment extends HTMLFragment implements ISwipeListener 
 	@Override
 	protected void addWebview() {
 		if(mWebView == null) {
-			mWebView = new SwipeWebView(mContext);
+			mWebView = new GestureWebView(mContext);
 			setWebViewSettings(this);
 		}
 
@@ -131,9 +131,13 @@ public class HTMLFlipperFragment extends HTMLFragment implements ISwipeListener 
 	 * ISwipeListener
 	 */
 	@Override
-	public void onSwipeGesture(boolean direction) {
-		SwipeWebView(direction);
-		Log.i("Swipe ", direction ? "next" : "previous");
+	public void onSwipeGesture(int direction) {
+		if (direction == GESTURE_SWIPE_LEFT) {
+			if (mDebug) Log.i(getClass().getSimpleName(), "next");
+		}
+		else if (direction == GESTURE_SWIPE_RIGHT){
+			if (mDebug) Log.i(getClass().getSimpleName(), "previous");
+		}
 	}
 
 
