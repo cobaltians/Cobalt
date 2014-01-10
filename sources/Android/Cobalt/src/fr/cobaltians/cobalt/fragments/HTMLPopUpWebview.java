@@ -16,57 +16,81 @@ import fr.cobaltians.cobalt.activities.HTMLActivity;
  */
 public class HTMLPopUpWebview extends HTMLFragment {	
 
+	/******************************************************
+	 * LIFECYCLE
+	 *****************************************************/
 	@Override
 	public void onStart() {
 		super.onStart();
-		if(mWebView != null)
+		
+		if(mWebView != null) {
 			mWebView.setBackgroundColor(Color.TRANSPARENT);
+		}
 	}
 
 	@Override
+	public void onDestroy() {
+		onDismiss();
+		
+		super.onDestroy();
+	}
+	
+	/*************************************************************************************************************************************
+	 * COBALT
+	 ************************************************************************************************************************************/
+	@Override
 	@JavascriptInterface
-	public boolean handleMessageSentByJavaScript(String messageJS)
-	{
-		final JSONObject jsonObj;
-		try 
-		{
-			jsonObj = new JSONObject(messageJS);
-			if(jsonObj != null)
-			{
-				if(jsonObj.has(kJSType))
-				{
-					String type = jsonObj.optString(kJSType);
-					if(type != null && type.length() >0 && type.equals(JSTypeWebLayer))
-					{
-						String name = jsonObj.optString(kJSAction);
-						if(name != null && name.length() > 0 && name.equals(JSActionWebLayerDismiss))
-						{
-							mHandler.post(new Runnable() {
-
-								@Override
-								public void run() {
-									dismissWebAlert(jsonObj);
-								}
-							});
-							return true;
-						}
+	public boolean handleMessageSentByJavaScript(String message) {
+		JSONObject jsonObj;
+		
+		try {
+			jsonObj = new JSONObject(message);
+			if (jsonObj != null) {
+				String type = jsonObj.optString(kJSType);
+				if (type.equals(JSTypeWebLayer)) {
+					String action = jsonObj.optString(kJSAction);
+					if (action.equals(JSActionWebLayerDismiss)) {
+						final JSONObject data = jsonObj.optJSONObject(kJSData);
+						mHandler.post(new Runnable() {
+							@Override
+							public void run() {
+								dismissWebAlert(data);
+							}
+						});
+						return true;
 					}
 				}
 			}
-		} catch (JSONException e1) {
-			if(mDebug) Log.e(getClass().getSimpleName(),"ERROR : CANNOT HANDLE MESSAGE WITH JSON EXCEPTION FOR JSON : #"+messageJS+"#");
-			e1.printStackTrace();
+		} 
+		catch (JSONException exception) {
+			if (mDebug) Log.e(getClass().getSimpleName(), "handleMessageSentByJavaScript: cannot handle message for JSON \n" + message);
+			exception.printStackTrace();
 		}
-		return super.handleMessageSentByJavaScript(messageJS);
+		
+		return super.handleMessageSentByJavaScript(message);
 	}
 
+	@Override
+	protected void onUnhandledMessage(JSONObject message) {
+		
+	}
 
+	@Override
+	protected void handleBackButtonPressed(boolean allowedToGoBack) {
+		if(allowedToGoBack) {
+			dismissWebAlert(null);
+		}
+	}
+	
+	/********************************************************************************************
+	 * DISMISS
+	 *******************************************************************************************/
 	protected void dismissWebAlert(JSONObject jsonObject) {
 		android.support.v4.app.FragmentTransaction fTransition;
 		fTransition = getActivity().getSupportFragmentManager().beginTransaction();
 		
 		if(jsonObject != null) {
-			double fadeDuration = jsonObject.optDouble(kJSWebLayerFadeDuration,0);
+			double fadeDuration = jsonObject.optDouble(kJSWebLayerFadeDuration, 0);
 			
 			if(fadeDuration > 0) {
 				fTransition.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, 
@@ -84,36 +108,15 @@ public class HTMLPopUpWebview extends HTMLFragment {
 		fTransition.commit();
 	}
 
-	@Override
-	protected void handleBackButtonPressed(boolean allowedToGoBack) {
-		if(allowedToGoBack) {
-			dismissWebAlert(null);
-		}
-	}
-
-
-	@Override
-	public void onDestroy() {
-		popupIsDismissed();
-		super.onDestroy();
-	}
-
-	private void popupIsDismissed()
-	{
-		if(HTMLActivity.class.isAssignableFrom(getActivity().getClass()))
-		{
+	private void onDismiss() {
+		if (HTMLActivity.class.isAssignableFrom(getActivity().getClass())) {
 			HTMLActivity activity = (HTMLActivity) getActivity();
-			activity.onWebPopupDismiss(this.pageName,getParamsForDismiss());
+			activity.onWebPopupDismiss(pageName, getDataForDismiss());
 		}
 	}
 
-	public Object getParamsForDismiss()
-	{
+	// TODO: discuss with Guillaume about data passed to Web with onDismissWebLayer event
+	public Object getDataForDismiss() {
 		return null;
-	}
-
-	@Override
-	protected void onUnhandledMessage(JSONObject message) {
-		
 	}
 }
