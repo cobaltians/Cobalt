@@ -541,12 +541,8 @@ public abstract class HTMLFragment extends Fragment {
 						String callbackID = jsonObj.getString(kJSCallback);
 						if(callbackID != null && callbackID.length() >0 && callbackID.equals(JSCallbackOnBackButtonPressed))
 						{
-							String params = jsonObj.getString(kJSData);
-							JSONObject jsonParams = new JSONObject(params);
-							
-							//TODO find the name of the key for the boolean 
-							//boolean allowToGoBack = jsonParams.optBoolean();
-							//handleBackButtonPressed(allowToGoBack);
+							boolean allowToGoBack = jsonObj.getBoolean(kJSData);
+							handleBackButtonPressed(allowToGoBack);
 							return true;
 						}
 						else {
