@@ -998,7 +998,7 @@ public abstract class HTMLFragment extends Fragment {
 						if(HTMLPopUpWebview.class.isAssignableFrom(currentDisplayedFragment.getClass()))
 						{
 							HTMLPopUpWebview popUpToDismiss = (HTMLPopUpWebview) currentDisplayedFragment;
-							popUpToDismiss.dismissWebAlert();
+							popUpToDismiss.dismissWebAlert(null);
 						}
 
 						//show the newly created popup.

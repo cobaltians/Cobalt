@@ -45,7 +45,7 @@ public class HTMLPopUpWebview extends HTMLFragment {
 
 								@Override
 								public void run() {
-									dismissWebAlertWithJSON(jsonObj);
+									dismissWebAlert(jsonObj);
 								}
 							});
 							return true;
@@ -61,40 +61,33 @@ public class HTMLPopUpWebview extends HTMLFragment {
 	}
 
 
-	private void dismissWebAlertWithJSON(JSONObject obj)
-	{
-		if(obj != null)
-		{
-			double fadeDuration = obj.optDouble(kJSWebLayerFadeDuration,0);
-			android.support.v4.app.FragmentTransaction fTransition;
-			fTransition = getActivity().getSupportFragmentManager().beginTransaction();
-			if(fadeDuration >0)
-			{
-				fTransition.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out,android.R.anim.fade_in,android.R.anim.fade_out);
-			}
-			else 
-			{
-				fTransition.setTransition(FragmentTransaction.TRANSIT_NONE);
-			}
-			fTransition.remove(this);
-			fTransition.commit();
-		}
-	}
-
-	protected void dismissWebAlert()
-	{
+	protected void dismissWebAlert(JSONObject jsonObject) {
 		android.support.v4.app.FragmentTransaction fTransition;
 		fTransition = getActivity().getSupportFragmentManager().beginTransaction();
-		fTransition.setTransition(FragmentTransaction.TRANSIT_NONE);
+		
+		if(jsonObject != null) {
+			double fadeDuration = jsonObject.optDouble(kJSWebLayerFadeDuration,0);
+			
+			if(fadeDuration > 0) {
+				fTransition.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, 
+												android.R.anim.fade_in, android.R.anim.fade_out);
+			}
+			else {
+				fTransition.setTransition(FragmentTransaction.TRANSIT_NONE);
+			}
+		}
+		else {
+			fTransition.setTransition(FragmentTransaction.TRANSIT_NONE);
+		}
+		
 		fTransition.remove(this);
 		fTransition.commit();
 	}
 
 	@Override
 	protected void handleBackButtonPressed(boolean allowedToGoBack) {
-		if(allowedToGoBack)
-		{
-			dismissWebAlertWithJSON(new JSONObject());
+		if(allowedToGoBack) {
+			dismissWebAlert(null);
 		}
 	}
 
