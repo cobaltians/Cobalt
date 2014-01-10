@@ -49,19 +49,19 @@
                 $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
 
 		       $('#test1').on('tap click',function(){
-			        cobalt.webAlert("show","tests_12_webAlertContent.html");
+			        cobalt.webLayer("show","tests_12_webAlertContent.html");
 		            return false;
 	            });
 				$('#test2').on('tap click',function(){
-					cobalt.webAlert("show","tests_12_webAlertContent.html",1.2);
+					cobalt.webLayer("show","tests_12_webAlertContent.html",1.2);
 		            return false;
 	            });
 				$('#test3').on('tap click',function(){
-					cobalt.webAlert("show","tests_12_webAlertContent.html",0);
+					cobalt.webLayer("show","tests_12_webAlertContent.html",0);
 		            return false;
 	            });
 		        $('#test4').on('tap click',function(){
-			        cobalt.webAlert("show","tests_12_webAlertContentEdit.html");
+			        cobalt.webLayer("show","tests_12_webAlertContentEdit.html");
 		            return false;
 	            });
 
