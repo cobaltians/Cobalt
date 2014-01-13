@@ -102,7 +102,7 @@ public abstract class HTMLFragment extends Fragment {
 	protected final static String JSActionNavigationDismiss = "dismiss";
 	protected final static String kJSNavigationController = "controller";
 	protected final static String JSNavigationControllerDefault = "default";
-
+	
 	// UI
 	protected final static String JSTypeUI = "ui";
 	protected final static String kJSUIControl = "control";
@@ -478,7 +478,7 @@ public abstract class HTMLFragment extends Fragment {
 			}
 		}
 	}
-
+	
 	public void sendEvent(final String event, final JSONObject data, final String callbackID) {
 		if (event != null
 			&& event.length() > 0) {
@@ -572,10 +572,7 @@ public abstract class HTMLFragment extends Fragment {
 				}
 				mDatabase.close();
 			}
-
 		}
-
-		
 
 		/**
 		 * Removes item corresponding to the given key
@@ -877,7 +874,6 @@ public abstract class HTMLFragment extends Fragment {
 	 * This method is called when the backButton is pressed. It asks the webView whether the default action of the backbutton should be fired.
 	 * This method should NOT be overridden in subclasses.
 	 */
-
 	public void askWebViewForBackPermission() {
 		sendEvent(JSEventOnBackButtonPressed, null, JSCallbackOnBackButtonPressed);
 	}
