@@ -157,8 +157,6 @@ public abstract class HTMLFragment extends Fragment {
 	 * LIFECYCLE
 	 *************************************************************************************************************************/
 	
-	// TODO: FROM HERE
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -206,7 +204,6 @@ public abstract class HTMLFragment extends Fragment {
 		preloadContent();
 	}
 
-	// TODO: FROM HERE
 	@Override
 	public void onStop() {
 		super.onStop();
@@ -387,6 +384,7 @@ public abstract class HTMLFragment extends Fragment {
 		}
 	}
 	
+	// TODO: FROM HERE
 	/**************************************************************
 	 * NOTIFIER
 	 *************************************************************/
