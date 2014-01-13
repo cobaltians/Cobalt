@@ -35,11 +35,11 @@ public abstract class HTMLPullToRefreshFragment extends HTMLFragment implements 
 	 ************************************************************************************/
 	
 	// PULL TO REFRESH
-	private static String JSEventPullToRefreshRefresh = "pullToRefreshRefresh";
+	private static String JSEventPullToRefresh = "pullToRefresh";
 	private static String JSCallbackPullToRefreshDidRefresh = "pullToRefreshDidRefresh";
 
 	// INFINITE SCROLL
-	private static String JSEventInfiniteScrollRefresh = "infiniteScroll";
+	private static String JSEventInfiniteScroll= "infiniteScroll";
 	private static String JSCallbackInfiniteScrollDidRefresh = "infiniteScrollDidRefresh";
 	
 	/**********************************************************************
@@ -128,7 +128,7 @@ public abstract class HTMLPullToRefreshFragment extends HTMLFragment implements 
 					mHandler.post(new Runnable() {
 						@Override
 						public void run() {
-							onWebViewDidRefresh();
+							onPullToRefreshDidRefresh();
 						}
 					});
 					return true;
@@ -243,7 +243,7 @@ public abstract class HTMLPullToRefreshFragment extends HTMLFragment implements 
 				try {
 					JSONObject jsonObj = new JSONObject();
 					jsonObj.put(kJSType, JSTypeEvent);
-					jsonObj.put(kJSEvent, JSEventPullToRefreshRefresh);
+					jsonObj.put(kJSEvent, JSEventPullToRefresh);
 					jsonObj.put(kJSCallback, JSCallbackPullToRefreshDidRefresh);
 					executeScriptInWebView(jsonObj);
 				} 
@@ -254,7 +254,7 @@ public abstract class HTMLPullToRefreshFragment extends HTMLFragment implements 
 		});
 	}
 	
-	private void onWebViewDidRefresh() {
+	private void onPullToRefreshDidRefresh() {
 		mPullToRefreshWebView.onRefreshComplete();
 		onPullToRefreshRefreshed();
 	}
@@ -314,7 +314,7 @@ public abstract class HTMLPullToRefreshFragment extends HTMLFragment implements 
 					try {
 						JSONObject jsonObj = new JSONObject();
 						jsonObj.put(kJSType,JSTypeEvent);
-						jsonObj.put(kJSEvent, JSEventInfiniteScrollRefresh);
+						jsonObj.put(kJSEvent, JSEventInfiniteScroll);
 						jsonObj.put(kJSCallback, JSCallbackInfiniteScrollDidRefresh);
 						executeScriptInWebView(jsonObj);
 						mInfiniteScrollRefreshing = true;
