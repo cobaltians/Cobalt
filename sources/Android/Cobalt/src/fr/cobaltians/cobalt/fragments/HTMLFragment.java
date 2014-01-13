@@ -292,8 +292,8 @@ public abstract class HTMLFragment extends Fragment {
 	 * @param fileName : the filename that will be displayed in the {@link HTMLPopUpWebview}
 	 * @return a new instance of the {@link HTMLPopUpWebview} that should be added in this {@link HTMLActivity}
 	 */
-	protected HTMLPopUpWebview getPopUpWebview(String fileName) {
-		return new HTMLPopUpWebview();
+	protected HTMLWebLayerFragment getWebLayerFragment(String fileName) {
+		return new HTMLWebLayerFragment();
 	}
 
 	private void preloadContent() {
@@ -646,19 +646,22 @@ public abstract class HTMLFragment extends Fragment {
 	 * This method is called from the corresponding {@link HTMLPopUpWebview} when the popup has been dismissed.
 	 * This method may be overridden in subclasses.
 	 */
-	public void onWebPopupDismiss(final String fileName,Object additionalParams)
-	{
+	public void onWebLayerDismiss(final String page, final JSONObject data) {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				JSONObject obj = new JSONObject();
+				JSONObject jsonObj = new JSONObject();
 				try {
-					obj.put(kJSType,JSTypeEvent);
-					obj.put(kJSEvent, JSCallbackWebLayerOnDismiss);
-					obj.put(kJSValue, fileName);
-					executeScriptInWebView(obj);
-				} catch (JSONException e) {
-					e.printStackTrace();
+					jsonObj.put(kJSType, JSTypeEvent);
+					jsonObj.put(kJSEvent, JSCallbackWebLayerOnDismiss);
+					jsonObj.put(kJSValue, page);
+					if (data != null) {
+						jsonObj.put(kJSData, data);
+					}
+					executeScriptInWebView(jsonObj);
+				} 
+				catch (JSONException exception) {
+					exception.printStackTrace();
 				}
 			}
 		});
@@ -966,11 +969,11 @@ public abstract class HTMLFragment extends Fragment {
 					String pageNamed = obj.getString(kJSPage);
 					double fadeDuration = obj.optDouble(kJSWebLayerFadeDuration,0.3);
 
-					HTMLPopUpWebview popUpWebview = getPopUpWebview(pageNamed);
+					HTMLWebLayerFragment webLayerFragment = getWebLayerFragment(pageNamed);
 					Bundle bundleToAdd = new Bundle();
 					bundleToAdd.putString(kPage, pageNamed);
 					bundleToAdd.putString(kResourcePath, mRessourcePath);
-					popUpWebview.setArguments(bundleToAdd);
+					webLayerFragment.setArguments(bundleToAdd);
 
 					android.support.v4.app.FragmentTransaction fTransition;
 					fTransition = getActivity().getSupportFragmentManager().beginTransaction();
@@ -989,15 +992,15 @@ public abstract class HTMLFragment extends Fragment {
 						//dismiss a popup if a one is shown before displaying the new popup.
 						HTMLActivity activity = (HTMLActivity)getActivity();
 						Fragment currentDisplayedFragment = activity.getSupportFragmentManager().findFragmentById(activity.getFragmentContainerId());
-						if(HTMLPopUpWebview.class.isAssignableFrom(currentDisplayedFragment.getClass()))
+						if(HTMLWebLayerFragment.class.isAssignableFrom(currentDisplayedFragment.getClass()))
 						{
-							HTMLPopUpWebview popUpToDismiss = (HTMLPopUpWebview) currentDisplayedFragment;
-							popUpToDismiss.dismissWebAlert(null);
+							HTMLWebLayerFragment webLayerToDismiss = (HTMLWebLayerFragment) currentDisplayedFragment;
+							webLayerToDismiss.dismissWebLayer(null);
 						}
 
 						//show the newly created popup.
 						if (activity.findViewById(activity.getFragmentContainerId()) != null) {
-							fTransition.add(activity.getFragmentContainerId(),popUpWebview);
+							fTransition.add(activity.getFragmentContainerId(),webLayerFragment);
 							fTransition.commit();
 						}
 						else if(mDebug)  Log.e(getClass().getSimpleName(), "ERROR : Fragment container not found");

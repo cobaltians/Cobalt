@@ -1,18 +1,18 @@
 package fr.cobaltians.cobalt.activities;
 
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
-
 import fr.cobaltians.cobalt.fragments.HTMLFragment;
-import fr.cobaltians.cobalt.fragments.HTMLPopUpWebview;
+import fr.cobaltians.cobalt.fragments.HTMLWebLayerFragment;
 import fr.cobaltians.cobalt.R;
 
 /**
  * {@link Activity} containing a {@link HTMLFragment}.
- * 
  * @author Diane
  */
 public abstract class HTMLActivity extends FragmentActivity {
@@ -67,9 +67,8 @@ public abstract class HTMLActivity extends FragmentActivity {
 	 ************************************/
 
 	/**
-	 * Returns a new instance of the contained fragment. This method should be
-	 * overridden in subclasses.
-	 * 
+	 * Returns a new instance of the contained fragment. 
+	 * This method should be overridden in subclasses.
 	 * @return a new instance of the fragment contained.
 	 */
 	protected abstract HTMLFragment getFragment();
@@ -87,8 +86,8 @@ public abstract class HTMLActivity extends FragmentActivity {
 	 ****************************************************************************************************************/
 
 	/**
-	 * Called when back button is pressed. This method should NOT be overridden
-	 * in subclasses.
+	 * Called when back button is pressed. 
+	 * This method should NOT be overridden in subclasses.
 	 */
 	@Override
 	public void onBackPressed() {
@@ -99,9 +98,8 @@ public abstract class HTMLActivity extends FragmentActivity {
 	}
 
 	/**
-	 * Called from the contained {@link HTMLFragment} when the webview has
-	 * authorized the back event. This method should NOT be overridden in
-	 * subclasses.
+	 * Called from the contained {@link HTMLFragment} when the Web view has authorized the back event. 
+	 * This method should NOT be overridden in subclasses.
 	 */
 	public void goBack() {
 		runOnUiThread(new Runnable() {
@@ -117,17 +115,17 @@ public abstract class HTMLActivity extends FragmentActivity {
 	}
 
 	/*****************************************************************************************************************
-	 * Back
+	 * Web Layer dismiss
 	 ****************************************************************************************************************/
 
 	/**
-	 * Called when a {@link HTMLPopUpWebview} has been dismissed. This method
-	 * may be overridden in subclasses.
+	 * Called when a {@link HTMLPopUpWebview} has been dismissed. 
+	 * This method may be overridden in subclasses.
 	 */
-	public void onWebPopupDismiss(String fileName, Object additionalParams) {
+	public void onWebLayerDismiss(String page, JSONObject data) {
 		HTMLFragment fragment = (HTMLFragment) getSupportFragmentManager().findFragmentById(getFragmentContainerId());
 		if (fragment != null) {
-			fragment.onWebPopupDismiss(fileName, additionalParams);
+			fragment.onWebLayerDismiss(page, data);
 		}
 	}
 }
