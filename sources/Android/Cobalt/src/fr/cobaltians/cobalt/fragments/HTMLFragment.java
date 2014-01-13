@@ -147,7 +147,7 @@ public abstract class HTMLFragment extends Fragment {
 	protected Context mContext;
 	protected Handler mHandler;
 
-	private ArrayList<JSONObject> mWaitingJavaScriptCallsList;
+	private ArrayList<JSONObject> mWaitingJavaScriptCallsQueue;
 	
 	private boolean mPreloadOnCreateView;
 	private boolean mWebViewLoaded;
@@ -166,7 +166,7 @@ public abstract class HTMLFragment extends Fragment {
 		mContext = (Context) getActivity().getApplicationContext();
 		mHandler = new Handler();
 		
-		mWaitingJavaScriptCallsList = new ArrayList<JSONObject>();
+		mWaitingJavaScriptCallsQueue = new ArrayList<JSONObject>();
 		
 		mPreloadOnCreateView = true;
 		mWebViewLoaded = false;
@@ -204,6 +204,18 @@ public abstract class HTMLFragment extends Fragment {
 		preloadContent();
 	}
 
+	/**
+	 * Saves the Web view state.
+	 */
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		
+		if(mWebView != null) {
+			mWebView.saveState(outState);
+		}
+	}
+	
 	@Override
 	public void onStop() {
 		super.onStop();
@@ -384,24 +396,68 @@ public abstract class HTMLFragment extends Fragment {
 		}
 	}
 	
+	/*****************************************
+	 * LOGGING
+	 ****************************************/
+	
+	public boolean isLoggingEnabled() {
+		return mDebug;
+	}
+
+	public void enableLogging(boolean debug) {
+		mDebug = debug;
+	}
+	
+	/****************************************************************************************
+	 * SCRIPT EXECUTION
+	 ***************************************************************************************/
+	// TODO: find a way to keep in the queue not sent messages
+	/**
+	 * Sends script to be executed by JavaScript in Web view
+	 * @param jsonObj: JSONObject containing script.
+	 */
+	public void executeScriptInWebView(final JSONObject jsonObj) {
+		if (jsonObj != null) {
+			if(mCobaltIsReady) {
+				mHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						// Line & paragraph separators are not JSON compliant but supported by JSONObject
+						String message = jsonObj.toString().replaceAll("[\u2028\u2029]", "");
+						String url = "javascript:cobalt.execute(" + message + ");";
+						
+						if(mWebView != null) {
+							mWebView.loadUrl(url);		
+						}
+						else {
+							if(mDebug) Log.e(getClass().getSimpleName(), "executeScriptInWebView: message cannot been sent to empty Web view");
+						}						
+					}
+				});
+			}
+			else {
+				mWaitingJavaScriptCallsQueue.add(jsonObj);
+			}
+		}
+	}
+
+	private void executeWaitingCalls() {
+		int mWaitingJavaScriptCallsQueueLength = mWaitingJavaScriptCallsQueue.size();
+		
+		for (int i = 0 ; i < mWaitingJavaScriptCallsQueueLength ; i++) {
+			if (mDebug) Log.i(getClass().getSimpleName(), "executeWaitingCalls: execute " + mWaitingJavaScriptCallsQueue.get(i).toString());
+			executeScriptInWebView(mWaitingJavaScriptCallsQueue.get(i));
+		}
+		
+		mWaitingJavaScriptCallsQueue.clear();
+	}
+
 	// TODO: FROM HERE
 	/**************************************************************
 	 * NOTIFIER
 	 *************************************************************/
 	
 	protected abstract void onUnhandledMessage(JSONObject message);
-
-	/**
-	 * In this method, the webView state is saved.
-	 */
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		
-		if(mWebView != null) {
-			mWebView.saveState(outState);
-		}
-	}
 
 	/**
 	 * This method returns a new instance of the fragment that will be displayed as the {@link HTMLPopUpWebview} in the fragment container where the current fragment is shown.
@@ -411,47 +467,6 @@ public abstract class HTMLFragment extends Fragment {
 	 */
 	protected HTMLWebLayerFragment getWebLayerFragment(String fileName) {
 		return new HTMLWebLayerFragment();
-	}
-
-	/**
-	 * sends jsonObj to the JavaScript in this.webView
-	 * @param jsonObj : the JSONObject that will be sent to the webView and handled in the JavaScript code.
-	 */
-	public void executeScriptInWebView(final JSONObject jsonObj) {
-		if (jsonObj != null) {
-			if(	mWebViewLoaded 
-				|| mCobaltIsReady) {
-				mHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						String jsonMessage = jsonObj.toString().replaceAll("[\u2028\u2029]", "");
-						String url = "javascript:cobalt.execute(" + jsonMessage + ");";
-						
-						if(mWebView != null) {
-							//Log.e(getClass().getSimpleName(), "load url "+jsonMessage);
-							mWebView.loadUrl(url);		
-						}
-						else {
-							if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : message cannot been sent to empty webview : " + jsonMessage);
-						}						
-					}
-				});
-			}
-			else {
-				mWaitingJavaScriptCallsList.add(jsonObj);
-			}
-		}
-	}
-
-	private void executeWaitingCalls() {
-		int waitingJavaScriptCallsListSize = mWaitingJavaScriptCallsList.size();
-		
-		for(int i = 0 ; i < waitingJavaScriptCallsListSize ; i++) {
-			if (mDebug) Log.i(getClass().getSimpleName(), "executeWaitingCalls: execute " + mWaitingJavaScriptCallsList.get(i).toString());
-			executeScriptInWebView(mWaitingJavaScriptCallsList.get(i));
-		}
-		
-		mWaitingJavaScriptCallsList.clear();
 	}
 
 	/**
@@ -540,7 +555,7 @@ public abstract class HTMLFragment extends Fragment {
 					else if(type.equals(JSTypeLog))
 					{
 						String message = jsonObj.optString(kJSValue);
-						Log.w("JS Logs", message);
+						if (mDebug) Log.d("JS Log", message);
 						return true;
 					}
 					
@@ -666,7 +681,7 @@ public abstract class HTMLFragment extends Fragment {
 	}
 
 	protected void onReady() {
-		if(mDebug) Log.i(getClass().getSimpleName(), "cobalt is ready. waiting calls : "+mWaitingJavaScriptCallsList.size());
+		if(mDebug) Log.i(getClass().getSimpleName(), "cobalt is ready. waiting calls : "+mWaitingJavaScriptCallsQueue.size());
 
 		mCobaltIsReady = true;
 		executeWaitingCalls();
@@ -788,7 +803,7 @@ public abstract class HTMLFragment extends Fragment {
 				sendEvent(JSEventWebLayerOnDismiss, data, null);
 				/*try {
 					jsonObj.put(kJSType, JSTypeEvent);
-					jsonObj.put(kJSEvent, JSCallbackWebLayerOnDismiss);
+					jsonObj.put(kJSEvent, JSEventWebLayerOnDismiss);
 					jsonObj.put(kJSValue, page);
 					if (data != null) {
 						jsonObj.put(kJSData, data);
@@ -1173,14 +1188,6 @@ public abstract class HTMLFragment extends Fragment {
 			e.printStackTrace();
 		}
 		return "";
-	}
-
-	public boolean isDebugLoggingEnabled() {
-		return mDebug;
-	}
-
-	public void enableDebugLogging(boolean debug) {
-		mDebug = debug;
 	}
 
 	/*******************************************************************************************************************************
