@@ -39,13 +39,13 @@ public class HTMLFlipperFragment extends HTMLFragment implements IGestureListene
 	 *******************************************************/
 	
 	@Override
-	protected void addWebview() {
+	protected void addWebView() {
 		if(mWebView == null) {
 			mWebView = new GestureWebView(mContext);
 			setWebViewSettings(this);
 		}
 		
-		super.addWebview();
+		super.addWebView();
 	}
 
 	@Override

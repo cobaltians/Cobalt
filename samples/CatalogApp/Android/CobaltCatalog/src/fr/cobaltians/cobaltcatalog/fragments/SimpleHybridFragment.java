@@ -22,9 +22,9 @@ public class SimpleHybridFragment extends HTMLFragment {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
 		
 		mRessourcePath = "www/";
-		if(!webviewContentHasBeenLoaded)
+		if(! mWebViewContentHasBeenLoaded)
 		{
-			loadFileContentFromAssets(mRessourcePath, (this.pageName != null) ? this.pageName : "index.html");
+			loadFileFromAssets(mRessourcePath, (mPage != null) ? mPage : "index.html");
 		}
 		
 		return view;

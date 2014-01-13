@@ -115,7 +115,7 @@ public class HTMLWebLayerFragment extends HTMLFragment {
 	private void onDismiss() {
 		if (HTMLActivity.class.isAssignableFrom(getActivity().getClass())) {
 			HTMLActivity activity = (HTMLActivity) getActivity();
-			activity.onWebLayerDismiss(pageName, getDataForDismiss());
+			activity.onWebLayerDismiss(mPage, getDataForDismiss());
 		}
 	}
 	

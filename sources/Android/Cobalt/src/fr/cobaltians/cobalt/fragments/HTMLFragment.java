@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -38,7 +39,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.Toast;
-
 import fr.cobaltians.cobalt.activities.HTMLActivity;
 import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
 import fr.cobaltians.cobalt.database.LocalStorage;
@@ -51,8 +51,6 @@ import fr.cobaltians.cobalt.R;
  * @author Diane Moebs
  */
 public abstract class HTMLFragment extends Fragment {
-	
-	protected boolean mDebug = false;
 	
 	// RESOURCES
 	private final static String ASSETS_PATH = "file:///android_asset/";
@@ -67,9 +65,9 @@ public abstract class HTMLFragment extends Fragment {
 	protected final static String kInfiniteScroll = "infiniteScroll";
 	protected final static String kSwipe = "swipe";
 	
-	/***************
+	/*********************************************************************************
 	 * JS MESSAGES
-	 **************/
+	 ********************************************************************************/
 	
 	// GENERAL
 	protected final static String kJSAction = "action";
@@ -133,29 +131,33 @@ public abstract class HTMLFragment extends Fragment {
 	protected final static String kJSWebLayerFadeDuration = "fadeDuration";
 	protected final static String JSCallbackWebLayerOnDismiss = "onWebLayerDismissed";
 	
-	// TODO: FROM HERE
+	/*********************************************************
+	 * MEMBERS
+	 ********************************************************/
+	protected boolean mDebug = false;
 	
-	//PROPERTIES
 	protected String mRessourcePath;
-	protected String pageName;
+	protected String mPage;
 	
 	protected OverScrollingWebView mWebView;
 	// TODO: use ViewGroup instead of FrameLayout to allow using different layouts 
-	protected FrameLayout webViewPlaceholder;
-
+	protected FrameLayout mWebViewPlaceholder;
+	protected boolean mWebViewContentHasBeenLoaded;
+	
 	protected Context mContext;
-
-	protected boolean webviewContentHasBeenLoaded;
 	protected Handler mHandler;
 
-	private ArrayList<JSONObject> waitingJavaScriptCallsList;
-	private boolean webViewLoaded;
-	private boolean cobaltIsReady;
-	private boolean preloadOnCreateView;
+	private ArrayList<JSONObject> mWaitingJavaScriptCallsList;
+	
+	private boolean mPreloadOnCreateView;
+	private boolean mWebViewLoaded;
+	private boolean mCobaltIsReady;
 	
 	/**************************************************************************************************************************
 	 * LIFECYCLE
 	 *************************************************************************************************************************/
+	
+	// TODO: FROM HERE
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -164,27 +166,28 @@ public abstract class HTMLFragment extends Fragment {
 		setRetainInstance(true);
 		
 		mContext = (Context) getActivity().getApplicationContext();
-		waitingJavaScriptCallsList = new ArrayList<JSONObject>();
-		webViewLoaded = false;
-		webviewContentHasBeenLoaded = false;
-		preloadOnCreateView = true;
 		mHandler = new Handler();
+		
+		mWaitingJavaScriptCallsList = new ArrayList<JSONObject>();
+		
+		mPreloadOnCreateView = true;
+		mWebViewLoaded = false;
+		mWebViewContentHasBeenLoaded = false;
+		mCobaltIsReady = false;
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		
-		cobaltIsReady = false;
-		
-		View view = inflater.inflate(getLayoutToInflate(), container,false);
+		View view = inflater.inflate(getLayoutToInflate(), container, false);
 		setUpViews(view);
 		setUpListeners();
 		return view;
 	}	
 
 	/**
-	 * Restores webView state.
+	 * Restores Web view state.
 	 */
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -198,16 +201,190 @@ public abstract class HTMLFragment extends Fragment {
 	@Override
 	public void onStart() {
 		super.onStart();
-		addWebview();
+		
+		addWebView();
 		preloadContent();
 	}
 
+	// TODO: FROM HERE
 	@Override
 	public void onStop() {
 		super.onStop();
-		//fragment will rotate (or been destroyed) so we don't preload again the content defined in fragment's arguments
-		preloadOnCreateView = false;
-		removeWebviewFromPlaceholder();
+		
+		// Fragment will rotate or be destroyed, so we don't preload content defined in fragment's arguments again 
+		mPreloadOnCreateView = false;
+		
+		removeWebViewFromPlaceholder();
+	}
+	
+	/****************************************************************************************
+	 * Helpers
+	 ***************************************************************************************/
+	
+	/**
+	 * This method should be overridden in subclasses.
+	 * @return Layout id inflated by this fragment
+	 */
+	protected int getLayoutToInflate() {
+		return R.layout.html_fragment;
+	}
+
+	/**
+	 * Sets up the fragment's properties according to the inflated layout.
+	 * This method should be overridden in subclasses. 
+	 * @param rootView: parent view
+	 */
+	protected void setUpViews(View rootView) {
+		// TODO: and if webViewPlaceholder id is null?
+		mWebViewPlaceholder = ((FrameLayout) rootView.findViewById(R.id.webViewPlaceholder));
+	}
+
+	/**
+	 * Sets up listeners for components inflated from the given layout and the parent view.
+	 * This method should be overridden in subclasses.
+	 */
+	protected void setUpListeners() { }
+	
+	/**
+	 * Called to add the Web view in the placeholder (and creates it if necessary).
+	 * This method SHOULD NOT be overridden in subclasses.
+	 */
+	protected void addWebView() {
+		if(mWebView == null) {
+			mWebView = new OverScrollingWebView(mContext);
+			setWebViewSettings(this);
+		}
+		
+		if(mWebViewPlaceholder != null) {
+			mWebViewPlaceholder.addView(mWebView);
+		}
+		else  {
+			if(mDebug) Log.e(getClass().getSimpleName(), "addWebView: you must set up Web view placeholder in setUpViews!");
+		}		
+	}
+	
+	private void preloadContent() {
+		// TODO: resourcePath & mPage setting. Do we keep this behavior?
+		Bundle arguments = getArguments();
+		
+		mRessourcePath = arguments.getString(kResourcePath);
+		mPage = arguments.getString(kPage);
+
+		mRessourcePath = (mRessourcePath != null) ? mRessourcePath : "www/";
+		mPage = (mPage != null) ? mPage : "index.html";
+		
+		if (mPreloadOnCreateView) {
+			loadFileFromAssets(mRessourcePath, mPage);
+		}
+	}
+	
+	/**
+	 * Called when fragment is about to rotate or be destroyed
+	 * This method SHOULD NOT be overridden in subclasses.
+	 */
+	protected void removeWebViewFromPlaceholder() {
+		if (mWebViewPlaceholder != null
+			&& mWebView != null) {
+			mWebViewPlaceholder.removeView(mWebView);
+		}
+		else if(mDebug) Log.e(getClass().getSimpleName(), "removeWebViewFromPlaceholder: you must set up Web view placeholder in setUpViews!");
+	}
+	
+	@SuppressLint("SetJavaScriptEnabled")
+	protected void setWebViewSettings(Object javascriptInterface) {
+		if(mWebView != null) {		
+			mWebView.setScrollListener(this);
+			mWebView.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
+			
+			// Enables JS
+			WebSettings webSettings = mWebView.getSettings();
+			webSettings.setJavaScriptEnabled(true);
+
+			// Enables and setup JS local storage
+			webSettings.setDomStorageEnabled(true); 
+			webSettings.setDatabaseEnabled(true);
+			//@deprecated since API 19. But calling this method have simply no effect for API 19+
+			webSettings.setDatabasePath(mContext.getFilesDir().getParentFile().getPath()+"/databases/");
+			
+			// Enables cross-domain calls for Ajax
+			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+				allowAjax();
+			}
+			
+			// Fix some focus issues on old devices like HTC Wildfire
+			// keyboard was not properly showed on input touch.
+			mWebView.requestFocus(View.FOCUS_DOWN);
+			mWebView.setOnTouchListener(new View.OnTouchListener() {
+				@Override
+				public boolean onTouch(View view, MotionEvent event) {
+					switch (event.getAction()) {
+						case MotionEvent.ACTION_DOWN:
+						case MotionEvent.ACTION_UP:
+							if (! view.hasFocus()) {
+								view.requestFocus();
+							}
+							break;
+						default:
+							break;
+					}
+					
+					return false;
+				}
+			});
+
+			// Add JavaScript interface so JavaScript can call native functions.
+			mWebView.addJavascriptInterface(javascriptInterface, "Android");
+			mWebView.addJavascriptInterface(new LocalStorageJavaScriptInterface(mContext), "LocalStorage");
+
+			ScaleWebViewClient scaleWebViewClient = new ScaleWebViewClient() {
+				@Override
+				public void onPageStarted(WebView view, String url, Bitmap favicon) {
+					super.onPageStarted(view, url, favicon);
+					
+					mWebViewLoaded = false;
+				}
+
+				@Override
+				public void onPageFinished(WebView view, String url) {
+					mWebViewLoaded = true;
+					
+					executeWaitingCalls();
+				}
+			};
+			
+			if(HTMLPullToRefreshFragment.class.isAssignableFrom(getClass())) {
+				scaleWebViewClient.setScaleListener((HTMLPullToRefreshFragment) this);
+			}
+
+			mWebView.setWebViewClient(scaleWebViewClient);
+		}
+		else {
+			if(mDebug) Log.e(getClass().getSimpleName(), "setWebViewSettings: Web view is null.");
+		}
+	}
+	
+	@TargetApi(android.os.Build.VERSION_CODES.JELLY_BEAN) // 16
+	private void allowAjax() {
+		try {
+			// TODO: see how to restrict only to local files
+			mWebView.getSettings().setAllowUniversalAccessFromFileURLs(true);
+		} 
+		catch(NullPointerException exception) {
+			exception.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Load the given file in the Web view 
+	 * @param path: path in assets folder where the file is located.
+	 * @param file: file name to load.
+	 * @warning All application HTML files should be found in the same subfolder in ressource path
+	 */
+	public void loadFileFromAssets(String path, String file) {
+		if(mWebView != null) {
+			mWebView.loadUrl(ASSETS_PATH + path + file);
+			mWebViewContentHasBeenLoaded = true;
+		}
 	}
 	
 	/**************************************************************
@@ -215,40 +392,6 @@ public abstract class HTMLFragment extends Fragment {
 	 *************************************************************/
 	
 	protected abstract void onUnhandledMessage(JSONObject message);
-	
-	/**
-	 * This method is called to add the webview in the placeholder (and create it if necessary)
-	 * This method SHOULD NOT be overridden in subclasses.
-	 */
-	protected void addWebview() {
-		if(mWebView == null) {
-			mWebView = new OverScrollingWebView(mContext);
-			setWebViewSettings(this);
-		}
-		
-		if(webViewPlaceholder != null) {
-			webViewPlaceholder.addView(mWebView);
-		}
-		else  {
-			if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : you must set up webViewPlaceholder in setUpViews !");
-		}		
-	}
-
-	/**
-	 * This method is called when the fragment is about to rotate. 
-	 * This method SHOULD NOT be overridden in subclasses.
-	 */
-	protected void removeWebviewFromPlaceholder() {
-		if (webViewPlaceholder != null) {
-			if(mWebView != null) {
-				// Remove the WebView from the old placeholder
-				webViewPlaceholder.removeView(mWebView);
-			}
-		}
-		else {
-			if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : you must set up webViewPlaceholder in setUpViews !");
-		}
-	}
 
 	/**
 	 * In this method, the webView state is saved.
@@ -263,31 +406,6 @@ public abstract class HTMLFragment extends Fragment {
 	}
 
 	/**
-	 * This method should be overridden in subclasses
-	 * @return the identifier of the layout that will be inflated in this fragment
-	 */
-	protected int getLayoutToInflate() {
-		return R.layout.html_fragment;
-	}
-
-	/**
-	 * This method should be overridden in subclasses. 
-	 * Here, you set up the fragment's properties depending on the layout that has been inflated
-	 * @param rootView the root of the views that has been inflated
-	 */
-	protected void setUpViews(View rootView) {
-		webViewPlaceholder = ((FrameLayout) rootView.findViewById(R.id.webViewPlaceholder));
-	}
-
-	/**
-	 * This method should be overridden in subclasses. 
-	 * Here you set up the listeners for the components that were inflated in the given layout (from layoutToInflate) and set up in setUpViews(View rootView)
-	 */
-	protected void setUpListeners() {
-
-	}
-
-	/**
 	 * This method returns a new instance of the fragment that will be displayed as the {@link HTMLPopUpWebview} in the fragment container where the current fragment is shown.
 	 * This method may be overridden in subclasses if the {@link HTMLPopUpWebview} must implement customized dialogs with native side such as in "public boolean handleMessageSentByJavaScript(String messageJS)".
 	 * @param fileName : the filename that will be displayed in the {@link HTMLPopUpWebview}
@@ -297,57 +415,14 @@ public abstract class HTMLFragment extends Fragment {
 		return new HTMLWebLayerFragment();
 	}
 
-	private void preloadContent() {
-		if(preloadOnCreateView) {
-			if(mWebView != null) {
-				if(	getArguments() != null 
-					&& getArguments().containsKey(kResourcePath)) {
-					mRessourcePath = getArguments().getString(kResourcePath);
-				}
-
-				if(	getArguments() != null 
-					&& getArguments().containsKey(kPage)) {
-					pageName = getArguments().getString(kPage);
-				}
-
-				if(	pageName != null 
-					&& mRessourcePath != null) {
-					loadFileContentFromAssets(mRessourcePath, pageName);
-					webviewContentHasBeenLoaded = true;
-				}
-				else {
-					mRessourcePath = (mRessourcePath == null) ? "www/" : mRessourcePath;
-					pageName = (pageName != null) ? pageName : "index.html";
-					loadFileContentFromAssets(mRessourcePath, pageName);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Load the given file in this.webView 
-	 * @param pathInAssets : the path in assets where the file named fileName is to be found
-	 * @param fileName : the filenName to load in this.webView
-	 * @warning All the HTML Files of the whole applications should be found in the same place at the root of this.ressourcePath
-	 */
-	public void loadFileContentFromAssets(String pathInAssets,String fileName) {
-		if(mWebView != null) {
-			//String hTMLStructure = getFileContentFromAssets(pathInAssets+fileName);
-			String baseUrl = ASSETS_PATH+pathInAssets+fileName;
-			//webView.loadDataWithBaseURL(baseUrl,hTMLStructure,"text/html","UTF-8",baseUrl);
-			//Log.e(getClass().getSimpleName(), "load url "+baseUrl);
-			mWebView.loadUrl(baseUrl);
-		}
-	}
-
 	/**
 	 * sends jsonObj to the JavaScript in this.webView
 	 * @param jsonObj : the JSONObject that will be sent to the webView and handled in the JavaScript code.
 	 */
 	public void executeScriptInWebView(final JSONObject jsonObj) {
-		if(jsonObj != null) {
-			if(	webViewLoaded 
-				|| cobaltIsReady) {
+		if (jsonObj != null) {
+			if(	mWebViewLoaded 
+				|| mCobaltIsReady) {
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
@@ -365,11 +440,21 @@ public abstract class HTMLFragment extends Fragment {
 				});
 			}
 			else {
-				waitingJavaScriptCallsList.add(jsonObj);
+				mWaitingJavaScriptCallsList.add(jsonObj);
 			}
 		}
 	}
 
+	private void executeWaitingCalls() {
+		int waitingJavaScriptCallsListSize = mWaitingJavaScriptCallsList.size();
+		
+		for(int i = 0 ; i < waitingJavaScriptCallsListSize ; i++) {
+			if (mDebug) Log.i(getClass().getSimpleName(), "executeWaitingCalls: execute " + mWaitingJavaScriptCallsList.get(i).toString());
+			executeScriptInWebView(mWaitingJavaScriptCallsList.get(i));
+		}
+		
+		mWaitingJavaScriptCallsList.clear();
+	}
 
 	/**
 	 * This method is called when a button is clicked on an alertDialog that was generated by the web.
@@ -605,9 +690,9 @@ public abstract class HTMLFragment extends Fragment {
 					
 					else if(type != null && type.length() >0 && type.equals(JSTypeCobaltIsReady))
 					{
-						if(mDebug) Log.i(getClass().getSimpleName(), "cobalt is ready. waiting calls : "+waitingJavaScriptCallsList.size());
+						if(mDebug) Log.i(getClass().getSimpleName(), "cobalt is ready. waiting calls : "+mWaitingJavaScriptCallsList.size());
 
-						cobaltIsReady = true;
+						mCobaltIsReady = true;
 						executeWaitingCalls();
 					}
 					else 
@@ -725,7 +810,7 @@ public abstract class HTMLFragment extends Fragment {
 			//send callback to store this.className and HTMLPage to dismiss later !
 			JSONObject objectToSend = new JSONObject();
 			try {
-				objectToSend.put(kJSPage, this.pageName);
+				objectToSend.put(kJSPage, mPage);
 				objectToSend.put(kJSNavigationController, getActivity() != null ? getActivity().getClass().getName() : "ERROR : activity's className couldn't be found.");		
 				sendCallbackResponse(callBackID, objectToSend);
 			} catch (JSONException e) {
@@ -1017,80 +1102,6 @@ public abstract class HTMLFragment extends Fragment {
 		}
 	}
 
-	protected void setWebViewSettings(Object jsInterface)
-	{
-		if(mWebView != null)
-		{		
-
-			mWebView.setScrollListener(this);
-			mWebView.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
-			//allows JS to be called from native
-			WebSettings webSettings = mWebView.getSettings();
-			webSettings.setJavaScriptEnabled(true);
-
-			//Enable and setup JS localStorage
-			webSettings.setDomStorageEnabled(true); 
-			webSettings.setDatabaseEnabled(true);
-			webSettings.setDatabasePath(mContext.getFilesDir().getParentFile().getPath()+"/databases/");
-			//for JS Ajax calls : disable cache
-			//webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE); 
-			//webSettings.setAppCacheEnabled(false); 
-			//webView.clearCache(false);
-			//for JS Ajax calls : enable cross domain calls
-			int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-			if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN){
-				allowAjaxForNewAndroid();
-			}
-
-			//fix some focus problems on old devices like HTC Wildfire
-			//keyboard was not properly showed on input touch.
-			mWebView.requestFocus(View.FOCUS_DOWN);
-			mWebView.setOnTouchListener(new View.OnTouchListener() {
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					switch (event.getAction()) {
-					case MotionEvent.ACTION_DOWN:
-					case MotionEvent.ACTION_UP:
-						if (!v.hasFocus()) {
-							v.requestFocus();
-						}
-						break;
-					}
-					return false;
-				}
-			});
-
-			//add JS interface so that JS can call native functions.
-			mWebView.addJavascriptInterface(jsInterface, "Android");
-			mWebView.addJavascriptInterface(new LocalStorageJavaScriptInterface(mContext), "LocalStorage");
-
-			ScaleWebViewClient wvc = new ScaleWebViewClient() {
-				@Override
-				public void onPageStarted(WebView view, String url,Bitmap favicon) {
-					super.onPageStarted(view, url, favicon);
-					webViewLoaded = false;
-				}
-
-				@Override
-				public void onPageFinished(WebView view, String url) {
-					webViewLoaded = true;
-					executeWaitingCalls();
-				}
-			};
-
-			if(HTMLPullToRefreshFragment.class.isAssignableFrom(getClass()))
-			{
-				wvc.setScaleListener((HTMLPullToRefreshFragment) this);
-			}
-
-			mWebView.setWebViewClient(wvc);
-		}
-		else
-		{
-			if(mDebug) Log.e(getClass().getSimpleName(),"ERROR : webView is null and cannot be set");
-		}
-	}
-
 	private String getFileContentFromAssets(String filename)
 	{
 		try {
@@ -1116,30 +1127,6 @@ public abstract class HTMLFragment extends Fragment {
 		return "";
 	}
 
-
-	@TargetApi(16)
-	private void allowAjaxForNewAndroid() {
-		try {
-			mWebView.getSettings().setAllowUniversalAccessFromFileURLs(true);
-		} 
-		catch(NullPointerException e) {
-		}
-	}
-
-	private void executeWaitingCalls()
-	{
-		if(waitingJavaScriptCallsList.size() > 0)
-		{
-			int size = waitingJavaScriptCallsList.size();
-			for(int i = 0 ; i < size ; i++)
-			{
-				if(mDebug) Log.i(getClass().getSimpleName(), "executeWaitingCalls: execute " + waitingJavaScriptCallsList.get(i).toString());
-				executeScriptInWebView(waitingJavaScriptCallsList.get(i));
-			}
-			waitingJavaScriptCallsList.clear();
-		}
-	}
-
 	public boolean isDebugLoggingEnabled() {
 		return mDebug;
 	}
@@ -1148,6 +1135,10 @@ public abstract class HTMLFragment extends Fragment {
 		mDebug = debug;
 	}
 
+	/*******************************************************************************************************************************
+	 * LOCAL STORAGE
+	 ******************************************************************************************************************************/
+	
 	/**
 	 * This class is used as a substitution of the local storage in Android webviews
 	 * 
@@ -1243,9 +1234,9 @@ public abstract class HTMLFragment extends Fragment {
 		}
 	}
 	
-	/********************************************************
-     * DatePicker
-     ********************************************************/
+	/*************************************************************************************
+     * DATE PICKER
+     ************************************************************************************/
     protected void showDatePickerDialog(int year, int month, int day, String callbackID) {
     	Bundle args = new Bundle();
     	args.putInt(HTMLDatePickerFragment.ARG_YEAR, year);

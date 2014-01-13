@@ -76,7 +76,7 @@ public abstract class HTMLPullToRefreshFragment extends HTMLFragment implements 
 	 ************************************************************************************/
 	
 	@Override
-	protected void addWebview() {
+	protected void addWebView() {
 		if (mPullToRefreshWebView == null) {
 			mPullToRefreshWebView = new PullToRefreshOverScrollWebview(mContext);
 			if (mWebView == null) {
@@ -86,8 +86,8 @@ public abstract class HTMLPullToRefreshFragment extends HTMLFragment implements 
 			setWebViewSettings(this);
 		}
 
-		if (webViewPlaceholder != null) {
-			webViewPlaceholder.addView(mPullToRefreshWebView);
+		if (mWebViewPlaceholder != null) {
+			mWebViewPlaceholder.addView(mPullToRefreshWebView);
 		}
 		else {
 			if(mDebug) Log.e(getClass().getSimpleName(), "You must set up webViewPlaceholder in setUpViews!");
@@ -96,9 +96,9 @@ public abstract class HTMLPullToRefreshFragment extends HTMLFragment implements 
 	
 	@Override
 	protected void removeWebviewFromPlaceholder() {
-		if (webViewPlaceholder != null) {
+		if (mWebViewPlaceholder != null) {
 			if (mPullToRefreshWebView != null) {
-				webViewPlaceholder.removeView(mPullToRefreshWebView);
+				mWebViewPlaceholder.removeView(mPullToRefreshWebView);
 			}
 		}
 		else  {
@@ -113,7 +113,7 @@ public abstract class HTMLPullToRefreshFragment extends HTMLFragment implements 
 
 	@Override
 	protected void setUpViews(View rootView) {
-		webViewPlaceholder = (FrameLayout) rootView.findViewById(R.id.webViewPlaceholder);
+		mWebViewPlaceholder = (FrameLayout) rootView.findViewById(R.id.webViewPlaceholder);
 	}
 
 	@JavascriptInterface
