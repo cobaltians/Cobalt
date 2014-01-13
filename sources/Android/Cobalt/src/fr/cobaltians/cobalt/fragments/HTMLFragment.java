@@ -393,6 +393,7 @@ public abstract class HTMLFragment extends Fragment {
 				obj.put(kJSType,JSTypeCallBack);
 				obj.put(kJSCallback, callbackId);
 				obj.put(kJSData, objectToSend);	
+				
 				executeScriptInWebView(obj);
 			} 
 			catch (JSONException exception) {
@@ -524,12 +525,7 @@ public abstract class HTMLFragment extends Fragment {
 								});
 								return true;
 							}
-							if (name.equals(JSActionWebLayerDismiss))
-							{
-								//TODO something
-							}
 						}
-
 						else {
 							onUnhandledMessage(jsonObj);
 						}
@@ -795,7 +791,6 @@ public abstract class HTMLFragment extends Fragment {
 				//Find Infos from conf file
 				if(classId != null && confs.has(classId))
 				{
-
 					className = confs.getJSONObject(classId).optString(kAndroidController);
 					pullToRefresh = confs.getJSONObject(classId).optBoolean(kPullToRefresh);
 					infiniteScroll = confs.getJSONObject(classId).optBoolean(kInfiniteScroll);
@@ -860,7 +855,7 @@ public abstract class HTMLFragment extends Fragment {
 
 
 	private void showAlertDialogWithJSON(JSONObject jsonParams, final String callbackId)
-	{
+	{		
 		if(jsonParams != null)
 		{
 
@@ -883,7 +878,6 @@ public abstract class HTMLFragment extends Fragment {
 
 				// Callback
 				if (callbackId.length() != 0) {
-				
 					if(buttons.length() == 0)
 					{
 						mAlert.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {	

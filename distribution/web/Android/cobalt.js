@@ -238,9 +238,9 @@ var cobalt={
 		}
 		if (typeof callbackfunction === "function"){
 	        try{
-		        callbackfunction(callback.params)
+		        callbackfunction(callback.data)
 	        }catch(e){
-		        cobalt.log('Failed calling callback #'+callback.callback+'.')
+		        cobalt.log('Failed calling callback #'+callback.callback+'. : ' + e )
 	        }
         }
 	},

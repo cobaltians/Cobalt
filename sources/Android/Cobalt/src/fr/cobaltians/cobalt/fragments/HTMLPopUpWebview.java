@@ -38,7 +38,7 @@ public class HTMLPopUpWebview extends HTMLFragment {
 					String type = jsonObj.optString(kJSType);
 					if(type != null && type.length() >0 && type.equals(JSTypeWebLayer))
 					{
-						String name = jsonObj.optString(kJSAction);
+						String name = jsonObj.getString(kJSAction);
 						if(name != null && name.length() > 0 && name.equals(JSActionWebLayerDismiss))
 						{
 							mHandler.post(new Runnable() {
@@ -49,6 +49,9 @@ public class HTMLPopUpWebview extends HTMLFragment {
 								}
 							});
 							return true;
+						}
+						else {
+							onUnhandledMessage(jsonObj);
 						}
 					}
 				}
@@ -114,6 +117,5 @@ public class HTMLPopUpWebview extends HTMLFragment {
 
 	@Override
 	protected void onUnhandledMessage(JSONObject message) {
-		
 	}
 }
