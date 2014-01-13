@@ -27,4 +27,9 @@ public class PullToRefreshFragment extends HTMLPullToRefreshFragment {
 			disableInfiniteScroll();
 		}
 	}
+
+	@Override
+	protected void onPullToRefreshRefreshed() { }
+	@Override
+	protected void onInfiniteScrollRefreshed() { }
 }

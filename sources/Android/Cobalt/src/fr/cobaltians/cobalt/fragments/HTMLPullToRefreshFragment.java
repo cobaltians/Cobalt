@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -22,419 +23,347 @@ import fr.cobaltians.cobalt.webViewClients.ScaleWebViewClient;
 import fr.cobaltians.cobalt.R;
 
 /**
- * {@link HTMLFragment} that may have Pull To Refresh or/and InfiniteScroll features if those are activated.
+ * {@link HTMLFragment} may having pull-to-refresh or/and infinite scroll features if activated.
  * @extends HTMLFragment
  * @implements IScrollListener
  * @author Diane
  */
-public class HTMLPullToRefreshFragment extends HTMLFragment implements IScrollListener {
+public abstract class HTMLPullToRefreshFragment extends HTMLFragment implements IScrollListener {
+	
+	/*************************************************************************************
+	 * JS MESSAGES
+	 ************************************************************************************/
+	
+	// PULL TO REFRESH
+	private static String JSEventPullToRefresh = "pullToRefresh";
+	private static String JSCallbackPullToRefreshDidRefresh = "pullToRefreshDidRefresh";
 
-	/**
-	 * the webview that may have the PullToRefresh and/or InfiniteScroll features.
-	 */
-	protected PullToRefreshOverScrollWebview mPullRefreshWebView;
+	// INFINITE SCROLL
+	private static String JSEventInfiniteScroll= "infiniteScroll";
+	private static String JSCallbackInfiniteScrollDidRefresh = "infiniteScrollDidRefresh";
+	
+	/**********************************************************************
+	 * MEMBERS
+	 *********************************************************************/
+	
+	// Web view may having pull-to-refresh and/or infinite scroll features.
+	protected PullToRefreshOverScrollWebview mPullToRefreshWebView;
 
-	//PULL TO REFRESH
-	private static String JSNamePullToRefreshRefresh = "pullToRefreshRefresh";
-	private static String JSNamePullToRefreshDidRefresh = "pullToRefreshDidRefresh";
-	private static String JSNamePullToRefreshCancelled = "pullToRefreshCancelled";
-
-	//INFINITE SCROLL
-	private static String JSNameInfiniteScrollRefresh = "infiniteScrollRefresh";
-	private static String JSNameInfiniteScrollDidRefresh = "infiniteScrollDidRefresh";
-	private static String JSNameInfiniteScrollCancelled = "infiniteScrollCancelled";
-	private boolean infiniteScrollRefreshing = false;
-
-	private boolean infiniteScrollActive = false;
+	private boolean mInfiniteScrollRefreshing = false;
+	private boolean mInfiniteScrollEnabled = false;
+	
+	/*********************************************************************************************
+	 * LIFECYCLE
+	 ********************************************************************************************/
 	
 	@Override
 	public void onStart() {
 		super.onStart();
-		//webview has been added. -> set up its listener
-		if(mPullRefreshWebView != null)
-		{
-			mPullRefreshWebView.setOnRefreshListener(new OnRefreshListener<OverScrollingWebView>() {
-				@Override
-				public void onRefresh(
-						PullToRefreshBase<OverScrollingWebView> refreshView) {
-					refreshWebView();
-				}
-			});
-		}
+		
+		// Web view has been added, set up its listener
+		mPullToRefreshWebView.setOnRefreshListener(new OnRefreshListener<OverScrollingWebView>() {
+			@Override
+			public void onRefresh(PullToRefreshBase<OverScrollingWebView> refreshView) {
+				refreshWebView();
+			}
+		});
 		
 		setFeaturesWantedActive();
 	}
 
+	/*************************************************************************************
+	 * COBALT
+	 ************************************************************************************/
+	
 	@Override
-	protected int getLayoutToInflate()
-	{
-		return R.layout.html_ptr_fragment;
-	}
-
-	/**
-	 * @discussion You must set mPullRefreshWebView instead of webView in a HTMLPullToRefreshFragment. webView will be set automatically.
-	 */
-	@Override
-	protected void setUpViews(View rootView) {
-		webViewPlaceholder = (FrameLayout)rootView.findViewById(R.id.webViewPlaceholder);
-	}
-
-	@Override
-	protected void addWebview()
-	{
-		if(mPullRefreshWebView == null)
-		{
-			//Create the webview since it has not been created before.
-			mPullRefreshWebView = new PullToRefreshOverScrollWebview(mContext);
-			if(mWebView == null) {
-				//set webview as the refreshableView of mPullRefreshWebView.
-				mWebView = mPullRefreshWebView.getRefreshableView();
+	protected void addWebView() {
+		if (mPullToRefreshWebView == null) {
+			mPullToRefreshWebView = new PullToRefreshOverScrollWebview(mContext);
+			if (mWebView == null) {
+				// Set Web view as the refreshable view of pull-to-refresh Web view.
+				mWebView = mPullToRefreshWebView.getRefreshableView();
 			}
 			setWebViewSettings(this);
 		}
 
-		if(webViewPlaceholder != null)
-		{
-			webViewPlaceholder.addView(mPullRefreshWebView);
+		if (mWebViewPlaceholder != null) {
+			mWebViewPlaceholder.addView(mPullToRefreshWebView);
 		}
-		else 
-		{
-			if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : you must set up webViewPlaceholder in setUpViews !");
+		else {
+			if(mDebug) Log.e(getClass().getSimpleName(), "You must set up webViewPlaceholder in setUpViews!");
 		}
+	}
+	
+	@Override
+	protected void removeWebViewFromPlaceholder() {
+		if (mWebViewPlaceholder != null) {
+			if (mPullToRefreshWebView != null) {
+				mWebViewPlaceholder.removeView(mPullToRefreshWebView);
+			}
+		}
+		else  {
+			if (mDebug) Log.e(getClass().getSimpleName(), "You must set up webViewPlaceholder in setUpViews!");
+		}
+	}
+	
+	@Override
+	protected int getLayoutToInflate() {
+		return R.layout.html_ptr_fragment;
 	}
 
 	@Override
-	protected void removeWebviewFromPlaceholder()
-	{
-		if (webViewPlaceholder != null)
-		{
-			if(mPullRefreshWebView != null)
-			{
-				// Remove the WebView from the old placeholder
-				webViewPlaceholder.removeView(mPullRefreshWebView);
-			}
-		}
-		else 
-		{
-			if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : you must set up webViewPlaceholder in setUpViews !");
-		}
+	protected void setUpViews(View rootView) {
+		mWebViewPlaceholder = (FrameLayout) rootView.findViewById(R.id.webViewPlaceholder);
 	}
-
-	/**
-	 * Customizes the pullToRefresh Loading View.
-	 * @param pullLabel : text to be shown when user is pulling
-	 * @param refreshingLabel : text to be shown while the pullToRefresh is refreshing
-	 * @param releaseLabel : text to be shown when refreshing is done
-	 * @param lastUpdatedLabel : text of the lastUpdateLabel
-	 * @param loadingDrawable : the drawable to show
-	 * @details To customize the animation of the loadingDrawable or the text color of the labels, it must be indicated in the layout.
-	 * @example ptr:ptrAnimationStyle="flip|rotate"
-	 */
-	protected void setCustomTitlesAndImage(String pullLabel,String refreshingLabel,String releaseLabel,String lastUpdatedLabel,Drawable loadingDrawable,Typeface typeface)
-	{
-		LoadingLayoutProxy llp = ((LoadingLayoutProxy) mPullRefreshWebView.getLoadingLayoutProxy());
-		if(lastUpdatedLabel != null)
-			llp.setLastUpdatedLabel(lastUpdatedLabel);
-		if(pullLabel != null)
-			llp.setPullLabel(pullLabel);
-		if(refreshingLabel != null)
-			llp.setRefreshingLabel(refreshingLabel);
-		if(releaseLabel != null)
-			llp.setReleaseLabel(releaseLabel);
-		if(loadingDrawable != null)
-			llp.setLoadingDrawable(loadingDrawable);
-		if(typeface != null)
-			llp.setTextTypeface(typeface);
-	}
-
-	/**
-	 * Customizes the pullToRefresh Last update Label
-	 * @param lastUpdatedLabel: text of the lastUpdateLabel
-	 */
-	protected void setLastUpdateLabel(String lastUpdatedLabel)
-	{
-		LoadingLayoutProxy llp = ((LoadingLayoutProxy) mPullRefreshWebView.getLoadingLayoutProxy());
-		if(lastUpdatedLabel != null)
-			llp.setLastUpdatedLabel(lastUpdatedLabel);
-	}
-
-	/**
-	 * enable the pullToRefresh feature
-	 * the mPullRefreshWebView must have been set before 
-	 */
-	public void enablePullToRefresh()
-	{
-		if(this.mPullRefreshWebView != null)
-			this.mPullRefreshWebView.setMode(Mode.PULL_FROM_START);
-		else if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : impossible to enable pullToRefresh feature since mPullRefreshWebView is null.");
-	}
-
-	/**
-	 * disable the pullToRefresh feature
-	 * the mPullRefreshWebView must have been set before 
-	 */
-	public void disablePullToRefresh()
-	{
-		if(this.mPullRefreshWebView != null)
-			this.mPullRefreshWebView.setMode(Mode.DISABLED);
-		else if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : impossible to disable pullToRefresh feature since mPullRefreshWebView is null.");
-	}
-
-	/**
-	 * this methods returns a boolean to know if the infiniteScroll feature is active
-	 * @return true if infiniteScroll is active, false otherwise
-	 */
-	public boolean isPullToRefreshActive()
-	{
-		return !(this.mPullRefreshWebView.getMode() == Mode.DISABLED);
-	}
-
-	/**
-	 * enable the infiniteScroll feature
-	 */
-	public void enableInfiniteScroll()
-	{
-		this.infiniteScrollActive = true;
-	}
-
-	/**
-	 * disable the infiniteScroll feature
-	 */
-	public void disableInfiniteScroll()
-	{
-		this.infiniteScrollActive = false;
-	}
-
-	/**
-	 * this methods returns a boolean to know if the infiniteScroll feature is active
-	 * @return true if infiniteScroll is active, false otherwise
-	 */
-	public boolean isInfiniteScrollActive()
-	{
-		return this.infiniteScrollActive;
-	}
-
-	private void setFeaturesWantedActive()
-	{
-		if(this.mPullRefreshWebView != null)
-		{
-			if(this.getArguments() != null && this.getArguments().containsKey(kPullToRefresh))
-			{
-				boolean ptrActive = this.getArguments().getBoolean(kPullToRefresh);
-				if(ptrActive)
-				{
-					enablePullToRefresh();
-				}
-				else disablePullToRefresh();
-			}
-			else disablePullToRefresh();
-
-			if(this.getArguments() != null && this.getArguments().containsKey(kInfiniteScroll))
-			{
-				this.infiniteScrollActive = this.getArguments().getBoolean(kInfiniteScroll,false);
-			}
-		}
-	}
-
 
 	@JavascriptInterface
-	public boolean handleMessageSentByJavaScript(String messageJS)
-	{	
-		JSONObject jsonObj;
-		try 
-		{
-			jsonObj = new JSONObject(messageJS);
-			if(jsonObj != null)
-			{
-				String type = jsonObj.optString(kJSType);
-
-				//TYPE = EVENT
-				if(type != null && type.length() >0 && type.equals(JSTypeCallBack))
-				{
-					String callbackID = jsonObj.optString(kJSCallback);
-					if(callbackID != null && callbackID.length() >0 && callbackID.equals(JSNamePullToRefreshDidRefresh))
-					{
-						mHandler.post(new Runnable() {
-							@Override
-							public void run() {
-								webViewDidRefresh();
-							}
-						});
-						return true;
-					}
-					else if(callbackID != null && callbackID.length() >0 && callbackID.equals(JSNameInfiniteScrollDidRefresh))
-					{
-						mHandler.post(new Runnable() {
-							@Override
-							public void run() {
-								infiniteScrollDidRefresh();
-							}
-						});
-						return true;
-					}
+	public boolean handleMessageSentByJavaScript(String message) {	
+		try {
+			JSONObject jsonObj = new JSONObject(message);
+			String type = jsonObj.getString(kJSType);
+			// TYPE = CALLBACK
+			if (type.equals(JSTypeCallBack)) {
+				String callbackID = jsonObj.getString(kJSCallback);
+				if (callbackID.equals(JSCallbackPullToRefreshDidRefresh)) {
+					mHandler.post(new Runnable() {
+						@Override
+						public void run() {
+							onPullToRefreshDidRefresh();
+						}
+					});
+					return true;
+				}
+				else if (callbackID.equals(JSCallbackInfiniteScrollDidRefresh)) {
+					mHandler.post(new Runnable() {
+						@Override
+						public void run() {
+							onInfiniteScrollDidRefresh();
+						}
+					});
+					return true;
 				}
 			}
-		} catch (JSONException e1) {
-			if(mDebug) Log.e(getClass().getName(),"JSON EXCEPTION FOR JSON : "+messageJS);
-			e1.printStackTrace();
+		} 
+		catch (JSONException exception) {
+			if (mDebug) Log.e(getClass().getName(), "handleMessageSentByJavaScript: JSON exception for \n" + message);
+			exception.printStackTrace();
 		}
-		return super.handleMessageSentByJavaScript(messageJS);
+		
+		return super.handleMessageSentByJavaScript(message);
+	}
+	
+	@Override
+	protected void onUnhandledMessage(JSONObject message) {
+		
+	}
+	
+	/******************************************************************************************************************************
+	 * PULL TO REFRESH
+	 *****************************************************************************************************************************/
+	
+	/**
+	 * Enables pull-to-refresh feature
+	 * mPullRefreshWebView must be set
+	 */
+	public void enablePullToRefresh() {
+		if (mPullToRefreshWebView != null) {
+			mPullToRefreshWebView.setMode(Mode.PULL_FROM_START);
+		}
+		else if(mDebug) Log.e(getClass().getSimpleName(), "Unable to enable pull-to-refresh feature. mPullToRefreshWebView must be set.");
 	}
 
+	/**
+	 * Disables pull-to-refresh feature
+	 * mPullRefreshWebView must be set 
+	 */
+	public void disablePullToRefresh() {
+		if(mPullToRefreshWebView != null) {
+			mPullToRefreshWebView.setMode(Mode.DISABLED);
+		}
+		else if(mDebug) Log.e(getClass().getSimpleName(), "Unable to disable pull-to-refresh feature. mPullToRefreshWebView must be set.");
+	}
 
-
-	private void refreshWebView()
-	{
+	/**
+	 * Returns a boolean to know if pull-to-refresh feature is enabled
+	 * @return 	true if pull-to-refresh is enabled, 
+	 * 			false otherwise
+	 */
+	public boolean isPullToRefreshEnabled() {
+		return ! (mPullToRefreshWebView.getMode() == Mode.DISABLED);
+	}
+	
+	/**
+	 * Customizes pull-to-refresh loading view.
+	 * @param pullLabel: text shown when user pulling
+	 * @param refreshingLabel: text shown while refreshing
+	 * @param releaseLabel: text shown when refreshed
+	 * @param lastUpdatedLabel: text shown for the last update
+	 * @param loadingDrawable: drawable shown when user pulling
+	 * @details loadingDrawable animation or labels text color customization must be done in the layout.
+	 * @example ptr:ptrAnimationStyle="flip|rotate"
+	 */
+	protected void setCustomTitlesAndImage(	String pullLabel, String refreshingLabel, String releaseLabel, String lastUpdatedLabel, 
+											Drawable loadingDrawable, Typeface typeface) {
+		LoadingLayoutProxy loadingLayoutProxy = ((LoadingLayoutProxy) mPullToRefreshWebView.getLoadingLayoutProxy());
+		if (lastUpdatedLabel != null) {
+			loadingLayoutProxy.setLastUpdatedLabel(lastUpdatedLabel);
+		}
+		if (pullLabel != null) {
+			loadingLayoutProxy.setPullLabel(pullLabel);
+		}
+		if (refreshingLabel != null) {
+			loadingLayoutProxy.setRefreshingLabel(refreshingLabel);
+		}
+		if (releaseLabel != null) {
+			loadingLayoutProxy.setReleaseLabel(releaseLabel);
+		}
+		if (loadingDrawable != null) {
+			loadingLayoutProxy.setLoadingDrawable(loadingDrawable);
+		}
+		if (typeface != null) {
+			loadingLayoutProxy.setTextTypeface(typeface);
+		}
+	}
+	
+	/**
+	 * Customizes pull-to-refresh last updated label
+	 * @param text: text of last updated label
+	 */
+	protected void setLastUpdatedLabel(String text) {
+		LoadingLayoutProxy loadingLayoutProxy = (LoadingLayoutProxy) mPullToRefreshWebView.getLoadingLayoutProxy();
+		if (text != null) {
+			loadingLayoutProxy.setLastUpdatedLabel(text);
+		}
+	}
+	
+	private void refreshWebView() {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				JSONObject obj = new JSONObject();
 				try {
-					obj.put(kJSType,JSTypeEvent);
-					obj.put(kJSEvent, JSNamePullToRefreshRefresh);
-					obj.put(kJSCallback, JSNamePullToRefreshDidRefresh);
-					executeScriptInWebView(obj);
-				} catch (JSONException e) {
-					e.printStackTrace();
+					JSONObject jsonObj = new JSONObject();
+					jsonObj.put(kJSType, JSTypeEvent);
+					jsonObj.put(kJSEvent, JSEventPullToRefresh);
+					jsonObj.put(kJSCallback, JSCallbackPullToRefreshDidRefresh);
+					executeScriptInWebView(jsonObj);
+				} 
+				catch (JSONException exception) {
+					exception.printStackTrace();
 				}
 			}
 		});
 	}
-
-
-
-	private void webViewDidRefresh()
-	{
-		mPullRefreshWebView.onRefreshComplete();
-		pullToRefreshHasRefreshed();
+	
+	private void onPullToRefreshDidRefresh() {
+		mPullToRefreshWebView.onRefreshComplete();
+		onPullToRefreshRefreshed();
 	}
 
 	/**
-	 * This method is called after the pullToRefresh request has been completed.
 	 * This method may be overridden in subclasses.
 	 */
-	protected void pullToRefreshHasRefreshed()
-	{
-
-	}
+	protected abstract void onPullToRefreshRefreshed();
 	
-	/**
-	 * This method may be called when you want to interrupt the pullToRefresh from refreshing.
-	 */
-	protected void cancelPullToRefreshRefreshing()
-	{
-		if(isPullToRefreshActive() && mPullRefreshWebView.isRefreshing())
-		{
-			mPullRefreshWebView.onRefreshComplete();
-			mHandler.post(new Runnable() {
-				@Override
-				public void run() {
-					JSONObject obj = new JSONObject();
-					try {
-						obj.put(kJSType,JSTypeEvent);
-						obj.put(kJSEvent, JSNamePullToRefreshCancelled);
-						executeScriptInWebView(obj);
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-		}
-	}
-
-	/**
-	 * This method may be called when you want to interrupt the infiniteScroll from refreshing.
-	 */
-	protected void cancelInfiniteScrollRefreshing()
-	{
-		if(isInfiniteScrollActive() && infiniteScrollRefreshing)
-		{
-			infiniteScrollRefreshing = false;
-			mHandler.post(new Runnable() {
-				@Override
-				public void run() {
-					JSONObject obj = new JSONObject();
-					try {
-						obj.put(kJSType,JSTypeEvent);
-						obj.put(kJSEvent, JSNameInfiniteScrollCancelled);
-						executeScriptInWebView(obj);
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-		}
-	}
+	/************************************************************************************
+	 * INFINITE SCROLL
+	 ***********************************************************************************/
 	
 	@Override
-	public void onOverScrolled(int scrollX, int scrollY, int oldX, int oldY) {
-		//Log.i("overscroll", scrollY+" "+oldY);
+	public void onOverScrolled(int scrollX, int scrollY,int oldscrollX, int oldscrollY) {
 		float density = mContext.getResources().getDisplayMetrics().density;
-		//round density in case it is too precise (and big)
-		if(density > 1)
-			density = (float) (Math.floor(density*10)/10.0);
-		//Log.i("", "density after "+density+" "+webView.getHeight()/density+" "+webView.getMeasuredHeight());
-		int yPos = (int)((mWebView.getScrollY() + mWebView.getHeight())/density);
-		//Log.i("overscroll", yPos+" "+webView.getContentHeight());
-		if(yPos >= mWebView.getContentHeight())
-		{
+		// Round density in case it is too precise (and big)
+		if (density > 1) {
+			density = (float) (Math.floor(density * 10) / 10.0);
+		}
+		
+		int yPosition = (int) ((mWebView.getScrollY() + mWebView.getHeight()) / density);
+		if (yPosition >= mWebView.getContentHeight()) {
 			infiniteScrollRefresh();
 		}
 	}
+	
+	/**
+	 * Enables infinite scroll feature
+	 */
+	public void enableInfiniteScroll() {
+		mInfiniteScrollEnabled = true;
+	}
 
-	private void infiniteScrollRefresh()
-	{
-		if(infiniteScrollActive && !infiniteScrollRefreshing)
-		{
-			infiniteScrollRefreshing = true;
+	/**
+	 * Disables infinite scroll feature
+	 */
+	public void disableInfiniteScroll() {
+		mInfiniteScrollEnabled = false;
+	}
 
+	/**
+	 * Returns a boolean to know if the infinite scroll feature is enabled
+	 * @return 	true if infinite scroll is enabled, 
+	 * 			false otherwise
+	 */
+	public boolean isInfiniteScrollEnabled() {
+		return mInfiniteScrollEnabled;
+	}
+
+	private void infiniteScrollRefresh() {
+		if (mInfiniteScrollEnabled 
+			&& ! mInfiniteScrollRefreshing) {
 			mHandler.post(new Runnable() {
 				@Override
 				public void run() {
-					JSONObject obj = new JSONObject();
 					try {
-						obj.put(kJSType,JSTypeEvent);
-						obj.put(kJSEvent, JSNameInfiniteScrollRefresh);
-						obj.put(kJSCallback, JSNameInfiniteScrollDidRefresh);
-						executeScriptInWebView(obj);
-
-					} catch (JSONException e) {
-						e.printStackTrace();
+						JSONObject jsonObj = new JSONObject();
+						jsonObj.put(kJSType,JSTypeEvent);
+						jsonObj.put(kJSEvent, JSEventInfiniteScroll);
+						jsonObj.put(kJSCallback, JSCallbackInfiniteScrollDidRefresh);
+						executeScriptInWebView(jsonObj);
+						mInfiniteScrollRefreshing = true;
+					} 
+					catch (JSONException exception) {
+						exception.printStackTrace();
 					}
 				}
 			});
 		}
 	}
-
-
-	private void infiniteScrollDidRefresh()
-	{
-		infiniteScrollRefreshing = false;
-		infiniteScrollHasRefreshed();
+	
+	private void onInfiniteScrollDidRefresh() {
+		mInfiniteScrollRefreshing = false;
+		onInfiniteScrollRefreshed();
 	}
 
 	/**
-	 * This method is called after the infiniteScroll request has been completed.
 	 * This method may be overridden in subclasses.
 	 */
-	protected void infiniteScrollHasRefreshed()
-	{
-
+	protected abstract void onInfiniteScrollRefreshed();
+	
+	/*****************************************************************
+	 * HELPERS
+	 ****************************************************************/
+	
+	private void setFeaturesWantedActive() {
+		Bundle args = getArguments();
+		
+		if (args != null) {
+			if(args.getBoolean(kPullToRefresh)) {
+				enablePullToRefresh();
+			}
+			else {
+				disablePullToRefresh();
+			}
+			
+			mInfiniteScrollEnabled = args.getBoolean(kInfiniteScroll);
+		}
+		else {
+			disablePullToRefresh();
+			mInfiniteScrollEnabled = false;
+		}
 	}
-
 
 	/**
-	 * This method is fired by the {@link ScaleWebViewClient} to inform the webview that its scale has changed. (pullToRefresh need to know that to show the pullToRefresh Header appropriately.
-	 * @param oldScale
-	 * @param newScale
+	 * Fired by {@link ScaleWebViewClient} to inform Web view its scale changed (pull-to-refresh need to know that to show its header appropriately).
 	 */
-	public void notifyScaleChange(float oldScale,float newScale)
-	{
-		mPullRefreshWebView.setWebviewScale(newScale);
-	}
-
-	@Override
-	protected void onUnhandledMessage(JSONObject message) {
-		
+	public void notifyScaleChange(float oldScale, float newScale) {
+		mPullToRefreshWebView.setWebviewScale(newScale);
 	}
 }
