@@ -67,7 +67,9 @@ public class SimpleHybridFragment extends HTMLFragment {
 						if(callbackId != null && callbackId.length() >0)
 						{
 							JSONArray a = generateBigData(value);
-							sendCallbackResponse(callbackId, a);
+							JSONObject data = new JSONObject();
+							data.put(kJSValue, a);
+							sendCallback(callbackId, data);
 						}
 						return true;
 

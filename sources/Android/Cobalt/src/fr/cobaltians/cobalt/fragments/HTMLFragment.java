@@ -131,7 +131,7 @@ public abstract class HTMLFragment extends Fragment {
 	protected final static String JSActionWebLayerShow = "show";
 	protected final static String JSActionWebLayerDismiss = "dismiss";
 	protected final static String kJSWebLayerFadeDuration = "fadeDuration";
-	protected final static String JSCallbackWebLayerOnDismiss = "onWebLayerDismissed";
+	protected final static String JSEventWebLayerOnDismiss = "onWebLayerDismissed";
 	
 	// TODO: FROM HERE
 	
@@ -381,24 +381,41 @@ public abstract class HTMLFragment extends Fragment {
 	}
 
 	/**
-	 * Use this method to send an Object (int, String, JSONObject...) to the web with the given callbackId
+	 * Use this method to send a JSONObject data who contains some params (int, String, JSONObject...) to the web with the given callbackId
 	 * @param callbackId : the callbackId to call back after having handled native instructions.
-	 * @param objectToSend : the params to pass when calling the callback named callbackId
+	 * @param data : the params to pass when calling the callback named callbackId
 	 */
-	public void sendCallbackResponse(final String callbackId, final Object objectToSend) {
+	public void sendCallback(final String callbackId, final JSONObject data) {
 		if(	callbackId != null 
 			&& callbackId.length() > 0) {
 			JSONObject obj = new JSONObject();
 			try {
 				obj.put(kJSType,JSTypeCallBack);
 				obj.put(kJSCallback, callbackId);
-				obj.put(kJSData, objectToSend);	
+				obj.put(kJSData, data);	
 				
 				executeScriptInWebView(obj);
 			} 
 			catch (JSONException exception) {
 				exception.printStackTrace();
 			}
+		}
+	}
+	
+	public void sendEvent(String name, JSONObject data, String callbackId) {
+		JSONObject obj = new JSONObject();
+		try {
+			obj.put(kJSType,name);
+			obj.put(kJSData, data);			
+			
+			if (callbackId != null) {
+				obj.put(kJSCallback, callbackId);
+			}
+			
+			executeScriptInWebView(obj);
+		}
+		catch (JSONException exception) {
+			exception.printStackTrace();
 		}
 	}
 
@@ -426,32 +443,25 @@ public abstract class HTMLFragment extends Fragment {
 				{
 					String type = jsonObj.optString(kJSType);
 					//EVENT
-					if(type != null && type.length() >0 && type.equals(JSTypeEvent))
+					if(type.equals(JSTypeEvent))
 					{
-						String name = jsonObj.optString(kJSEvent);
-						if(name != null && name.length() >0 && name.equals(JSControlToast))
-						{
-							String message = jsonObj.optString(kJSValue);
-							if(message != null)
-							{
-								Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
-								return true;
-							}
-						}
-						else {
-							onUnhandledMessage(jsonObj);
-						}
+						String name = jsonObj.getString(kJSEvent);
+						JSONObject data =jsonObj.getJSONObject(kJSData);
+						String callback = jsonObj.optString(kJSCallback);
+						
+						return handleEvent(name, data, callback);			
 					}
+					
 					//LOG
-					else if(type != null && type.length() >0 && type.equals(JSTypeLog))
+					else if(type.equals(JSTypeLog))
 					{
 						String message = jsonObj.optString(kJSValue);
 						Log.w("JS Logs", message);
 						return true;
-
 					}
+					
 					//NAVIGATE
-					else if(type != null && type.length() >0 && type.equals(JSTypeNavigation))
+					else if(type.equals(JSTypeNavigation))
 					{
 						if(jsonObj.has(kJSAction))
 						{
@@ -505,8 +515,9 @@ public abstract class HTMLFragment extends Fragment {
 							}
 						}
 					}
+					
 					//WEB LAYER
-					else if(type != null && type.length() >0 && type.equals(JSTypeWebLayer))
+					else if(type.equals(JSTypeWebLayer))
 					{
 						String name = jsonObj.getString(kJSAction);
 						if(name != null && name.length() > 0)
@@ -532,86 +543,33 @@ public abstract class HTMLFragment extends Fragment {
 					}
 
 					//CALLBACK
-					else if(type != null && type.length() >0 && type.equals(JSTypeCallBack))
+					else if(type.equals(JSTypeCallBack))
 					{
 						String callbackID = jsonObj.getString(kJSCallback);
-						if(callbackID != null && callbackID.length() >0 && callbackID.equals(JSCallbackOnBackButtonPressed))
-						{
-							boolean allowToGoBack = jsonObj.getBoolean(kJSData);
-							handleBackButtonPressed(allowToGoBack);
-							return true;
-						}
-						else {
-							onUnhandledMessage(jsonObj);
-						}
+						JSONObject data =jsonObj.getJSONObject(kJSData);
+						
+						return handleCallback(callbackID, data);		
 					}
+					
 					// UI
-			    	else if (type != null && type.length() >0 && type.equals(JSTypeUI)) 
+			    	else if (type.equals(JSTypeUI)) 
 			    	{
-				    	final String control = jsonObj.optString(kJSUIControl);
-				    	if (control != null && control.length() > 0) 
-				    	{
-				    		if (control.equals(JSControlPicker)) 
-				    		{
-						    	JSONObject params = jsonObj.optJSONObject(kJSData);
-						    	if (params != null) 
-						    	{
-						    		final String typeParams = params.optString(kJSType);
-						    		if (typeParams != null 
-									    && typeParams.length() > 0) {
-						    			if (typeParams.equals(JSPickerDate)) 
-						    			{
-						    				JSONObject date = params.optJSONObject(kJSDate);
-						    				
-						    				Calendar cal = Calendar.getInstance();
-						    				int year = cal.get(Calendar.YEAR);
-						    		        int month = cal.get(Calendar.MONTH);
-						    		        int day = cal.get(Calendar.DAY_OF_MONTH);
-						    		        
-						    				if (date != null) {
-						    					if (date.has(kJSYear)
-						    						&& date.has(kJSMonth)
-						    						&& date.has(kJSDay)) {
-						    						year = date.getInt(kJSYear);
-						    						month = date.getInt(kJSMonth);
-						    						month--;
-						    						day = date.getInt(kJSDay);
-						    					}
-						    				}
-						    				String callbackID = jsonObj.optString(kJSCallback);
-								    		if (callbackID != null && callbackID.length() > 0) 
-								    		{
-												showDatePickerDialog(year, month, day, callbackID);	
-								    		}
-						    			}
-						    			else 
-						    			{
-											onUnhandledMessage(jsonObj);
-										}
-						    		}
-						    	}
-				    		}
-				    		else if(control.equals(JSControlAlert))
-							{
-				    			String params = jsonObj.optString(kJSData);
-								JSONObject jsonParams = new JSONObject(params);
-								final String callbackId = jsonObj.getString(kJSCallback);
+				    	final String control = jsonObj.getString(kJSUIControl);
+						JSONObject data =jsonObj.getJSONObject(kJSData);
+						String callback = jsonObj.optString(kJSCallback);
 
-								showAlertDialogWithJSON(jsonParams, callbackId);
-							}
-				    	}
+						return handleUi(control, data, callback);
 			    	}
 					
-					else if(type != null && type.length() >0 && type.equals(JSTypeCobaltIsReady))
+					else if(type.equals(JSTypeCobaltIsReady))
 					{
-						if(mDebug) Log.i(getClass().getSimpleName(), "cobalt is ready. waiting calls : "+waitingJavaScriptCallsList.size());
-
-						cobaltIsReady = true;
-						executeWaitingCalls();
+						onReady();
+						return true;
 					}
+					
 					else 
 					{
-						onUnhandledMessage(jsonObj);
+						handleUnknowType(jsonObj);
 					}
 				}
 
@@ -623,7 +581,92 @@ public abstract class HTMLFragment extends Fragment {
 		return false;
 	}
 
+	protected void onReady() {
+		if(mDebug) Log.i(getClass().getSimpleName(), "cobalt is ready. waiting calls : "+waitingJavaScriptCallsList.size());
 
+		cobaltIsReady = true;
+		executeWaitingCalls();
+	}
+	
+	protected boolean handleEvent(String name, JSONObject data, String callback) {
+		return true;
+	}
+	
+	protected boolean handleUi(String control, JSONObject data, String callback) {
+		try {
+			if (control.equals(JSControlPicker)) 
+			{
+				JSONObject params = data.optJSONObject(kJSData);
+				final String typeParams = params.optString(kJSType);
+				if (typeParams.equals(JSPickerDate)) 
+				{
+					JSONObject date = params.optJSONObject(kJSDate);
+
+					Calendar cal = Calendar.getInstance();
+					int year = cal.get(Calendar.YEAR);
+					int month = cal.get(Calendar.MONTH);
+					int day = cal.get(Calendar.DAY_OF_MONTH);
+
+					if (date != null) {
+						if (date.has(kJSYear)
+								&& date.has(kJSMonth)
+								&& date.has(kJSDay)) {
+							year = date.getInt(kJSYear);
+							month = date.getInt(kJSMonth);
+							month--;
+							day = date.getInt(kJSDay);
+						}
+					}
+					showDatePickerDialog(year, month, day, callback);	
+					return true;
+				}
+				else 
+				{
+					onUnhandledMessage(data);
+				}
+			}
+			else if(control.equals(JSControlAlert))
+			{
+				showAlertDialogWithJSON(data, callback);
+				return true;
+			}
+			else if(control.equals(JSControlToast))
+			{
+				String message = data.optString(kJSAlertMessage);
+				
+				Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+				return true;
+			}
+			else {
+				onUnhandledMessage(data);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}	
+		return false;
+	}
+	
+	protected boolean handleCallback(String name, JSONObject data) {
+		try {
+			if(name.equals(JSCallbackOnBackButtonPressed)){
+				boolean allowToGoBack;
+				Log.e(getClass().getSimpleName(), "Dans le handleCallback BackButtonPressed avec data = "+data);
+				allowToGoBack = data.getBoolean(kJSData);
+
+				handleBackButtonPressed(allowToGoBack);
+				return true;
+			}
+			else {
+				onUnhandledMessage(data);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	protected void handleUnknowType(JSONObject jsonObj) {
+		Log.e(getClass().getSimpleName(),"ERROR : CANNOT HANDLE MESSAGE WITH THIS TYPE IN JSON : #"+jsonObj+"#");
+	}
 
 	/**
 	 * This method is called when the backButton is pressed. It asks the webView whether the default action of the backbutton should be fired.
@@ -631,7 +674,9 @@ public abstract class HTMLFragment extends Fragment {
 	 */
 	public void askWebViewForBackPermission()
 	{
-		JSONObject j = new JSONObject();
+		sendCallback(JSCallbackOnBackButtonPressed, null);
+
+		/*JSONObject j = new JSONObject();
 		try {
 			j.put(kJSType, JSTypeEvent);
 			j.put(kJSEvent, JSCallbackOnBackButtonPressed);
@@ -639,7 +684,7 @@ public abstract class HTMLFragment extends Fragment {
 			executeScriptInWebView(j);
 		} catch (JSONException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	/**
@@ -650,8 +695,14 @@ public abstract class HTMLFragment extends Fragment {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				JSONObject jsonObj = new JSONObject();
 				try {
+					data.put(kJSValue, page);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				sendEvent(JSEventWebLayerOnDismiss, data, null);
+				/*try {
 					jsonObj.put(kJSType, JSTypeEvent);
 					jsonObj.put(kJSEvent, JSCallbackWebLayerOnDismiss);
 					jsonObj.put(kJSValue, page);
@@ -662,7 +713,7 @@ public abstract class HTMLFragment extends Fragment {
 				} 
 				catch (JSONException exception) {
 					exception.printStackTrace();
-				}
+				}*/
 			}
 		});
 	}
@@ -726,7 +777,7 @@ public abstract class HTMLFragment extends Fragment {
 			try {
 				objectToSend.put(kJSPage, this.pageName);
 				objectToSend.put(kJSNavigationController, getActivity() != null ? getActivity().getClass().getName() : "ERROR : activity's className couldn't be found.");		
-				sendCallbackResponse(callBackID, objectToSend);
+				sendCallback(callBackID, objectToSend);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -871,7 +922,6 @@ public abstract class HTMLFragment extends Fragment {
 
 				JSONArray buttons = jsonParams.has(kJSAlertButtons) ? jsonParams.getJSONArray(kJSAlertButtons) : new JSONArray();
 
-				//AlertDialog.Builder alert = new AlertDialog.Builder(mContext);    
 				AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 				
 				alert.setTitle(title);
@@ -892,7 +942,7 @@ public abstract class HTMLFragment extends Fragment {
 									try {
 										j.put(kJSAlertID, alertId);
 										j.put(kJSAlertButtonIndex,0);
-										sendCallbackResponse(callbackId, j);
+										sendCallback(callbackId, j);
 									} catch (JSONException e) {
 										e.printStackTrace();
 									}								
@@ -914,7 +964,7 @@ public abstract class HTMLFragment extends Fragment {
 										try {
 											j.put(kJSAlertID, alertId);
 											j.put(kJSAlertButtonIndex,-1-which);
-											sendCallbackResponse(callbackId,j);
+											sendCallback(callbackId,j);
 										} catch (JSONException e) {
 											e.printStackTrace();
 										}

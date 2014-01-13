@@ -178,7 +178,13 @@ public class MainFragment extends HTMLFragment {
 
 	private void changeNameForWebCallBack(String callbackId, String value) {
 		String nValue = "Je m'appelle "+value;
-		sendCallbackResponse(callbackId, nValue);
+		JSONObject data = new JSONObject();
+		try {
+			data.put(kJSValue, nValue);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		sendCallback(callbackId, data);
 	}
 
 
