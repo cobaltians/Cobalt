@@ -501,6 +501,9 @@ public abstract class HTMLFragment extends Fragment {
 	 ***************************************************************************************/
 	
 	protected abstract void onUnhandledMessage(JSONObject message);
+	protected abstract void onUnhandledEvent(String name, JSONObject data, String callback);
+	protected abstract void onUnhandledUi(String control, JSONObject data, String callback);
+	protected abstract void onUnhandledCallback(String name, JSONObject data);
 
 	/*******************************************************************************************************************************
 	 * LOCAL STORAGE
@@ -791,11 +794,12 @@ public abstract class HTMLFragment extends Fragment {
 		executeWaitingCalls();
 	}
 	
-	protected boolean handleEvent(String name, JSONObject data, String callback) {
+	private boolean handleEvent(String name, JSONObject data, String callback) {
+		onUnhandledEvent(name, data, callback);
 		return true;
 	}
 	
-	protected boolean handleUi(String control, JSONObject data, String callback) {
+	private boolean handleUi(String control, JSONObject data, String callback) {
 		try {
 			if (control.equals(JSControlPicker)) 
 			{
@@ -841,7 +845,7 @@ public abstract class HTMLFragment extends Fragment {
 				return true;
 			}
 			else {
-				onUnhandledMessage(data);
+				onUnhandledUi(control, data, callback);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -849,7 +853,7 @@ public abstract class HTMLFragment extends Fragment {
 		return false;
 	}
 	
-	protected boolean handleCallback(String name, JSONObject data) {
+	private boolean handleCallback(String name, JSONObject data) {
 		try {
 			if(name.equals(JSCallbackOnBackButtonPressed)){
 				boolean allowToGoBack;
@@ -859,7 +863,7 @@ public abstract class HTMLFragment extends Fragment {
 				return true;
 			}
 			else {
-				onUnhandledMessage(data);
+				onUnhandledCallback(name, data);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

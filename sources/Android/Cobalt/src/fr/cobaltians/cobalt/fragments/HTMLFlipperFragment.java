@@ -52,6 +52,19 @@ public class HTMLFlipperFragment extends HTMLFragment implements IGestureListene
 	protected void onUnhandledMessage(JSONObject message) {
 		
 	}
+	@Override
+	protected void onUnhandledEvent(String name, JSONObject data,
+			String callback) {		
+	}
+
+	@Override
+	protected void onUnhandledUi(String control, JSONObject data,
+			String callback) {		
+	}
+
+	@Override
+	protected void onUnhandledCallback(String name, JSONObject data) {		
+	}
 	
 	/********************************************************
 	 * SWIPE
