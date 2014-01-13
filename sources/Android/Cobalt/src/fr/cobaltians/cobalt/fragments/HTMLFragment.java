@@ -87,6 +87,10 @@ public abstract class HTMLFragment extends Fragment {
 	protected final static String JSTypeEvent = "event";
 	protected final static String kJSEvent = "name"; // TODO: DISCUSS WITH GUILLAUME
 
+	// BACK BUTTON
+	private final static String JSEventOnBackButtonPressed = "onBackButtonPressed";
+	private final static String JSCallbackOnBackButtonPressed = "onBackButtonPressed";
+		
 	// LOG
 	protected final static String JSTypeLog = "log";
 	
@@ -98,9 +102,6 @@ public abstract class HTMLFragment extends Fragment {
 	protected final static String JSActionNavigationDismiss = "dismiss";
 	protected final static String kJSNavigationController = "controller";
 	protected final static String JSNavigationControllerDefault = "default";
-	
-	//BACK BUTTON
-	private final static String JSCallbackOnBackButtonPressed = "onBackButtonPressed";	
 
 	// UI
 	protected final static String JSTypeUI = "ui";
@@ -149,7 +150,7 @@ public abstract class HTMLFragment extends Fragment {
 	protected Context mContext;
 	protected Handler mHandler;
 
-	private ArrayList<JSONObject> mWaitingJavaScriptCallsList;
+	private ArrayList<JSONObject> mWaitingJavaScriptCallsQueue;
 	
 	private boolean mPreloadOnCreateView;
 	private boolean mWebViewLoaded;
@@ -168,7 +169,7 @@ public abstract class HTMLFragment extends Fragment {
 		mContext = (Context) getActivity().getApplicationContext();
 		mHandler = new Handler();
 		
-		mWaitingJavaScriptCallsList = new ArrayList<JSONObject>();
+		mWaitingJavaScriptCallsQueue = new ArrayList<JSONObject>();
 		
 		mPreloadOnCreateView = true;
 		mWebViewLoaded = false;
@@ -206,6 +207,18 @@ public abstract class HTMLFragment extends Fragment {
 		preloadContent();
 	}
 
+	/**
+	 * Saves the Web view state.
+	 */
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		
+		if(mWebView != null) {
+			mWebView.saveState(outState);
+		}
+	}
+	
 	@Override
 	public void onStop() {
 		super.onStop();
@@ -386,25 +399,212 @@ public abstract class HTMLFragment extends Fragment {
 		}
 	}
 	
-	// TODO: FROM HERE
-	/**************************************************************
-	 * NOTIFIER
-	 *************************************************************/
+	/*****************************************
+	 * LOGGING
+	 ****************************************/
 	
-	protected abstract void onUnhandledMessage(JSONObject message);
+	public boolean isLoggingEnabled() {
+		return mDebug;
+	}
 
+	public void enableLogging(boolean debug) {
+		mDebug = debug;
+	}
+	
+	/****************************************************************************************
+	 * SCRIPT EXECUTION
+	 ***************************************************************************************/
+	// TODO: find a way to keep in the queue not sent messages
 	/**
-	 * In this method, the webView state is saved.
+	 * Sends script to be executed by JavaScript in Web view
+	 * @param jsonObj: JSONObject containing script.
 	 */
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		
-		if(mWebView != null) {
-			mWebView.saveState(outState);
+	public void executeScriptInWebView(final JSONObject jsonObj) {
+		if (jsonObj != null) {
+			if(mCobaltIsReady) {
+				mHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						// Line & paragraph separators are not JSON compliant but supported by JSONObject
+						String message = jsonObj.toString().replaceAll("[\u2028\u2029]", "");
+						String url = "javascript:cobalt.execute(" + message + ");";
+						
+						if(mWebView != null) {
+							mWebView.loadUrl(url);		
+						}
+						else {
+							if(mDebug) Log.e(getClass().getSimpleName(), "executeScriptInWebView: message cannot been sent to empty Web view");
+						}						
+					}
+				});
+			}
+			else {
+				mWaitingJavaScriptCallsQueue.add(jsonObj);
+			}
 		}
 	}
 
+	private void executeWaitingCalls() {
+		int mWaitingJavaScriptCallsQueueLength = mWaitingJavaScriptCallsQueue.size();
+		
+		for (int i = 0 ; i < mWaitingJavaScriptCallsQueueLength ; i++) {
+			if (mDebug) Log.i(getClass().getSimpleName(), "executeWaitingCalls: execute " + mWaitingJavaScriptCallsQueue.get(i).toString());
+			executeScriptInWebView(mWaitingJavaScriptCallsQueue.get(i));
+		}
+		
+		mWaitingJavaScriptCallsQueue.clear();
+	}
+
+	/****************************************************************************************
+	 * MESSAGE SENDING
+	 ***************************************************************************************/
+	/**
+	 * Calls the Web callback with an object containing response fields
+	 * @param callbackId: the Web callback.
+	 * @param data: the object containing response fields
+	 */
+	public void sendCallback(final String callbackId, final JSONObject data) {
+		if(	callbackId != null 
+			&& callbackId.length() > 0) {
+			try {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put(kJSType, JSTypeCallBack);
+				jsonObj.put(kJSCallback, callbackId);
+				jsonObj.put(kJSData, data);	
+				executeScriptInWebView(jsonObj);
+			} 
+			catch (JSONException exception) {
+				exception.printStackTrace();
+			}
+		}
+	}
+
+	public void sendEvent(final String event, final JSONObject data, final String callbackID) {
+		if (event != null
+			&& event.length() > 0) {
+			try {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put(kJSType, JSTypeEvent);
+				jsonObj.put(kJSEvent, event);
+				jsonObj.put(kJSData, data);
+				jsonObj.put(kJSCallback, callbackID);
+				executeScriptInWebView(jsonObj);
+			}
+			catch (JSONException exception) {
+				exception.printStackTrace();
+			}
+		}
+	}
+	
+	/****************************************************************************************
+	 * MESSAGE HANDLING
+	 ***************************************************************************************/
+	
+	protected abstract void onUnhandledMessage(JSONObject message);
+
+	/*******************************************************************************************************************************
+	 * LOCAL STORAGE
+	 ******************************************************************************************************************************/
+	/**
+	 * Local storage substitution for Web views
+	 * @author Diane
+	 */
+	private class LocalStorageJavaScriptInterface {
+		
+		private Context mContext;
+		private LocalStorage mLocalStorage;
+		private SQLiteDatabase mDatabase;
+
+		LocalStorageJavaScriptInterface(Context context) {
+			mContext = context;
+			mLocalStorage = LocalStorage.getInstance(mContext);
+		}
+
+		/**
+		 * Gets item for the given key
+		 * @param key: key to look for
+		 * @return item corresponding to the given key
+		 */
+		@JavascriptInterface
+		public String getItem(String key) {
+			String value = null;
+			
+			if (key != null) {
+				mDatabase = mLocalStorage.getReadableDatabase();
+				Cursor cursor = mDatabase.query(LocalStorage.LOCALSTORAGE_TABLE_NAME,
+												null, 
+												LocalStorage.LOCALSTORAGE_ID + " = ?",  new String [] {key}, 
+												null, null, null);
+				if (cursor.moveToFirst()) {
+					value = cursor.getString(1);
+				}
+				cursor.close();
+				mDatabase.close();
+			}
+			
+			return value;
+		}
+
+		/**
+		 * Sets value for the given key.
+		 * @param key
+		 * @param value
+		 */
+		@JavascriptInterface
+		public void setItem(String key, String value) {
+			if (key != null 
+				&& value != null) {
+				mDatabase = mLocalStorage.getWritableDatabase();
+				
+				ContentValues values = new ContentValues();
+				values.put(LocalStorage.LOCALSTORAGE_ID, key);
+				values.put(LocalStorage.LOCALSTORAGE_VALUE, value);
+				
+				if (getItem(key) != null) {
+					mDatabase.update(	LocalStorage.LOCALSTORAGE_TABLE_NAME, 
+										values, 
+										LocalStorage.LOCALSTORAGE_ID + " = " + key, 
+										null);
+				}
+				else {
+					mDatabase.insert(	LocalStorage.LOCALSTORAGE_TABLE_NAME, null, 
+										values);
+				}
+				mDatabase.close();
+			}
+
+		}
+
+		
+
+		/**
+		 * Removes item corresponding to the given key
+		 * @param key
+		 */
+		@JavascriptInterface
+		public void removeItem(String key) {
+			if(key != null) {
+				mDatabase = mLocalStorage.getWritableDatabase();
+				mDatabase.delete(	LocalStorage.LOCALSTORAGE_TABLE_NAME, 
+									LocalStorage.LOCALSTORAGE_ID + " = " + key, 
+									null);
+				mDatabase.close();
+			}
+		}
+
+		/**
+		 * Clears local storage.
+		 */
+		@JavascriptInterface
+		public void clear() {
+			mDatabase = mLocalStorage.getWritableDatabase();
+			mDatabase.delete(LocalStorage.LOCALSTORAGE_TABLE_NAME, null, null);
+			mDatabase.close();
+		}
+	}
+	
+	// TODO: FROM HERE
+	
 	/**
 	 * This method returns a new instance of the fragment that will be displayed as the {@link HTMLPopUpWebview} in the fragment container where the current fragment is shown.
 	 * This method may be overridden in subclasses if the {@link HTMLPopUpWebview} must implement customized dialogs with native side such as in "public boolean handleMessageSentByJavaScript(String messageJS)".
@@ -416,47 +616,6 @@ public abstract class HTMLFragment extends Fragment {
 	}
 
 	/**
-	 * sends jsonObj to the JavaScript in this.webView
-	 * @param jsonObj : the JSONObject that will be sent to the webView and handled in the JavaScript code.
-	 */
-	public void executeScriptInWebView(final JSONObject jsonObj) {
-		if (jsonObj != null) {
-			if(	mWebViewLoaded 
-				|| mCobaltIsReady) {
-				mHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						String jsonMessage = jsonObj.toString().replaceAll("[\u2028\u2029]", "");
-						String url = "javascript:cobalt.execute(" + jsonMessage + ");";
-						
-						if(mWebView != null) {
-							//Log.e(getClass().getSimpleName(), "load url "+jsonMessage);
-							mWebView.loadUrl(url);		
-						}
-						else {
-							if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : message cannot been sent to empty webview : " + jsonMessage);
-						}						
-					}
-				});
-			}
-			else {
-				mWaitingJavaScriptCallsList.add(jsonObj);
-			}
-		}
-	}
-
-	private void executeWaitingCalls() {
-		int waitingJavaScriptCallsListSize = mWaitingJavaScriptCallsList.size();
-		
-		for(int i = 0 ; i < waitingJavaScriptCallsListSize ; i++) {
-			if (mDebug) Log.i(getClass().getSimpleName(), "executeWaitingCalls: execute " + mWaitingJavaScriptCallsList.get(i).toString());
-			executeScriptInWebView(mWaitingJavaScriptCallsList.get(i));
-		}
-		
-		mWaitingJavaScriptCallsList.clear();
-	}
-
-	/**
 	 * This method is called when a button is clicked on an alertDialog that was generated by the web.
 	 * This method may be overridden in subclasses
 	 * @param tag : the alertId of the alert
@@ -464,42 +623,6 @@ public abstract class HTMLFragment extends Fragment {
 	 */
 	public void alertDialogClickedButton(long tag, int buttonIndex) {
 		
-	}
-
-	/**
-	 * Use this method to send a JSONObject data who contains some params (int, String, JSONObject...) to the web with the given callbackId
-	 * @param callbackId : the callbackId to call back after having handled native instructions.
-	 * @param data : the params to pass when calling the callback named callbackId
-	 */
-	public void sendCallback(final String callbackId, final JSONObject data) {
-		if(	callbackId != null 
-			&& callbackId.length() > 0) {
-			JSONObject obj = new JSONObject();
-			try {
-				obj.put(kJSType,JSTypeCallBack);
-				obj.put(kJSCallback, callbackId);
-				obj.put(kJSData, data);	
-				
-				executeScriptInWebView(obj);
-			} 
-			catch (JSONException exception) {
-				exception.printStackTrace();
-			}
-		}
-	}
-	
-	public void sendEvent(String name, JSONObject data, String callback) {
-		JSONObject obj = new JSONObject();
-		try {
-			obj.put(kJSType,name);
-			obj.put(kJSData, data);			
-			obj.put(kJSCallback, callback);
-	
-			executeScriptInWebView(obj);
-		}
-		catch (JSONException exception) {
-			exception.printStackTrace();
-		}
 	}
 
 	/**
@@ -539,7 +662,7 @@ public abstract class HTMLFragment extends Fragment {
 					else if(type.equals(JSTypeLog))
 					{
 						String message = jsonObj.optString(kJSValue);
-						Log.w("JS Logs", message);
+						if (mDebug) Log.d("JS Log", message);
 						return true;
 					}
 					
@@ -665,7 +788,7 @@ public abstract class HTMLFragment extends Fragment {
 	}
 
 	protected void onReady() {
-		if(mDebug) Log.i(getClass().getSimpleName(), "cobalt is ready. waiting calls : "+mWaitingJavaScriptCallsList.size());
+		if(mDebug) Log.i(getClass().getSimpleName(), "cobalt is ready. waiting calls : "+mWaitingJavaScriptCallsQueue.size());
 
 		mCobaltIsReady = true;
 		executeWaitingCalls();
@@ -754,19 +877,9 @@ public abstract class HTMLFragment extends Fragment {
 	 * This method is called when the backButton is pressed. It asks the webView whether the default action of the backbutton should be fired.
 	 * This method should NOT be overridden in subclasses.
 	 */
-	public void askWebViewForBackPermission()
-	{
-		sendEvent(JSCallbackOnBackButtonPressed, null, JSCallbackOnBackButtonPressed);
 
-		/*JSONObject j = new JSONObject();
-		try {
-			j.put(kJSType, JSTypeEvent);
-			j.put(kJSEvent, JSCallbackOnBackButtonPressed);
-			j.put(kJSCallback, JSCallbackOnBackButtonPressed);
-			executeScriptInWebView(j);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}*/
+	public void askWebViewForBackPermission() {
+		sendEvent(JSEventOnBackButtonPressed, null, JSCallbackOnBackButtonPressed);
 	}
 
 	/**
@@ -783,18 +896,6 @@ public abstract class HTMLFragment extends Fragment {
 					e.printStackTrace();
 				}
 				sendEvent(JSEventWebLayerOnDismiss, data, null);
-				/*try {
-					jsonObj.put(kJSType, JSTypeEvent);
-					jsonObj.put(kJSEvent, JSCallbackWebLayerOnDismiss);
-					jsonObj.put(kJSValue, page);
-					if (data != null) {
-						jsonObj.put(kJSData, data);
-					}
-					executeScriptInWebView(jsonObj);
-				} 
-				catch (JSONException exception) {
-					exception.printStackTrace();
-				}*/
 			}
 		});
 	}
@@ -1171,113 +1272,6 @@ public abstract class HTMLFragment extends Fragment {
 		}
 		return "";
 	}
-
-	public boolean isDebugLoggingEnabled() {
-		return mDebug;
-	}
-
-	public void enableDebugLogging(boolean debug) {
-		mDebug = debug;
-	}
-
-	/*******************************************************************************************************************************
-	 * LOCAL STORAGE
-	 ******************************************************************************************************************************/
-	
-	/**
-	 * This class is used as a substitution of the local storage in Android webviews
-	 * 
-	 * @author Diane
-	 */
-	private class LocalStorageJavaScriptInterface {
-		private Context mContext;
-		private LocalStorage localStorageDBHelper;
-		private SQLiteDatabase database;
-
-		LocalStorageJavaScriptInterface(Context c) {
-			mContext = c;
-			localStorageDBHelper = LocalStorage.getInstance(mContext);
-		}
-
-		/**
-		 * This method allows to get an item for the given key
-		 * @param key : the key to look for in the local storage
-		 * @return the item having the given key
-		 */
-		@JavascriptInterface
-		public String getItem(String key)
-		{
-			String value = null;
-			if(key != null)
-			{
-				database = localStorageDBHelper.getReadableDatabase();
-				Cursor cursor = database.query(LocalStorage.LOCALSTORAGE_TABLE_NAME,
-						null, 
-						LocalStorage.LOCALSTORAGE_ID + " = ?", 
-						new String [] {key},null, null, null);
-				if(cursor.moveToFirst())
-				{
-					value = cursor.getString(1);
-				}
-				cursor.close();
-				database.close();
-			}
-			return value;
-		}
-
-		/**
-		 * set the value for the given key, or create the set of datas if the key does not exist already.
-		 * @param key
-		 * @param value
-		 */
-		@JavascriptInterface
-		public void setItem(String key,String value)
-		{
-			if(key != null && value != null)
-			{
-				String oldValue = getItem(key);
-				database = localStorageDBHelper.getWritableDatabase();
-				ContentValues values = new ContentValues();
-				values.put(LocalStorage.LOCALSTORAGE_ID, key);
-				values.put(LocalStorage.LOCALSTORAGE_VALUE, value);
-				if(oldValue != null)
-				{
-					database.update(LocalStorage.LOCALSTORAGE_TABLE_NAME, values, LocalStorage.LOCALSTORAGE_ID + " = " + key, null);
-				}
-				else
-				{
-					database.insert(LocalStorage.LOCALSTORAGE_TABLE_NAME, null, values);
-				}
-				database.close();
-			}
-		}
-
-		/**
-		 * removes the item corresponding to the given key
-		 * @param key
-		 */
-		@JavascriptInterface
-		public void removeItem(String key)
-		{
-			if(key != null)
-			{
-				database = localStorageDBHelper.getWritableDatabase();
-				database.delete(LocalStorage.LOCALSTORAGE_TABLE_NAME, LocalStorage.LOCALSTORAGE_ID + " = " + key, null);
-				database.close();
-			}
-		}
-
-		/**
-		 * clears all the local storage.
-		 */
-		@JavascriptInterface
-		public void clear()
-		{
-			database = localStorageDBHelper.getWritableDatabase();
-			database.delete(LocalStorage.LOCALSTORAGE_TABLE_NAME, null, null);
-			database.close();
-		}
-	}
 	
 	/*************************************************************************************
      * DATE PICKER
@@ -1311,7 +1305,6 @@ public abstract class HTMLFragment extends Fragment {
 			Log.d(getClass().getName(), "sendDate + : " + jsonResponse);
 			executeScriptInWebView(jsonResponse);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
