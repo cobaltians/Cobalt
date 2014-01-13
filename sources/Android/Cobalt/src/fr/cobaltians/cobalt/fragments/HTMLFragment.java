@@ -79,7 +79,6 @@ public abstract class HTMLFragment extends Fragment {
 	
 	// CALLBACKS
 	protected final static String JSTypeCallBack = "callback";
-	private final static String JSCallbackOnBackButtonPressed = "onBackButtonPressed";
 	
 	// COBALT IS READY
 	protected final static String JSTypeCobaltIsReady = "cobaltIsReady";
@@ -88,6 +87,10 @@ public abstract class HTMLFragment extends Fragment {
 	protected final static String JSTypeEvent = "event";
 	protected final static String kJSEvent = "name"; // TODO: DISCUSS WITH GUILLAUME
 
+	// BACK BUTTON
+	private final static String JSEventOnBackButtonPressed = "onBackButtonPressed";
+	private final static String JSCallbackOnBackButtonPressed = "onBackButtonPressed";
+		
 	// LOG
 	protected final static String JSTypeLog = "log";
 	
@@ -99,7 +102,7 @@ public abstract class HTMLFragment extends Fragment {
 	protected final static String JSActionNavigationDismiss = "dismiss";
 	protected final static String kJSNavigationController = "controller";
 	protected final static String JSNavigationControllerDefault = "default";
-
+	
 	// UI
 	protected final static String JSTypeUI = "ui";
 	protected final static String kJSUIControl = "control";
@@ -493,13 +496,112 @@ public abstract class HTMLFragment extends Fragment {
 		}
 	}
 	
-	// TODO: FROM HERE
 	/****************************************************************************************
 	 * MESSAGE HANDLING
 	 ***************************************************************************************/
 	
 	protected abstract void onUnhandledMessage(JSONObject message);
 
+	/*******************************************************************************************************************************
+	 * LOCAL STORAGE
+	 ******************************************************************************************************************************/
+	/**
+	 * Local storage substitution for Web views
+	 * @author Diane
+	 */
+	private class LocalStorageJavaScriptInterface {
+		
+		private Context mContext;
+		private LocalStorage mLocalStorage;
+		private SQLiteDatabase mDatabase;
+
+		LocalStorageJavaScriptInterface(Context context) {
+			mContext = context;
+			mLocalStorage = LocalStorage.getInstance(mContext);
+		}
+
+		/**
+		 * Gets item for the given key
+		 * @param key: key to look for
+		 * @return item corresponding to the given key
+		 */
+		@JavascriptInterface
+		public String getItem(String key) {
+			String value = null;
+			
+			if (key != null) {
+				mDatabase = mLocalStorage.getReadableDatabase();
+				Cursor cursor = mDatabase.query(LocalStorage.LOCALSTORAGE_TABLE_NAME,
+												null, 
+												LocalStorage.LOCALSTORAGE_ID + " = ?",  new String [] {key}, 
+												null, null, null);
+				if (cursor.moveToFirst()) {
+					value = cursor.getString(1);
+				}
+				cursor.close();
+				mDatabase.close();
+			}
+			
+			return value;
+		}
+
+		/**
+		 * Sets value for the given key.
+		 * @param key
+		 * @param value
+		 */
+		@JavascriptInterface
+		public void setItem(String key, String value) {
+			if (key != null 
+				&& value != null) {
+				mDatabase = mLocalStorage.getWritableDatabase();
+				
+				ContentValues values = new ContentValues();
+				values.put(LocalStorage.LOCALSTORAGE_ID, key);
+				values.put(LocalStorage.LOCALSTORAGE_VALUE, value);
+				
+				if (getItem(key) != null) {
+					mDatabase.update(	LocalStorage.LOCALSTORAGE_TABLE_NAME, 
+										values, 
+										LocalStorage.LOCALSTORAGE_ID + " = " + key, 
+										null);
+				}
+				else {
+					mDatabase.insert(	LocalStorage.LOCALSTORAGE_TABLE_NAME, null, 
+										values);
+				}
+				mDatabase.close();
+			}
+		}
+
+		/**
+		 * Removes item corresponding to the given key
+		 * @param key
+		 */
+		@JavascriptInterface
+		public void removeItem(String key) {
+			if(key != null) {
+				mDatabase = mLocalStorage.getWritableDatabase();
+				mDatabase.delete(	LocalStorage.LOCALSTORAGE_TABLE_NAME, 
+									LocalStorage.LOCALSTORAGE_ID + " = " + key, 
+									null);
+				mDatabase.close();
+			}
+		}
+
+		/**
+		 * Clears local storage.
+		 */
+		@JavascriptInterface
+		public void clear() {
+			mDatabase = mLocalStorage.getWritableDatabase();
+			mDatabase.delete(LocalStorage.LOCALSTORAGE_TABLE_NAME, null, null);
+			mDatabase.close();
+		}
+	}
+	
+	// TODO: FROM HERE
+	
 	/**
 	 * This method returns a new instance of the fragment that will be displayed as the {@link HTMLPopUpWebview} in the fragment container where the current fragment is shown.
 	 * This method may be overridden in subclasses if the {@link HTMLPopUpWebview} must implement customized dialogs with native side such as in "public boolean handleMessageSentByJavaScript(String messageJS)".
@@ -773,19 +875,8 @@ public abstract class HTMLFragment extends Fragment {
 	 * This method is called when the backButton is pressed. It asks the webView whether the default action of the backbutton should be fired.
 	 * This method should NOT be overridden in subclasses.
 	 */
-	public void askWebViewForBackPermission()
-	{
-		sendCallback(JSCallbackOnBackButtonPressed, null);
-
-		/*JSONObject j = new JSONObject();
-		try {
-			j.put(kJSType, JSTypeEvent);
-			j.put(kJSEvent, JSCallbackOnBackButtonPressed);
-			j.put(kJSCallback, JSCallbackOnBackButtonPressed);
-			executeScriptInWebView(j);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}*/
+	public void askWebViewForBackPermission() {
+		sendEvent(JSEventOnBackButtonPressed, null, JSCallbackOnBackButtonPressed);
 	}
 
 	/**
@@ -1189,105 +1280,6 @@ public abstract class HTMLFragment extends Fragment {
 			e.printStackTrace();
 		}
 		return "";
-	}
-
-	/*******************************************************************************************************************************
-	 * LOCAL STORAGE
-	 ******************************************************************************************************************************/
-	
-	/**
-	 * This class is used as a substitution of the local storage in Android webviews
-	 * 
-	 * @author Diane
-	 */
-	private class LocalStorageJavaScriptInterface {
-		private Context mContext;
-		private LocalStorage localStorageDBHelper;
-		private SQLiteDatabase database;
-
-		LocalStorageJavaScriptInterface(Context c) {
-			mContext = c;
-			localStorageDBHelper = LocalStorage.getInstance(mContext);
-		}
-
-		/**
-		 * This method allows to get an item for the given key
-		 * @param key : the key to look for in the local storage
-		 * @return the item having the given key
-		 */
-		@JavascriptInterface
-		public String getItem(String key)
-		{
-			String value = null;
-			if(key != null)
-			{
-				database = localStorageDBHelper.getReadableDatabase();
-				Cursor cursor = database.query(LocalStorage.LOCALSTORAGE_TABLE_NAME,
-						null, 
-						LocalStorage.LOCALSTORAGE_ID + " = ?", 
-						new String [] {key},null, null, null);
-				if(cursor.moveToFirst())
-				{
-					value = cursor.getString(1);
-				}
-				cursor.close();
-				database.close();
-			}
-			return value;
-		}
-
-		/**
-		 * set the value for the given key, or create the set of datas if the key does not exist already.
-		 * @param key
-		 * @param value
-		 */
-		@JavascriptInterface
-		public void setItem(String key,String value)
-		{
-			if(key != null && value != null)
-			{
-				String oldValue = getItem(key);
-				database = localStorageDBHelper.getWritableDatabase();
-				ContentValues values = new ContentValues();
-				values.put(LocalStorage.LOCALSTORAGE_ID, key);
-				values.put(LocalStorage.LOCALSTORAGE_VALUE, value);
-				if(oldValue != null)
-				{
-					database.update(LocalStorage.LOCALSTORAGE_TABLE_NAME, values, LocalStorage.LOCALSTORAGE_ID + " = " + key, null);
-				}
-				else
-				{
-					database.insert(LocalStorage.LOCALSTORAGE_TABLE_NAME, null, values);
-				}
-				database.close();
-			}
-		}
-
-		/**
-		 * removes the item corresponding to the given key
-		 * @param key
-		 */
-		@JavascriptInterface
-		public void removeItem(String key)
-		{
-			if(key != null)
-			{
-				database = localStorageDBHelper.getWritableDatabase();
-				database.delete(LocalStorage.LOCALSTORAGE_TABLE_NAME, LocalStorage.LOCALSTORAGE_ID + " = " + key, null);
-				database.close();
-			}
-		}
-
-		/**
-		 * clears all the local storage.
-		 */
-		@JavascriptInterface
-		public void clear()
-		{
-			database = localStorageDBHelper.getWritableDatabase();
-			database.delete(LocalStorage.LOCALSTORAGE_TABLE_NAME, null, null);
-			database.close();
-		}
 	}
 	
 	/*************************************************************************************
