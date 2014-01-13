@@ -452,10 +452,51 @@ public abstract class HTMLFragment extends Fragment {
 		mWaitingJavaScriptCallsQueue.clear();
 	}
 
+	/****************************************************************************************
+	 * MESSAGE SENDING
+	 ***************************************************************************************/
+	/**
+	 * Calls the Web callback with an object containing response fields
+	 * @param callbackId: the Web callback.
+	 * @param data: the object containing response fields
+	 */
+	public void sendCallback(final String callbackId, final JSONObject data) {
+		if(	callbackId != null 
+			&& callbackId.length() > 0) {
+			try {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put(kJSType, JSTypeCallBack);
+				jsonObj.put(kJSCallback, callbackId);
+				jsonObj.put(kJSData, data);	
+				executeScriptInWebView(jsonObj);
+			} 
+			catch (JSONException exception) {
+				exception.printStackTrace();
+			}
+		}
+	}
+	
+	public void sendEvent(final String event, final JSONObject data, final String callbackID) {
+		if (event != null
+			&& event.length() > 0) {
+			try {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put(kJSType, JSTypeEvent);
+				jsonObj.put(kJSEvent, event);
+				jsonObj.put(kJSData, data);
+				jsonObj.put(kJSCallback, callbackID);
+				executeScriptInWebView(jsonObj);
+			}
+			catch (JSONException exception) {
+				exception.printStackTrace();
+			}
+		}
+	}
+	
 	// TODO: FROM HERE
-	/**************************************************************
-	 * NOTIFIER
-	 *************************************************************/
+	/****************************************************************************************
+	 * MESSAGE HANDLING
+	 ***************************************************************************************/
 	
 	protected abstract void onUnhandledMessage(JSONObject message);
 
@@ -477,45 +518,6 @@ public abstract class HTMLFragment extends Fragment {
 	 */
 	public void alertDialogClickedButton(long tag, int buttonIndex) {
 		
-	}
-
-	/**
-	 * Use this method to send a JSONObject data who contains some params (int, String, JSONObject...) to the web with the given callbackId
-	 * @param callbackId : the callbackId to call back after having handled native instructions.
-	 * @param data : the params to pass when calling the callback named callbackId
-	 */
-	public void sendCallback(final String callbackId, final JSONObject data) {
-		if(	callbackId != null 
-			&& callbackId.length() > 0) {
-			JSONObject obj = new JSONObject();
-			try {
-				obj.put(kJSType,JSTypeCallBack);
-				obj.put(kJSCallback, callbackId);
-				obj.put(kJSData, data);	
-				
-				executeScriptInWebView(obj);
-			} 
-			catch (JSONException exception) {
-				exception.printStackTrace();
-			}
-		}
-	}
-	
-	public void sendEvent(String name, JSONObject data, String callbackId) {
-		JSONObject obj = new JSONObject();
-		try {
-			obj.put(kJSType,name);
-			obj.put(kJSData, data);			
-			
-			if (callbackId != null) {
-				obj.put(kJSCallback, callbackId);
-			}
-			
-			executeScriptInWebView(obj);
-		}
-		catch (JSONException exception) {
-			exception.printStackTrace();
-		}
 	}
 
 	/**
@@ -797,7 +799,6 @@ public abstract class HTMLFragment extends Fragment {
 				try {
 					data.put(kJSValue, page);
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				sendEvent(JSEventWebLayerOnDismiss, data, null);
@@ -1321,7 +1322,6 @@ public abstract class HTMLFragment extends Fragment {
 			Log.d(getClass().getName(), "sendDate + : " + jsonResponse);
 			executeScriptInWebView(jsonResponse);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
