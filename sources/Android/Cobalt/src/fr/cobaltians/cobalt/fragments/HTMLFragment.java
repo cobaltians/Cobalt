@@ -140,6 +140,7 @@ public abstract class HTMLFragment extends Fragment {
 	protected String pageName;
 	
 	protected OverScrollingWebView mWebView;
+	// TODO: use ViewGroup instead of FrameLayout to allow using different layouts 
 	protected FrameLayout webViewPlaceholder;
 
 	protected Context mContext;
