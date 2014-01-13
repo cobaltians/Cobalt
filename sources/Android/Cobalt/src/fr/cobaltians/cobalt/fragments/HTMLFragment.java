@@ -79,7 +79,6 @@ public abstract class HTMLFragment extends Fragment {
 	
 	// CALLBACKS
 	protected final static String JSTypeCallBack = "callback";
-	private final static String JSCallbackOnBackButtonPressed = "onBackButtonPressed";
 	
 	// COBALT IS READY
 	protected final static String JSTypeCobaltIsReady = "cobaltIsReady";
@@ -99,6 +98,9 @@ public abstract class HTMLFragment extends Fragment {
 	protected final static String JSActionNavigationDismiss = "dismiss";
 	protected final static String kJSNavigationController = "controller";
 	protected final static String JSNavigationControllerDefault = "default";
+	
+	//BACK BUTTON
+	private final static String JSCallbackOnBackButtonPressed = "onBackButtonPressed";	
 
 	// UI
 	protected final static String JSTypeUI = "ui";
@@ -486,16 +488,13 @@ public abstract class HTMLFragment extends Fragment {
 		}
 	}
 	
-	public void sendEvent(String name, JSONObject data, String callbackId) {
+	public void sendEvent(String name, JSONObject data, String callback) {
 		JSONObject obj = new JSONObject();
 		try {
 			obj.put(kJSType,name);
 			obj.put(kJSData, data);			
-			
-			if (callbackId != null) {
-				obj.put(kJSCallback, callbackId);
-			}
-			
+			obj.put(kJSCallback, callback);
+	
 			executeScriptInWebView(obj);
 		}
 		catch (JSONException exception) {
@@ -734,7 +733,6 @@ public abstract class HTMLFragment extends Fragment {
 		try {
 			if(name.equals(JSCallbackOnBackButtonPressed)){
 				boolean allowToGoBack;
-				Log.e(getClass().getSimpleName(), "Dans le handleCallback BackButtonPressed avec data = "+data);
 				allowToGoBack = data.getBoolean(kJSData);
 
 				handleBackButtonPressed(allowToGoBack);
@@ -758,7 +756,7 @@ public abstract class HTMLFragment extends Fragment {
 	 */
 	public void askWebViewForBackPermission()
 	{
-		sendCallback(JSCallbackOnBackButtonPressed, null);
+		sendEvent(JSCallbackOnBackButtonPressed, null, JSCallbackOnBackButtonPressed);
 
 		/*JSONObject j = new JSONObject();
 		try {
@@ -782,7 +780,6 @@ public abstract class HTMLFragment extends Fragment {
 				try {
 					data.put(kJSValue, page);
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				sendEvent(JSEventWebLayerOnDismiss, data, null);
