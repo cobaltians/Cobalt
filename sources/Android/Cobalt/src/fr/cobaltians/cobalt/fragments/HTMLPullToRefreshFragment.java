@@ -95,7 +95,7 @@ public abstract class HTMLPullToRefreshFragment extends HTMLFragment implements 
 	}
 	
 	@Override
-	protected void removeWebviewFromPlaceholder() {
+	protected void removeWebViewFromPlaceholder() {
 		if (mWebViewPlaceholder != null) {
 			if (mPullToRefreshWebView != null) {
 				mWebViewPlaceholder.removeView(mPullToRefreshWebView);
