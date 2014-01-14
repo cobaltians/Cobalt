@@ -53,7 +53,7 @@
 			            "onBackButtonPressed":function(event){
 				            cobalt.alert('Quitter?',"Êtes-vous sûr de vouloir quitter l'application catalogue?", ["Confirmer","Annuler"],{ callback:function(params){
 					            if (params.index===0){
-						            cobalt.sendCallback(event,true);
+						            cobalt.sendCallback(event,{value : true});
 					            }
 				            }})
 			            }

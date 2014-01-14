@@ -14,7 +14,7 @@ cobalt.android_adapter={
 	        switch (event.name){
 		        case "onBackButtonPressed":
 				    cobalt.log('sending OK for a native back')
-			        cobalt.sendCallback(event,true);
+			        cobalt.sendCallback(event,{value : true});
 			    break;
 	        }
         }
