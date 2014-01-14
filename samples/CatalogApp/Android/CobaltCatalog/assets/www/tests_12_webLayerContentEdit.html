@@ -46,7 +46,7 @@
 		       		$('#text').blur();
 		       		setTimeout(function(){
 		       			//using setTimeout because otherwise, android kills the webview too fast
-		       			cobalt.webLayer("dismiss");
+		       			cobalt.webLayer("dismiss",{ value : $('#text').val() });
 		       		},500)
 			       
 	            	return false;

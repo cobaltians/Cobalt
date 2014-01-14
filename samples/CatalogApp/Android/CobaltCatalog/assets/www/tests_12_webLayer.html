@@ -47,6 +47,14 @@
 
 	            cobalt.init({
 		            debug:true,
+		            events:{
+			            "onWebLayerDismissed":function(event){
+				            cobalt.toast('webLayer '+event.page+' closed')
+				            if (event.data){
+					            cobalt.toast('webLayer result is '+JSON.stringify(event.data))
+				            }
+			            }
+		            }
 		            //sendingToNative:false,
 		        });
 
