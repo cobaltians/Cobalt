@@ -81,7 +81,7 @@ var cobalt={
 	send:function(obj, callback){
 		if (callback){
 			if (typeof callback==="function"){
-				obj.callback = cobalt.lastCallbackId++;
+				obj.callback = ""+(cobalt.lastCallbackId++);
 				cobalt.callbacks[obj.callback]=callback;
 			}else if (typeof callback==="string"){
 				obj.callback = ""+callback;
@@ -182,15 +182,17 @@ var cobalt={
 		//see doc for guidelines.
 		//cobalt.webLayer("show","tests_12_webAlertContent.html",1.2);
 		//cobalt.webLayer("dismiss");
+		//in next example, foobar object will be sent in onWebLayerDismissed :
+		//cobalt.webLayer("dismiss",{ foo : "bar"});
 	 */
-	webLayer:function(action, page, fadeDuration){
+	webLayer:function(action, data, fadeDuration){
 		switch (action){
 			case "dismiss":
-				cobalt.send({type:"webLayer", action:"dismiss"});
+				cobalt.send({type:"webLayer", action:"dismiss", data: data});
 			break;
 			case "show":
 				if (page){
-					cobalt.send({type:"webLayer", action:"show", data :{ page:page, fadeDuration:fadeDuration }})
+					cobalt.send({type:"webLayer", action:"show", data :{ page:data, fadeDuration:fadeDuration }})
 				}
 			break;
 		}
