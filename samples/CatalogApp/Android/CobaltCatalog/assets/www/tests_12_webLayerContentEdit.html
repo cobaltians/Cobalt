@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="webalert">
+<html class="webLayer">
     <head>
 			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
@@ -7,14 +7,10 @@
     </head>
     <body>
 
-        <div class="webalert">
-	        <h1>This is a web alert !</h1>
-
-	        <p>TEST 02 - Fermer cette webAlerte</p>
-
-	        <a id="test1">Fermer</a><br/>
-
-
+        <div class="webLayer webLayer2">
+	        <h1>Lache tes com'</h1>
+	        <textarea id="text">salut</textarea>
+	        <a id="close">Fermer</a>
         </div>
 
 
@@ -37,25 +33,25 @@
 		            debug:true,
 		            //sendingToNative:false,
 		        });
-                cobalt.log("webAlerte cobalt is ready!")
+                cobalt.log("webLayer cobalt is ready!")
+
+                  setTimeout(function(){
+                             $('#text').focus();
+                  },200);
 
                 $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
                 $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
 
-		       $('#test1').on('tap click',function(){
-			       cobalt.webLayer("dismiss");
-		           return false;
+		       $('#close').on('tap click',function(){
+		       		$('#text').blur();
+		       		setTimeout(function(){
+		       			//using setTimeout because otherwise, android kills the webview too fast
+		       			cobalt.webLayer("dismiss");
+		       		},500)
+			       
+	            	return false;
 	            });
-
-	            $('#monBouton3').on('tap click',function(){
-					if (cobalt.ios_adapter){
-						cobalt.ios_adapter.pipeline=[];
-						cobalt.ios_adapter.pipelineRunning=false;
-					}
-                    $('#cobalt_logdiv').html('');
-                    return false;
-				});
-
+	            
 	            $('a.pop').on('tap click',function(){
 		        	cobalt.navigate('pop');
 		            return false;

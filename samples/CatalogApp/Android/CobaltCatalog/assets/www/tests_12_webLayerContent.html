@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="webLayer">
     <head>
 			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
@@ -7,36 +7,24 @@
     </head>
     <body>
 
-        <a href="javascript:;" class="pop">POP</a><br/>
+        <div class="webLayer">
+	        <h1>This is a web layer !</h1>
 
-  		<p>Test des alertes web </p>
+	        <p>TEST 02 - Fermer cette webLayer</p>
 
-  		<p>TEST 01 - Ouvrir cette webAlerte.</p>
-
-        <a id="test1">Ouvrir</a><br/>
-
-        <p>TEST 02 - Ouvrir cette même webAlerte mais avec un effet de fadeIn plus long.</p>
-
-        <a id="test2">Ouvrir</a><br/>
-
-        <p>TEST 03 - Ouvrir cette même webAlerte mais avec un effet de fadeIn à 0.</p>
-
-        <a id="test3">Ouvrir</a><br/>
-
-         <p>TEST 04 - Ouvrir cette webAlerte d'edition de commentaire, verifier que le champs texte est dans la partie haute de l'ecran, et que le clavier sort tout seul comme un grand.</p>
-
-        <a id="test4">Ouvrir</a><br/>
+	        <a id="test1">Fermer</a><br/>
 
 
-  		<p>Ci dessous le log de la lib d'echange</p>
-  		<input id="monBouton3" type="button" value="nettoyage logs"/>
-  		<div id="cobalt_logdiv"></div>
+        </div>
+
+
+  		<div id="cobalt_logdiv" style="display:none;"></div>
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/utils.storage.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
 
-		<!-- for cobalt dev only
+        <!-- for cobalt dev only
 		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
 		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
 		-->
@@ -49,27 +37,15 @@
 		            debug:true,
 		            //sendingToNative:false,
 		        });
+                cobalt.log("webLayer cobalt is ready!")
 
                 $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
                 $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
 
 		       $('#test1').on('tap click',function(){
-			        cobalt.webLayer("show","tests_12_webAlertContent.html");
-		            return false;
+			       cobalt.webLayer("dismiss");
+		           return false;
 	            });
-				$('#test2').on('tap click',function(){
-					cobalt.webLayer("show","tests_12_webAlertContent.html",1.2);
-		            return false;
-	            });
-				$('#test3').on('tap click',function(){
-					cobalt.webLayer("show","tests_12_webAlertContent.html",0);
-		            return false;
-	            });
-		        $('#test4').on('tap click',function(){
-			        cobalt.webLayer("show","tests_12_webAlertContentEdit.html");
-		            return false;
-	            });
-
 
 	            $('#monBouton3').on('tap click',function(){
 					if (cobalt.ios_adapter){
