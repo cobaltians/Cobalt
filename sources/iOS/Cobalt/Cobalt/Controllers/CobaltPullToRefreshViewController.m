@@ -63,10 +63,12 @@
             [self.webView.scrollView addSubview:self.pullToRefreshTableHeaderView];
             //self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.scrollView.frame.size.height+1);
         }
+#if DEBUG_COBALT
         else
         {
             NSLog(@"WARNING : no pullToRefreshTableHeaderView set !");
         }
+#endif
     }
     
     [self.webView.scrollView setDelegate:self];
@@ -112,11 +114,12 @@
 -(void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+#if DEBUG_COBALT
     NSLog(@"pullToRefresh enabled = %d",self.isPullToRefreshActive);
+#endif
 }
 
- 
+
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     if(self.pullToRefreshTableHeaderView && self.pullToRefreshTableHeaderView.superview)
     {

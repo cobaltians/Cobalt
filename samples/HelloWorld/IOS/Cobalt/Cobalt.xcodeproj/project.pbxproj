@@ -31,7 +31,6 @@
 		71B4B1CF1885C8DF0027AC4F /* PullToRefreshScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1C21885C8DF0027AC4F /* PullToRefreshScrollViewController.m */; };
 		71B4B1D01885C8DF0027AC4F /* iToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1C41885C8DF0027AC4F /* iToast.m */; };
 		71B4B1D11885C8DF0027AC4F /* HPToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1C71885C8DF0027AC4F /* HPToast.m */; };
-		71B4B1D21885C8DF0027AC4F /* PullToRefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1C91885C8DF0027AC4F /* PullToRefreshTableHeaderView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,8 +82,6 @@
 		71B4B1C41885C8DF0027AC4F /* iToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iToast.m; sourceTree = "<group>"; };
 		71B4B1C61885C8DF0027AC4F /* HPToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPToast.h; sourceTree = "<group>"; };
 		71B4B1C71885C8DF0027AC4F /* HPToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPToast.m; sourceTree = "<group>"; };
-		71B4B1C81885C8DF0027AC4F /* PullToRefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullToRefreshTableHeaderView.h; sourceTree = "<group>"; };
-		71B4B1C91885C8DF0027AC4F /* PullToRefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullToRefreshTableHeaderView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -224,8 +221,6 @@
 			children = (
 				71B4B1C61885C8DF0027AC4F /* HPToast.h */,
 				71B4B1C71885C8DF0027AC4F /* HPToast.m */,
-				71B4B1C81885C8DF0027AC4F /* PullToRefreshTableHeaderView.h */,
-				71B4B1C91885C8DF0027AC4F /* PullToRefreshTableHeaderView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -329,7 +324,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				71B4B1D21885C8DF0027AC4F /* PullToRefreshTableHeaderView.m in Sources */,
 				71B4B1CB1885C8DF0027AC4F /* AbstractViewController.m in Sources */,
 				71B4B1CA1885C8DF0027AC4F /* Cobalt.m in Sources */,
 				67A4432718649B3400F5C301 /* ViewController.m in Sources */,

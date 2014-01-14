@@ -29,6 +29,7 @@
 #import "AbstractViewController.h"
 #import "HPToast.h"
 
+// JAVASCRIPT KEYS
 #define kJSType             @"type"
 #define JSTypeEvent         @"typeEvent"
 #define JSNativeBridgeIsReady @"nativeBridgeIsReady"
@@ -49,7 +50,6 @@
 //CALLBACKS
 #define kJSCallbackID       @"callbackID"
 #define JSCallbackSimpleAcquitment @"callbackSimpleAcquitment"
-
 #define kJSParams @"params"
 
 //NAVIGATION
@@ -81,6 +81,9 @@
 #define kJSWebAlertPageName             @"pageName"
 #define kJSWebAlertfadeDuration         @"fadeDuration"
 
+// HTML
+#define defaultHtmlPage             @"index.html"
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark INTERFACE
@@ -91,7 +94,6 @@
  @abstract		Base class for a webView controller that allows javascript/native dialogs
  */
 @interface CobaltViewController : AbstractViewController <UIWebViewDelegate,UIAlertViewDelegate,HPToastDelegateProtocol>
-
 {
     NSOperationQueue *toJavaScriptOperationQueue;
     NSOperationQueue *fromJavaScriptOperationQueue;
@@ -106,13 +108,13 @@
  @property		webView
  @abstract		the webView displaying content
  */
-@property (strong, nonatomic) IBOutlet UIWebView *webView;
+@property (strong, nonatomic) UIWebView *webView;
 
 /*!
  @property		activityIndicator
  @abstract		an activity indicator shown- while the webView is loading
  */
-@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (strong, nonatomic) UIActivityIndicatorView *activityIndicator;
 
 /*!
  @property		pageName
@@ -122,6 +124,7 @@
 @property (strong, nonatomic) NSString *pageName;
 
 @property (strong,nonatomic) UIWebView *popUpWebview;
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark METHODS
@@ -211,3 +214,94 @@
 -(void) alertView:(UIAlertView *)alertView WithTag:(NSInteger)tag clickedButtonAtIndex:(NSInteger)buttonIndex;
 
 @end
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark INTERFACE
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+typedef enum {
+    RefreshStateNormal = 0,
+    RefreshStatePulling,
+    RefreshStateLoading
+} RefreshState;
+
+/*!
+ @class			PullToRefreshTableHeaderView
+ @abstract		Class for header of table view that pull to refresh.
+ */
+@interface PullToRefreshTableHeaderView : UIView {
+    
+    CGFloat loadingHeight;
+    UIActivityIndicatorView *progressView;
+    UIImageView *arrowImageView;
+    UILabel *lastUpdatedLabel;
+    UILabel *statusLabel;
+    RefreshState state;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark PROPERTIES
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*!
+ @property		loadingHeight
+ @abstract		The view heigh when in loading state.
+ */
+@property (nonatomic, assign) CGFloat loadingHeight;
+
+/*!
+ @property		progressView
+ @abstract		The progress view.
+ */
+@property (nonatomic, retain) UIActivityIndicatorView *progressView;
+
+/*!
+ @property		arrowImageView
+ @abstract		The arrow image view.
+ */
+@property (nonatomic, retain) UIImageView *arrowImageView;
+
+/*!
+ @property		lastUpdatedLabel
+ @abstract		The last updated label.
+ */
+@property (nonatomic, retain)  UILabel *lastUpdatedLabel;
+
+/*!
+ @property		statusLabel
+ @abstract		The status label.
+ */
+@property (nonatomic, retain) UILabel *statusLabel;
+
+/*!
+ @property		state
+ @abstract		The refresh state.
+ */
+@property (nonatomic, assign) RefreshState state;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark METHODS
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*!
+ @method		- (void)setLastUpdated:(NSString *)lastUpdated
+ @abstract		Sets the last updated text.
+ @param         lastUpdated The last updated text to set.
+ */
+- (void)setLastUpdated:(NSString *)lastUpdated;
+
+/*!
+ @method		- (NSString *)textForState:(RefreshState)newState
+ @abstract		Sets the text for the status label depending on the newState given
+ @param         newState The new state applied to the pullToRefreshTableHeaderView
+ @return        a NSString containing the string to display for the given mode.
+ @discussion    This method may be overriden in subclasses.
+ */
+- (NSString *)textForState:(RefreshState)newState;
+@end
+
+

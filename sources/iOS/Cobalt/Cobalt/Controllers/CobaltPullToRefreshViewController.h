@@ -7,7 +7,6 @@
 //
 
 #import "CobaltViewController.h"
-#import "PullToRefreshTableHeaderView.h"
 
 
 @interface CobaltPullToRefreshViewController : CobaltViewController <UIScrollViewDelegate> {

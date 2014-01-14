@@ -69,7 +69,9 @@
         }
         else
         {
+#if DEBUG_COBALT
             NSLog(@"WARNING : no pullToRefreshTableHeaderView set !");
+#endif
         }
     }
     

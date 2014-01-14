@@ -35,7 +35,7 @@
 #define haploidSpecialJSKey @"h@ploid#k&y"
 
 //Conf File
-#define confFileName            @"nativeBridge.conf"
+#define confFileName            @"cobalt.conf"
 #define kIosClassName           @"iosClassName"
 #define kIosNibName             @"iosNibName"
 #define kPullToRefreshActive    @"pullToRefresh"
@@ -88,20 +88,10 @@ NSString *popupPageName;
     
     if([self.webView respondsToSelector:@selector(setKeyboardDisplayRequiresUserAction:)])
         [self.webView setKeyboardDisplayRequiresUserAction:NO];
-    /*
-     //if a pageName is already defined -> display it in the webview !
-     //PB WITH PREFIX...
-     if(self.pageName && self.pageName.length > 0)
-     {
-     //load content in webView
-     NSString *contentToDisplay = [self getStringFromFileNamed:self.pageName atPath:RESSOURCE_PATH];
-     [self.webView loadHTMLString:contentToDisplay baseURL:[NSURL URLWithString:RESSOURCE_PATH]];
-     }
-     //*/
     
     if(!self.pageName || self.pageName.length == 0)
     {
-        self.pageName = @"index.html";
+        self.pageName = defaultHtmlPage;
     }
     
     [self loadContentInWebView:self.webView FromFileNamed:self.pageName atPath:[self ressourcePath] withRessourcesAtPath:[self ressourcePath]];
@@ -151,9 +141,12 @@ NSString *popupPageName;
     NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@",path,filename] isDirectory:NO];
     NSError *error;
     NSString *stringFromFileAtURL = [[NSString alloc] initWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
+
+#if DEBUG_COBALT
     if (stringFromFileAtURL == nil) {
         NSLog(@"Error reading file at %@\n%@",url, [error localizedFailureReason]);
     }
+#endif
     
     return stringFromFileAtURL;
 }
@@ -202,7 +195,9 @@ NSString *popupPageName;
         //[self performSelectorOnMainThread:@selector(executeScriptInWebViewWithDictionary:) withObject:dict waitUntilDone:YES];
         [self executeScriptInWebView:self.webView WithDictionary:dict];
     }
+#if DEBUG_COBALT
     else NSLog(@"ERROR : web callbackID invalid (null or empty)");
+#endif
     
 }
 
@@ -218,7 +213,9 @@ NSString *popupPageName;
             NSString *value = [dict objectForKey:kJSValue];
             if(value && [value isKindOfClass:[NSString class]] && value.length >0)
             {
+#if DEBUG_COBALT
                 NSLog(@"JS LOGS : %@",value);
+#endif
                 
                 return YES;
             }
@@ -314,10 +311,14 @@ NSString *popupPageName;
         else if([type isEqualToString:JSNativeBridgeIsReady])
         {
             [toJavaScriptOperationQueue setSuspended:NO];
+#if DEBUG_COBALT
             NSLog(@"Received NativeBridgeIsReady");
+#endif
         }
     }
+#if DEBUG_COBALT
     else NSLog(@"ERROR : type is undefined. Impossible to handle JavaScriptEvent !");
+#endif
     return NO;
 }
 
@@ -379,7 +380,9 @@ NSString *popupPageName;
 {
     if(self.presentingViewController)
         [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+#if DEBUG_COBALT
     else NSLog(@"Error : no controller is presented");
+#endif
 }
 
 
@@ -405,7 +408,9 @@ NSString *popupPageName;
             
             if(!className)
             {
+#if DEBUG_COBALT
                 NSLog(@"WARNING : className for ID %@ not found. Look for default class ID",viewControllerId);
+#endif
                 className = [[confDictionary objectForKey:JSNavigationDefaultClassId] objectForKey:kIosClassName];
                 nibName = [[confDictionary objectForKey:JSNavigationDefaultClassId] objectForKey:kIosNibName];
                 pullToRefreshActive = [[[confDictionary objectForKey:JSNavigationDefaultClassId] objectForKey:kPullToRefreshActive] boolValue];
@@ -421,14 +426,18 @@ NSString *popupPageName;
         }
         else
         {
+#if DEBUG_COBALT
             NSLog(@"ERROR : Syntax error in Conf file");
+#endif
             return nil;
         }
         
     }
     else
     {
-        NSLog(@"ERROR : Conf file may be missing or not at the root of RESSOURCE_PATH folder.");
+#if DEBUG_COBALT
+        NSLog(@"ERROR : Conf file may be missing or not at the root of ressources folder.");
+#endif
         return nil;
     }
     
@@ -461,7 +470,9 @@ NSString *popupPageName;
     }
     else
     {
+#if DEBUG_COBALT
         NSLog(@"ERROR : no view Controller named %@ was found for given ID %@. Nothing will happen...",className,viewControllerId);
+#endif
         return nil;
     }
 }
@@ -476,16 +487,22 @@ NSString *popupPageName;
     {
         if(!className || (className && !NSClassFromString(className)))
         {
+#if DEBUG_COBALT
             NSLog(@"ERROR : classNotFound %@",className);
+#endif
         }
         else if(className && NSClassFromString(className) && ![NSClassFromString(className) isSubclassOfClass:[CobaltViewController class]])
         {
+#if DEBUG_COBALT
             NSLog(@"ERROR : impossible to show %@ for it does not inherit from CobaltViewController",className);
+#endif
         }
     }
     else if(!b2)
     {
+#if DEBUG_COBALT
         NSLog(@"ERROR : nibName %@ does not exist !",nibName);
+#endif
     }
     
     return b1&&b2;
@@ -532,12 +549,16 @@ NSString *popupPageName;
                 }
                 else
                 {
+#if DEBUG_COBALT
                     NSLog(@"WARNING : invalid callback name for alertView with webCallback (null or empty)");
+#endif
                 }
             }
             else if(![receiverType isEqualToString:JSAlertCallbackReceiverNative])
             {
+#if DEBUG_COBALT
                 NSLog(@"WARNING : invalid callback receiver for alertView : %@",receiverType);
+#endif
             }
             
         }
@@ -724,7 +745,9 @@ NSString *popupPageName;
 -(void) HPToastwillShow:(HPToast *)toast
 {
     toastIsShown = YES;
+#if DEBUG_COBALT
     NSLog(@"show");
+#endif
 }
 
 -(void) HPToastwillHide:(HPToast *)toast
@@ -739,17 +762,111 @@ NSString *popupPageName;
     
 }
 
+@end
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark MEMORY MANAGEMENT
+#pragma mark IMPLEMENTATION
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+@implementation PullToRefreshTableHeaderView
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark PROPERTIES
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+@synthesize loadingHeight, progressView, arrowImageView, lastUpdatedLabel, statusLabel, state;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark METHODS
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//*******************
+// SET LAST UPDATED *
+//*******************
+/*!
+ @method		- (void)setLastUpdated:(NSString *)lastUpdated
+ @abstract		Sets the last updated text.
+ @param         lastUpdated The last updated text to set.
+ */
+- (void)setLastUpdated:(NSString *)lastUpdated {
+    self.lastUpdatedLabel.text = lastUpdated;
 }
 
+//************
+// SET STATE *
+//************
+/*!
+ @method		- (void)setState:(RefreshState)newState
+ @abstract		Sets the refresh state.
+ @param         newState    The refresh state to set.
+ */
+- (void)setState:(RefreshState)newState {
+    switch (newState) {
+        case RefreshStateNormal:
+            if (state == RefreshStatePulling) {
+                [UIView beginAnimations:nil context:nil];
+                [UIView setAnimationDuration:0.2];
+                self.arrowImageView.transform = CGAffineTransformIdentity;
+                [UIView commitAnimations];
+            }
+            self.statusLabel.text = [self textForState:newState];
+            [self.progressView stopAnimating];
+            self.arrowImageView.hidden = NO;
+            self.arrowImageView.transform = CGAffineTransformIdentity;
+            break;
+            
+        case RefreshStatePulling:
+            self.statusLabel.text = [self textForState:newState];
+            [UIView beginAnimations:nil context:nil];
+            [UIView setAnimationDuration:0.2];
+            self.arrowImageView.transform = CGAffineTransformMakeRotation(M_PI);
+            [UIView commitAnimations];
+            break;
+            
+        case RefreshStateLoading:
+            self.statusLabel.text = [self textForState:newState];
+            [self.progressView startAnimating];
+            self.arrowImageView.hidden = YES;
+            break;
+            
+        default:
+            break;
+    }
+    
+    state = newState;
+}
+
+//************
+// SET TEXT FOR STATE *
+//************
+/*!
+ @method		- (NSString *)textForState:(RefreshState)newState
+ @abstract		Sets the text for the status label depending on the newState given
+ @param         newState The new state applied to the pullToRefreshTableHeaderView
+ @return        a NSString containing the string to display for the given mode.
+ @discussion    This method may be overriden in subclasses.
+ */
+- (NSString *)textForState:(RefreshState)newState {
+    switch (newState) {
+        case RefreshStateNormal:
+            return NSLocalizedString(@"Tirez pour rafraîchir...", nil);
+            break;
+        case RefreshStatePulling:
+            return NSLocalizedString(@"Relâchez pour actualiser...", nil);
+            break;
+        case RefreshStateLoading:
+            return NSLocalizedString(@"Chargement...", nil);
+            break;
+        default:
+            break;
+    }
+    return @"";
+}
 
 @end
