@@ -47,11 +47,6 @@ public class HTMLFlipperFragment extends HTMLFragment implements IGestureListene
 		
 		super.addWebView();
 	}
-
-	@Override
-	protected void onUnhandledMessage(JSONObject message) {
-		
-	}
 	
 	@Override
 	protected boolean onUnhandledCallback(String name, JSONObject data) {
@@ -59,16 +54,12 @@ public class HTMLFlipperFragment extends HTMLFragment implements IGestureListene
 	}
 	
 	@Override
-	protected boolean onUnhandledEvent(String name, JSONObject data,
-			String callback) {
+	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
 		return false;
 	}
-
+	
 	@Override
-	protected boolean onUnhandledUi(String control, JSONObject data,
-			String callback) {
-		return false;
-	}
+	protected void onUnhandledMessage(JSONObject message) { }
 	
 	/********************************************************
 	 * SWIPE

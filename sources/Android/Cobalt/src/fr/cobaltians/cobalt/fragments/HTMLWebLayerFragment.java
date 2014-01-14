@@ -43,24 +43,20 @@ public class HTMLWebLayerFragment extends HTMLFragment {
 	@Override
 	@JavascriptInterface
 	public boolean handleMessageSentByJavaScript(String message) {
-		JSONObject jsonObj;
-		
 		try {
-			jsonObj = new JSONObject(message);
-			if (jsonObj != null) {
-				String type = jsonObj.optString(kJSType);
-				if (type.equals(JSTypeWebLayer)) {
-					String action = jsonObj.optString(kJSAction);
-					if (action.equals(JSActionWebLayerDismiss)) {
-						final JSONObject data = jsonObj.optJSONObject(kJSData);
-						mHandler.post(new Runnable() {
-							@Override
-							public void run() {
-								dismissWebLayer(data);
-							}
-						});
-						return true;
-					}
+			JSONObject jsonObj = new JSONObject(message);
+			String type = jsonObj.optString(kJSType);
+			if (type.equals(JSTypeWebLayer)) {
+				String action = jsonObj.getString(kJSAction);
+				if (action.equals(JSActionWebLayerDismiss)) {
+					final JSONObject data = jsonObj.optJSONObject(kJSData);
+					mHandler.post(new Runnable() {
+						@Override
+						public void run() {
+							dismissWebLayer(data);
+						}
+					});
+					return true;
 				}
 			}
 		} 
@@ -73,11 +69,6 @@ public class HTMLWebLayerFragment extends HTMLFragment {
 	}
 
 	@Override
-	protected void onUnhandledMessage(JSONObject message) {
-		
-	}
-
-	@Override
 	protected boolean onUnhandledCallback(String name, JSONObject data) {
 		return false;		
 	}
@@ -87,16 +78,13 @@ public class HTMLWebLayerFragment extends HTMLFragment {
 			String callback) {
 		return false;
 	}
-
-	@Override
-	protected boolean onUnhandledUi(String control, JSONObject data,
-			String callback) {
-		return false;
-	}
 	
 	@Override
-	protected void handleBackButtonPressed(boolean allowedToGoBack) {
-		if(allowedToGoBack) {
+	protected void onUnhandledMessage(JSONObject message) { }
+	
+	@Override
+	protected void onBackPressed(boolean allowedToBack) {
+		if(allowedToBack) {
 			dismissWebLayer(null);
 		}
 	}

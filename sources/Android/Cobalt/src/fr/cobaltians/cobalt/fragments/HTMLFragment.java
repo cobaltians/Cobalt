@@ -500,11 +500,183 @@ public abstract class HTMLFragment extends Fragment {
 	/****************************************************************************************
 	 * MESSAGE HANDLING
 	 ***************************************************************************************/
+	/**
+	 * This method is called when the JavaScript sends a message to the native side.
+	 * This method should be overridden in subclasses.
+	 * @param messageJS : the JSON-message sent by JavaScript.
+	 * @return true if the message was handled by the native, false otherwise
+	 * @details some basic operations are already implemented : navigation, logs, toasts, native alerts, web alerts
+	 * @details this method may be called from a secondary thread.
+	 */
+	// This method must be public !!!
+	@JavascriptInterface
+	public boolean handleMessageSentByJavaScript(String message) {
+		try {
+			final JSONObject jsonObj = new JSONObject(message);
+			
+			// TYPE
+			if (jsonObj.has(kJSType)) {
+				String type = jsonObj.getString(kJSType);
+				
+				//CALLBACK
+				if (type.equals(JSTypeCallBack)) {
+					String callbackID = jsonObj.getString(kJSCallback);
+					JSONObject data = jsonObj.optJSONObject(kJSData);
+					
+					return handleCallback(callbackID, data);		
+				}
+				
+				// COBALT IS READY
+				else if (type.equals(JSTypeCobaltIsReady)) {
+					onReady();
+					return true;
+				}
+				
+				// EVENT
+				if (type.equals(JSTypeEvent)) {
+					String event = jsonObj.getString(kJSEvent);
+					JSONObject data = jsonObj.optJSONObject(kJSData);
+					String callback = jsonObj.optString(kJSCallback, null);
+					
+					return handleEvent(event, data, callback);			
+				}
+				
+				// LOG
+				else if (type.equals(JSTypeLog)) {
+					String text = jsonObj.getString(kJSValue);
+					if (mDebug) Log.d("JS LOG", text);
+					return true;
+				}
+				
+				// NAVIGATION
+				else if (type.equals(JSTypeNavigation)) {
+					String action = jsonObj.getString(kJSAction);
+					
+					// PUSH
+					if (action.equals(JSActionNavigationPush)) {
+						JSONObject data = jsonObj.getJSONObject(kJSData);
+						String page = data.getString(kJSPage);
+						String controller = data.optString(kJSNavigationController, null);
+						push(controller, page);
+						return true;
+					}
+					
+					// POP
+					else if (action.equals(JSActionNavigationPop)) {
+						pop();
+						return true;
+					}
+					
+					// MODALE
+					else if (action.equals(JSActionNavigationModale)) {
+						JSONObject data = jsonObj.getJSONObject(kJSData);
+						String page = data.getString(kJSPage);
+						String controller = data.optString(kJSNavigationController, null);
+						String callBackId = jsonObj.optString(kJSCallback, null);
+						presentModale(controller, page, callBackId);
+						return true;
+					}
+					
+					// DISMISS
+					else if (action.equals(JSActionNavigationDismiss)) {
+						// TODO: not present in iOS
+						JSONObject data = jsonObj.getJSONObject(kJSData);
+						String controller = data.getString(kJSNavigationController);
+						String page = data.getString(kJSPage);
+						dismissModale(controller, page);
+						return true;
+					}
+					
+					// UNHANDLED NAVIGATION
+					else {
+						onUnhandledMessage(jsonObj);
+					}
+				}
+				
+				// UI
+		    	else if (type.equals(JSTypeUI)) {
+			    	String control = jsonObj.getString(kJSUIControl);
+					JSONObject data = jsonObj.getJSONObject(kJSData);
+					String callback = jsonObj.optString(kJSCallback, null);
+
+					return handleUi(control, data, callback);
+		    	}
+				
+				// WEB LAYER
+				else if (type.equals(JSTypeWebLayer)) {
+					String action = jsonObj.getString(kJSAction);
+					
+					// SHOW
+					if (action.equals(JSActionWebLayerShow)) {
+						final JSONObject data = jsonObj.getJSONObject(kJSData);
+						
+						mHandler.post(new Runnable() {
+							@Override
+							public void run() {
+								showWebAlertWithJSON(data);
+							}
+						});
+						
+						return true;
+					}
+					
+					// UNHANDLED ACTION
+					else {
+						onUnhandledMessage(jsonObj);
+					}
+				}
+				
+				// UNHANDLED TYPE
+				else {
+					onUnhandledMessage(jsonObj);
+				}
+			}
+			
+			// UNHANDLED MESSAGE
+			else {
+				onUnhandledMessage(jsonObj);
+			}
+		} 
+		catch (JSONException exception) {
+			exception.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	protected void onReady() {
+		if (mDebug) Log.i(getClass().getSimpleName(), "onReady");
+
+		mCobaltIsReady = true;
+		executeWaitingCalls();
+	}
+	
+	private boolean handleCallback(String callback, JSONObject data) {
+		try {
+			if(callback.equals(JSCallbackOnBackButtonPressed)) {
+				onBackPressed(data.getBoolean(kJSValue));
+				return true;
+			}
+			else {
+				return onUnhandledCallback(callback, data);
+			}
+		} 
+		catch (JSONException exception) {
+			exception.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	protected abstract boolean onUnhandledCallback(String callback, JSONObject data);
+	
+	private boolean handleEvent(String event, JSONObject data, String callback) {
+		return onUnhandledEvent(event, data, callback);
+	}
+	
+	protected abstract boolean onUnhandledEvent(String event, JSONObject data, String callback);
 	
 	protected abstract void onUnhandledMessage(JSONObject message);
-	protected abstract boolean onUnhandledEvent(String name, JSONObject data, String callback);
-	protected abstract boolean onUnhandledUi(String control, JSONObject data, String callback);
-	protected abstract boolean onUnhandledCallback(String name, JSONObject data);
 
 	/*******************************************************************************************************
 	 * LOCAL STORAGE
@@ -604,7 +776,6 @@ public abstract class HTMLFragment extends Fragment {
 		}
 	}
 	
-	// TODO: FROM HERE
 	/********************************************************************************************************************
 	 * CONFIGURATION FILE
 	 *******************************************************************************************************************/
@@ -721,6 +892,92 @@ public abstract class HTMLFragment extends Fragment {
 		return new String();
 	}
 	
+	/********************************************************************************************************************
+	 * NAVIGATION
+	 *******************************************************************************************************************/
+	private void push(String controller, String page) {
+		Intent intent = getIntentForController(controller, page);
+		if(intent != null) {
+			getActivity().startActivity(intent);
+		}
+		else if (mDebug) Log.w(getClass().getSimpleName(), "push: Unable to push " + controller + " controller");
+	}
+	
+	private void pop() {
+		onBackPressed(true);
+	}
+	
+	private void presentModale(String controller, String page, String callBackID) {
+		Intent intent = getIntentForController(controller, page);
+		
+		if (intent != null) {
+			getActivity().startActivity(intent);
+			// Sends callback to store current activity & HTML page for dismiss
+			try {
+				JSONObject data = new JSONObject();
+				data.put(kJSPage, mPage);
+				data.put(kJSNavigationController, getActivity() != null ? getActivity().getClass().getName() : null);		
+				sendCallback(callBackID, data);
+			} 
+			catch (JSONException exception) {
+				exception.printStackTrace();
+			}
+		}
+		else if (mDebug) Log.e(getClass().getSimpleName(), "presentModale: Unable to present modale " + controller + " controller");
+	}
+
+	private void dismissModale(String controller, String page) {
+		try {
+			Class<?> pClass = Class.forName(controller);
+
+			// Instantiates intent only if class inherits from Activity
+			if (Activity.class.isAssignableFrom(pClass)) {
+				Bundle bundle = new Bundle();
+				bundle.putString(kResourcePath, mRessourcePath);
+				bundle.putString(kPage, page);
+
+				Intent intent = new Intent(mContext, pClass);
+				intent.putExtra(kExtras, bundle);
+
+				NavUtils.navigateUpTo(getActivity(), intent);
+			}
+			else if(mDebug) Log.e(getClass().getSimpleName(), "dismissModale: unable to dismiss modale since " + controller + " does not inherit from Activity");
+		} 
+		catch (ClassNotFoundException exception) {
+			if (mDebug) Log.e(getClass().getSimpleName(), "dismissModale: " + controller + "not found");
+			exception.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Called when the Web view allowed or not the onBackPressed event.
+	 * @param allowedToBack: 	if true, the onBackPressed method of activity will be called, 
+	 * 							onBackDenied() will be called otherwise
+	 * @details This method should not be overridden in subclasses
+	 */
+	protected void onBackPressed(boolean allowedToBack) {
+		if (allowedToBack) {
+			HTMLActivity activity = (HTMLActivity) getActivity();
+			if (activity != null) {
+				activity.back();
+			}
+			else if(mDebug) Log.e(getClass().getSimpleName(), "onBackButtonPressed: activity is null, cannot call back");
+		}
+		else {
+			onBackDenied();
+		}
+	}
+	
+	/**
+	 * Called when onBackPressed event is denied by the Web view.
+	 * @details This method may be overridden in subclasses.
+	 */
+	protected void onBackDenied() {
+		if(mDebug) Log.i(getClass().getSimpleName(), "onBackDenied: onBackPressed event denied by Web view");
+	}
+	
+	// TODO: FROM HERE
+	
 	/**
 	 * This method returns a new instance of the fragment that will be displayed as the {@link HTMLPopUpWebview} in the fragment container where the current fragment is shown.
 	 * This method may be overridden in subclasses if the {@link HTMLPopUpWebview} must implement customized dialogs with native side such as in "public boolean handleMessageSentByJavaScript(String messageJS)".
@@ -739,179 +996,6 @@ public abstract class HTMLFragment extends Fragment {
 	 */
 	public void alertDialogClickedButton(long tag, int buttonIndex) {
 		
-	}
-
-	/**
-	 * This method is called when the JavaScript sends a message to the native side.
-	 * This method should be overridden in subclasses.
-	 * @param messageJS : the JSON-message sent by JavaScript.
-	 * @return true if the message was handled by the native, false otherwise
-	 * @details some basic operations are already implemented : navigation, logs, toasts, native alerts, web alerts
-	 * @details this method may be called from a secondary thread.
-	 */
-	//this method must be public !!!
-	@JavascriptInterface
-	public boolean handleMessageSentByJavaScript(String messageJS)
-	{
-		final JSONObject jsonObj;
-		//Log.e(getClass().getSimpleName(), messageJS);
-
-		try 
-		{
-			jsonObj = new JSONObject(messageJS);
-			if(jsonObj != null)
-			{
-				if(jsonObj.has(kJSType))
-				{
-					String type = jsonObj.optString(kJSType);
-					//EVENT
-					if(type.equals(JSTypeEvent))
-					{
-						String name = jsonObj.getString(kJSEvent);
-						JSONObject data =jsonObj.getJSONObject(kJSData);
-						String callback = jsonObj.optString(kJSCallback);
-						
-						return handleEvent(name, data, callback);			
-					}
-					
-					//LOG
-					else if(type.equals(JSTypeLog))
-					{
-						String message = jsonObj.optString(kJSValue);
-						if (mDebug) Log.d("JS Log", message);
-						return true;
-					}
-					
-					//NAVIGATE
-					else if(type.equals(JSTypeNavigation))
-					{
-						if(jsonObj.has(kJSAction))
-						{
-							String navType = jsonObj.optString(kJSAction);
-							//PUSH
-							if(navType != null && navType.length() >0 && navType.equals(JSActionNavigationPush))
-							{
-								String params = jsonObj.getString(kJSData);
-								JSONObject jsonParams = new JSONObject(params);
-								
-								String pageNamed = jsonParams.getString(kJSPage);	
-								String activityId = jsonParams.optString(kJSNavigationController);
-
-								pushWebView(activityId,pageNamed);
-								return true;
-							}
-							//POP
-							else if(navType != null && navType.length() >0 && navType.equals(JSActionNavigationPop))
-							{
-								popWebViewActivity();
-								return true;
-							}
-							//MODALE
-							else if(navType != null && navType.length() >0 && navType.equals(JSActionNavigationModale))
-							{
-								String params = jsonObj.optString(kJSData);
-								JSONObject jsonParams = new JSONObject(params);
-								
-								String pageNamed = jsonParams.getString(kJSPage);	
-								String activityId = jsonParams.optString(kJSNavigationController);
-								String callBackId = jsonParams.optString(kJSCallback);
-								
-								presentWebView(activityId, pageNamed, callBackId);
-								return true;
-							}
-							//DISMISS
-							else if(navType != null && navType.length() >0 && navType.equals(JSActionNavigationDismiss))
-							{
-								String params = jsonObj.optString(kJSData);
-								JSONObject jsonParams = new JSONObject(params);
-
-								String className = jsonParams.optString(kJSNavigationController);
-								String pageNamed = jsonParams.optString(kJSPage);
-								
-								dismissWebViewWithActivity(className, pageNamed);
-								return true;
-							}
-							else 
-							{
-								onUnhandledMessage(jsonObj);
-							}
-						}
-					}
-					
-					//WEB LAYER
-					else if(type.equals(JSTypeWebLayer))
-					{
-						String name = jsonObj.getString(kJSAction);
-						if(name != null && name.length() > 0)
-						{
-							if (name.equals(JSActionWebLayerShow))
-							{
-								String params = jsonObj.getString(kJSData);
-								final JSONObject jsonParams = new JSONObject(params);
-								
-								mHandler.post(new Runnable() {
-
-									@Override
-									public void run() {
-										showWebAlertWithJSON(jsonParams);
-									}
-								});
-								return true;
-							}
-						}
-						else {
-							onUnhandledMessage(jsonObj);
-						}
-					}
-
-					//CALLBACK
-					else if(type.equals(JSTypeCallBack))
-					{
-						String callbackID = jsonObj.getString(kJSCallback);
-						JSONObject data =jsonObj.getJSONObject(kJSData);
-						
-						return handleCallback(callbackID, data);		
-					}
-					
-					// UI
-			    	else if (type.equals(JSTypeUI)) 
-			    	{
-				    	final String control = jsonObj.getString(kJSUIControl);
-						JSONObject data =jsonObj.getJSONObject(kJSData);
-						String callback = jsonObj.optString(kJSCallback);
-
-						return handleUi(control, data, callback);
-			    	}
-					
-					else if(type.equals(JSTypeCobaltIsReady))
-					{
-						onReady();
-						return true;
-					}
-					
-					else 
-					{
-						handleUnknowType(jsonObj);
-					}
-				}
-
-			}
-		} catch (JSONException e1) {
-			if(mDebug) Log.e(getClass().getSimpleName(),"ERROR : CANNOT HANDLE MESSAGE WITH JSON EXCEPTION FOR JSON : #"+messageJS+"#");
-			e1.printStackTrace();
-		}
-		return false;
-	}
-
-	protected void onReady() {
-		if(mDebug) Log.i(getClass().getSimpleName(), "cobalt is ready. waiting calls : "+mWaitingJavaScriptCallsQueue.size());
-
-		mCobaltIsReady = true;
-		executeWaitingCalls();
-	}
-	
-	private boolean handleEvent(String name, JSONObject data, String callback) {
-		return onUnhandledEvent(name, data, callback);
 	}
 	
 	private boolean handleUi(String control, JSONObject data, String callback) {
@@ -960,33 +1044,17 @@ public abstract class HTMLFragment extends Fragment {
 				return true;
 			}
 			else {
-				return onUnhandledUi(control, data, callback);
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put(kJSType, JSTypeUI);
+				jsonObj.put(kJSUIControl, control);
+				jsonObj.put(kJSData, data);
+				jsonObj.put(kJSCallback, callback);
+				onUnhandledMessage(jsonObj);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}	
 		return false;
-	}
-	
-	private boolean handleCallback(String name, JSONObject data) {
-		try {
-			if(name.equals(JSCallbackOnBackButtonPressed)){
-				boolean allowToGoBack;
-				allowToGoBack = data.getBoolean(kJSData);
-
-				handleBackButtonPressed(allowToGoBack);
-				return true;
-			}
-			else {
-				return onUnhandledCallback(name, data);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-	protected void handleUnknowType(JSONObject jsonObj) {
-		Log.e(getClass().getSimpleName(),"ERROR : CANNOT HANDLE MESSAGE WITH THIS TYPE IN JSON : #"+jsonObj+"#");
 	}
 
 	/**
@@ -1005,107 +1073,16 @@ public abstract class HTMLFragment extends Fragment {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
+				JSONObject jsonObj = new JSONObject();
 				try {
-					data.put(kJSValue, page);
+					jsonObj.put(kJSPage, page);
+					jsonObj.put(kJSData, data);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				sendEvent(JSEventWebLayerOnDismiss, data, null);
+				sendEvent(JSEventWebLayerOnDismiss, jsonObj, null);
 			}
 		});
-	}
-
-
-	/**
-	 * This method is called when the webView has decided to allow or not the backButton's actions.
-	 * @details This method should not be overridden in subclasses
-	 * @param allowedToGoBack : if true, the default backButton action will be performed, otherwise, executeActionWhenBackButtonWasInhibited() will be called
-	 */
-	protected void handleBackButtonPressed(boolean allowedToGoBack)
-	{
-		if(allowedToGoBack)
-		{
-			HTMLActivity a = (HTMLActivity)getActivity();
-			if(a != null)
-			{
-				a.goBack();
-			}
-			else if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : Activity is null !! CANNOT CALL onBackPressed();");
-
-		}
-		else 
-		{
-			executeActionWhenBackButtonWasInhibited();
-		}
-	}
-
-
-	/**
-	 * This method is called when the backButton action was inhibited by the webView.
-	 * @details This method may be overridden in subclasses if a custom action is to be performed.
-	 */
-	protected void executeActionWhenBackButtonWasInhibited()
-	{
-		if(mDebug) Log.i(getClass().getSimpleName(), "action onBackPressed inhibited by webView");
-	}
-
-	private void pushWebView(String activityId, String pageNamed) {
-		Intent i = getIntentForController(activityId, pageNamed);
-		if(i != null)
-		{
-			getActivity().startActivity(i);
-		}
-		else Log.e(getClass().getSimpleName(), "ERROR BAD INTENT TO PUSH NOTHING HAPPENS");
-	}
-
-	private void popWebViewActivity() {
-		handleBackButtonPressed(true);
-	}
-
-
-	private void presentWebView(String activityId,String pageNamed,String callBackID)
-	{
-		Intent i = getIntentForController(activityId, pageNamed);
-		if(i != null)
-		{
-			getActivity().startActivity(i);
-			//send callback to store this.className and HTMLPage to dismiss later !
-			JSONObject objectToSend = new JSONObject();
-			try {
-				objectToSend.put(kJSPage, mPage);
-				objectToSend.put(kJSNavigationController, getActivity() != null ? getActivity().getClass().getName() : "ERROR : activity's className couldn't be found.");		
-				sendCallback(callBackID, objectToSend);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}	
-	}
-
-	private void dismissWebViewWithActivity(String className,String pageNamed)
-	{
-		try {
-			Class<?> myClass = Class.forName(className);
-
-			//if the class inherits from an activity, we navigate to it
-			if(Activity.class.isAssignableFrom(myClass))
-			{
-				Bundle bundleToAdd = new Bundle();
-				bundleToAdd.putString(kPage, pageNamed);
-				bundleToAdd.putString(kResourcePath, mRessourcePath);
-
-				Intent i = new Intent(mContext,myClass);
-				i.putExtra(kExtras, bundleToAdd);
-
-				NavUtils.navigateUpTo(getActivity(), i);
-			}
-			else
-			{
-				if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : impossible to dismiss the current activity since "+className+" does not inherit from Activity");
-			}
-		} catch (ClassNotFoundException e) {
-			if(mDebug) Log.e(getClass().getSimpleName(), "catched classNotFound "+e.getLocalizedMessage());
-			e.printStackTrace();
-		}
 	}
 
 	private void showAlertDialogWithJSON(JSONObject jsonParams, final String callbackId)
