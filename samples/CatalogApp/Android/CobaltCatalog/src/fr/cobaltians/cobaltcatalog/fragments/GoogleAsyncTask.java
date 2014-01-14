@@ -60,7 +60,9 @@ class GoogleAsyncTask extends AsyncTask<String, String, String>{
         super.onPostExecute(result);
         if(this.callBackID != null && this.value != null && result != null)
         {
-        	f.sendCallbackResponse(this.callBackID, this.value+" "+result);
+        	// TODO: update sendCallbackResponse call
+        	Log.e(getClass().getSimpleName(), "onPostExecute: update sendCallbackResponse call with result & value(" + result + ", " + value + ")");
+        	//f.sendCallbackResponse(this.callBackID, this.value+" "+result);
         }
         else Log.e(getClass().getName(), "ERROR IN ON POST EXECUTE");
     }
