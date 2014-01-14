@@ -204,10 +204,6 @@ public class MainFragment extends HTMLFragment {
 		return false;
 	}
 	@Override
-	protected boolean onUnhandledUi(String control, JSONObject data, String callback) {
-		return false;
-	}
-	@Override
 	protected boolean onUnhandledCallback(String name, JSONObject data) {
 		return false;
 	}

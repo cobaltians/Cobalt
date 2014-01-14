@@ -101,16 +101,16 @@ public abstract class HTMLActivity extends FragmentActivity {
 	 * Called from the contained {@link HTMLFragment} when the Web view has authorized the back event. 
 	 * This method should NOT be overridden in subclasses.
 	 */
-	public void goBack() {
+	public void back() {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				goBackWithSuper();
+				backWithSuper();
 			}
 		});
 	}
 
-	private void goBackWithSuper() {
+	private void backWithSuper() {
 		super.onBackPressed();
 	}
 
