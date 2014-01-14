@@ -1129,96 +1129,65 @@ public abstract class HTMLFragment extends Fragment {
 		});
 	}
 	
-	// TODO: FROM HERE
 	/******************************************************************************************************************
 	 * ALERT DIALOG
 	 *****************************************************************************************************************/
 	private void showAlertDialog(JSONObject data, final String callback) {		
-		if (data != null) {
-			try {
-				String title = data.optString(kJSAlertTitle);
-				String message = data.optString(kJSAlertMessage);
-				boolean isCancellable = data.optBoolean(kJSAlertCancelable, false);
-				// TODO: delete this ID
-				final int alertId = data.getInt(kJSAlertID);
+		try {
+			String title = data.optString(kJSAlertTitle);
+			String message = data.optString(kJSAlertMessage);
+			boolean cancelable = data.optBoolean(kJSAlertCancelable, false);
+			JSONArray buttons = data.has(kJSAlertButtons) ? data.getJSONArray(kJSAlertButtons) : new JSONArray();
 
-				JSONArray buttons = data.has(kJSAlertButtons) ? data.getJSONArray(kJSAlertButtons) : new JSONArray();
+			AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+			alert.setTitle(title);
+			alert.setMessage(message);
 
-				AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-				
-				alert.setTitle(title);
-				alert.setMessage(message);
-
-				AlertDialog mAlert = alert.create();
-
-				// Callback
-				if (callback.length() != 0) {
-					if (buttons.length() == 0) {
-						mAlert.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {	
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								if (callback.length() > 0) {
-									JSONObject jsonObj = new JSONObject();
-									try {
-										jsonObj.put(kJSAlertID, alertId);
-										jsonObj.put(kJSAlertButtonIndex, 0);
-										sendCallback(callback, jsonObj);
-									} 
-									catch (JSONException exception) {
-										exception.printStackTrace();
-									}								
+			AlertDialog mAlert = alert.create();
+			mAlert.setCancelable(cancelable);
+			
+			if (buttons.length() == 0) {
+				mAlert.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {	
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						if (callback != null) {
+							try {
+								JSONObject data = new JSONObject();
+								data.put(kJSAlertButtonIndex, 0);
+								sendCallback(callback, data);
+							} 
+							catch (JSONException exception) {
+								exception.printStackTrace();
+							}								
+						}
+					}
+				});
+			}
+			else {
+				int realSize = Math.min(buttons.length(), 3);
+				for (int i = 1 ; i <= realSize ; i++) {
+					mAlert.setButton(-i, buttons.getString(i-1), new DialogInterface.OnClickListener() {	
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							if (callback != null) {
+								try {
+									JSONObject data = new JSONObject();
+									data.put(kJSAlertButtonIndex, -which-1);
+									sendCallback(callback, data);
+								} 
+								catch (JSONException exception) {
+									exception.printStackTrace();
 								}
 							}
-						});
-					}
-					else {
-						int realSize = Math.min(buttons.length(), 3);
-						for (int i = 1 ; i <= realSize ; i++) {
-							mAlert.setButton(-i, buttons.getString(i-1), new DialogInterface.OnClickListener() {	
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									if (callback.length() > 0) {
-										JSONObject jsonObj = new JSONObject();
-										try {
-											jsonObj.put(kJSAlertID, alertId);
-											jsonObj.put(kJSAlertButtonIndex, -1-which);
-											sendCallback(callback, jsonObj);
-										} 
-										catch (JSONException exception) {
-											exception.printStackTrace();
-										}
-									}
-								}
-							});
 						}
-					}
+					});
 				}
-				
-				// No callback
-				else {
-					if (buttons.length() == 0) {
-						mAlert.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {	
-							@Override
-							public void onClick(DialogInterface dialog, int which) { }
-						});
-					}
-					else {
-						int realSize = Math.min(buttons.length(), 3);
-						for (int i = 1 ; i <= realSize ; i++) {
-							mAlert.setButton(-i, buttons.getString(i-1), new DialogInterface.OnClickListener() {	
-								@Override
-								public void onClick(DialogInterface dialog, int which) { }
-							});
-						}
-					}
-				}
-				mAlert.setCancelable(isCancellable);
-				mAlert.show();
-
-			} 
-			catch (JSONException exception) {
-				exception.printStackTrace();
 			}
+			
+			mAlert.show();
+		} 
+		catch (JSONException exception) {
+			exception.printStackTrace();
 		}
 	}
 	
