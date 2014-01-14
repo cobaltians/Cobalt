@@ -77,8 +77,10 @@
                 $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
 
 				$('#monBouton3').on('tap click',function(){
-					cobalt.ios_adapter.pipeline=[];
-					cobalt.ios_adapter.pipelineRunning=false;
+					if (cobalt.ios_adapter){
+						cobalt.ios_adapter.pipeline=[];
+						cobalt.ios_adapter.pipelineRunning=false;
+					}
                     $('#cobalt_logdiv').html('');
 					return false;
 				});
