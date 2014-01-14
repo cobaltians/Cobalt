@@ -18,9 +18,9 @@ cobalt.tizen_adapter={
 			case "push":
 				if (navigationPageName){
 					if ( cobalt.checkDependency('storage') ){
-						var pushNumber= utils.storage.getItem('cobalt_pushNumber','int') || 0;
+						var pushNumber= cobalt.storage.getItem('cobalt_pushNumber','int') || 0;
 						pushNumber++;
-						utils.storage.setItem('cobalt_pushNumber',pushNumber)
+						cobalt.storage.setItem('cobalt_pushNumber',pushNumber)
 						cobalt.send({ type:"navigation", action:"push", data : { page  : navigationPageName, controller: navigationClassId, pushNumber :pushNumber} });
 					}
 				}

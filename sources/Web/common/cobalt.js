@@ -26,10 +26,9 @@ var cobalt={
 			if (options.events){
 		        this.userEvents=options.events
 	        }
-		    if (options.storage===true){
-			    cobalt.initStorage();
-		    }
 		}
+		cobalt.storage.enable();
+
 		if (cobalt.adapter.init){
 			cobalt.adapter.init();
 		}
@@ -285,12 +284,7 @@ var cobalt={
 	checkDependency:function(dependency){
 		switch(dependency){
 			case "storage":
-				if ( ! window.utils || ! window.utils.storage){
-					cobalt.log('WARNING : window.utils.storage is not set. it is required for some navigate calls')
-					return false;
-
-				}
-				return cobalt.initStorage();
+				return cobalt.storage.enable()
 			break;
 		}
 	},
@@ -310,12 +304,83 @@ var cobalt={
 			cobalt.send({ "type":"typeNavigation", "action":"dismiss"});
 		},
 		initStorage:function(){
-			if (window.utils && utils.storage){
-				return utils.storage.enable();
+			return cobalt.storage.enable()
+		}
+	},
+
+
+	storage : {
+		/*	localStorage helper
+
+			cobalt.storage.setItem('town','Lannion');
+			cobalt.storage.getItem('town');
+				//returns 'Lannion'
+
+			cobalt.storage.setItem('age',12);
+			cobalt.storage.getItem('age');
+				//returns '12' (string)
+			cobalt.storage.getItem('age','int'); //there is also float, date, json
+				//returns 12 (number)
+
+			//experimental :
+			cobalt.storage.setItem('user',{name:'toto',age:6},'json');
+			cobalt.storage.getItem('user','json');
+				//returns {name:'toto',age:6} (object)
+
+		 */
+		storage:false,
+		enable:function(){
+			var storage,
+					fail,
+					uid;
+			try {
+				uid = new Date;
+				(storage = window.localStorage).setItem(uid, uid);
+				fail = storage.getItem(uid) != uid;
+				storage.removeItem(uid);
+				fail && (storage = false);
+			} catch(e) {}
+
+			if (!storage){
+				return false;
 			}else{
-				cobalt.log('WARNING : you should include utils.storage to use storage')
+				this.storage=storage;
+				return true;
 			}
-			return false;
+		},
+		clear:function(){
+			if (this.storage){
+				this.storage.clear();
+			}
+		},
+		getItem:function(uid, type){
+			if (this.storage){
+				var val=this.storage.getItem(uid);
+				switch(type){
+					case undefined :return val;
+					case "int":     return parseInt(val);
+					case "float":   return parseFloat(val);
+					case "date":    return new Date(val);
+					case "json":    return JSON.parse(val)
+				}
+				return val;
+			}
+		},
+		setItem:function(uid, value, type){
+			if (this.storage){
+				switch ( type ){
+					case undefined :return this.storage.setItem(uid,""+value);
+					case 'json' :   return this.storage.setItem(uid, JSON.stringify(value));
+				}
+			}
+		},
+		removeItem:function(uid){
+			if (this.storage){
+				return this.storage.removeItem(uid)
+			}
 		}
 	}
+
+
+
 };

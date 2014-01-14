@@ -39,10 +39,10 @@ cobalt.android_adapter={
 	},
 	dismissFromModale:function(){
 		if ( cobalt.checkDependency('storage') ){
-			var dismissInformations= utils.storage.getItem("dismissInformations","json");
+			var dismissInformations= cobalt.storage.getItem("dismissInformations","json");
 			if (dismissInformations && dismissInformations.page && dismissInformations.controller){
 				cobalt.send({ "type":"navigation", "action":"dismiss", data : { page : dismissInformations.page, controller:dismissInformations.controller }});
-				utils.storage.removeItem("dismissInformations");
+				cobalt.storage.removeItem("dismissInformations");
 			}else{
 				cobalt.log("dismissInformations are not available in storage")
 			}
@@ -54,7 +54,7 @@ cobalt.android_adapter={
 		//cobalt.log("storing informations for the dismiss :", false)
 		if ( cobalt.checkDependency('storage') ){
 			cobalt.log(params, false)
-			utils.storage.setItem("dismissInformations",params, "json")
+			cobalt.storage.setItem("dismissInformations",params, "json")
 
 		}
 	},
@@ -66,7 +66,7 @@ cobalt.android_adapter={
 		}catch(e){
 			cobalt.log("LocalStorage ERROR : can't find android class LocalStorage. switching to raw localStorage")
 		}
-		return utils.storage.enable();
+		return cobalt.storage.enable();
 	},
 	//default behaviours
     handleCallback : cobalt.defaultBehaviors.handleCallback
