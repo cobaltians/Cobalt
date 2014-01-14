@@ -26,10 +26,9 @@ var cobalt={
 			if (options.events){
 		        this.userEvents=options.events
 	        }
-		    if (options.storage===true){
-			    cobalt.initStorage();
-		    }
 		}
+		cobalt.storage.enable();
+
 		if (cobalt.adapter.init){
 			cobalt.adapter.init();
 		}
@@ -81,7 +80,7 @@ var cobalt={
 	send:function(obj, callback){
 		if (callback){
 			if (typeof callback==="function"){
-				obj.callback = cobalt.lastCallbackId++;
+				obj.callback = ""+(cobalt.lastCallbackId++);
 				cobalt.callbacks[obj.callback]=callback;
 			}else if (typeof callback==="string"){
 				obj.callback = ""+callback;
@@ -142,7 +141,7 @@ var cobalt={
 
 		//full web
 		cobalt.alert("Texte");
-		cobalt.alert("Title", "Texte", ["Ok"], { callback:function(index){console.log('popup dismissed') }});
+		cobalt.alert("Title", "Texte", ["Ok"], { callback:function(data){cobalt.log('popup dismissed '+data.index) }});
 		cobalt.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", cancelable : true });
 
 	 */
@@ -181,6 +180,7 @@ var cobalt={
 		//see doc for guidelines.
 		//cobalt.webLayer("show","tests_12_webAlertContent.html",1.2);
 		//cobalt.webLayer("dismiss");
+		//in next example, foobar object will be sent in onWebLayerDismissed :
 		//cobalt.webLayer("dismiss",{ foo : "bar"});
 	 */
 	webLayer:function(action, data, fadeDuration){
@@ -240,7 +240,7 @@ var cobalt={
 	        try{
 		        callbackfunction(callback.data)
 	        }catch(e){
-		        cobalt.log('Failed calling callback #'+callback.callback+'. : ' + e )
+		        cobalt.log('Failed calling callback : ' + e)
 	        }
         }
 	},
@@ -284,12 +284,7 @@ var cobalt={
 	checkDependency:function(dependency){
 		switch(dependency){
 			case "storage":
-				if ( ! window.utils || ! window.utils.storage){
-					cobalt.log('WARNING : window.utils.storage is not set. it is required for some navigate calls')
-					return false;
-
-				}
-				return cobalt.initStorage();
+				return cobalt.storage.enable()
 			break;
 		}
 	},
@@ -309,15 +304,87 @@ var cobalt={
 			cobalt.send({ "type":"typeNavigation", "action":"dismiss"});
 		},
 		initStorage:function(){
-			if (window.utils && utils.storage){
-				return utils.storage.enable();
+			return cobalt.storage.enable()
+		}
+	},
+
+
+	storage : {
+		/*	localStorage helper
+
+			cobalt.storage.setItem('town','Lannion');
+			cobalt.storage.getItem('town');
+				//returns 'Lannion'
+
+			cobalt.storage.setItem('age',12);
+			cobalt.storage.getItem('age');
+				//returns '12' (string)
+			cobalt.storage.getItem('age','int'); //there is also float, date, json
+				//returns 12 (number)
+
+			//experimental :
+			cobalt.storage.setItem('user',{name:'toto',age:6},'json');
+			cobalt.storage.getItem('user','json');
+				//returns {name:'toto',age:6} (object)
+
+		 */
+		storage:false,
+		enable:function(){
+			var storage,
+					fail,
+					uid;
+			try {
+				uid = new Date;
+				(storage = window.localStorage).setItem(uid, uid);
+				fail = storage.getItem(uid) != uid;
+				storage.removeItem(uid);
+				fail && (storage = false);
+			} catch(e) {}
+
+			if (!storage){
+				return false;
 			}else{
-				cobalt.log('WARNING : you should include utils.storage to use storage')
+				this.storage=storage;
+				return true;
 			}
-			return false;
+		},
+		clear:function(){
+			if (this.storage){
+				this.storage.clear();
+			}
+		},
+		getItem:function(uid, type){
+			if (this.storage){
+				var val=this.storage.getItem(uid);
+				switch(type){
+					case undefined :return val;
+					case "int":     return parseInt(val);
+					case "float":   return parseFloat(val);
+					case "date":    return new Date(val);
+					case "json":    return JSON.parse(val)
+				}
+				return val;
+			}
+		},
+		setItem:function(uid, value, type){
+			if (this.storage){
+				switch ( type ){
+					case undefined :return this.storage.setItem(uid,""+value);
+					case 'json' :   return this.storage.setItem(uid, JSON.stringify(value));
+				}
+			}
+		},
+		removeItem:function(uid){
+			if (this.storage){
+				return this.storage.removeItem(uid)
+			}
 		}
 	}
-};cobalt.android_adapter={
+
+
+
+};
+cobalt.android_adapter={
 	//
 	//ANDROID ADAPTER
 	//
@@ -333,7 +400,7 @@ var cobalt={
 	        switch (event.name){
 		        case "onBackButtonPressed":
 				    cobalt.log('sending OK for a native back')
-			        cobalt.sendCallback(event,true);
+			        cobalt.sendCallback(event,{value : true});
 			    break;
 	        }
         }
@@ -358,10 +425,10 @@ var cobalt={
 	},
 	dismissFromModale:function(){
 		if ( cobalt.checkDependency('storage') ){
-			var dismissInformations= utils.storage.getItem("dismissInformations","json");
+			var dismissInformations= cobalt.storage.getItem("dismissInformations","json");
 			if (dismissInformations && dismissInformations.page && dismissInformations.controller){
 				cobalt.send({ "type":"navigation", "action":"dismiss", data : { page : dismissInformations.page, controller:dismissInformations.controller }});
-				utils.storage.removeItem("dismissInformations");
+				cobalt.storage.removeItem("dismissInformations");
 			}else{
 				cobalt.log("dismissInformations are not available in storage")
 			}
@@ -373,7 +440,7 @@ var cobalt={
 		//cobalt.log("storing informations for the dismiss :", false)
 		if ( cobalt.checkDependency('storage') ){
 			cobalt.log(params, false)
-			utils.storage.setItem("dismissInformations",params, "json")
+			cobalt.storage.setItem("dismissInformations",params, "json")
 
 		}
 	},
@@ -385,7 +452,7 @@ var cobalt={
 		}catch(e){
 			cobalt.log("LocalStorage ERROR : can't find android class LocalStorage. switching to raw localStorage")
 		}
-		return utils.storage.enable();
+		return cobalt.storage.enable();
 	},
 	//default behaviours
     handleCallback : cobalt.defaultBehaviors.handleCallback
