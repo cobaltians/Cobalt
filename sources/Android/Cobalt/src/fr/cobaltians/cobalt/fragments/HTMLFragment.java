@@ -505,9 +505,9 @@ public abstract class HTMLFragment extends Fragment {
 	protected abstract boolean onUnhandledUi(String control, JSONObject data, String callback);
 	protected abstract boolean onUnhandledCallback(String name, JSONObject data);
 
-	/*******************************************************************************************************************************
+	/*******************************************************************************************************
 	 * LOCAL STORAGE
-	 ******************************************************************************************************************************/
+	 ******************************************************************************************************/
 	/**
 	 * Local storage substitution for Web views
 	 * @author Diane
@@ -604,6 +604,105 @@ public abstract class HTMLFragment extends Fragment {
 	}
 	
 	// TODO: FROM HERE
+	/********************************************************************************************************************
+	 * CONFIGURATION FILE
+	 *******************************************************************************************************************/
+	private Intent getIntentForController(String controller, String page) {
+		Intent intent = null;
+		
+		JSONObject configuration = getConfiguration();
+		String activity = null;
+		boolean enablePullToRefresh = false;
+		boolean enableInfiniteScroll = false;
+		// TODO: add enableGesture
+		
+		// Gets configuration
+		try {
+			if (controller != null
+				&& configuration.has(controller)) {
+				activity = configuration.getJSONObject(controller).getString(kAndroidController);
+				enablePullToRefresh = configuration.getJSONObject(controller).optBoolean(kPullToRefresh);
+				enableInfiniteScroll = configuration.getJSONObject(controller).optBoolean(kInfiniteScroll);
+			}
+			else {
+				activity = configuration.getJSONObject(JSNavigationControllerDefault).getString(kAndroidController);
+				enablePullToRefresh = configuration.getJSONObject(JSNavigationControllerDefault).getBoolean(kPullToRefresh);
+				enableInfiniteScroll = configuration.getJSONObject(JSNavigationControllerDefault).getBoolean(kInfiniteScroll);
+			}
+		}
+		catch (JSONException exception) {
+			Log.e(getClass().getSimpleName(), 	"getIntentForController: check cobalt.conf. Known issues: \n "
+												+ "- \t" + controller + " not found and no " + JSNavigationControllerDefault + "controller defined \n "
+												+ "- \t" + controller + " or " + JSNavigationControllerDefault + "controller found but no " + kAndroidController + "defined \n ");
+			exception.printStackTrace();
+			return intent; // null
+		}
+		
+		// Creates intent
+		Class<?> pClass;
+		try {
+			pClass = Class.forName(activity);
+			// Instantiates intent only if class inherits from Activity
+			if (Activity.class.isAssignableFrom(pClass)) {
+				Bundle bundle = new Bundle();
+				bundle.putString(kResourcePath, mRessourcePath);
+				bundle.putString(kPage, page);
+				bundle.putBoolean(kPullToRefresh, enablePullToRefresh);
+				bundle.putBoolean(kInfiniteScroll, enableInfiniteScroll);
+				
+				intent = new Intent(mContext, pClass);
+				intent.putExtra(kExtras, bundle);
+			}
+			else {
+				if (mDebug) Log.e(getClass().getSimpleName(), "getIntentForController: " + activity + " does not inherit from Activity!");
+			}
+		} 
+		catch (ClassNotFoundException exception) {
+			if (mDebug) Log.e(getClass().getSimpleName(), "getIntentForController: " + activity + " class not found for id " + controller + "!");
+			exception.printStackTrace();
+		}
+		
+		return intent;
+	}
+	
+	private JSONObject getConfiguration() {
+		String configuration = readFileFromAssets(mRessourcePath + CONF_FILE);
+
+		try {
+			JSONObject jsonObj = new JSONObject(configuration);
+			return jsonObj;
+		} 
+		catch (JSONException exception) {
+			if (mDebug) Log.e(getClass().getSimpleName(), "getConfiguration: check cobalt.conf. File is missing or not at " + ASSETS_PATH + mRessourcePath + CONF_FILE);
+			exception.printStackTrace();
+		}
+		
+		return new JSONObject();
+	}
+	
+	private String readFileFromAssets(String file) {
+		try {
+			AssetManager assetManager = mContext.getAssets();
+			InputStream inputStream = assetManager.open(file);
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+			StringBuilder fileContent = new StringBuilder();
+			int character;
+			
+			while ((character = bufferedReader.read()) != -1) {
+				fileContent.append((char) character) ;  
+			}
+			
+			return fileContent.toString();
+		} 
+		catch (FileNotFoundException exception) {
+			if (mDebug) Log.e(getClass().getSimpleName(), "getFileContentFromAssets: " + file + "not found.");
+		} 
+		catch (IOException exception) {
+			exception.printStackTrace();
+		}
+		
+		return new String();
+	}
 	
 	/**
 	 * This method returns a new instance of the fragment that will be displayed as the {@link HTMLPopUpWebview} in the fragment container where the current fragment is shown.
@@ -934,7 +1033,7 @@ public abstract class HTMLFragment extends Fragment {
 	}
 
 	private void pushWebView(String activityId, String pageNamed) {
-		Intent i = getIntentForClassId(activityId, pageNamed);
+		Intent i = getIntentForController(activityId, pageNamed);
 		if(i != null)
 		{
 			getActivity().startActivity(i);
@@ -949,7 +1048,7 @@ public abstract class HTMLFragment extends Fragment {
 
 	private void presentWebView(String activityId,String pageNamed,String callBackID)
 	{
-		Intent i = getIntentForClassId(activityId, pageNamed);
+		Intent i = getIntentForController(activityId, pageNamed);
 		if(i != null)
 		{
 			getActivity().startActivity(i);
@@ -991,103 +1090,6 @@ public abstract class HTMLFragment extends Fragment {
 			e.printStackTrace();
 		}
 	}
-
-	private JSONObject getConfFileContent()
-	{
-		String confToParse = getFileContentFromAssets(mRessourcePath+CONF_FILE);
-		JSONObject jsonObj;
-
-		if(confToParse != null && confToParse.length() > 0)
-		{
-			try {
-				jsonObj = new JSONObject(confToParse);
-				return jsonObj;
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-		else
-		{
-			if(mDebug) Log.e(getClass().getSimpleName(),"ERROR : check your cobalt.conf... File is missing or not at this.ressourcePath in assets ?");
-		}
-		return new JSONObject();
-	}
-
-	private Intent getIntentForClassId(String classId,String pageNamed)
-	{
-		JSONObject confs = getConfFileContent();
-		Intent i = null;
-
-		if(confs != null)
-		{
-			String className = "";
-			boolean pullToRefresh = false,infiniteScroll = false;
-			try {
-				//Find Infos from conf file
-				if(classId != null && confs.has(classId))
-				{
-					className = confs.getJSONObject(classId).optString(kAndroidController);
-					pullToRefresh = confs.getJSONObject(classId).optBoolean(kPullToRefresh);
-					infiniteScroll = confs.getJSONObject(classId).optBoolean(kInfiniteScroll);
-				}
-
-				if(className == null || className.length() == 0)
-				{
-					Log.w(getClass().getSimpleName(), "WARNING : className for ID "+classId != null ?classId :"(null)"+"not found. Looking for default class ID");
-					if(confs.has(JSNavigationControllerDefault)){
-						className = confs.getJSONObject(JSNavigationControllerDefault).optString(kAndroidController);
-						pullToRefresh = confs.getJSONObject(JSNavigationControllerDefault).optBoolean(kPullToRefresh);
-						infiniteScroll = confs.getJSONObject(JSNavigationControllerDefault).optBoolean(kInfiniteScroll);
-					}	
-					else Log.w(getClass().getSimpleName(), "WARNING : No default key is present in conf file...");
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-
-			//CREATE INTENT 
-			Bundle bundleToAdd = new Bundle();
-			bundleToAdd.putString(kPage, pageNamed);
-			bundleToAdd.putString(kResourcePath, mRessourcePath);
-			bundleToAdd.putBoolean(kPullToRefresh, pullToRefresh);
-			bundleToAdd.putBoolean(kInfiniteScroll, infiniteScroll);
-
-			if(className != null && className.length() > 0)
-			{
-				Class<?> myClass;
-				try {
-					myClass = Class.forName(className);
-					//if the class inherits from an activity, we load it
-					if(Activity.class.isAssignableFrom(myClass))
-					{
-						i=new Intent(mContext,myClass);	
-						i.putExtra(kExtras, bundleToAdd);
-					}
-					else
-					{
-						if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : impossible to show "+className+" for it does not inherit from Activity");
-						i=new Intent(mContext,HTMLActivity.class);	
-						i.putExtra(kExtras, bundleToAdd);
-					}
-
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-					if(mDebug) Log.e(getClass().getSimpleName(),"ERROR : classNotFound "+className+" for given ID : "+classId+" !");
-
-					i=new Intent(mContext,HTMLActivity.class);
-					i.putExtra(kExtras, bundleToAdd);
-				}
-			}
-			else
-			{
-				if(mDebug) Log.e(getClass().getSimpleName(),"ERROR : classNotFound for given ID : "+classId+" !");
-				i=new Intent(mContext,HTMLActivity.class);
-				i.putExtra(kExtras, bundleToAdd);
-			}
-		}
-		return i;
-	}
-
 
 	private void showAlertDialogWithJSON(JSONObject jsonParams, final String callbackId)
 	{		
@@ -1245,31 +1247,6 @@ public abstract class HTMLFragment extends Fragment {
 			else if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : Impossible to show a webAlert from a Fragment that has been detached !");
 
 		}
-	}
-
-	private String getFileContentFromAssets(String filename)
-	{
-		try {
-			AssetManager assetManager = mContext.getAssets();
-			InputStream ims = assetManager.open(filename);
-			BufferedReader bfr = new BufferedReader(new InputStreamReader(ims));
-
-			int c;
-			StringBuilder response= new StringBuilder();
-
-			while ((c = bfr.read()) != -1) {
-				response.append( (char)c ) ;  
-			}
-			String result = response.toString();
-			return result;
-
-		} catch (FileNotFoundException e1) {
-			if(mDebug) Log.e(getClass().getSimpleName(), "ERROR : file not found : "+filename);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return "";
 	}
 	
 	/*************************************************************************************
