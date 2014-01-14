@@ -76,24 +76,24 @@ public class HTMLWebLayerFragment extends HTMLFragment {
 	protected void onUnhandledMessage(JSONObject message) {
 		
 	}
+
+	@Override
+	protected boolean onUnhandledCallback(String name, JSONObject data) {
+		return false;		
+	}
+
+	@Override
+	protected boolean onUnhandledEvent(String name, JSONObject data,
+			String callback) {
+		return false;
+	}
+
+	@Override
+	protected boolean onUnhandledUi(String control, JSONObject data,
+			String callback) {
+		return false;
+	}
 	
-	@Override
-	protected void onUnhandledEvent(String name, JSONObject data,
-			String callback) {
-		
-	}
-
-	@Override
-	protected void onUnhandledUi(String control, JSONObject data,
-			String callback) {
-		
-	}
-
-	@Override
-	protected void onUnhandledCallback(String name, JSONObject data) {
-		
-	}
-
 	@Override
 	protected void handleBackButtonPressed(boolean allowedToGoBack) {
 		if(allowedToGoBack) {

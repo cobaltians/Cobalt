@@ -501,9 +501,9 @@ public abstract class HTMLFragment extends Fragment {
 	 ***************************************************************************************/
 	
 	protected abstract void onUnhandledMessage(JSONObject message);
-	protected abstract void onUnhandledEvent(String name, JSONObject data, String callback);
-	protected abstract void onUnhandledUi(String control, JSONObject data, String callback);
-	protected abstract void onUnhandledCallback(String name, JSONObject data);
+	protected abstract boolean onUnhandledEvent(String name, JSONObject data, String callback);
+	protected abstract boolean onUnhandledUi(String control, JSONObject data, String callback);
+	protected abstract boolean onUnhandledCallback(String name, JSONObject data);
 
 	/*******************************************************************************************************************************
 	 * LOCAL STORAGE
@@ -795,8 +795,7 @@ public abstract class HTMLFragment extends Fragment {
 	}
 	
 	private boolean handleEvent(String name, JSONObject data, String callback) {
-		onUnhandledEvent(name, data, callback);
-		return true;
+		return onUnhandledEvent(name, data, callback);
 	}
 	
 	private boolean handleUi(String control, JSONObject data, String callback) {
@@ -845,7 +844,7 @@ public abstract class HTMLFragment extends Fragment {
 				return true;
 			}
 			else {
-				onUnhandledUi(control, data, callback);
+				return onUnhandledUi(control, data, callback);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -863,7 +862,7 @@ public abstract class HTMLFragment extends Fragment {
 				return true;
 			}
 			else {
-				onUnhandledCallback(name, data);
+				return onUnhandledCallback(name, data);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
