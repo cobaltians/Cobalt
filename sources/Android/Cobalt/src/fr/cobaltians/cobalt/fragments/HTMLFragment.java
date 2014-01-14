@@ -676,6 +676,70 @@ public abstract class HTMLFragment extends Fragment {
 	
 	protected abstract boolean onUnhandledEvent(String event, JSONObject data, String callback);
 	
+	private boolean handleUi(String control, JSONObject data, String callback) {
+		try {
+			// PICKER
+			if (control.equals(JSControlPicker)) {
+				String type = data.getString(kJSType);
+				
+				//DATE
+				if (type.equals(JSPickerDate)) {
+					JSONObject date = data.optJSONObject(kJSDate);
+
+					Calendar calendar = Calendar.getInstance();
+					int year = calendar.get(Calendar.YEAR);
+					int month = calendar.get(Calendar.MONTH);
+					int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+					if (date != null
+						&& date.has(kJSYear)
+						&& date.has(kJSMonth)
+						&& date.has(kJSDay)) {
+						year = date.getInt(kJSYear);
+						month = date.getInt(kJSMonth);
+						month--;
+						day = date.getInt(kJSDay);
+					}
+					
+					showDatePickerDialog(year, month, day, callback);
+					
+					return true;
+				}
+			}
+			
+			// ALERT
+			else if(control.equals(JSControlAlert)) {
+				showAlertDialog(data, callback);
+				return true;
+			}
+			
+			// TOAST
+			else if(control.equals(JSControlToast)) {
+				String message = data.getString(kJSAlertMessage);
+				Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+				return true;
+			}
+		} 
+		catch (JSONException exception) {
+			exception.printStackTrace();
+		}
+		
+		// UNHANDLED UI
+		try {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put(kJSType, JSTypeUI);
+			jsonObj.put(kJSUIControl, control);
+			jsonObj.put(kJSData, data);
+			jsonObj.put(kJSCallback, callback);
+			onUnhandledMessage(jsonObj);
+		}
+		catch (JSONException exception) {
+			exception.printStackTrace();
+		}
+		
+		return false;
+	}
+	
 	protected abstract void onUnhandledMessage(JSONObject message);
 
 	/*******************************************************************************************************
@@ -950,6 +1014,14 @@ public abstract class HTMLFragment extends Fragment {
 	}
 	
 	/**
+	 * Called when onBackPressed event is fired. Asks the Web view for back permission.
+	 * This method should NOT be overridden in subclasses.
+	 */
+	public void askWebViewForBackPermission() {
+		sendEvent(JSEventOnBackButtonPressed, null, JSCallbackOnBackButtonPressed);
+	}
+	
+	/**
 	 * Called when the Web view allowed or not the onBackPressed event.
 	 * @param allowedToBack: 	if true, the onBackPressed method of activity will be called, 
 	 * 							onBackDenied() will be called otherwise
@@ -976,9 +1048,9 @@ public abstract class HTMLFragment extends Fragment {
 		if(mDebug) Log.i(getClass().getSimpleName(), "onBackDenied: onBackPressed event denied by Web view");
 	}
 	
-	/********************************************************************************************************************
+	/***********************************************************************************************************************************
 	 * WEB LAYER
-	 *******************************************************************************************************************/
+	 **********************************************************************************************************************************/
 	private void showWebLayer(JSONObject data) {
 		if (getActivity() != null) {
 			try {
@@ -1058,87 +1130,19 @@ public abstract class HTMLFragment extends Fragment {
 	}
 	
 	// TODO: FROM HERE
-	
-	private boolean handleUi(String control, JSONObject data, String callback) {
-		try {
-			if (control.equals(JSControlPicker)) 
-			{
-				JSONObject params = data.optJSONObject(kJSData);
-				final String typeParams = params.optString(kJSType);
-				if (typeParams.equals(JSPickerDate)) 
-				{
-					JSONObject date = params.optJSONObject(kJSDate);
-
-					Calendar cal = Calendar.getInstance();
-					int year = cal.get(Calendar.YEAR);
-					int month = cal.get(Calendar.MONTH);
-					int day = cal.get(Calendar.DAY_OF_MONTH);
-
-					if (date != null) {
-						if (date.has(kJSYear)
-								&& date.has(kJSMonth)
-								&& date.has(kJSDay)) {
-							year = date.getInt(kJSYear);
-							month = date.getInt(kJSMonth);
-							month--;
-							day = date.getInt(kJSDay);
-						}
-					}
-					showDatePickerDialog(year, month, day, callback);	
-					return true;
-				}
-				else 
-				{
-					onUnhandledMessage(data);
-				}
-			}
-			else if(control.equals(JSControlAlert))
-			{
-				showAlertDialogWithJSON(data, callback);
-				return true;
-			}
-			else if(control.equals(JSControlToast))
-			{
-				String message = data.optString(kJSAlertMessage);
-				
-				Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
-				return true;
-			}
-			else {
-				JSONObject jsonObj = new JSONObject();
-				jsonObj.put(kJSType, JSTypeUI);
-				jsonObj.put(kJSUIControl, control);
-				jsonObj.put(kJSData, data);
-				jsonObj.put(kJSCallback, callback);
-				onUnhandledMessage(jsonObj);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}	
-		return false;
-	}
-
-	/**
-	 * This method is called when the backButton is pressed. It asks the webView whether the default action of the backbutton should be fired.
-	 * This method should NOT be overridden in subclasses.
-	 */
-	public void askWebViewForBackPermission() {
-		sendEvent(JSEventOnBackButtonPressed, null, JSCallbackOnBackButtonPressed);
-	}
-
-	private void showAlertDialogWithJSON(JSONObject jsonParams, final String callbackId)
-	{		
-		if(jsonParams != null)
-		{
-
+	/******************************************************************************************************************
+	 * ALERT DIALOG
+	 *****************************************************************************************************************/
+	private void showAlertDialog(JSONObject data, final String callback) {		
+		if (data != null) {
 			try {
-				
-				String title = jsonParams.optString(kJSAlertTitle);
-				String message = jsonParams.optString(kJSAlertMessage);
-				boolean isCancellable =jsonParams.optBoolean(kJSAlertCancelable,true);
-				final int alertId = jsonParams.getInt(kJSAlertID);
+				String title = data.optString(kJSAlertTitle);
+				String message = data.optString(kJSAlertMessage);
+				boolean isCancellable = data.optBoolean(kJSAlertCancelable, false);
+				// TODO: delete this ID
+				final int alertId = data.getInt(kJSAlertID);
 
-				JSONArray buttons = jsonParams.has(kJSAlertButtons) ? jsonParams.getJSONArray(kJSAlertButtons) : new JSONArray();
+				JSONArray buttons = data.has(kJSAlertButtons) ? data.getJSONArray(kJSAlertButtons) : new JSONArray();
 
 				AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 				
@@ -1148,71 +1152,62 @@ public abstract class HTMLFragment extends Fragment {
 				AlertDialog mAlert = alert.create();
 
 				// Callback
-				if (callbackId.length() != 0) {
-					if(buttons.length() == 0)
-					{
+				if (callback.length() != 0) {
+					if (buttons.length() == 0) {
 						mAlert.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {	
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								if(callbackId.length() > 0)
-								{
-									JSONObject j = new JSONObject();
+								if (callback.length() > 0) {
+									JSONObject jsonObj = new JSONObject();
 									try {
-										j.put(kJSAlertID, alertId);
-										j.put(kJSAlertButtonIndex,0);
-										sendCallback(callbackId, j);
-									} catch (JSONException e) {
-										e.printStackTrace();
+										jsonObj.put(kJSAlertID, alertId);
+										jsonObj.put(kJSAlertButtonIndex, 0);
+										sendCallback(callback, jsonObj);
+									} 
+									catch (JSONException exception) {
+										exception.printStackTrace();
 									}								
 								}
 							}
 						});
 					}
-					else
-					{
+					else {
 						int realSize = Math.min(buttons.length(), 3);
-						for(int i = 1 ;i <= realSize ;i++)
-						{
+						for (int i = 1 ; i <= realSize ; i++) {
 							mAlert.setButton(-i, buttons.getString(i-1), new DialogInterface.OnClickListener() {	
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
-									if(callbackId.length() > 0)
-									{
-										JSONObject j = new JSONObject();
+									if (callback.length() > 0) {
+										JSONObject jsonObj = new JSONObject();
 										try {
-											j.put(kJSAlertID, alertId);
-											j.put(kJSAlertButtonIndex,-1-which);
-											sendCallback(callbackId,j);
-										} catch (JSONException e) {
-											e.printStackTrace();
+											jsonObj.put(kJSAlertID, alertId);
+											jsonObj.put(kJSAlertButtonIndex, -1-which);
+											sendCallback(callback, jsonObj);
+										} 
+										catch (JSONException exception) {
+											exception.printStackTrace();
 										}
-
 									}
 								}
 							});
 						}
 					}
 				}
-				// NO Callback
-				else
-				{
-					if(buttons.length() == 0)
-					{
-						mAlert.setButton(DialogInterface.BUTTON_POSITIVE,"OK", new DialogInterface.OnClickListener() {	
+				
+				// No callback
+				else {
+					if (buttons.length() == 0) {
+						mAlert.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {	
 							@Override
-							public void onClick(DialogInterface dialog, int which) {
-							}
+							public void onClick(DialogInterface dialog, int which) { }
 						});
 					}
-					else
-					{
+					else {
 						int realSize = Math.min(buttons.length(), 3);
-						for(int i = 1 ;i <= realSize ;i++)
-						{
+						for (int i = 1 ; i <= realSize ; i++) {
 							mAlert.setButton(-i, buttons.getString(i-1), new DialogInterface.OnClickListener() {	
 								@Override
-								public void onClick(DialogInterface dialog, int which) {
-								}
+								public void onClick(DialogInterface dialog, int which) { }
 							});
 						}
 					}
@@ -1220,8 +1215,9 @@ public abstract class HTMLFragment extends Fragment {
 				mAlert.setCancelable(isCancellable);
 				mAlert.show();
 
-			} catch (JSONException e) {
-				e.printStackTrace();
+			} 
+			catch (JSONException exception) {
+				exception.printStackTrace();
 			}
 		}
 	}
