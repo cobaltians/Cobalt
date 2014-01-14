@@ -280,9 +280,10 @@ public abstract class HTMLFragment extends Fragment {
 		// TODO: resourcePath & mPage setting. Do we keep this behavior?
 		Bundle arguments = getArguments();
 		
-		mRessourcePath = arguments.getString(kResourcePath);
-		mPage = arguments.getString(kPage);
-
+		if (arguments != null) {
+			mRessourcePath = arguments.getString(kResourcePath);
+			mPage = arguments.getString(kPage);
+		}
 		mRessourcePath = (mRessourcePath != null) ? mRessourcePath : "www/";
 		mPage = (mPage != null) ? mPage : "index.html";
 		
@@ -897,8 +898,8 @@ public abstract class HTMLFragment extends Fragment {
 			}
 			else {
 				activity = configuration.getJSONObject(JSNavigationControllerDefault).getString(kAndroidController);
-				enablePullToRefresh = configuration.getJSONObject(JSNavigationControllerDefault).getBoolean(kPullToRefresh);
-				enableInfiniteScroll = configuration.getJSONObject(JSNavigationControllerDefault).getBoolean(kInfiniteScroll);
+				enablePullToRefresh = configuration.getJSONObject(JSNavigationControllerDefault).optBoolean(kPullToRefresh);
+				enableInfiniteScroll = configuration.getJSONObject(JSNavigationControllerDefault).optBoolean(kInfiniteScroll);
 			}
 		}
 		catch (JSONException exception) {
