@@ -61,6 +61,7 @@ public abstract class HTMLFragment extends Fragment {
 	private final static String kAndroidController = "androidController";
 	public final static String kExtras = "extras";
 	private final static String kPage = "page";
+	protected final static String kActivity = "activity";
 	protected final static String kPullToRefresh = "pullToRefresh";
 	protected final static String kInfiniteScroll = "infiniteScroll";
 	protected final static String kSwipe = "swipe";
@@ -610,6 +611,41 @@ public abstract class HTMLFragment extends Fragment {
 	private Intent getIntentForController(String controller, String page) {
 		Intent intent = null;
 		
+		Bundle configuration = getConfigurationForController(controller);
+		
+		if (configuration != null) {
+			String activity = configuration.getString(kActivity);
+			
+			if (activity != null) {
+				// Creates intent
+				Class<?> pClass;
+				try {
+					pClass = Class.forName(activity);
+					// Instantiates intent only if class inherits from Activity
+					if (Activity.class.isAssignableFrom(pClass)) {
+						configuration.putString(kResourcePath, mRessourcePath);
+						configuration.putString(kPage, page);
+						
+						intent = new Intent(mContext, pClass);
+						intent.putExtra(kExtras, configuration);
+					}
+					else {
+						if (mDebug) Log.e(getClass().getSimpleName(), "getIntentForController: " + activity + " does not inherit from Activity!");
+					}
+				} 
+				catch (ClassNotFoundException exception) {
+					if (mDebug) Log.e(getClass().getSimpleName(), "getIntentForController: " + activity + " class not found for id " + controller + "!");
+					exception.printStackTrace();
+				}
+			}
+		}
+		
+		return intent;
+	}
+	
+	protected Bundle getConfigurationForController(String controller) {
+		Bundle bundle = null;
+		
 		JSONObject configuration = getConfiguration();
 		String activity = null;
 		boolean enablePullToRefresh = false;
@@ -631,38 +667,19 @@ public abstract class HTMLFragment extends Fragment {
 			}
 		}
 		catch (JSONException exception) {
-			Log.e(getClass().getSimpleName(), 	"getIntentForController: check cobalt.conf. Known issues: \n "
-												+ "- \t" + controller + " not found and no " + JSNavigationControllerDefault + "controller defined \n "
+			Log.e(getClass().getSimpleName(), 	"getConfigurationForController: check cobalt.conf. Known issues: \n "
+												+ "- \t" + controller + " controller not found and no " + JSNavigationControllerDefault + " controller defined \n "
 												+ "- \t" + controller + " or " + JSNavigationControllerDefault + "controller found but no " + kAndroidController + "defined \n ");
 			exception.printStackTrace();
-			return intent; // null
+			return bundle; // null
 		}
 		
-		// Creates intent
-		Class<?> pClass;
-		try {
-			pClass = Class.forName(activity);
-			// Instantiates intent only if class inherits from Activity
-			if (Activity.class.isAssignableFrom(pClass)) {
-				Bundle bundle = new Bundle();
-				bundle.putString(kResourcePath, mRessourcePath);
-				bundle.putString(kPage, page);
-				bundle.putBoolean(kPullToRefresh, enablePullToRefresh);
-				bundle.putBoolean(kInfiniteScroll, enableInfiniteScroll);
-				
-				intent = new Intent(mContext, pClass);
-				intent.putExtra(kExtras, bundle);
-			}
-			else {
-				if (mDebug) Log.e(getClass().getSimpleName(), "getIntentForController: " + activity + " does not inherit from Activity!");
-			}
-		} 
-		catch (ClassNotFoundException exception) {
-			if (mDebug) Log.e(getClass().getSimpleName(), "getIntentForController: " + activity + " class not found for id " + controller + "!");
-			exception.printStackTrace();
-		}
+		bundle = new Bundle();
+		bundle.putString(kActivity, activity);
+		bundle.putBoolean(kPullToRefresh, enablePullToRefresh);
+		bundle.putBoolean(kInfiniteScroll, enableInfiniteScroll);
 		
-		return intent;
+		return bundle;
 	}
 	
 	private JSONObject getConfiguration() {
