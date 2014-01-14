@@ -37,7 +37,11 @@
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/utils.storage.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
-        
+
+		<!-- for cobalt dev only
+		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
+		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
+		-->
         <script>
             
             Zepto(function($){
@@ -69,8 +73,10 @@
 	            });
 	            
 	            $('#monBouton3').on('tap click',function(){
-					cobalt.ios_adapter.pipeline=[];
-					cobalt.ios_adapter.pipelineRunning=false;
+					if (cobalt.ios_adapter){
+						cobalt.ios_adapter.pipeline=[];
+						cobalt.ios_adapter.pipelineRunning=false;
+					}
                     $('#cobalt_logdiv').html('');
                     return false;                    
 				});
