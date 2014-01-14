@@ -143,7 +143,7 @@ var cobalt={
 		//full web
 		cobalt.alert("Texte");
 		cobalt.alert("Title", "Texte", ["Ok"], { callback:function(index){console.log('popup dismissed') }});
-		cobalt.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", id:12 });
+		cobalt.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", cancelable : true });
 
 	 */
 	alert:function(title, text, buttons, options){
@@ -164,12 +164,11 @@ var cobalt={
 				if (typeof options.callback === "string" || typeof options.callback === "function"){
 					callback=options.callback;
 				}
-				//add alertIdentifier
-				obj.data.id=parseInt(options.id);
-				if ( options.mandatory === true ){
-					obj.cancelable=false;
+				if ( options.cancelable ){
+					obj.data.cancelable=true;
 				}
 			}
+
 			//enforce alertId presence :
 			if (!obj.data.id || !cobalt.isNumber(obj.data.id)){
 				obj.data.id=0;

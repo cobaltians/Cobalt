@@ -30,13 +30,6 @@
  		<a id="test4">Afficher</a><br/>
 
 
-		<p>TEST 05 - Afficher une alerte avec un titre, un texte, deux boutons paramettrés qui activent une fonction <b>native</b><br>
-		A la fermeture, le natif devrait afficher un toast disant quel bouton a été cliqué, et quel callbackId a été défini</p>
- 		<a id="test5">Afficher</a><br/>
-		<p>TEST 06 - Idem mais sans le texte (uniquement un titre) et avec un autre callbackId</p>
- 		<a id="test6">Afficher</a><br/>
-
-
 		<p>TEST 07 - Afficher une alerte avec un grand titre et un grand texte</p>
  		<a id="test7">Afficher</a><br/>
 
@@ -123,7 +116,7 @@
 		            buttons:["Oui", "Non", "Je ne suis pas sûr"],
 		            callMeBack:function(params){
 			            cobalt.log('myApp.callMeBack called with params='+params)
-			            cobalt.toast("alerte refermée. vous avez choisi "+ myApp.buttons[params.index]+", alertId="+params.alertId)
+			            cobalt.toast("alerte refermée. vous avez choisi "+ myApp.buttons[params.index]+")
 		            }
 	            }
 	            $('#test4').on('tap click',function(){
@@ -132,22 +125,13 @@
 	            });
 
 
-	            $('#test5').on('tap click',function(){
-		            cobalt.alert("Titre", "Vous allez devoir refermer cette popup.", ["Oui", "Sûrement pas"], { callbackType:"native", alertId: 42});
-		            return false;
-	            });
-	            $('#test6').on('tap click',function(){
-		            cobalt.alert("Quel est la couleur du cheval blanc d'Henry 5", undefined, ["Blanc", "Aucune", "Ca dépends"], { callbackType:"native", alertId: 43});
-		            return false;
-	            });
-
 	            $('#test7').on('tap click',function(){
 		            cobalt.alert("Quel est la couleur du cheval blanc d'Henry 5?", "Henri V d'Angleterre, né le 9 août 1387 ou le 16 septembre 13871 à Monmouth au Pays de Galles et décédé le 31 août 1422 au château de Vincennes, en France ; duc de Cornouailles et de Lancastre, est roi d'Angleterre de 1413 à 1422.Vainqueur de la bataille d'Azincourt le 25 octobre 1415, il parvient à se faire reconnaître comme héritier du trône de France au traité de Troyes (1420), mais meurt prématurément avant son beau-père Charles VI de France, sans avoir pu ceindre la couronne de France.Fils du roi Henri IV, et de Marie de Bohun, Henri épouse Catherine de Valois et est le père d'Henri VI d'Angleterre, qui lui succèdera à l'âge de neuf mois.", ["Blanc", "Aucune", "Ca dépends"]);
 		            return false;
 	            });
 
 	            $('#test8').on('tap click',function(){
-		            cobalt.alert("Obligatoire !", "Cette alerte est obligatoire sur Android, on ne peut pas l'annuler en cliquant dans le vide ou via le bouton back", ["Oui", "Non"], { mandatory:true });
+		            cobalt.alert("Obligatoire !", "Cette alerte est optionelle sur Android, on peut l'annuler en cliquant dans le vide ou via le bouton back", ["Oui", "Non"], { cancelable:true });
 		            return false;
 	            });
 

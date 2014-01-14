@@ -143,7 +143,7 @@ var cobalt={
 		//full web
 		cobalt.alert("Texte");
 		cobalt.alert("Title", "Texte", ["Ok"], { callback:function(index){console.log('popup dismissed') }});
-		cobalt.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", alertId:12 });
+		cobalt.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", cancelable : true });
 
 	 */
 	alert:function(title, text, buttons, options){
@@ -164,12 +164,11 @@ var cobalt={
 				if (typeof options.callback === "string" || typeof options.callback === "function"){
 					callback=options.callback;
 				}
-				//add alertIdentifier
-				obj.data.id=parseInt(options.id);
-				if ( options.mandatory === true ){
-					obj.cancelable=false;
+				if ( options.cancelable ){
+					obj.data.cancelable=true;
 				}
 			}
+
 			//enforce alertId presence :
 			if (!obj.data.id || !cobalt.isNumber(obj.data.id)){
 				obj.data.id=0;
@@ -182,15 +181,16 @@ var cobalt={
 		//see doc for guidelines.
 		//cobalt.webLayer("show","tests_12_webAlertContent.html",1.2);
 		//cobalt.webLayer("dismiss");
+		//cobalt.webLayer("dismiss",{ foo : "bar"});
 	 */
-	webLayer:function(action, page, fadeDuration){
+	webLayer:function(action, data, fadeDuration){
 		switch (action){
 			case "dismiss":
-				cobalt.send({type:"webLayer", action:"dismiss"});
+				cobalt.send({type:"webLayer", action:"dismiss", data: data});
 			break;
 			case "show":
 				if (page){
-					cobalt.send({type:"webLayer", action:"show", data :{ page:page, fadeDuration:fadeDuration }})
+					cobalt.send({type:"webLayer", action:"show", data :{ page:data, fadeDuration:fadeDuration }})
 				}
 			break;
 		}
