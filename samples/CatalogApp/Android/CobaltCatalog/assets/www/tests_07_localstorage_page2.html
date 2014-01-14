@@ -50,8 +50,8 @@
 		            //sendingToNative:false,
 	            });
 
-               	cobalt.log("init dismissInformations : "+utils.storage.getItem("dismissInformations"), false);
-				cobalt.log("init testLocalStorageKey : "+utils.storage.getItem("testLocalStorageKey"), false);
+               	cobalt.log("init dismissInformations : "+cobalt.storage.getItem("dismissInformations"), false);
+				cobalt.log("init testLocalStorageKey : "+cobalt.storage.getItem("testLocalStorageKey"), false);
                 
 				$('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
                 $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
@@ -72,17 +72,17 @@
 	            });
 	            
 	            $('a#test').on('tap click',function(){
-	            	cobalt.log('Local storage enabled : '+ utils.storage.enable(), false)
+	            	cobalt.log('Local storage enabled : '+ cobalt.storage.enable(), false)
 		            return false;
 	            });
    	            $('a#store').on('tap click',function(){
 		            var obj={ value: "changed"}
 		            cobalt.log("Changement de la valeur de l'objet en "+cobalt.toString(obj), false)
-					utils.storage.setItem('testLocalStorageKey',obj, "json")
+					cobalt.storage.setItem('testLocalStorageKey',obj, "json")
 		            return false;
 	            });
    	            $('a#retrieve').on('tap click',function(){
-		            var keyvalue=utils.storage.getItem('testLocalStorageKey',"json")
+		            var keyvalue=cobalt.storage.getItem('testLocalStorageKey',"json")
 		            if (keyvalue){
 			            if (keyvalue.value){
 				            cobalt.log("La clé value de 'testLocalStorageKey' contient : "+ keyvalue.value, false)
@@ -98,7 +98,7 @@
 	            });
 	           $('a#clean').on('tap click',function(){
 					cobalt.log("Vidage du local storage.", false)
-					utils.storage.clear();
+					cobalt.storage.clear();
 		            return false;
 	            });
 

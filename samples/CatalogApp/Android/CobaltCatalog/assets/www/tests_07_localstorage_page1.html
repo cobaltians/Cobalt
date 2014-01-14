@@ -63,9 +63,9 @@
 
 	            });
 
-                //utils.storage.enable();
-				cobalt.log("init dismissInformations : "+utils.storage.getItem("dismissInformations"), false);
-				cobalt.log("init testLocalStorageKey : "+utils.storage.getItem("testLocalStorageKey"), false);
+                //cobalt.storage.enable();
+				cobalt.log("init dismissInformations : "+cobalt.storage.getItem("dismissInformations"), false);
+				cobalt.log("init testLocalStorageKey : "+cobalt.storage.getItem("testLocalStorageKey"), false);
 
 	            $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
                 $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
@@ -87,23 +87,23 @@
 	            
 	            
 	            $('a#test').on('tap click',function(){
-	            	cobalt.log('Local storage enabled : '+ utils.storage.enable(), false)
+	            	cobalt.log('Local storage enabled : '+ cobalt.storage.enable(), false)
 		            return false;
 	            });
    	            $('a#store').on('tap click',function(){
 		            var obj={ value: "stored"}
 		            cobalt.log("Changement de la valeur de l'objet en "+cobalt.toString(obj), false)
-					utils.storage.setItem('testLocalStorageKey',obj, "json")
+					cobalt.storage.setItem('testLocalStorageKey',obj, "json")
 		            return false;
 	            });
 	            $('a#store2').on('tap click',function(){
 		            var obj={ value: "TOTO"}
 		            cobalt.log("Changement de la valeur de l'objet en "+cobalt.toString(obj), false)
-					utils.storage.setItem('testLocalStorageKey',obj, "json")
+					cobalt.storage.setItem('testLocalStorageKey',obj, "json")
 		            return false;
 	            });
    	            $('a#retrieve').on('tap click',function(){
-		            var keyvalue=utils.storage.getItem('testLocalStorageKey',"json")
+		            var keyvalue=cobalt.storage.getItem('testLocalStorageKey',"json")
 		            if (keyvalue){
 			            if (keyvalue.value){
 				            cobalt.log("La clé value de 'testLocalStorageKey' contient : "+ keyvalue.value, false)
@@ -119,7 +119,7 @@
 	            });
 	           $('a#clean').on('tap click',function(){
 					cobalt.log("Vidage du local storage.", false)
-					utils.storage.clear();
+					cobalt.storage.clear();
 		            return false;
 	            });
 
@@ -140,41 +140,41 @@
 
 	            $('#test4').on('tap click',function(){
 					cobalt.log("--lancement des tests auto", false)
-					utils.storage.clear();
+					cobalt.storage.clear();
 
 
 		            assertEqual('set/get', function(){
-			            utils.storage.setItem("setget","toto");
-			            return utils.storage.getItem("setget");
+			            cobalt.storage.setItem("setget","toto");
+			            return cobalt.storage.getItem("setget");
 		            },"toto");
 
 		            assertEqual('null', function(){
-			            utils.storage.setItem("null",null);
-			            return utils.storage.getItem("toto");
+			            cobalt.storage.setItem("null",null);
+			            return cobalt.storage.getItem("toto");
 		            },null);
 
 		            assertEqual('undef', function(){
-			            utils.storage.setItem("undef",undefined);
-			            return utils.storage.getItem("undef");
+			            cobalt.storage.setItem("undef",undefined);
+			            return cobalt.storage.getItem("undef");
 		            },"undefined") //nice one ;)
 
 		            assertEqual('set/set', function(){
-			            utils.storage.setItem("setset","toto");
-			            utils.storage.setItem("setset","tata");
-			            return utils.storage.getItem("setset");
+			            cobalt.storage.setItem("setset","toto");
+			            cobalt.storage.setItem("setset","tata");
+			            return cobalt.storage.getItem("setset");
 		            },"tata");
 
 		            assertEqual('set/rem', function(){
-			            utils.storage.setItem("setrem","toto");
-			            utils.storage.removeItem("setrem");
-			            return utils.storage.getItem("setrem");
+			            cobalt.storage.setItem("setrem","toto");
+			            cobalt.storage.removeItem("setrem");
+			            return cobalt.storage.getItem("setrem");
 		            }, null);
 
 
 		            assertEqual('jsonSetGet', function(){
 			            var obj1={a:1, b:"xyz", c:true};
-			            utils.storage.setItem("jsonSetGet",obj1, "json");
-			            var obj2=utils.storage.getItem("jsonSetGet","json");
+			            cobalt.storage.setItem("jsonSetGet",obj1, "json");
+			            var obj2=cobalt.storage.getItem("jsonSetGet","json");
 			            var result=true;
 			            $.each(obj1,function(index,item){
 				            if (obj1[index]!=obj2[index]){
@@ -193,7 +193,7 @@
 		            cobalt.log('started...',false)
 		            var startTime=new Date().getTime();
 		            for (var i=1;i<=2000;i++){
-						utils.storage.setItem('item_'+i,"splendid value stored")
+						cobalt.storage.setItem('item_'+i,"splendid value stored")
 		            }
 		            var endTime=new Date().getTime();
 		            cobalt.log('ended. done in '+(endTime-startTime)+"ms",false)
@@ -205,7 +205,7 @@
 		            var startTime=new Date().getTime();
 		            var values=[]
 		            for (var i=1;i<=2000;i++){
-						values.push(utils.storage.getItem('item_'+i));
+						values.push(cobalt.storage.getItem('item_'+i));
 		            }
 		            var endTime=new Date().getTime();
 		            cobalt.log('ended. done in '+(endTime-startTime)+"ms",false)

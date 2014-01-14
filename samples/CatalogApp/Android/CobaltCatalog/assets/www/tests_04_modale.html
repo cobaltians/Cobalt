@@ -37,9 +37,9 @@
 		            //sendingToNative:false,
 	            });
 
-                utils.storage.enable();
-				cobalt.log("init dismissInformations : "+utils.storage.getItem("dismissInformations"), false);
-				cobalt.log("init testLocalStorageKey : "+utils.storage.getItem("testLocalStorageKey"), false);
+                cobalt.storage.enable();
+				cobalt.log("init dismissInformations : "+cobalt.storage.getItem("dismissInformations"), false);
+				cobalt.log("init testLocalStorageKey : "+cobalt.storage.getItem("testLocalStorageKey"), false);
 				
 				$('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
                 $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
