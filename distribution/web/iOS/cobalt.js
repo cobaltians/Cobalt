@@ -35,8 +35,16 @@ var cobalt={
 		//send cobalt is ready event to native
 		cobalt.send({'type':'cobaltIsReady'})
     },
-
-
+	addEventListener:function(eventName, handlerFunction){
+		if (typeof eventName === "string" && typeof handlerFunction === "function"){
+			this.userEvents[eventName] = handlerFunction;
+		}
+	},
+	removeEventListener:function(eventName){
+		if (typeof eventName === "string" && this.userEvents[eventName] ){
+			this.userEvents[eventName] = undefined;
+		}
+	},
 	/*	cobalt.log(stuff,sendLogToNative)
 		stuff : a string or an object. object will be json-ised
 		sendLogToNative : boolean to call native log function. default to true.
