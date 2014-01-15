@@ -31,7 +31,6 @@
 
 #import "CobaltViewController.h"
 
-
 @interface Cobalt : NSObject
 
 @end

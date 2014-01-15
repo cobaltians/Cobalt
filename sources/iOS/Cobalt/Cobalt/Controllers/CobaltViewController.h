@@ -28,24 +28,23 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "AbstractViewController.h"
 #import "HPToast.h"
 
 // JAVASCRIPT KEYS
-#define kJSType             @"type"
-#define JSTypeEvent         @"typeEvent"
-#define JSNativeBridgeIsReady @"nativeBridgeIsReady"
-#define JSTypeReady         @"nativeBridgeIsReady"
-#define JSTypeLog           @"typeLog"
-#define JSTypeAlert         @"typeAlert"
-#define JSTypeWebAlert      @"typeWebAlert"
-#define JSTypeCallBack      @"typeCallback"
-#define JSTypeNavigation    @"typeNavigation"
+#define kJSType                 @"type"
+#define JSTypeEvent             @"typeEvent"
+#define JSNativeBridgeIsReady   @"nativeBridgeIsReady"
+#define JSTypeReady             @"nativeBridgeIsReady"
+#define JSTypeLog               @"typeLog"
+#define JSTypeAlert             @"typeAlert"
+#define JSTypeWebAlert          @"typeWebAlert"
+#define JSTypeCallBack          @"typeCallback"
+#define JSTypeNavigation        @"typeNavigation"
 
 //EVENTS
 #define kJSName             @"name"
 #define JSNameToast         @"nameToast"
-#define JSNameSetZoom       @"nameSetZoom"//todo : remove, nothing to do in nativeBridge
+#define JSNameSetZoom       @"nameSetZoom"  // TODO: remove, nothing to do in nativeBridge
 
 #define kJSValue            @"value"
 
@@ -95,8 +94,10 @@
  @class			CobaltViewController
  @abstract		Base class for a webView controller that allows javascript/native dialogs
  */
-@interface CobaltViewController : AbstractViewController <UIWebViewDelegate,UIAlertViewDelegate,HPToastDelegateProtocol>
+@interface CobaltViewController : UIViewController <UIWebViewDelegate,UIAlertViewDelegate,HPToastDelegateProtocol>
 {
+    BOOL _refreshing;
+    
     NSOperationQueue *toJavaScriptOperationQueue;
     NSOperationQueue *fromJavaScriptOperationQueue;
 }
