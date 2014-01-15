@@ -93,9 +93,9 @@
 		            return false;
 	            });
 				exampleObject={
-					changeValue:function(value){
+					changeValue:function(data){
 					    cobalt.log('changeValue called')
-					    $('#input2').val(value)
+					    $('#input2').val(data.value)
 					}
 				};
 	            $('#monBouton5').on('tap click',function(){
