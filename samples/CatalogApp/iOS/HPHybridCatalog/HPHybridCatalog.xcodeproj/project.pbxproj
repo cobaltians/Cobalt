@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		67D8625C1860B2DB00878F9A /* www in Resources */ = {isa = PBXBuildFile; fileRef = 67D8625B1860B2DB00878F9A /* www */; };
+		71B4B1E71886D9DD0027AC4F /* Cobalt.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1D61886D9DD0027AC4F /* Cobalt.m */; };
+		71B4B1E81886D9DD0027AC4F /* CobaltPullToRefreshViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1D91886D9DD0027AC4F /* CobaltPullToRefreshViewController.m */; };
+		71B4B1E91886D9DD0027AC4F /* CobaltViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1DB1886D9DD0027AC4F /* CobaltViewController.m */; };
+		71B4B1EA1886D9DD0027AC4F /* HPPtrIsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1DD1886D9DD0027AC4F /* HPPtrIsViewController.m */; };
+		71B4B1EB1886D9DD0027AC4F /* PullToRefreshScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1DF1886D9DD0027AC4F /* PullToRefreshScrollViewController.m */; };
+		71B4B1EC1886D9DD0027AC4F /* iToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1E11886D9DD0027AC4F /* iToast.m */; };
+		71B4B1ED1886D9DD0027AC4F /* CobaltToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1E41886D9DD0027AC4F /* CobaltToast.m */; };
+		71B4B1EE1886D9DD0027AC4F /* Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1E61886D9DD0027AC4F /* Toast.m */; };
 		C45C1F25172EA08F002BE836 /* HPHybridDefaultPTRViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C45C1F23172EA08F002BE836 /* HPHybridDefaultPTRViewController.m */; };
 		C45C1F26172EA08F002BE836 /* HPHybridDefaultPTRViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C45C1F24172EA08F002BE836 /* HPHybridDefaultPTRViewController.xib */; };
 		C45C1F29172EA2FB002BE836 /* chaton.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = C45C1F28172EA2FB002BE836 /* chaton.jpeg */; };
@@ -36,6 +44,23 @@
 
 /* Begin PBXFileReference section */
 		67D8625B1860B2DB00878F9A /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = HPHybridCatalog/www; sourceTree = "<group>"; };
+		71B4B1D41886D9DD0027AC4F /* Cobalt-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Cobalt-Prefix.pch"; sourceTree = "<group>"; };
+		71B4B1D51886D9DD0027AC4F /* Cobalt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cobalt.h; sourceTree = "<group>"; };
+		71B4B1D61886D9DD0027AC4F /* Cobalt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cobalt.m; sourceTree = "<group>"; };
+		71B4B1D81886D9DD0027AC4F /* CobaltPullToRefreshViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltPullToRefreshViewController.h; sourceTree = "<group>"; };
+		71B4B1D91886D9DD0027AC4F /* CobaltPullToRefreshViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltPullToRefreshViewController.m; sourceTree = "<group>"; };
+		71B4B1DA1886D9DD0027AC4F /* CobaltViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltViewController.h; sourceTree = "<group>"; };
+		71B4B1DB1886D9DD0027AC4F /* CobaltViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltViewController.m; sourceTree = "<group>"; };
+		71B4B1DC1886D9DD0027AC4F /* HPPtrIsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPPtrIsViewController.h; sourceTree = "<group>"; };
+		71B4B1DD1886D9DD0027AC4F /* HPPtrIsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPPtrIsViewController.m; sourceTree = "<group>"; };
+		71B4B1DE1886D9DD0027AC4F /* PullToRefreshScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullToRefreshScrollViewController.h; sourceTree = "<group>"; };
+		71B4B1DF1886D9DD0027AC4F /* PullToRefreshScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullToRefreshScrollViewController.m; sourceTree = "<group>"; };
+		71B4B1E01886D9DD0027AC4F /* iToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iToast.h; sourceTree = "<group>"; };
+		71B4B1E11886D9DD0027AC4F /* iToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iToast.m; sourceTree = "<group>"; };
+		71B4B1E31886D9DD0027AC4F /* CobaltToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltToast.h; sourceTree = "<group>"; };
+		71B4B1E41886D9DD0027AC4F /* CobaltToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltToast.m; sourceTree = "<group>"; };
+		71B4B1E51886D9DD0027AC4F /* Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Toast.h; sourceTree = "<group>"; };
+		71B4B1E61886D9DD0027AC4F /* Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Toast.m; sourceTree = "<group>"; };
 		C45C1F22172EA08F002BE836 /* HPHybridDefaultPTRViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPHybridDefaultPTRViewController.h; sourceTree = "<group>"; };
 		C45C1F23172EA08F002BE836 /* HPHybridDefaultPTRViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPHybridDefaultPTRViewController.m; sourceTree = "<group>"; };
 		C45C1F24172EA08F002BE836 /* HPHybridDefaultPTRViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HPHybridDefaultPTRViewController.xib; sourceTree = "<group>"; };
@@ -87,6 +112,47 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		71B4B1D31886D9DD0027AC4F /* Cobalt */ = {
+			isa = PBXGroup;
+			children = (
+				71B4B1D41886D9DD0027AC4F /* Cobalt-Prefix.pch */,
+				71B4B1D51886D9DD0027AC4F /* Cobalt.h */,
+				71B4B1D61886D9DD0027AC4F /* Cobalt.m */,
+				71B4B1D71886D9DD0027AC4F /* Controllers */,
+				71B4B1E01886D9DD0027AC4F /* iToast.h */,
+				71B4B1E11886D9DD0027AC4F /* iToast.m */,
+				71B4B1E21886D9DD0027AC4F /* Views */,
+			);
+			name = Cobalt;
+			path = ../../../../sources/iOS/Cobalt/Cobalt;
+			sourceTree = "<group>";
+		};
+		71B4B1D71886D9DD0027AC4F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				71B4B1D81886D9DD0027AC4F /* CobaltPullToRefreshViewController.h */,
+				71B4B1D91886D9DD0027AC4F /* CobaltPullToRefreshViewController.m */,
+				71B4B1DA1886D9DD0027AC4F /* CobaltViewController.h */,
+				71B4B1DB1886D9DD0027AC4F /* CobaltViewController.m */,
+				71B4B1DC1886D9DD0027AC4F /* HPPtrIsViewController.h */,
+				71B4B1DD1886D9DD0027AC4F /* HPPtrIsViewController.m */,
+				71B4B1DE1886D9DD0027AC4F /* PullToRefreshScrollViewController.h */,
+				71B4B1DF1886D9DD0027AC4F /* PullToRefreshScrollViewController.m */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		71B4B1E21886D9DD0027AC4F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				71B4B1E31886D9DD0027AC4F /* CobaltToast.h */,
+				71B4B1E41886D9DD0027AC4F /* CobaltToast.m */,
+				71B4B1E51886D9DD0027AC4F /* Toast.h */,
+				71B4B1E61886D9DD0027AC4F /* Toast.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		C45C1F2A172EA300002BE836 /* img */ = {
 			isa = PBXGroup;
 			children = (
@@ -117,6 +183,7 @@
 		F01A5A0A1716EF4C0000DD94 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				71B4B1D31886D9DD0027AC4F /* Cobalt */,
 				F01A5A0B1716EF4C0000DD94 /* UIKit.framework */,
 				F01A5A0D1716EF4C0000DD94 /* Foundation.framework */,
 				F01A5A0F1716EF4C0000DD94 /* CoreGraphics.framework */,
@@ -246,12 +313,20 @@
 			files = (
 				F01A5A181716EF4D0000DD94 /* main.m in Sources */,
 				F01A5A1C1716EF4D0000DD94 /* HPAppDelegate.m in Sources */,
+				71B4B1E71886D9DD0027AC4F /* Cobalt.m in Sources */,
+				71B4B1EE1886D9DD0027AC4F /* Toast.m in Sources */,
+				71B4B1EC1886D9DD0027AC4F /* iToast.m in Sources */,
 				C49597581717090B006454BA /* HPHybridViewController.m in Sources */,
 				C4D664A2171E8D97009EDE58 /* HPZoomHybridViewController.m in Sources */,
+				71B4B1E91886D9DD0027AC4F /* CobaltViewController.m in Sources */,
 				C4D664AA171E91D5009EDE58 /* HPSimpleHybridViewController.m in Sources */,
+				71B4B1ED1886D9DD0027AC4F /* CobaltToast.m in Sources */,
 				C4A39B341726E464004F7282 /* HPToastAlertViewController.m in Sources */,
+				71B4B1E81886D9DD0027AC4F /* CobaltPullToRefreshViewController.m in Sources */,
+				71B4B1EB1886D9DD0027AC4F /* PullToRefreshScrollViewController.m in Sources */,
 				C4A39B4A17281CC9004F7282 /* HPHybridPullToRefreshViewController.m in Sources */,
 				C4A39B63172951EB004F7282 /* HPHybridISViewController.m in Sources */,
+				71B4B1EA1886D9DD0027AC4F /* HPPtrIsViewController.m in Sources */,
 				C45C1F25172EA08F002BE836 /* HPHybridDefaultPTRViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

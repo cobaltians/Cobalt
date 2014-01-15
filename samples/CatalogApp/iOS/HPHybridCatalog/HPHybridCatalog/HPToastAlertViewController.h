@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Haploid. All rights reserved.
 //
 
-#import "HPNativeBridgeViewController.h"
+#import "CobaltViewController.h"
 
-@interface HPToastAlertViewController : HPNativeBridgeViewController
+@interface HPToastAlertViewController : CobaltViewController
 
 @property (strong, nonatomic) IBOutlet UILabel *messageLabel;
 @end

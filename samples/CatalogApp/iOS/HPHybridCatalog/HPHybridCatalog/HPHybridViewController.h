@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Haploid. All rights reserved.
 //
 
-#import "HPNativeBridgeViewController.h"
+#import "CobaltViewController.h"
 
-@interface HPHybridViewController : HPNativeBridgeViewController
+@interface HPHybridViewController : CobaltViewController
 
 @property (strong, nonatomic) IBOutlet UITextField *messageToSendToWebTextField;
 

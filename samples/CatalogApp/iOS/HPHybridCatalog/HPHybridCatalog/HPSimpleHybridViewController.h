@@ -6,10 +6,10 @@
 //  Copyright (c) 2013 Haploid. All rights reserved.
 //
 
-#import "HPNativeBridgeViewController.h"
+#import "CobaltViewController.h"
 
 
 
-@interface HPSimpleHybridViewController : HPNativeBridgeViewController
+@interface HPSimpleHybridViewController : CobaltViewController
 
 @end
