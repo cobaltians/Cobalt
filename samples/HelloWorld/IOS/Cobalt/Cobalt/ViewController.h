@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CobaltPullToRefreshViewController.h"
+#import "CobaltViewController.h"
 
-@interface ViewController : CobaltPullToRefreshViewController
+@interface ViewController : CobaltViewController
 @end

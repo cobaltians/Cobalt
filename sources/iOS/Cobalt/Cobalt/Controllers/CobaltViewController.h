@@ -27,62 +27,10 @@
 
 #import <UIKit/UIKit.h>
 #import "AbstractViewController.h"
-#import "HPToast.h"
+#import "CobaltToast.h"
 
-// JAVASCRIPT KEYS
-#define kJSType             @"type"
-#define JSTypeEvent         @"typeEvent"
-#define JSNativeBridgeIsReady @"nativeBridgeIsReady"
-#define JSTypeReady         @"nativeBridgeIsReady"
-#define JSTypeLog           @"typeLog"
-#define JSTypeAlert         @"typeAlert"
-#define JSTypeWebAlert      @"typeWebAlert"
-#define JSTypeCallBack      @"typeCallback"
-#define JSTypeNavigation    @"typeNavigation"
+@class PullToRefreshTableHeaderView;
 
-//EVENTS
-#define kJSName             @"name"
-#define JSNameToast         @"nameToast"
-#define JSNameSetZoom       @"nameSetZoom"//todo : remove, nothing to do in nativeBridge
-
-#define kJSValue            @"value"
-
-//CALLBACKS
-#define kJSCallbackID       @"callbackID"
-#define JSCallbackSimpleAcquitment @"callbackSimpleAcquitment"
-#define kJSParams @"params"
-
-//NAVIGATION
-#define kJSNavigationType             @"navigationType"
-#define JSNavigationTypePush          @"push"
-#define JSNavigationTypePop           @"pop"
-#define JSNavigationTypeDismiss       @"dismiss"
-#define JSNavigationTypeModale        @"modale"
-
-#define kJSNavigationPageName         @"navigationPageName"
-
-#define kJSNavigationClassId         @"navigationClassId"
-#define JSNavigationDefaultClassId   @"default"
-
-//ALERT
-#define kJSAlertTitle               @"alertTitle"
-#define kJSAlertMessage             @"alertMessage"
-#define kJSAlertButtons             @"alertButtons"
-#define kJSAlertCallbackReceiver    @"alertReceiver"
-#define kJSAlertID                  @"alertId"
-#define kJSAlertButtonIndex         @"index"
-
-#define JSAlertCallbackReceiverWeb         @"web"
-#define JSAlertCallbackReceiverNative      @"native"
-
-//WEBALERT
-#define JSWebAlertShow                 @"show"
-#define JSWebAlertDismiss              @"dismiss"
-#define kJSWebAlertPageName             @"pageName"
-#define kJSWebAlertfadeDuration         @"fadeDuration"
-
-// HTML
-#define defaultHtmlPage             @"index.html"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -93,10 +41,18 @@
  @class			CobaltViewController
  @abstract		Base class for a webView controller that allows javascript/native dialogs
  */
-@interface CobaltViewController : AbstractViewController <UIWebViewDelegate,UIAlertViewDelegate,HPToastDelegateProtocol>
+@interface CobaltViewController : UIViewController <UIWebViewDelegate,UIAlertViewDelegate,HPToastDelegateProtocol, UIScrollViewDelegate>
 {
+    // Javascript queues
     NSOperationQueue *toJavaScriptOperationQueue;
     NSOperationQueue *fromJavaScriptOperationQueue;
+    
+    // UI components
+    PullToRefreshTableHeaderView *pullToRefreshTableHeaderView;
+    
+@private
+	BOOL _isLoadingMore;
+    BOOL _isRefreshing;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -123,13 +79,32 @@
  */
 @property (strong, nonatomic) NSString *pageName;
 
-@property (strong,nonatomic) UIWebView *popUpWebview;
+@property (strong, nonatomic) UIWebView *popUpWebview;
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*!
+ @property		pullToRefreshTableHeaderView
+ @abstract		The pull to refresh table header view.
+ */
+@property (nonatomic, strong) PullToRefreshTableHeaderView *pullToRefreshTableHeaderView;
+
+/*!
+ @property		isPullToRefreshActive
+ @abstract		allows or not the pullToRefresh functionality
+ */
+@property BOOL isPullToRefreshActive;
+
+/*!
+ @property		isInfiniteScrollActive
+ @abstract		allows or not the infinite scroll functionality
+ */
+@property BOOL isInfiniteScrollActive;
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark METHODS
+#pragma mark COBALT METHODS
 #pragma mark -
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*!
  @method		-(NSString *)ressourcePath
@@ -212,6 +187,66 @@
  @discussion    This delegate method -(void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex; SHOULD NOT be overriden.
  */
 -(void) alertView:(UIAlertView *)alertView WithTag:(NSInteger)tag clickedButtonAtIndex:(NSInteger)buttonIndex;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark PULL TO REFRESH METHODS
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*!
+ @method		- (void)refresh
+ @abstract		Tells the webview to be refresh its content.
+ */
+- (void)refresh;
+
+/*!
+ @method		- (void)refreshWebViewDataSource
+ @abstract		Starts refreshing the web view data source.
+ */
+- (void)refreshWebViewDataSource;
+
+/*!
+ @method		- (void)didRefresh
+ @abstract		Tells the web view it has been refreshed.
+ */
+- (void)didRefresh;
+
+/*!
+ @method		- (void)stopPullToRefreshRefreshing
+ @abstract		stop the pullToRefresh from its refreshing state.
+ @discussion	call this method when you want to reset the pullToRefresh state.
+ */
+-(void) stopPullToRefreshRefreshing;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark INFINITE SCROLL METHOS
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*!
+ @method		- (void)loadMoreItems
+ @abstract		Tells the webview to be load more datas
+ */
+- (void)loadMoreItems;
+
+/*!
+ @method		-(void) loadMoreContentInWebview
+ @abstract		Starts loading more content in webview
+ */
+-(void) loadMoreContentInWebview;
+
+/*!
+ @method		-(void)moreItemsLoaded
+ @abstract		Tells the web view more items have been loaded
+ */
+-(void)moreItemsLoaded;
+
+/*!
+ @method		- (void)stopInfiniteScrollRefreshing
+ @abstract		stop the pullToRefresh from its refreshing state.
+ @discussion	call this method when you want to reset the infinite scroll state.
+ */
+-(void) stopInfiniteScrollRefreshing;
 
 @end
 

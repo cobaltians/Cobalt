@@ -8,18 +8,18 @@
 
 #import "iToast.h"
 
-@class HPToast;
+@class CobaltToast;
 @protocol HPToastDelegateProtocol <NSObject>
 
--(void) HPToastwillShow:(HPToast *)toast;
--(void) HPToastwillHide:(HPToast *)toast;
+-(void) HPToastwillShow:(CobaltToast *)toast;
+-(void) HPToastwillHide:(CobaltToast *)toast;
 
 @end
 
-@interface HPToast : iToast
+@interface CobaltToast : iToast
 
 @property (nonatomic,retain) id<HPToastDelegateProtocol> delegate;
 
-+ (HPToast *) makeText:(NSString *) text;
++ (CobaltToast *) makeText:(NSString *) text;
 
 @end

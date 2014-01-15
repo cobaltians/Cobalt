@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Haploid. All rights reserved.
 //
 
-#import "HPToast.h"
+#import "CobaltToast.h"
 
-@implementation HPToast
+@implementation CobaltToast
 
 
 - (void) hideToast:(NSTimer*)theTimer{
@@ -29,9 +29,9 @@
     [view setUserInteractionEnabled:NO];
 }
 
-+ (HPToast *) makeText:(NSString *) tex
++ (CobaltToast *) makeText:(NSString *) tex
 {
-    HPToast *t = [[HPToast alloc] initWithText:tex];
+    CobaltToast *t = [[CobaltToast alloc] initWithText:tex];
     [t setDuration:iToastDurationNormal];
     return t;
 }

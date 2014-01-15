@@ -29,9 +29,6 @@
 #import "iToast.h"
 #import "Cobalt.h"
 
-#import "CobaltPullToRefreshViewController.h"
-#import "HPPtrIsViewController.h"
-
 #define haploidSpecialJSKey @"h@ploid#k&y"
 
 //Conf File
@@ -42,7 +39,69 @@
 #define kInfiniteScrollActive   @"infiniteScroll"
 
 
-#define JSOnWebAlertDismissed @"onWebAlertDismissed"
+// JAVASCRIPT KEYS
+#define kJSType                             @"type"
+#define JSTypeEvent                         @"typeEvent"
+#define JSNativeBridgeIsReady               @"nativeBridgeIsReady"
+#define JSTypeReady                         @"nativeBridgeIsReady"
+#define JSTypeLog                           @"typeLog"
+#define JSTypeAlert                         @"typeAlert"
+#define JSTypeWebAlert                      @"typeWebAlert"
+#define JSTypeCallBack                      @"typeCallback"
+#define JSTypeNavigation                    @"typeNavigation"
+
+// PULL TO REFRESH
+#define JSPullToRefreshRefresh              @"pullToRefreshRefresh"
+#define JSPullToRefreshDidRefresh           @"pullToRefreshDidRefresh"
+#define JSPullToRefreshCancelled            @"pullToRefreshCancelled"
+
+// INFINITE SCROLL
+#define JSInfiniteScrollRefresh             @"infiniteScrollRefresh"
+#define JSInfiniteScrollDidRefresh          @"infiniteScrollDidRefresh"
+#define JSInfiniteScrollCancelled           @"infiniteScrollCancelled"
+
+//EVENTS
+#define kJSName                             @"name"
+#define JSNameToast                         @"nameToast"
+#define kJSValue                            @"value"
+
+//CALLBACKS
+#define kJSCallbackID                       @"callbackID"
+#define JSCallbackSimpleAcquitment          @"callbackSimpleAcquitment"
+#define kJSParams                           @"params"
+
+//NAVIGATION
+#define kJSNavigationType                   @"navigationType"
+#define JSNavigationTypePush                @"push"
+#define JSNavigationTypePop                 @"pop"
+#define JSNavigationTypeDismiss             @"dismiss"
+#define JSNavigationTypeModale              @"modale"
+
+#define kJSNavigationPageName               @"navigationPageName"
+
+#define kJSNavigationClassId                @"navigationClassId"
+#define JSNavigationDefaultClassId          @"default"
+
+//ALERT
+#define kJSAlertTitle                       @"alertTitle"
+#define kJSAlertMessage                     @"alertMessage"
+#define kJSAlertButtons                     @"alertButtons"
+#define kJSAlertCallbackReceiver            @"alertReceiver"
+#define kJSAlertID                          @"alertId"
+#define kJSAlertButtonIndex                 @"index"
+
+#define JSAlertCallbackReceiverWeb          @"web"
+#define JSAlertCallbackReceiverNative       @"native"
+#define JSOnWebAlertDismissed               @"onWebAlertDismissed"
+
+//WEBALERT
+#define JSWebAlertShow                      @"show"
+#define JSWebAlertDismiss                   @"dismiss"
+#define kJSWebAlertPageName                 @"pageName"
+#define kJSWebAlertfadeDuration             @"fadeDuration"
+
+// HTML
+#define defaultHtmlPage                     @"index.html"
 
 @interface CobaltViewController ()
 
@@ -50,7 +109,7 @@
 
 @implementation CobaltViewController
 
-@synthesize webView,activityIndicator,pageName,popUpWebview;
+@synthesize webView,activityIndicator,pageName,popUpWebview, pullToRefreshTableHeaderView,isPullToRefreshActive;
 
 NSMutableDictionary *alertCallbacks;
 
@@ -94,6 +153,28 @@ NSString *popupPageName;
         self.pageName = defaultHtmlPage;
     }
     
+    // Add pull to refresh table header view
+    if(self.isPullToRefreshActive)
+    {
+        [self customPullToRefreshDefaultView];
+        
+        self.pullToRefreshTableHeaderView.state = RefreshStateNormal;
+        self.pullToRefreshTableHeaderView.loadingHeight = self.pullToRefreshTableHeaderView.frame.size.height;
+        self.pullToRefreshTableHeaderView.frame = CGRectMake(0.0, -self.webView.bounds.size.height, self.webView.bounds.size.width, self.webView.bounds.size.height);
+        
+        if(self.pullToRefreshTableHeaderView)
+        {
+            [self.webView.scrollView addSubview:self.pullToRefreshTableHeaderView];
+        }
+#if DEBUG_COBALT
+        else
+        {
+            NSLog(@"WARNING : no pullToRefreshTableHeaderView set !");
+        }
+#endif
+        [self.webView.scrollView setDelegate:self];
+    }
+
     [self loadContentInWebView:self.webView FromFileNamed:self.pageName atPath:[self ressourcePath] withRessourcesAtPath:[self ressourcePath]];
 }
 
@@ -102,7 +183,27 @@ NSString *popupPageName;
     [self setWebView:nil];
     [self setActivityIndicator:nil];
     toJavaScriptOperationQueue = nil;
+    self.pullToRefreshTableHeaderView = nil;
+    [self.webView.scrollView setDelegate:nil];
     [super viewDidUnload];
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    if(self.pullToRefreshTableHeaderView && self.pullToRefreshTableHeaderView.superview)
+    {
+        [self.pullToRefreshTableHeaderView setHidden: YES];
+    }
+    [super willRotateToInterfaceOrientation: toInterfaceOrientation duration: duration];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    if(self.pullToRefreshTableHeaderView && self.pullToRefreshTableHeaderView.superview)
+    {
+        [self.pullToRefreshTableHeaderView setHidden: NO];
+        self.pullToRefreshTableHeaderView.frame = CGRectMake(0.0, -self.webView.bounds.size.height, self.webView.bounds.size.width, self.webView.bounds.size.height);
+        //self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+1);
+    }
+    [super didRotateFromInterfaceOrientation: fromInterfaceOrientation];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,13 +213,35 @@ NSString *popupPageName;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
 -(void) customWebView
 {
     /*
      This is the default implementation.
      */
+}
+
+-(void) customPullToRefreshDefaultView
+{
+    if(!self.pullToRefreshTableHeaderView)
+    {
+        CGRect frame = CGRectMake(0.0, 0.0, self.webView.bounds.size.width,60.0);
+        self.pullToRefreshTableHeaderView = [[PullToRefreshTableHeaderView alloc] initWithFrame:frame];
+        [self.pullToRefreshTableHeaderView setAutoresizingMask:UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin];
+        
+        self.pullToRefreshTableHeaderView.statusLabel = [[UILabel alloc] initWithFrame:frame];
+        [self.pullToRefreshTableHeaderView.statusLabel setTextAlignment:NSTextAlignmentCenter];
+        [self.pullToRefreshTableHeaderView.statusLabel setTextColor:[UIColor blackColor]];
+        [self.pullToRefreshTableHeaderView.statusLabel setBackgroundColor:[UIColor clearColor]];
+        [self.pullToRefreshTableHeaderView.statusLabel setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleLeftMargin];
+        [self.pullToRefreshTableHeaderView addSubview:self.pullToRefreshTableHeaderView.statusLabel];
+        
+        
+        self.pullToRefreshTableHeaderView.progressView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        [self.pullToRefreshTableHeaderView.progressView setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin];
+        [self.pullToRefreshTableHeaderView.progressView setColor:[UIColor blackColor]];
+        [self.pullToRefreshTableHeaderView.progressView setFrame:CGRectMake(0, 0, 60, 60)];
+        [self.pullToRefreshTableHeaderView addSubview:self.pullToRefreshTableHeaderView.progressView];
+    }
 }
 
 -(void)loadContentInWebView:(UIWebView *)mWebView FromFileNamed:(NSString *)filename atPath:(NSString *)path withRessourcesAtPath:(NSString *)pathOfRessources
@@ -228,7 +351,7 @@ NSString *popupPageName;
             if(name && [name isKindOfClass:[NSString class]] &&name.length >0 && [name isEqualToString:JSNameToast])
             {
                 NSString *value = [dict objectForKey:kJSValue];
-                HPToast *t = (HPToast *)[[HPToast makeText:value] setGravity:iToastGravityBottom];
+                CobaltToast *t = (CobaltToast *)[[CobaltToast makeText:value] setGravity:iToastGravityBottom];
                 [t setDelegate:self];
                 if(toastIsShown)
                 {
@@ -305,6 +428,21 @@ NSString *popupPageName;
                     [self performSelectorOnMainThread:@selector(dismissPopUpWebviewWithDict:) withObject:dict waitUntilDone:YES];
                     return YES;
                 }
+            }
+        }
+        // CALLBACKS
+        else if([type isEqualToString:JSTypeCallBack])
+        {
+            NSString *name = [dict objectForKey:kJSCallbackID];
+            if(name && [name isKindOfClass:[NSString class]] && [name isEqualToString:JSPullToRefreshDidRefresh])
+            {
+                [self performSelectorOnMainThread:@selector(didRefresh) withObject:nil waitUntilDone:YES];
+                return YES;
+            }
+            else if (name && [name isKindOfClass:[NSString class]] && [name isEqualToString:JSInfiniteScrollDidRefresh])
+            {
+                [self performSelectorOnMainThread:@selector(moreItemsHaveBeenLoaded) withObject:nil waitUntilDone:YES];
+                return YES;
             }
         }
         //JS READY EVENT
@@ -443,18 +581,9 @@ NSString *popupPageName;
     
     if([self isValidControllerWithClassName:className andNibName:nibName])
     {
-        if([NSClassFromString(className) isSubclassOfClass:[CobaltPullToRefreshViewController class]])
+        if([NSClassFromString(className) isSubclassOfClass:[CobaltViewController class]])
         {
-            CobaltPullToRefreshViewController *c = [[NSClassFromString(className) alloc] initWithNibName:nibName bundle:[NSBundle mainBundle]];
-            if (pullToRefreshActive) {
-                c.isPullToRefreshActive = YES;
-            }
-            else c.isPullToRefreshActive = NO;
-            return c;
-        }
-        else if([NSClassFromString(className) isSubclassOfClass:[HPPtrIsViewController class]])
-        {
-            HPPtrIsViewController *c = [[NSClassFromString(className) alloc] initWithNibName:nibName bundle:[NSBundle mainBundle]];
+            CobaltViewController *c = [[NSClassFromString(className) alloc] initWithNibName:nibName bundle:[NSBundle mainBundle]];
             if (pullToRefreshActive) {
                 c.isPullToRefreshActive = YES;
             }
@@ -465,7 +594,6 @@ NSString *popupPageName;
             else c.isInfiniteScrollActive = NO;
             return c;
         }
-        
         return [[NSClassFromString(className) alloc] initWithNibName:nibName bundle:[NSBundle mainBundle]];
     }
     else
@@ -672,7 +800,7 @@ NSString *popupPageName;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark WEBVIEW DELEGATE
+#pragma mark WEBVIEW DELEGATE METHODS
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -738,11 +866,11 @@ NSString *popupPageName;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark HPTOAST DELEGATE
+#pragma mark HPTOAST DELEGATE METHODS
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
--(void) HPToastwillShow:(HPToast *)toast
+-(void) HPToastwillShow:(CobaltToast *)toast
 {
     toastIsShown = YES;
 #if DEBUG_COBALT
@@ -750,17 +878,193 @@ NSString *popupPageName;
 #endif
 }
 
--(void) HPToastwillHide:(HPToast *)toast
+-(void) HPToastwillHide:(CobaltToast *)toast
 {
     toastIsShown = NO;
     if(toastsToShow.count > 0)
     {
-        HPToast *t = [toastsToShow objectAtIndex:0];
+        CobaltToast *t = [toastsToShow objectAtIndex:0];
         [t performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
         [toastsToShow removeObjectAtIndex:0];
     }
     
 }
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark SCROLL VIEW DELEGATE METHODS
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//*************
+// DID SCROLL *
+//*************
+/*!
+ @method        - (void)scrollViewDidScroll:(UIScrollView *)scrollView
+ @abstract      Tells the delegate when the user scrolls the content view within the receiver.
+ @param         scrollView  The scroll-view object in which the scrolling occurred.
+ */
+- (void)scrollViewDidScroll:(UIScrollView *)_scrollView {
+    if(self.isPullToRefreshActive && self.pullToRefreshTableHeaderView && self.pullToRefreshTableHeaderView.superview)
+    {
+        if (_scrollView.isDragging) {
+            if (self.pullToRefreshTableHeaderView.state == RefreshStatePulling && _scrollView.contentOffset.y > -65.0 && self.webView.scrollView.contentOffset.y < 0.0 && !_isRefreshing) {
+                self.pullToRefreshTableHeaderView.state = RefreshStateNormal;
+            }
+            else if (self.pullToRefreshTableHeaderView.state == RefreshStateNormal && _scrollView.contentOffset.y < -65.0 && !_isRefreshing) {
+                self.pullToRefreshTableHeaderView.state = RefreshStatePulling;
+            }
+        }
+    }
+}
+
+//*******************
+// DID END DRAGGING *
+//*******************
+/*!
+ @method        - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+ @abstract      Tells the delegate when dragging ended in the scroll view.
+ @param         scrollView  The scroll-view object that finished scrolling the content view.
+ @param         decelerate  YES if the scrolling movement will continue, but decelerate, after a touch-up gesture during a dragging operation.
+ */
+- (void)scrollViewDidEndDragging:(UIScrollView *)_scrollView willDecelerate:(BOOL)decelerate {
+    if(self.isPullToRefreshActive && self.pullToRefreshTableHeaderView && self.pullToRefreshTableHeaderView.superview)
+    {
+        if (_scrollView.contentOffset.y <= -65.0 && !_isRefreshing) {
+            [self refresh];
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark PULL TO REFRESH METHODS
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//**********
+// REFRESH *
+//**********
+/*!
+ @method		- (void)refresh
+ @abstract		Tells the web view to refresh its content.
+ */
+- (void)refresh {
+    if(self.isPullToRefreshActive)
+    {
+        _isRefreshing = YES;
+        self.pullToRefreshTableHeaderView.state = RefreshStateLoading;
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.2];
+        self.webView.scrollView.contentInset = UIEdgeInsetsMake(self.pullToRefreshTableHeaderView.loadingHeight, 0.0f, 0.0f, 0.0f);
+        [UIView commitAnimations];
+        
+        [self refreshWebViewDataSource];
+    }
+}
+
+//******************************
+// LOAD TABLE VIEW DATA SOURCE *
+//******************************
+/*!
+ @method		- (void)loadTableViewDataSource
+ @abstract		Simulates loading of the table view data source.
+ */
+- (void)loadWebViewDataSource {
+    [self didRefresh];
+}
+
+//*********************************
+// REFRESH TABLE VIEW DATA SOURCE *
+//*********************************
+/*!
+ @method		- (void)refreshTableViewDataSource
+ @abstract		Starts refreshing the table view data source.
+ */
+- (void)refreshWebViewDataSource {
+    NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:JSTypeEvent,kJSType,JSPullToRefreshRefresh,kJSName, JSPullToRefreshDidRefresh,kJSCallbackID,nil];
+    [self executeScriptInWebView:self.webView WithDictionary:d];
+}
+
+//**************
+// DID REFRESH *
+//**************
+/*!
+ @method		- (void)didRefresh
+ @abstract		Tells the table view it has been refreshed.
+ */
+- (void)didRefresh {
+    _isRefreshing = NO;
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.3];
+    [UIView setAnimationDelegate:self];
+    [UIView setAnimationDidStopSelector:@selector(didStop)];
+    self.webView.scrollView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
+	[UIView commitAnimations];
+}
+
+//***********
+// DID STOP *
+//***********
+/*!
+ @method		- (void)didStop
+ @abstract		Tells the table view the refresh animation has stopped.
+ */
+- (void)didStop {
+    self.pullToRefreshTableHeaderView.state = RefreshStateNormal;
+}
+
+-(void) stopPullToRefreshRefreshing
+{
+    if(self.isPullToRefreshActive && _isRefreshing)
+    {
+        [self didRefresh];
+        NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:JSTypeEvent,kJSType,JSPullToRefreshCancelled,kJSName,nil];
+        [self executeScriptInWebView:self.webView WithDictionary:d];
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark INFINITE SCROLL METHODS
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)loadMoreItems
+{
+    _isLoadingMore = YES;
+    
+    [self loadMoreContentInWebview];
+}
+
+-(void) loadMoreContentInWebview
+{
+    NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:JSTypeEvent,kJSType,JSInfiniteScrollRefresh,kJSName,JSInfiniteScrollDidRefresh,kJSCallbackID,nil];
+    [self executeScriptInWebView:self.webView WithDictionary:d];
+}
+
+-(void)moreItemsHaveBeenLoaded
+{
+    _isLoadingMore = NO;
+    [self moreItemsLoaded];
+}
+
+-(void)moreItemsLoaded
+{
+    /*
+     * default implementation
+     */
+}
+
+-(void) stopInfiniteScrollRefreshing
+{
+    if(self.isInfiniteScrollActive && _isLoadingMore)
+    {
+        _isLoadingMore = NO;
+        NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:JSTypeEvent,kJSType,JSInfiniteScrollCancelled,kJSName,nil];
+        [self executeScriptInWebView:self.webView WithDictionary:d];
+    }
+}
+
 
 @end
 
