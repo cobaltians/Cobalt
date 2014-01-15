@@ -86,8 +86,7 @@ public abstract class HTMLFragment extends Fragment {
 	
 	// EVENTS
 	protected final static String JSTypeEvent = "event";
-	// TODO: update to "event" when Guillaume will commit its changes
-	protected final static String kJSEvent = "name";
+	protected final static String kJSEvent = "event";
 
 	// BACK BUTTON
 	private final static String JSEventOnBackButtonPressed = "onBackButtonPressed";
