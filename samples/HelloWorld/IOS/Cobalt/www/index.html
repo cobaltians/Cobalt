@@ -21,9 +21,9 @@
                 
                 cobalt.init({                    	
                     events:{
-                        "pullToRefreshRefresh" : function(event){
+                        "pullToRefresh" : function(data,callback){
                             cobalt.log('Refresh');                           
-                            cobalt.sendCallback(event);
+                            cobalt.sendCallback(callback);
                             var hellos=new Array("Hello !","Refreshing !","Great !","Fast !", ";-)");
                             var elemlength = hellos.length;
                             var randomnum = Math.floor(Math.random()*elemlength);
@@ -38,12 +38,8 @@
             
             
         </script>
-<<<<<<< HEAD
-        
-=======
         <div id="cobalt_logdiv"></div> 
             
->>>>>>> 33403b97c4615da9360081d97db8c8399a591743
             
             
             
