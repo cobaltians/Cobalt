@@ -36,10 +36,10 @@
 		<div id="cobalt_logdiv"></div>
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
-        <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
+        <script type="text/javascript" src="js/cobalt/cosbalt.js"></script>
         <script type="text/javascript" src="js/functions.js"></script>
 
-		<!-- for cobalt dev only
+		<!-- for cobalt dev only-->
 		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
 		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
 		-->
@@ -52,20 +52,20 @@
 		            debug:true,
 		            //sendingToNative:false,
 		            events:{
-			            "nameTestCallback": function(event){
+			            "nameTestCallback": function(data, callback){
 				            cobalt.log('executing nameTestCallback',false)
-				            cobalt.sendCallback(event,"testCallback : Le resultat est "+ (parseInt(event.value[0]) + parseInt(event.value[1])) )
+				            cobalt.sendCallback(callback,{ value : "testCallback : Le resultat est "+ (parseInt(data.value[0]) + parseInt(data.value[1]))} )
 			            },
-			            "nameTestCallbackAsync": function(event){
+			            "nameTestCallbackAsync": function(data, callback){
 				            cobalt.log('executing nameTestCallbackAsync',false)
-				            var event=event;
+				            var callback=callback;
 							$.ajax({url:"http://www.google.fr", type:"GET",
 								success : function(){
 									cobalt.log('async call worked')
-									cobalt.sendCallback(event,"Assync WORKED!!")
+									cobalt.sendCallback(callback,{ value : "Assync WORKED!!"})
 								},error: function(req,err){
 									cobalt.log('async call failed')
-									cobalt.sendCallback(event,"Assync WORKED with HTTP error "+err)
+									cobalt.sendCallback(callback,{ value : "Assync WORKED with HTTP error "+err})
 								}
 							});
 			            }
@@ -85,9 +85,9 @@
 				});
 
 	            $('#monBouton4').on('tap click',function(){
-	            	cobalt.sendEvent("nameTestCallback", { value:$('#input').val() },function(newName){
+	            	cobalt.sendEvent("nameTestCallback", { value:$('#input').val() },function(data){
 		            	cobalt.log('changeValue called')
-						$('#input').val(newName)
+						$('#input').val(data.value)
 		            });
 		            //Expect {"type":"typeCallback", callbackID:"0", params:"toto"} from OS
 		            return false;
@@ -99,8 +99,8 @@
 					}
 				};
 	            $('#monBouton5').on('tap click',function(){
-		            cobalt.sendEvent("nameTestCallbackAsync", { value:$('#input2').val() },"exampleObject.changeValue")
-		            //Expect {"type":"typeCallback", callbackID:"exampleObject.changeValue", params:"toto"} from OS
+		            cobalt.sendEvent("nameTestCallbackAsync", { value:$('#input2').val() }, "exampleObject.changeValue")
+		            //Expect {"type":"typeCallback", callback:"exampleObject.changeValue", data:{ value : "toto" }} from OS
 		            return false;
 	            });
 	            

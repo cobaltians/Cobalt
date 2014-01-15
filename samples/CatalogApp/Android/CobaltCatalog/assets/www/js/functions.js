@@ -5,7 +5,7 @@ function setZoom(zoomLevel){
         document.querySelectorAll('body')[0].style.fontSize=zoomLevel+"px"
         
     }catch(e){
-        log(e);
+        cobalt.log(e);
     }
 }
 

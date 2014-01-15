@@ -41,7 +41,7 @@
 		            debug:true,
 		            //sendingToNative:false,
 		            events:{
-			            "nameSetZoom":function(event){
+			            "nameSetZoom":function(data, callback){
 			                cobalt.log('received setZoom at '+new Date().getTime())
                             setZoom(event.value)
 				        }

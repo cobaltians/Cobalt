@@ -1,6 +1,6 @@
 /**
  *
- * IScrollListener
+ * Toast.m
  * Cobalt
  *
  * The MIT License (MIT)
@@ -27,20 +27,44 @@
  *
  */
 
-package fr.cobaltians.cobalt.customviews;
+#import "Toast.h"
 
-/**
- * Interface providing a method to listen to the scroll of an OverScrollingWebview
- * @author Diane
- */
-public interface IScrollListener {
+@implementation Toast
 
-	/**
-	 * Called after the OverScrollingWebView has scrolled.
-	 * @param scrollX New X scroll value in pixels
-	 * @param scrollY New Y scroll value in pixels
-	 * @param oldscrollX old X scroll value in pixels
-	 * @param oldscrollY old Y scroll value in pixels
-	 */
-	void onOverScrolled(int scrollX, int scrollY,int oldscrollX, int oldscrollY);
++ (Toast *)makeText:(NSString *)text
+{
+    Toast * toast = [[Toast alloc] initWithText:text];
+    [toast setDuration:iToastDurationNormal];
+    return toast;
 }
+
+- (id)initWithText:(NSString *)pText
+{
+	if (self = [super init]) {
+		text = pText;
+	}
+	
+	return self;
+}
+
+- (void)show:(iToastType)type
+{
+    if (self.delegate) {
+        [self.delegate toastWillShow:self];
+    }
+    
+    [super show:type];
+    
+    [view setUserInteractionEnabled:NO];
+}
+
+- (void)hideToast:(NSTimer *)pTimer
+{
+    if (self.delegate) {
+        [self.delegate toastWillHide:self];
+    }
+    
+    [super hideToast:pTimer];
+}
+
+@end

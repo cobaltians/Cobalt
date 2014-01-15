@@ -1,4 +1,27 @@
-/* helper object to communicate with native */
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014 Cobaltians
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 var cobalt={
     
     userEvents:{}, //objects of events defined by the user
@@ -102,7 +125,7 @@ var cobalt={
 	    if (eventName){
 		    var obj = {
 			    type : "event",
-			    name : eventName,
+			    event : eventName,
 			    data : params || {}
 		    };
 		    cobalt.send(obj, callback);
@@ -110,11 +133,10 @@ var cobalt={
 	},
 	//Sends a callback to native side.
 	//See doc for guidelines.
-    sendCallback:function(originalEvent, data){
-		var event=originalEvent;
-		if (typeof event.callback ==="string" && event.callback.length > 0){
-			//cobalt.log("calling callback with "+JSON.stringify({type:"typeCallback", callbackID:event.callbackID, data: data}))
-			cobalt.send({type:"callback", callback :event.callback, data: data})
+    sendCallback:function(callback, data){
+		if (typeof callback ==="string" && callback.length > 0){
+			//cobalt.log("calling callback with "+JSON.stringify({type:"typeCallback", callback:callback, data: data}))
+			cobalt.send({type:"callback", callback : callback, data: data})
 	    }
 	},
 	//Navigate to an other page or do some special navigation actions
@@ -184,7 +206,7 @@ var cobalt={
 		}
 	},
 	/*
-		show a web page as an alert.
+		show a web page as an layer.
 		//see doc for guidelines.
 		//cobalt.webLayer("show","tests_12_webAlertContent.html",1.2);
 		//cobalt.webLayer("dismiss");
@@ -203,30 +225,28 @@ var cobalt={
 			break;
 		}
 	},
+
     /* internal, called from native */
-    execute:function(data){
+    execute:function(json){
     	//cobalt.log(data,false)
         /*test if data.type exists, otherwise parse data or die silently */
-        if (data && ! data.type){
+        if (json && ! json.type){
         	try{
-                data = JSON.parse(data);
+                json = JSON.parse(json);
             }catch(e){
-                data = {};
+                json = {};
             }
         }
         try{
-	        switch (data.type){
+	        switch (json.type){
 	        	case "event":
-                    cobalt.adapter.handleEvent(data)
+                    cobalt.adapter.handleEvent(json)
 	                break;
 	            case "callback":
-                    cobalt.adapter.handleCallback(data)
+                    cobalt.adapter.handleCallback(json)
                     break;
-		        case "log": //TODO : is it needed?
-                    cobalt.log('LOG '+decodeURIComponent(data.value), data.logBack)
-                    break;
-	        	default:
-	        		cobalt.log('received unhandled data type : '+data.type)        		
+		        default:
+	        		cobalt.log('received unhandled data type : '+json.type)
 	        }
 	    }catch(e){
             cobalt.log('cobalt.execute failed : '+e)
@@ -298,10 +318,16 @@ var cobalt={
 	},
 
 	defaultBehaviors:{
-		handleCallback:function(callback){
-	        switch(callback.callback){
+		handleEvent:function(json){
+			cobalt.log("received : "+JSON.stringify(json), false)
+		    if (cobalt.userEvents && typeof cobalt.userEvents[json.event] === "function"){
+				cobalt.userEvents[json.event](json.data,json.callback);
+		    }
+	    },
+		handleCallback:function(json){
+	        switch(json.callback){
 	            default:
-				    cobalt.tryToCallCallback(callback)
+				    cobalt.tryToCallCallback(json)
 			    break;
 	        }
 	    },
@@ -402,28 +428,19 @@ cobalt.ios_adapter={
 	init:function(){
 		cobalt.platform="iOs";
 	},
-	// handle events sent by native side
-    handleEvent:function(event){
-		cobalt.log("<b>received</b> : "+JSON.stringify(event), false)
-	    if (cobalt.userEvents && typeof cobalt.userEvents[event.name] === "function"){
-			cobalt.userEvents[event.name](event);
-	    }
-    },
-    // handle callbacks sent by native side
-    handleCallback:function(callback){
-        switch(callback.callbackID){
+	// handle callbacks sent by native side
+    handleCallback:function(json){
+        switch(json.callback){
             case "callbackSimpleAcquitment":
                 //cobalt.log("received callbackSimpleAcquitment", false)
                 cobalt.adapter.unpipe();
-                
                 if (cobalt.adapter.pipeline.length==0){
                     cobalt.log('set pipe running=false', false)
                     cobalt.adapter.pipelineRunning=false;
                 }
-                
                 break;
 	        default:
-			    cobalt.tryToCallCallback(callback)
+			    cobalt.tryToCallCallback(json)
 		    break;
         }
     },
@@ -445,6 +462,7 @@ cobalt.ios_adapter={
         }
     },
 	//default behaviours
+	handleEvent : cobalt.defaultBehaviors.handleEvent,
 	navigateToModale : cobalt.defaultBehaviors.navigateToModale,
 	dismissFromModale : cobalt.defaultBehaviors.dismissFromModale,
 	initStorage : cobalt.defaultBehaviors.initStorage

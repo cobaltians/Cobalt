@@ -8,28 +8,19 @@ cobalt.ios_adapter={
 	init:function(){
 		cobalt.platform="iOs";
 	},
-	// handle events sent by native side
-    handleEvent:function(event){
-		cobalt.log("<b>received</b> : "+JSON.stringify(event), false)
-	    if (cobalt.userEvents && typeof cobalt.userEvents[event.name] === "function"){
-			cobalt.userEvents[event.name](event);
-	    }
-    },
-    // handle callbacks sent by native side
-    handleCallback:function(callback){
-        switch(callback.callbackID){
+	// handle callbacks sent by native side
+    handleCallback:function(json){
+        switch(json.callback){
             case "callbackSimpleAcquitment":
                 //cobalt.log("received callbackSimpleAcquitment", false)
                 cobalt.adapter.unpipe();
-                
                 if (cobalt.adapter.pipeline.length==0){
                     cobalt.log('set pipe running=false', false)
                     cobalt.adapter.pipelineRunning=false;
                 }
-                
                 break;
 	        default:
-			    cobalt.tryToCallCallback(callback)
+			    cobalt.tryToCallCallback(json)
 		    break;
         }
     },
@@ -51,6 +42,7 @@ cobalt.ios_adapter={
         }
     },
 	//default behaviours
+	handleEvent : cobalt.defaultBehaviors.handleEvent,
 	navigateToModale : cobalt.defaultBehaviors.navigateToModale,
 	dismissFromModale : cobalt.defaultBehaviors.dismissFromModale,
 	initStorage : cobalt.defaultBehaviors.initStorage

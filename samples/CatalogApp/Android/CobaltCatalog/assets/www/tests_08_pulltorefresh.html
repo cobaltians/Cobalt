@@ -54,13 +54,13 @@
 		            debug:true,
 		            //sendingToNative:false,
                     events:{
-                       "pullToRefreshRefresh" : function(event){
+                       "pullToRefresh" : function(data, calllback){
                                cobalt.log('native asked to refresh');
 	                           $('#list').hide();
 	                           setTimeout(function(){
                                   
 		                            $('#list').append('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>').show();
-		                           cobalt.sendCallback(event);
+		                           cobalt.sendCallback(calllback);
 	                           },1000, true);
                         }
                                   
