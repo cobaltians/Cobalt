@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Haploid. All rights reserved.
 //
 
-#import "HPNativeBridgeViewController.h"
+#import "CobaltViewController.h"
 
-@interface HPZoomHybridViewController : HPNativeBridgeViewController
+@interface HPZoomHybridViewController : CobaltViewController
 
 @property (strong, nonatomic) IBOutlet UIButton *zoomOutButton;
 @property (strong, nonatomic) IBOutlet UIButton *zoomInButton;

@@ -8,6 +8,7 @@
 
 #import "HPZoomHybridViewController.h"
 
+#define JSNameSetZoom           @"JSNameSetZoom"
 #define kDefaultTextZoomLevel @"textSizeZoomLevel"
 #define defaultTextZoomLevel 10
 
