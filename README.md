@@ -9,7 +9,7 @@ Be sure to read [the intro page first](http://cobaltians.github.io/cobalt/), the
 Qucik links
 ===========
 
-* [learn the basics](https://github.com/cobaltians/cobalt/wiki)
+* [wiki home page](https://github.com/cobaltians/cobalt/wiki)
 * read the FAQ
 * download [the Hello World](samples/HelloWorld) sample app for your favourite platform
 * learn how to add some Cobalt webviews into your app
