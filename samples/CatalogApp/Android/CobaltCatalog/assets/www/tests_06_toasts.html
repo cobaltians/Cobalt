@@ -33,7 +33,7 @@
 		<p>TEST 07 - Afficher une alerte avec un grand titre et un grand texte</p>
  		<a id="test7">Afficher</a><br/>
 
-		<p>TEST 08 - (android) Verifier que cette alerte, contrairement aux autres, ne peut pas être fermée en cliquant à coté ou avec le bouton back.</p>
+		<p>TEST 08 - (android) Verifier que cette alerte, contrairement aux autres, peut être fermée en cliquant à coté ou avec le bouton back.</p>
  		<a id="test8">Afficher</a><br/>
 		<br/>
 
@@ -130,7 +130,7 @@
 	            });
 
 	            $('#test8').on('tap click',function(){
-		            cobalt.alert("Obligatoire !", "Cette alerte est optionelle sur Android, on peut l'annuler en cliquant dans le vide ou via le bouton back", ["Oui", "Non"], { cancelable:true });
+		            cobalt.alert("Optionelle !", "Cette alerte est optionelle sur Android, on peut l'annuler en cliquant dans le vide ou via le bouton back", ["Oui", "Non"], { cancelable:true });
 		            return false;
 	            });
 
