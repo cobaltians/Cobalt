@@ -102,7 +102,7 @@ var cobalt={
 	    if (eventName){
 		    var obj = {
 			    type : "event",
-			    name : eventName,
+			    event : eventName,
 			    data : params || {}
 		    };
 		    cobalt.send(obj, callback);
@@ -184,7 +184,7 @@ var cobalt={
 		}
 	},
 	/*
-		show a web page as an alert.
+		show a web page as an layer.
 		//see doc for guidelines.
 		//cobalt.webLayer("show","tests_12_webAlertContent.html",1.2);
 		//cobalt.webLayer("dismiss");
@@ -203,30 +203,28 @@ var cobalt={
 			break;
 		}
 	},
+
     /* internal, called from native */
-    execute:function(data){
+    execute:function(json){
     	//cobalt.log(data,false)
         /*test if data.type exists, otherwise parse data or die silently */
-        if (data && ! data.type){
+        if (json && ! json.type){
         	try{
-                data = JSON.parse(data);
+                json = JSON.parse(json);
             }catch(e){
-                data = {};
+                json = {};
             }
         }
         try{
-	        switch (data.type){
+	        switch (json.type){
 	        	case "event":
-                    cobalt.adapter.handleEvent(data)
+                    cobalt.adapter.handleEvent(json)
 	                break;
 	            case "callback":
-                    cobalt.adapter.handleCallback(data)
+                    cobalt.adapter.handleCallback(json)
                     break;
-		        case "log": //TODO : is it needed?
-                    cobalt.log('LOG '+decodeURIComponent(data.value), data.logBack)
-                    break;
-	        	default:
-	        		cobalt.log('received unhandled data type : '+data.type)        		
+		        default:
+	        		cobalt.log('received unhandled data type : '+json.type)
 	        }
 	    }catch(e){
             cobalt.log('cobalt.execute failed : '+e)
@@ -298,10 +296,16 @@ var cobalt={
 	},
 
 	defaultBehaviors:{
-		handleCallback:function(callback){
-	        switch(callback.callback){
+		handleEvent:function(json){
+			cobalt.log("received : "+JSON.stringify(json), false)
+		    if (cobalt.userEvents && typeof cobalt.userEvents[json.event] === "function"){
+				cobalt.userEvents[json.event](json.data,json.callback);
+		    }
+	    },
+		handleCallback:function(json){
+	        switch(json.callback){
 	            default:
-				    cobalt.tryToCallCallback(callback)
+				    cobalt.tryToCallCallback(json)
 			    break;
 	        }
 	    },

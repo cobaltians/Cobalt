@@ -40,15 +40,15 @@ cobalt.tizen_adapter={
 	},
 	
 	// handle events sent by native side
-    handleEvent:function(event){
-		cobalt.log("----received : "+JSON.stringify(event), false)
-		if (cobalt.userEvents && typeof cobalt.userEvents[event.name] === "function"){
-			cobalt.userEvents[event.name](event);
+    handleEvent:function(json){
+		cobalt.log("----received : "+JSON.stringify(json), false)
+		if (cobalt.userEvents && typeof cobalt.userEvents[json.event] === "function"){
+			cobalt.userEvents[json.event](json.data,json.callback);
 	    }else{
-	        switch (event.name){
+	        switch (json.event){
 		        case "onBackButtonPressed":
 				    cobalt.log('sending OK for a native back')
-			        cobalt.sendCallback(event,{value : true});
+			        cobalt.sendCallback(json.callback,{value : true});
 			    break;
 	        }
         }

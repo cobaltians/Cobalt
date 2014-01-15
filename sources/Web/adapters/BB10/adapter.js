@@ -32,11 +32,18 @@ cobalt.bb10_adapter={
 	},
 	
 	// handle events sent by native side
-    handleEvent:function(event){
-		cobalt.log("----received : "+JSON.stringify(event), false)
-        if (cobalt.userEvents && typeof cobalt.userEvents[event.name] === "function"){
-			cobalt.userEvents[event.name](event);
-	    }
+    handleEvent:function(json){
+		cobalt.log("----received : "+JSON.stringify(json), false)
+		if (cobalt.userEvents && typeof cobalt.userEvents[json.event] === "function"){
+			cobalt.userEvents[json.event](json.data,json.callback);
+	    }else{
+	        switch (json.event){
+		        case "onBackButtonPressed":
+				    cobalt.log('sending OK for a native back')
+			        cobalt.sendCallback(json.callback,{value : true});
+			    break;
+	        }
+        }
     },
     //send native stuff
     send:function(obj){
