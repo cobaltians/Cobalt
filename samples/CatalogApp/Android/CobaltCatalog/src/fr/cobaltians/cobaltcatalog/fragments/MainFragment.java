@@ -114,8 +114,8 @@ public class MainFragment extends HTMLFragment {
 					String name = jsonObj.optString(kJSEvent);
 					if(name != null && name.length() >0 && name.equals(JSNameTestCallback))
 					{
-
-						final String value = jsonObj.optString(kJSValue);
+						JSONObject data = jsonObj.getJSONObject(kJSData);
+						final String value = data.getString(kJSValue);
 						if(value != null)
 							getActivity().runOnUiThread(new Runnable() {
 								public void run() {
@@ -132,7 +132,8 @@ public class MainFragment extends HTMLFragment {
 					}
 					else if(name != null && name.length() >0 && name.equals(JSNameTestCallbackAsync))
 					{
-						final String value = jsonObj.optString(kJSValue);
+						JSONObject data = jsonObj.getJSONObject(kJSData);
+						final String value = data.getString(kJSValue);
 						if(value != null)
 							getActivity().runOnUiThread(new Runnable() {
 								public void run() {

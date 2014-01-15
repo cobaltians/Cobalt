@@ -13,6 +13,8 @@
 
 # generated files
 bin/
+sources/Android/Cobalt/bin/
+samples/CatalogApp/Android/CobaltCatalog/bin/
 gen/
 
 # Ignore gradle files
