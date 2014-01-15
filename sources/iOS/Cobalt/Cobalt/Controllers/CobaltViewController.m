@@ -33,74 +33,78 @@
 
 #define haploidSpecialJSKey                 @"h@ploid#k&y"
 
-//Conf File
+// CONFIGURATION FILE
 #define confFileName                        @"cobalt.conf"
-#define kIosClassName                       @"iosClassName"
+#define kIosController                      @"iosController"
 #define kIosNibName                         @"iosNibName"
-#define kPullToRefreshActive                @"pullToRefresh"
-#define kInfiniteScrollActive               @"infiniteScroll"
+#define kPullToRefreshEnabled               @"pullToRefresh"
+#define kInfiniteScrollEnabled              @"infiniteScroll"
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark JAVASCRIPT KEYS
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// JAVASCRIPT KEYS
+// GENERAL
+#define kJSAction                           @"action"
+#define kJSCallback                         @"callback"
+#define kJSData                             @"data"
+#define kJSPage                             @"page"
 #define kJSType                             @"type"
-#define JSTypeEvent                         @"typeEvent"
-#define JSNativeBridgeIsReady               @"nativeBridgeIsReady"
-#define JSTypeReady                         @"nativeBridgeIsReady"
-#define JSTypeLog                           @"typeLog"
-#define JSTypeAlert                         @"typeAlert"
-#define JSTypeWebAlert                      @"typeWebAlert"
-#define JSTypeCallBack                      @"typeCallback"
-#define JSTypeNavigation                    @"typeNavigation"
-
-// PULL TO REFRESH
-#define JSPullToRefreshRefresh              @"pullToRefreshRefresh"
-#define JSPullToRefreshDidRefresh           @"pullToRefreshDidRefresh"
-#define JSPullToRefreshCancelled            @"pullToRefreshCancelled"
-
-// INFINITE SCROLL
-#define JSInfiniteScrollRefresh             @"infiniteScrollRefresh"
-#define JSInfiniteScrollDidRefresh          @"infiniteScrollDidRefresh"
-#define JSInfiniteScrollCancelled           @"infiniteScrollCancelled"
-
-//EVENTS
-#define kJSName                             @"name"
-#define JSNameToast                         @"nameToast"
 #define kJSValue                            @"value"
 
-//CALLBACKS
-#define kJSCallbackID                       @"callbackID"
+// CALLBACK
+#define JSTypeCallBack                      @"callback"
 #define JSCallbackSimpleAcquitment          @"callbackSimpleAcquitment"
-#define kJSParams                           @"params"
 
-//NAVIGATION
-#define kJSNavigationType                   @"navigationType"
-#define JSNavigationTypePush                @"push"
-#define JSNavigationTypePop                 @"pop"
-#define JSNavigationTypeDismiss             @"dismiss"
-#define JSNavigationTypeModale              @"modale"
+// COBALT IS READY
+#define JSTypeCobaltIsReady                 @"cobaltIsReady"
 
-#define kJSNavigationPageName               @"navigationPageName"
+// EVENT
+#define JSTypeEvent                         @"event"
+#define kJSEvent                            @"event"
 
-#define kJSNavigationClassId                @"navigationClassId"
-#define JSNavigationDefaultClassId          @"default"
+// LOG
+#define JSTypeLog                           @"log"
 
-//ALERT
-#define kJSAlertTitle                       @"alertTitle"
-#define kJSAlertMessage                     @"alertMessage"
-#define kJSAlertButtons                     @"alertButtons"
-#define kJSAlertCallbackReceiver            @"alertReceiver"
-#define kJSAlertID                          @"alertId"
+// NAVIGATION
+#define JSTypeNavigation                    @"navigation"
+#define JSActionNavigationPush              @"push"
+#define JSActionNavigationPop               @"pop"
+#define JSActionNavigationModale            @"modale"
+#define JSActionNavigationDismiss           @"dismiss"
+#define kJSNavigationController             @"controller"
+#define JSNavigationControllerDefault       @"default"
+
+// PULL TO REFRESH
+#define JSEventPullToRefresh                @"pullToRefresh"
+#define JSCallbackPullToRefreshDidRefresh   @"pullToRefreshDidRefresh"
+
+// INFINITE SCROLL
+#define JSEventInfiniteScroll               @"infiniteScroll"
+#define JSCallbackInfiniteScrollDidRefresh  @"infiniteScrollDidRefresh"
+
+// UI
+#define JSTypeUI                            @"ui";
+#define kJSUIControl                        @"control";
+
+// ALERT
+#define JSControlAlert                      @"alert"
+#define kJSAlertTitle                       @"title"
+#define kJSAlertMessage                     @"message"
+#define kJSAlertButtons                     @"buttons"
 #define kJSAlertButtonIndex                 @"index"
 
-#define JSAlertCallbackReceiverWeb          @"web"
-#define JSAlertCallbackReceiverNative       @"native"
-#define JSOnWebAlertDismissed               @"onWebAlertDismissed"
+// TOAST
+#define JSControlToast                      @"toast"
 
-//WEBALERT
-#define JSWebAlertShow                      @"show"
-#define JSWebAlertDismiss                   @"dismiss"
-#define kJSWebAlertPageName                 @"pageName"
-#define kJSWebAlertfadeDuration             @"fadeDuration"
+// WEB LAYER
+#define JSTypeWebLayer                      @"webLayer"
+#define JSActionWebLayerShow                @"show"
+#define JSActionWebLayerDismiss             @"dismiss"
+#define kJSWebLayerFadeDuration             @"fadeDuration"
+#define JSEventWebLayerOnDismiss            @"onWebLayerDismissed"
 
 // HTML
 #define defaultHtmlPage                     @"index.html"
@@ -312,8 +316,8 @@ NSString *popupPageName;
     {
         NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
                               JSTypeCallBack, kJSType,
-                              callbackId, kJSCallbackID,
-                              object,kJSParams,
+                              callbackId, kJSCallback,
+                              object, kJSData,
                               nil];
         
         // pourquoi executer ça dans la main thread ??? (d'autant plus que tu y es déjà !!)
@@ -348,9 +352,9 @@ NSString *popupPageName;
         //EVENT
         else if([type isEqualToString:JSTypeEvent])
         {
-            NSString *name = [dict objectForKey:kJSName];
+            NSString *name = [dict objectForKey:kJSEvent];
             //EVENT = TOAST
-            if(name && [name isKindOfClass:[NSString class]] &&name.length >0 && [name isEqualToString:JSNameToast])
+            if(name && [name isKindOfClass:[NSString class]] &&name.length >0 && [name isEqualToString:JSControlToast])
             {
                 NSString *value = [dict objectForKey:kJSValue];
                 CobaltToast *t = (CobaltToast *)[[CobaltToast makeText:value] setGravity:iToastGravityBottom];
@@ -369,38 +373,42 @@ NSString *popupPageName;
         //NAVIGATE
         else if([type isEqualToString:JSTypeNavigation])
         {
-            NSString *navType = [dict objectForKey:kJSNavigationType];
+            NSString *navType = [dict objectForKey:kJSAction];
             //PUSH
             if(navType && [navType isKindOfClass:[NSString class]] && navType.length >0)
             {
-                if([navType isEqualToString:JSNavigationTypePush])
+                if([navType isEqualToString:JSActionNavigationPush])
                 {
-                    NSString *vcId = [dict objectForKey:kJSNavigationClassId] ? [dict objectForKey:kJSNavigationClassId] : @"";
-                    NSString *pageNamed = [dict objectForKey:kJSNavigationPageName] ? [dict objectForKey:kJSNavigationPageName] : @"";
-                    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:vcId,kJSNavigationClassId,pageNamed,kJSNavigationPageName, nil];
+                    NSString *vcId = [dict objectForKey:kJSNavigationController] ? [dict objectForKey:kJSNavigationController] : @"";
+                    NSString *pageNamed = [dict objectForKey:kJSPage] ? [dict objectForKey:kJSPage] : @"";
+                    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:vcId, kJSNavigationController,
+                                                                                    pageNamed, kJSPage,
+                                                                                    nil];
                     [self performSelectorOnMainThread:@selector(pushWebViewControllerWithDict:) withObject:dict waitUntilDone:YES];
                     
                     return YES;
                 }
                 //POP
-                else if(navType && navType.length >0 && [navType isEqualToString:JSNavigationTypePop])
+                else if(navType && navType.length >0 && [navType isEqualToString:JSActionNavigationPop])
                 {
                     [self performSelectorOnMainThread:@selector(popWebViewController) withObject:nil waitUntilDone:YES];
                     
                     return YES;
                 }
                 //MODALE
-                else if(navType && navType.length >0 && [navType isEqualToString:JSNavigationTypeModale])
+                else if(navType && navType.length >0 && [navType isEqualToString:JSActionNavigationModale])
                 {
-                    NSString *vcId = [dict objectForKey:kJSNavigationClassId] ? [dict objectForKey:kJSNavigationClassId] : @"";
-                    NSString *pageNamed = [dict objectForKey:kJSNavigationPageName] ? [dict objectForKey:kJSNavigationPageName] : @"";
-                    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:vcId,kJSNavigationClassId,pageNamed,kJSNavigationPageName, nil];
+                    NSString *vcId = [dict objectForKey:kJSNavigationController] ? [dict objectForKey:kJSNavigationController] : @"";
+                    NSString *pageNamed = [dict objectForKey:kJSPage] ? [dict objectForKey:kJSPage] : @"";
+                    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:vcId, kJSNavigationController,
+                                                                                    pageNamed, kJSPage,
+                                                                                    nil];
                     [self performSelectorOnMainThread:@selector(presentWebViewControllerWithDict:) withObject:dict waitUntilDone:YES];
                     
                     return YES;
                 }
                 //DISMISS
-                else if(navType && navType.length >0 && [navType isEqualToString:JSNavigationTypeDismiss])
+                else if(navType && navType.length >0 && [navType isEqualToString:JSActionNavigationDismiss])
                 {
                     [self performSelectorOnMainThread:@selector(dismissWebViewController) withObject:nil waitUntilDone:YES];
                     return YES;
@@ -408,24 +416,24 @@ NSString *popupPageName;
             }
         }
         //ALERT
-        else if([type isEqualToString:JSTypeAlert])
+        else if([type isEqualToString:JSControlAlert])
         {
             [self showAlertWithDict:dict];
             return YES;
             
         }
         //WEB ALERT
-        else if([type isEqualToString:JSTypeWebAlert])
+        else if([type isEqualToString:JSTypeWebLayer])
         {
-            NSString *name = [dict objectForKey:kJSName];
+            NSString *name = [dict objectForKey:kJSAction];
             if(name && [name isKindOfClass:[NSString class]] && name.length >0)
             {
-                if([name isEqualToString:JSWebAlertShow])
+                if([name isEqualToString:JSActionWebLayerShow])
                 {
                     [self performSelectorOnMainThread:@selector(showPopUpWebviewWithDict:) withObject:dict waitUntilDone:YES];
                     return YES;
                 }
-                else if([name isEqualToString:JSWebAlertDismiss])
+                else if([name isEqualToString:JSActionWebLayerDismiss])
                 {
                     [self performSelectorOnMainThread:@selector(dismissPopUpWebviewWithDict:) withObject:dict waitUntilDone:YES];
                     return YES;
@@ -435,20 +443,20 @@ NSString *popupPageName;
         // CALLBACKS
         else if([type isEqualToString:JSTypeCallBack])
         {
-            NSString *name = [dict objectForKey:kJSCallbackID];
-            if(name && [name isKindOfClass:[NSString class]] && [name isEqualToString:JSPullToRefreshDidRefresh])
+            NSString *name = [dict objectForKey:kJSCallback];
+            if(name && [name isKindOfClass:[NSString class]] && [name isEqualToString:JSCallbackPullToRefreshDidRefresh])
             {
                 [self performSelectorOnMainThread:@selector(didRefresh) withObject:nil waitUntilDone:YES];
                 return YES;
             }
-            else if (name && [name isKindOfClass:[NSString class]] && [name isEqualToString:JSInfiniteScrollDidRefresh])
+            else if (name && [name isKindOfClass:[NSString class]] && [name isEqualToString:JSCallbackInfiniteScrollDidRefresh])
             {
                 [self performSelectorOnMainThread:@selector(moreItemsHaveBeenLoaded) withObject:nil waitUntilDone:YES];
                 return YES;
             }
         }
         //JS READY EVENT
-        else if([type isEqualToString:JSNativeBridgeIsReady])
+        else if([type isEqualToString:JSTypeCobaltIsReady])
         {
             [toJavaScriptOperationQueue setSuspended:NO];
 #if DEBUG_COBALT
@@ -476,8 +484,8 @@ NSString *popupPageName;
 
 -(void) pushWebViewControllerWithDict:(NSDictionary *)dict
 {
-    NSString *viewControllerId = [dict objectForKey:kJSNavigationClassId] ? [dict objectForKey:kJSNavigationClassId] : @"";
-    NSString *pageNameToShow = [dict objectForKey:kJSNavigationPageName]  ? [dict objectForKey:kJSNavigationPageName] : @"";
+    NSString *viewControllerId = [dict objectForKey:kJSNavigationController] ? [dict objectForKey:kJSNavigationController] : @"";
+    NSString *pageNameToShow = [dict objectForKey:kJSPage]  ? [dict objectForKey:kJSPage] : @"";
     CobaltViewController *viewControllerToPush = [self getControllerFromId:viewControllerId];
     if(viewControllerToPush)
     {
@@ -501,8 +509,8 @@ NSString *popupPageName;
 
 -(void) presentWebViewControllerWithDict:(NSDictionary *)dict
 {
-    NSString *viewControllerId = [dict objectForKey:kJSNavigationClassId];
-    NSString *pageNameToShow = [dict objectForKey:kJSNavigationPageName];
+    NSString *viewControllerId = [dict objectForKey:kJSNavigationController];
+    NSString *pageNameToShow = [dict objectForKey:kJSPage];
     CobaltViewController *viewControllerToPresent = [self getControllerFromId:viewControllerId];
     if(viewControllerToPresent)
     {
@@ -540,10 +548,10 @@ NSString *popupPageName;
         {
             if(viewControllerId && ![viewControllerId isKindOfClass:[NSNull class]])
             {
-                className = [[confDictionary objectForKey:viewControllerId] objectForKey:kIosClassName];
+                className = [[confDictionary objectForKey:viewControllerId] objectForKey:kIosController];
                 nibName = [[confDictionary objectForKey:viewControllerId] objectForKey:kIosNibName];
-                pullToRefreshActive = [[[confDictionary objectForKey:viewControllerId] objectForKey:kPullToRefreshActive] boolValue];
-                infiniteScrollActive = [[[confDictionary objectForKey:viewControllerId] objectForKey:kInfiniteScrollActive] boolValue];
+                pullToRefreshActive = [[[confDictionary objectForKey:viewControllerId] objectForKey:kPullToRefreshEnabled] boolValue];
+                infiniteScrollActive = [[[confDictionary objectForKey:viewControllerId] objectForKey:kInfiniteScrollEnabled] boolValue];
             }
             
             if(!className)
@@ -551,10 +559,10 @@ NSString *popupPageName;
 #if DEBUG_COBALT
                 NSLog(@"WARNING : className for ID %@ not found. Look for default class ID",viewControllerId);
 #endif
-                className = [[confDictionary objectForKey:JSNavigationDefaultClassId] objectForKey:kIosClassName];
-                nibName = [[confDictionary objectForKey:JSNavigationDefaultClassId] objectForKey:kIosNibName];
-                pullToRefreshActive = [[[confDictionary objectForKey:JSNavigationDefaultClassId] objectForKey:kPullToRefreshActive] boolValue];
-                infiniteScrollActive = [[[confDictionary objectForKey:viewControllerId] objectForKey:kInfiniteScrollActive] boolValue];
+                className = [[confDictionary objectForKey:JSNavigationControllerDefault] objectForKey:kIosController];
+                nibName = [[confDictionary objectForKey:JSNavigationControllerDefault] objectForKey:kIosNibName];
+                pullToRefreshActive = [[[confDictionary objectForKey:JSNavigationControllerDefault] objectForKey:kPullToRefreshEnabled] boolValue];
+                infiniteScrollActive = [[[confDictionary objectForKey:viewControllerId] objectForKey:kInfiniteScrollEnabled] boolValue];
                 
             }
             
@@ -672,7 +680,7 @@ NSString *popupPageName;
             //save the callbackId to send it later to web
             if([receiverType isEqualToString:JSAlertCallbackReceiverWeb])
             {
-                NSString *callbackId = [NSString stringWithFormat:@"%@",[dict objectForKey:kJSCallbackID]];
+                NSString *callbackId = [NSString stringWithFormat:@"%@",[dict objectForKey:kJSCallback]];
                 if(callbackId && callbackId.length > 0)
                 {
                     [alertCallbacks setObject:callbackId forKey:[NSString stringWithFormat:@"%d",alertId.intValue]];
@@ -723,7 +731,9 @@ NSString *popupPageName;
     {
         NSString *callbackId = [alertCallbacks objectForKey:[NSString stringWithFormat:@"%d",alertViewId]];
         
-        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:alertViewId],kJSAlertID,[NSNumber numberWithInteger:buttonIndex],kJSAlertButtonIndex, nil];
+        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:alertViewId], kJSAlertID,
+                                                                        [NSNumber numberWithInteger:buttonIndex], kJSAlertButtonIndex,
+                                                                        nil];
         
         [self sendCallbackResponseWithID:callbackId andObject:dict];
         
@@ -756,8 +766,8 @@ NSString *popupPageName;
         self.popUpWebview = nil;
     }
     
-    popupPageName = ([dict objectForKey:kJSWebAlertPageName]  && [[dict objectForKey:kJSWebAlertPageName] isKindOfClass:[NSString class]])? [dict objectForKey:kJSWebAlertPageName] : @"";
-    NSNumber *fadeDuration = ([dict objectForKey:kJSWebAlertfadeDuration]  && [[dict objectForKey:kJSWebAlertfadeDuration] isKindOfClass:[NSNumber class]])? [dict objectForKey:kJSWebAlertfadeDuration] : [NSNumber numberWithFloat:0.3];
+    popupPageName = ([dict objectForKey:kJSPage]  && [[dict objectForKey:kJSPage] isKindOfClass:[NSString class]])? [dict objectForKey:kJSPage] : @"";
+    NSNumber *fadeDuration = ([dict objectForKey:kJSWebLayerFadeDuration]  && [[dict objectForKey:kJSWebLayerFadeDuration] isKindOfClass:[NSNumber class]])? [dict objectForKey:kJSWebLayerFadeDuration] : [NSNumber numberWithFloat:0.3];
     
     self.popUpWebview = [[UIWebView alloc] initWithFrame:self.view.frame];
     
@@ -780,7 +790,7 @@ NSString *popupPageName;
 
 -(void) dismissPopUpWebviewWithDict:(NSDictionary *)dict
 {
-    NSNumber *fadeDuration = ([dict objectForKey:kJSWebAlertfadeDuration]  && [[dict objectForKey:kJSWebAlertfadeDuration] isKindOfClass:[NSNumber class]])? [dict objectForKey:kJSWebAlertfadeDuration] : [NSNumber numberWithFloat:0.3];
+    NSNumber *fadeDuration = ([dict objectForKey:kJSWebLayerFadeDuration]  && [[dict objectForKey:kJSWebLayerFadeDuration] isKindOfClass:[NSNumber class]])? [dict objectForKey:kJSWebLayerFadeDuration] : [NSNumber numberWithFloat:0.3];
     
     [UIView animateWithDuration:fadeDuration.floatValue animations:^{
         [self.popUpWebview setAlpha:0.0];
@@ -796,7 +806,10 @@ NSString *popupPageName;
 
 -(void)onWebPopupDismissed:(NSString *)filename
 {
-   NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:JSTypeEvent,kJSType,JSOnWebAlertDismissed,kJSName,filename,kJSValue, nil];
+   NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:JSTypeEvent, kJSType,
+                                                                JSEventWebLayerOnDismiss, kJSEvent,
+                                                                filename, kJSValue,
+                                                                nil];
     [self executeScriptInWebView:self.webView WithDictionary:d];
 }
 
@@ -848,7 +861,9 @@ NSString *popupPageName;
 
 -(void) sendSimpleAcquitmentToJS
 {
-    NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:JSTypeCallBack,kJSType,JSCallbackSimpleAcquitment,kJSCallbackID, nil];
+    NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeCallBack, kJSType,
+                                                                        JSCallbackSimpleAcquitment, kJSCallback,
+                                                                        nil];
     [self executeScriptInWebView:self.webView WithDictionary:dict];
     
     if(self.popUpWebview)
@@ -983,7 +998,10 @@ NSString *popupPageName;
  @abstract		Starts refreshing the table view data source.
  */
 - (void)refreshWebViewDataSource {
-    NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:JSTypeEvent,kJSType,JSPullToRefreshRefresh,kJSName, JSPullToRefreshDidRefresh,kJSCallbackID,nil];
+    NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeEvent, kJSType,
+                                                                    JSEventPullToRefresh, kJSEvent,
+                                                                    JSCallbackPullToRefreshDidRefresh, kJSCallback,
+                                                                    nil];
     [self executeScriptInWebView:self.webView WithDictionary:d];
 }
 
@@ -1020,7 +1038,9 @@ NSString *popupPageName;
     if(self.isPullToRefreshActive && _isRefreshing)
     {
         [self didRefresh];
-        NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:JSTypeEvent,kJSType,JSPullToRefreshCancelled,kJSName,nil];
+        NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeEvent, kJSType,
+                                                                        JSPullToRefreshCancelled, kJSName,
+                                                                        nil];
         [self executeScriptInWebView:self.webView WithDictionary:d];
     }
 }
@@ -1040,7 +1060,10 @@ NSString *popupPageName;
 
 -(void) loadMoreContentInWebview
 {
-    NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:JSTypeEvent,kJSType,JSInfiniteScrollRefresh,kJSName,JSInfiniteScrollDidRefresh,kJSCallbackID,nil];
+    NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeEvent, kJSType,
+                                                                    JSEventInfiniteScroll, kJSEvent,
+                                                                    JSCallbackInfiniteScrollDidRefresh, kJSCallback,
+                                                                    nil];
     [self executeScriptInWebView:self.webView WithDictionary:d];
 }
 

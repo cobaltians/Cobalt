@@ -139,7 +139,6 @@ public abstract class HTMLFragment extends Fragment {
 		
 	// ALERT
 	protected final static String JSControlAlert = "alert";
-	protected final static String kJSAlertID = "id";
 	protected final static String kJSAlertTitle = "title";
 	protected final static String kJSAlertMessage = "message";
 	protected final static String kJSAlertButtons = "buttons";
