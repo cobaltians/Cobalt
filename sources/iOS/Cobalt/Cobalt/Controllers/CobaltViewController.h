@@ -34,6 +34,75 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
+#pragma mark JAVASCRIPT KEYS
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// GENERAL
+#define kJSAction                           @"action"
+#define kJSCallback                         @"callback"
+#define kJSData                             @"data"
+#define kJSPage                             @"page"
+#define kJSType                             @"type"
+#define kJSValue                            @"value"
+
+// CALLBACK
+#define JSTypeCallBack                      @"callback"
+#define JSCallbackSimpleAcquitment          @"callbackSimpleAcquitment"
+
+// COBALT IS READY
+#define JSTypeCobaltIsReady                 @"cobaltIsReady"
+
+// EVENT
+#define JSTypeEvent                         @"event"
+#define kJSEvent                            @"event"
+
+// LOG
+#define JSTypeLog                           @"log"
+
+// NAVIGATION
+#define JSTypeNavigation                    @"navigation"
+#define JSActionNavigationPush              @"push"
+#define JSActionNavigationPop               @"pop"
+#define JSActionNavigationModale            @"modale"
+#define JSActionNavigationDismiss           @"dismiss"
+#define kJSNavigationController             @"controller"
+#define JSNavigationControllerDefault       @"default"
+
+// PULL TO REFRESH
+#define JSEventPullToRefresh                @"pullToRefresh"
+#define JSCallbackPullToRefreshDidRefresh   @"pullToRefreshDidRefresh"
+
+// INFINITE SCROLL
+#define JSEventInfiniteScroll               @"infiniteScroll"
+#define JSCallbackInfiniteScrollDidRefresh  @"infiniteScrollDidRefresh"
+
+// UI
+#define JSTypeUI                            @"ui";
+#define kJSUIControl                        @"control";
+
+// ALERT
+#define JSControlAlert                      @"alert"
+#define kJSAlertTitle                       @"title"
+#define kJSAlertMessage                     @"message"
+#define kJSAlertButtons                     @"buttons"
+#define kJSAlertButtonIndex                 @"index"
+
+// TOAST
+#define JSControlToast                      @"toast"
+
+// WEB LAYER
+#define JSTypeWebLayer                      @"webLayer"
+#define JSActionWebLayerShow                @"show"
+#define JSActionWebLayerDismiss             @"dismiss"
+#define kJSWebLayerFadeDuration             @"fadeDuration"
+#define JSEventWebLayerOnDismiss            @"onWebLayerDismissed"
+
+// HTML
+#define defaultHtmlPage                     @"index.html"
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 #pragma mark INTERFACE
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
