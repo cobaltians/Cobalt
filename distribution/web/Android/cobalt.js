@@ -133,11 +133,10 @@ var cobalt={
 	},
 	//Sends a callback to native side.
 	//See doc for guidelines.
-    sendCallback:function(originalEvent, data){
-		var event=originalEvent;
-		if (typeof event.callback ==="string" && event.callback.length > 0){
-			//cobalt.log("calling callback with "+JSON.stringify({type:"typeCallback", callbackID:event.callbackID, data: data}))
-			cobalt.send({type:"callback", callback :event.callback, data: data})
+    sendCallback:function(callback, data){
+		if (typeof callback ==="string" && callback.length > 0){
+			//cobalt.log("calling callback with "+JSON.stringify({type:"typeCallback", callback:callback, data: data}))
+			cobalt.send({type:"callback", callback : callback, data: data})
 	    }
 	},
 	//Navigate to an other page or do some special navigation actions
