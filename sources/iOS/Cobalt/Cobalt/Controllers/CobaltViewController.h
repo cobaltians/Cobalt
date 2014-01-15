@@ -41,7 +41,7 @@
  @class			CobaltViewController
  @abstract		Base class for a webView controller that allows javascript/native dialogs
  */
-@interface CobaltViewController : UIViewController <UIWebViewDelegate,UIAlertViewDelegate,HPToastDelegateProtocol, UIScrollViewDelegate>
+@interface CobaltViewController : UIViewController <UIWebViewDelegate,UIAlertViewDelegate, CobaltToastDelegate, UIScrollViewDelegate>
 {
     // Javascript queues
     NSOperationQueue *toJavaScriptOperationQueue;
