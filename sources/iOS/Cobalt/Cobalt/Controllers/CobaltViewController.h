@@ -28,7 +28,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "HPToast.h"
+#import "Toast.h"
 
 // JAVASCRIPT KEYS
 #define kJSType                 @"type"
@@ -94,7 +94,7 @@
  @class			CobaltViewController
  @abstract		Base class for a webView controller that allows javascript/native dialogs
  */
-@interface CobaltViewController : UIViewController <UIWebViewDelegate,UIAlertViewDelegate,HPToastDelegateProtocol>
+@interface CobaltViewController : UIViewController <UIWebViewDelegate,UIAlertViewDelegate, ToastDelegate>
 {
     BOOL _refreshing;
     

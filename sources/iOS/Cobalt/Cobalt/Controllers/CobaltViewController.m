@@ -230,7 +230,7 @@ NSString *popupPageName;
             if(name && [name isKindOfClass:[NSString class]] &&name.length >0 && [name isEqualToString:JSNameToast])
             {
                 NSString *value = [dict objectForKey:kJSValue];
-                HPToast *t = (HPToast *)[[HPToast makeText:value] setGravity:iToastGravityBottom];
+                Toast *t = (Toast *)[[Toast makeText:value] setGravity:iToastGravityBottom];
                 [t setDelegate:self];
                 if(toastIsShown)
                 {
@@ -744,7 +744,7 @@ NSString *popupPageName;
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
--(void) HPToastwillShow:(HPToast *)toast
+-(void) toastwillShow:(Toast *)toast
 {
     toastIsShown = YES;
 #if DEBUG_COBALT
@@ -752,12 +752,12 @@ NSString *popupPageName;
 #endif
 }
 
--(void) HPToastwillHide:(HPToast *)toast
+-(void) toastwillHide:(Toast *)toast
 {
     toastIsShown = NO;
     if(toastsToShow.count > 0)
     {
-        HPToast *t = [toastsToShow objectAtIndex:0];
+        Toast *t = [toastsToShow objectAtIndex:0];
         [t performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
         [toastsToShow removeObjectAtIndex:0];
     }

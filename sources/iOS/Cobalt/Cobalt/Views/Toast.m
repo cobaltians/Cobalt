@@ -1,6 +1,6 @@
 /**
  *
- * HPToast.m
+ * Toast.m
  * Cobalt
  *
  * The MIT License (MIT)
@@ -27,42 +27,44 @@
  *
  */
 
-#import "HPToast.h"
+#import "Toast.h"
 
-@implementation HPToast
+@implementation Toast
 
-
-- (void) hideToast:(NSTimer*)theTimer{
-
-    if(self.delegate)
-        [self.delegate HPToastwillHide:self];
-    
-        [super hideToast:theTimer];
-}
-
-
--(void) show:(iToastType)type
++ (Toast *)makeText:(NSString *)text
 {
-    if(self.delegate)
-        [self.delegate HPToastwillShow:self];
-    
-    [super show:type];
-    [view setUserInteractionEnabled:NO];
+    Toast * toast = [[Toast alloc] initWithText:text];
+    [toast setDuration:iToastDurationNormal];
+    return toast;
 }
 
-+ (HPToast *) makeText:(NSString *) tex
+- (id)initWithText:(NSString *)pText
 {
-    HPToast *t = [[HPToast alloc] initWithText:tex];
-    [t setDuration:iToastDurationNormal];
-    return t;
-}
-
-- (id) initWithText:(NSString *) tex{
 	if (self = [super init]) {
-		text = tex;
+		text = pText;
 	}
 	
 	return self;
+}
+
+- (void)show:(iToastType)type
+{
+    if (self.delegate) {
+        [self.delegate toastWillShow:self];
+    }
+    
+    [super show:type];
+    
+    [view setUserInteractionEnabled:NO];
+}
+
+- (void)hideToast:(NSTimer *)pTimer
+{
+    if (self.delegate) {
+        [self.delegate toastWillHide:self];
+    }
+    
+    [super hideToast:pTimer];
 }
 
 @end

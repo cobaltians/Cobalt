@@ -1,6 +1,6 @@
 /**
  *
- * HPToast.h
+ * Toast.h
  * Cobalt
  *
  * The MIT License (MIT)
@@ -29,18 +29,19 @@
 
 #import "iToast.h"
 
-@class HPToast;
-@protocol HPToastDelegateProtocol <NSObject>
+@class Toast;
 
--(void) HPToastwillShow:(HPToast *)toast;
--(void) HPToastwillHide:(HPToast *)toast;
+@protocol ToastDelegate <NSObject>
+
+- (void)toastWillShow:(Toast *)toast;
+- (void)toastWillHide:(Toast *)toast;
 
 @end
 
-@interface HPToast : iToast
+@interface Toast : iToast
 
-@property (nonatomic,retain) id<HPToastDelegateProtocol> delegate;
+@property (nonatomic, retain) id <ToastDelegate> delegate;
 
-+ (HPToast *) makeText:(NSString *) text;
++ (Toast *)makeText:(NSString *)text;
 
 @end
