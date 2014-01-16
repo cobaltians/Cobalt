@@ -573,7 +573,7 @@ public abstract class HTMLFragment extends Fragment {
 				// LOG
 				else if (type.equals(JSTypeLog)) {
 					String text = jsonObj.getString(kJSValue);
-					if (mDebug) Log.d("JS LOG", text);
+					Log.d("JS LOG", text);
 					return true;
 				}
 				

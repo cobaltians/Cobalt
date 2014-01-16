@@ -329,10 +329,7 @@ NSString * popupPageName;
             NSString * text = [dict objectForKey:kJSValue];
             if (text
                 && [text isKindOfClass:[NSString class]]) {
-#if DEBUG_COBALT
                 NSLog(@"JS LOG: %@", text);
-#endif
-                
             }
         }
         
