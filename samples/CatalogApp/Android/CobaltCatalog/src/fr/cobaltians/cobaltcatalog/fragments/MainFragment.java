@@ -50,11 +50,8 @@ public class MainFragment extends HTMLFragment {
 					ArrayList<Integer> l = new ArrayList<Integer>();
 					l.add(51);
 					l.add(42);
-					j.put(kJSType, JSTypeEvent);
-					j.put(kJSEvent, JSNameTestCallback);
-					j.put(kJSCallback, JSNameTestCallback);
 					j.put(kJSValue,new JSONArray(l));
-					executeScriptInWebView(j);
+					sendEvent(JSNameTestCallback, j, JSNameTestCallback);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -69,11 +66,8 @@ public class MainFragment extends HTMLFragment {
 					ArrayList<String> l = new ArrayList<String>();
 					l.add("Bonjour");
 					l.add("Guillaume");
-					j.put(kJSType, JSTypeEvent);
-					j.put(kJSEvent, JSNameTestCallbackAsync);
-					j.put(kJSCallback, JSNameTestCallbackAsync);
 					j.put(kJSValue,new JSONArray(l));
-					executeScriptInWebView(j);
+					sendEvent(JSNameTestCallbackAsync, j, JSNameTestCallbackAsync);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -86,9 +80,8 @@ public class MainFragment extends HTMLFragment {
 			public void onClick(View arg0) {
 				JSONObject j = new JSONObject();
 				try {
-					j.put(kJSType, JSTypeLog);
-					j.put(kJSValue,nativeEditText.getText().toString());
-					executeScriptInWebView(j);
+					j.put(kJSValue, nativeEditText.getText().toString());
+					sendEvent("logThis", j, null);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
