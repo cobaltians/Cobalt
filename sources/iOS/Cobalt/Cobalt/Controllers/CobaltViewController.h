@@ -184,7 +184,7 @@
  @return        a string representing the ressource path to be used in the webview
  @discussion    must be subclassed in subclasses
  */
-- (NSString *)ressourcePath;
++ (NSString *)ressourcePath;
 
 /*!
  @method		-(void) customView
@@ -206,13 +206,12 @@
 ;
 
 /*!
- @method		-(NSString *)getStringFromFileNamed:(NSString *)filename andPath:(NSString *)path
- @abstract		this method returns the content of the File named filename at path path.
- @param         filename : the name of the file
- @param         path : the path where to find this file
+ @method		+ (NSString *)stringWithContentsOfFile:(NSString *)path
+ @abstract		this method returns the content of the file at path path.
+ @param         path: the path where to find this file
  @return        the content of the specified file or nil if an error occured
  */
-- (NSString *)getStringFromFileNamed:(NSString *)filename atPath:(NSString *)path;
++ (NSString *)stringWithContentsOfFile:(NSString *)path;
 
 /*!
  @method		-(void) executeScriptInWebView:(UIWebView *)mWebView WithDictionary:(NSDictionary *)dict
@@ -279,10 +278,10 @@
 - (void)refreshWebViewDataSource;
 
 /*!
- @method		- (void)didRefresh
+ @method		- (void)pullToRefreshDidRefresh
  @abstract		Tells the web view it has been refreshed.
  */
-- (void)didRefresh;
+- (void)pullToRefreshDidRefresh;
 
 /*!
  @method		- (void)stopPullToRefreshRefreshing

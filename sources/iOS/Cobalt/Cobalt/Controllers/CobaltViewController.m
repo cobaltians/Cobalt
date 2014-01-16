@@ -104,7 +104,7 @@ NSString * popupPageName;
         [webView.scrollView setDelegate:self];
     }
 
-    [self loadContentInWebView:webView FromFileNamed:pageName atPath:[self ressourcePath] withRessourcesAtPath:[self ressourcePath]];
+    [self loadContentInWebView:webView FromFileNamed:pageName atPath:[CobaltViewController ressourcePath] withRessourcesAtPath:[CobaltViewController ressourcePath]];
 }
 
 - (void)viewDidUnload
@@ -188,33 +188,90 @@ NSString * popupPageName;
     [mWebView loadRequest:request];
 }
 
-
-- (NSString *)getStringFromFileNamed:(NSString *)filename atPath:(NSString *)path
+- (NSDictionary *)getConfigurationForController:(NSString *)controller
 {
-    NSURL * url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@", path, filename] isDirectory:NO];
-    NSError * error;
-    NSString * stringFromFileAtURL = [[NSString alloc] initWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
-
+    NSDictionary * configuration = [self getConfiguration];
+    if (configuration) {
+        if (controller) {
+            NSDictionary * controllerConfiguration = [configuration objectForKey:controller];
+            
+            if (controllerConfiguration
+                && [controllerConfiguration isKindOfClass:[NSDictionary class]]) {
+                return controllerConfiguration;
+            }
 #if DEBUG_COBALT
-    if (stringFromFileAtURL == nil) {
-        NSLog(@"Error reading file at %@\n%@", url, [error localizedFailureReason]);
-    }
+            else {
+
+                NSLog(@"getConfigurationForController: no configuration found for %@ controller.\n\
+                      Trying to return default controller configuration", controller);
 #endif
+            }
+        }
+        
+        NSDictionary * defaultControllerConfiguration = [configuration objectForKey:JSNavigationControllerDefault];
+        
+        if (defaultControllerConfiguration
+            && [defaultControllerConfiguration isKindOfClass:[NSDictionary class]]) {
+            return defaultControllerConfiguration;
+        }
+        else {
+#if DEBUG_COBALT
+            NSLog(@"getConfigurationForController: no configuration found for default controller");
+#endif
+        }
+    }
     
-    return stringFromFileAtURL;
+    return nil;
 }
 
-- (id)parseJSONFromString:(NSString *)jsonString
+- (NSDictionary *)getConfiguration
 {
-    NSError * error;
-    NSData * data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    
-    if (data) {
-        return [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+    NSString * configuration = [CobaltViewController stringWithContentsOfFile:[NSString stringWithFormat:@"%@%@", [CobaltViewController ressourcePath], confFileName]];
+    if (configuration) {
+        return [CobaltViewController JSONObjectWithString:configuration];
     }
     else {
         return nil;
     }
+}
+
++ (NSString *)stringWithContentsOfFile:(NSString *)path
+{
+    if (path != nil) {
+        NSURL * url = [NSURL fileURLWithPath:path isDirectory:NO];
+        NSError * error;
+        NSString * content = [[NSString alloc] initWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
+
+    #if DEBUG_COBALT
+        if (! content) {
+            NSLog(@"stringWithContentsOfFile: Error while reading file at %@\n%@", url, [error localizedFailureReason]);
+        }
+    #endif
+        
+        return content;
+    }
+    else {
+#if DEBUG_COBALT
+        NSLog(@"stringWithContentsOfFile: path is nil");
+#endif
+        return nil;
+    }
+}
+
++ (id)JSONObjectWithString:(NSString *)string
+{
+    NSError * error;
+    NSData * data = [string dataUsingEncoding:NSUTF8StringEncoding];
+    
+    id dictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+    
+    #if DEBUG_COBALT
+    if (! dictionary) {
+        NSLog(@"JSONObjectWithString: Error while reading JSON %@\n%@", string, [error localizedFailureReason]);
+    }
+    #endif
+    
+    return dictionary;
 }
 
 - (void)executeScriptInWebView:(UIWebView *)mWebView WithDictionary:(NSDictionary *)dict
@@ -255,7 +312,6 @@ NSString * popupPageName;
 #endif
 }
 
-
 - (BOOL)handleDictionarySentByJavaScript:(NSDictionary *)dict
 {
     NSString * type = [dict objectForKey:kJSType];
@@ -271,10 +327,10 @@ NSString * popupPageName;
             if (callback
                 && [callback isKindOfClass:[NSString class]]) {
                 if ([callback isEqualToString:JSCallbackPullToRefreshDidRefresh]) {
-                    [self performSelectorOnMainThread:@selector(didRefresh) withObject:nil waitUntilDone:YES];
+                    [self performSelectorOnMainThread:@selector(pullToRefreshDidRefresh) withObject:nil waitUntilDone:YES];
                 }
                 else if ([callback isEqualToString:JSCallbackInfiniteScrollDidRefresh]) {
-                    [self performSelectorOnMainThread:@selector(moreItemsHaveBeenLoaded) withObject:nil waitUntilDone:YES];
+                    [self performSelectorOnMainThread:@selector(infiniteScrollDidRefresh) withObject:nil waitUntilDone:YES];
                 }
                 else {
 #if DEBUG_COBALT
@@ -287,11 +343,11 @@ NSString * popupPageName;
                 
                 
             }
-            else {
 #if DEBUG_COBALT
+            else {
                 NSLog(@"handleDictionarySentByJavaScript: callback field missing or not a string (message: %@)", [dict description]);
-#endif
             }
+#endif
         }
         
         // COBALT IS READY
@@ -317,11 +373,11 @@ NSString * popupPageName;
                 //return [self onUnhandledEvent:event withData:data andCallback:callback];
                 return NO;
             }
-            else {
 #if DEBUG_COBALT
+            else {
                 NSLog(@"handleDictionarySentByJavaScript: event field missing or not a string (message: %@)", [dict description]);
-#endif
             }
+#endif
         }
         
         // LOG
@@ -344,60 +400,34 @@ NSString * popupPageName;
                     NSDictionary * data = [dict objectForKey:kJSData];
                     if (data
                         && [data isKindOfClass:[NSDictionary class]]) {
-                        NSString * page = [data objectForKey:kJSPage];
-                        NSString * controller = [data objectForKey:kJSNavigationController];
-                        if (page
-                            && [page isKindOfClass:[NSString class]]) {
-                            NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   page, kJSPage,
-                                                                                                controller, kJSNavigationController,
-                                                                                                nil];
-                            [self performSelectorOnMainThread:@selector(pushWebViewControllerWithDict:) withObject:dict waitUntilDone:YES];
-                        }
-                        else {
-#if DEBUG_COBALT
-                            NSLog(@"handleDictionarySentByJavaScript: page field missing or not a string (message: %@)", [dict description]);
-#endif
-                        }
+                        [self performSelectorOnMainThread:@selector(pushViewControllerWithData:) withObject:data waitUntilDone:YES];
                     }
+#if DEBUG_COBALT
                     else {
-#if DEBUG_COBALT
                         NSLog(@"handleDictionarySentByJavaScript: data field missing or not an object (message: %@)", [dict description]);
-#endif
                     }
+#endif
                 }
                 //POP
                 else if ([action isEqualToString:JSActionNavigationPop]) {
-                    [self performSelectorOnMainThread:@selector(popWebViewController) withObject:nil waitUntilDone:YES];
+                    [self performSelectorOnMainThread:@selector(popViewController) withObject:nil waitUntilDone:YES];
                 }
                 //MODALE
                 else if ([action isEqualToString:JSActionNavigationModale]) {
                     NSDictionary * data = [dict objectForKey:kJSData];
                     if (data
                         && [data isKindOfClass:[NSDictionary class]]) {
-                        NSString * page = [data objectForKey:kJSPage];
-                        NSString * controller = [data objectForKey:kJSNavigationController];
-                        if (page
-                            && [page isKindOfClass:[NSString class]]) {
-                            NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   page, kJSPage,
-                                                                                                controller, kJSNavigationController,
-                                                                                                nil];
-                            [self performSelectorOnMainThread:@selector(presentWebViewControllerWithDict:) withObject:dict waitUntilDone:YES];
-                        }
-                        else {
-#if DEBUG_COBALT
-                            NSLog(@"handleDictionarySentByJavaScript: page field missing or not a string (message: %@)", [dict description]);
-#endif
-                        }
+                            [self performSelectorOnMainThread:@selector(presentViewControllerWithData:) withObject:data waitUntilDone:YES];
                     }
+#if DEBUG_COBALT
                     else {
-#if DEBUG_COBALT
                         NSLog(@"handleDictionarySentByJavaScript: data field missing or not an object (message: %@)", [dict description]);
-#endif
                     }
+#endif
                 }
                 //DISMISS
                 else if ([action isEqualToString:JSActionNavigationDismiss]) {
-                    [self performSelectorOnMainThread:@selector(dismissWebViewController) withObject:nil waitUntilDone:YES];
+                    [self performSelectorOnMainThread:@selector(dismissViewController) withObject:nil waitUntilDone:YES];
                 }
                 else {
 #if DEBUG_COBALT
@@ -409,12 +439,14 @@ NSString * popupPageName;
                 }
                 
             }
-            else {
 #if DEBUG_COBALT
+            else {
                 NSLog(@"handleDictionarySentByJavaScript: action field missing or not a string (message: %@)", [dict description]);
-#endif
             }
+#endif
         }
+        
+        // TODO: FROM HERE
         
         // UI
         else if ([type isEqualToString:JSTypeUI]) {
@@ -441,17 +473,17 @@ NSString * popupPageName;
                                 [toast performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
                             }
                         }
+#if DEBUG_COBALT
                         else {
-#if DEBUG_COBALT
                             NSLog(@"handleDictionarySentByJavaScript: message field missing or not a string (message: %@)", [dict description]);
-#endif
                         }
-                    }
-                    else {
-#if DEBUG_COBALT
-                        NSLog(@"handleDictionarySentByJavaScript: data field missing or not an object (message: %@)", [dict description]);
 #endif
                     }
+#if DEBUG_COBALT
+                    else {
+                        NSLog(@"handleDictionarySentByJavaScript: data field missing or not an object (message: %@)", [dict description]);
+                    }
+#endif
                 }
                 
                 // ALERT
@@ -468,11 +500,11 @@ NSString * popupPageName;
                     return NO;
                 }
             }
-            else {
 #if DEBUG_COBALT
+            else {
                 NSLog(@"handleDictionarySentByJavaScript: control field missing or not a string (message: %@)", [dict description]);
-#endif
             }
+#endif
         }
         
         // WEB LAYER
@@ -491,11 +523,12 @@ NSString * popupPageName;
                     [self performSelectorOnMainThread:@selector(dismissPopUpWebviewWithDict:) withObject:dict waitUntilDone:YES];
                 }
             }
-            else {
 #if DEBUG_COBALT
+            else {
                 NSLog(@"handleDictionarySentByJavaScript: action field missing or not a string (message: %@)", [dict description]);
-#endif
+
             }
+#endif
         }
         
         else {
@@ -519,7 +552,7 @@ NSString * popupPageName;
     return YES;
 }
 
-- (NSString *)ressourcePath
++ (NSString *)ressourcePath
 {
     return [NSString stringWithFormat:@"%@%@",[[NSBundle mainBundle] resourcePath], @"/www/"];
 }
@@ -530,170 +563,125 @@ NSString * popupPageName;
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)pushWebViewControllerWithDict:(NSDictionary *)dict
+- (void)pushViewControllerWithData:(NSDictionary *)data
 {
-    NSString * viewControllerId = [dict objectForKey:kJSNavigationController] ? [dict objectForKey:kJSNavigationController] : @"";
-    NSString * pageNameToShow = [dict objectForKey:kJSPage] ? [dict objectForKey:kJSPage] : @"";
-    CobaltViewController * viewControllerToPush = [self getControllerFromId:viewControllerId];
-    if (viewControllerToPush) {
-        //set ressourcePath and fileName
-        viewControllerToPush.pageName = pageNameToShow;
-        
-        //push the corresponding viewController
-        [self.navigationController pushViewController:viewControllerToPush animated:YES];
+    NSString * page = [data objectForKey:kJSPage];
+    NSString * controller = [data objectForKey:kJSNavigationController];
+    
+    if (page
+        && [page isKindOfClass:[NSString class]]) {
+        UIViewController * viewController = [self getViewControllerForController:controller];
+        if (viewController) {
+            if ([[viewController class] isSubclassOfClass:[CobaltViewController class]]) {
+                // Sets page
+                ((CobaltViewController *)viewController).pageName = page;
+            }
+            
+            // Push corresponding viewController
+            [self.navigationController pushViewController:viewController animated:YES];
+        }
     }
+#if DEBUG_COBALT
+    else {
+        NSLog(@"handleDictionarySentByJavaScript: page field missing or not a string (data: %@)", [data description]);
+    }
+#endif
 }
 
 
-- (void)popWebViewController
+- (void)popViewController
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-
-- (void)presentWebViewControllerWithDict:(NSDictionary *)dict
+- (void)presentViewControllerWithData:(NSDictionary *)data
 {
-    NSString * viewControllerId = [dict objectForKey:kJSNavigationController];
-    NSString * pageNameToShow = [dict objectForKey:kJSPage];
-    CobaltViewController * viewControllerToPresent = [self getControllerFromId:viewControllerId];
-    if (viewControllerToPresent) {
-        //set ressourcePath and fileName
-        viewControllerToPresent.pageName = pageNameToShow;
-        
-        //present the corresponding viewController
-        [self presentViewController:[[UINavigationController alloc] initWithRootViewController:viewControllerToPresent] animated:YES completion:nil];
+    NSString * page = [data objectForKey:kJSPage];
+    NSString * controller = [data objectForKey:kJSNavigationController];
+    if (page
+        && [page isKindOfClass:[NSString class]]) {
+        UIViewController * viewController = [self getViewControllerForController:controller];
+        if (viewController) {
+            if ([[viewController class] isSubclassOfClass:[CobaltViewController class]]) {
+                // Sets page
+                ((CobaltViewController *)viewController).pageName = page;
+            }
+            
+            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:viewController] animated:YES completion:nil];
+        }
     }
+#if DEBUG_COBALT
+    else {
+        NSLog(@"handleDictionarySentByJavaScript: page field missing or not a string (message: %@)", [data description]);
+    }
+#endif
 }
 
-
-- (void)dismissWebViewController
+- (void)dismissViewController
 {
     if (self.presentingViewController) {
         [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
     }
 #if DEBUG_COBALT
     else {
-        NSLog(@"Error : no controller is presented");
+        NSLog(@"dismissViewController: current controller was not presented");
     }
 #endif
 }
 
-
-- (CobaltViewController *)getControllerFromId:(NSString *)viewControllerId
+- (UIViewController *)getViewControllerForController:(NSString *)controller
 {
-    NSString * confToParse = [self getStringFromFileNamed:confFileName atPath: [self ressourcePath]];
-    NSString * className,
-             * nibName;
-    BOOL pullToRefreshActive,
-         infiniteScrollActive;
+    NSDictionary * configuration = [self getConfigurationForController:controller];
     
-    if (confToParse
-        && confToParse.length > 0) {
-        NSDictionary * confDictionary = [self parseJSONFromString:confToParse];
+    if (configuration) {
+        NSString * class = [configuration objectForKey:kIosController];
+        NSString * nib = [configuration objectForKey:kIosNibName];
+        BOOL pullToRefreshEnabled = [[configuration objectForKey:kPullToRefreshEnabled] boolValue];
+        BOOL infiniteScrollEnabled = [[configuration objectForKey:kInfiniteScrollEnabled] boolValue];
         
-        if (confDictionary
-            && ! [confDictionary isKindOfClass:[NSNull class]]) {
-            if (viewControllerId
-                && ! [viewControllerId isKindOfClass:[NSNull class]]) {
-                className = [[confDictionary objectForKey:viewControllerId] objectForKey:kIosController];
-                nibName = [[confDictionary objectForKey:viewControllerId] objectForKey:kIosNibName];
-                pullToRefreshActive = [[[confDictionary objectForKey:viewControllerId] objectForKey:kPullToRefreshEnabled] boolValue];
-                infiniteScrollActive = [[[confDictionary objectForKey:viewControllerId] objectForKey:kInfiniteScrollEnabled] boolValue];
-            }
-            
-            if (! className) {
+        if (! class) {
 #if DEBUG_COBALT
-                NSLog(@"WARNING: className for ID %@ not found. Look for default class ID", viewControllerId);
-#endif
-                className = [[confDictionary objectForKey:JSNavigationControllerDefault] objectForKey:kIosController];
-                nibName = [[confDictionary objectForKey:JSNavigationControllerDefault] objectForKey:kIosNibName];
-                pullToRefreshActive = [[[confDictionary objectForKey:JSNavigationControllerDefault] objectForKey:kPullToRefreshEnabled] boolValue];
-                infiniteScrollActive = [[[confDictionary objectForKey:viewControllerId] objectForKey:kInfiniteScrollEnabled] boolValue];
-                
-            }
-            
-            //if nibName is not defined in conf file -> use same as className !
-            if(! nibName
-               && className) {
-                nibName = className;
-            }
-        }
-        else {
-#if DEBUG_COBALT
-            NSLog(@"ERROR: Syntax error in Conf file");
+            NSLog(@"getCobaltViewControllerForController: no class found for %@ controller", controller);
 #endif
             return nil;
         }
         
-    }
-    else {
-#if DEBUG_COBALT
-        NSLog(@"ERROR: Conf file may be missing or not at the root of ressources folder.");
-#endif
-        return nil;
-    }
-    
-    if ([self isValidControllerWithClassName:className andNibName:nibName]) {
-        if ([NSClassFromString(className) isSubclassOfClass:[CobaltViewController class]]) {
-            CobaltViewController * viewController = [[NSClassFromString(className) alloc] initWithNibName:nibName bundle:[NSBundle mainBundle]];
-            
-            if (pullToRefreshActive) {
-                viewController.isPullToRefreshActive = YES;
-            }
-            else {
-                viewController.isPullToRefreshActive = NO;
-            }
-            
-            if (infiniteScrollActive) {
-                viewController.isInfiniteScrollActive = YES;
-            }
-            else {
-                viewController.isInfiniteScrollActive = NO;
-            }
-            
-            return viewController;
+        // If nib not defined in configuration file, use same as class!
+        if(! nib) {
+            nib = class;
         }
         
-        return [[NSClassFromString(className) alloc] initWithNibName:nibName bundle:[NSBundle mainBundle]];
+        if ([CobaltViewController isValidViewControllerWithClass:class andNib:nib]) {
+            if ([NSClassFromString(class) isSubclassOfClass:[CobaltViewController class]]) {
+                CobaltViewController * viewController = [[NSClassFromString(class) alloc] initWithNibName:nib bundle:[NSBundle mainBundle]];
+                viewController.isPullToRefreshActive = pullToRefreshEnabled;
+                viewController.isInfiniteScrollActive = infiniteScrollEnabled;
+                return viewController;
+            }
+            else {
+                return [[NSClassFromString(class) alloc] initWithNibName:nib bundle:[NSBundle mainBundle]];
+            }
+        }
     }
-    else {
-#if DEBUG_COBALT
-        NSLog(@"ERROR: no view Controller named %@ was found for given ID %@. Nothing will happen...", className, viewControllerId);
-#endif
-        return nil;
-    }
+    
+    return nil;
 }
 
-
-- (BOOL)isValidControllerWithClassName:(NSString *)className andNibName:(NSString *)nibName
++ (BOOL)isValidViewControllerWithClass:(NSString *)class andNib:(NSString *)nib
 {
-    BOOL isValidClass = (className
-                         && NSClassFromString(className)
-                         && [NSClassFromString(className) isSubclassOfClass:[CobaltViewController class]]);
-    BOOL isValidNib = (nibName
-                       && nibName.length > 0
-                       && [[NSBundle mainBundle] pathForResource:nibName ofType:@"nib"] != nil);
+    BOOL isValidClass = NSClassFromString(class) != nil;
+    BOOL isValidNib = (nib.length > 0
+                       && ! [[NSBundle mainBundle] pathForResource:nib ofType:@"nib"]);
     
+#if DEBUG_COBALT
     if (! isValidClass) {
-        if (! className
-            || (className && ! NSClassFromString(className))) {
-#if DEBUG_COBALT
-            NSLog(@"ERROR: classNotFound %@", className);
-#endif
-        }
-        else if(className
-                && NSClassFromString(className)
-                && ! [NSClassFromString(className) isSubclassOfClass:[CobaltViewController class]]) {
-#if DEBUG_COBALT
-            NSLog(@"ERROR: impossible to show %@ for it does not inherit from CobaltViewController", className);
-#endif
-        }
+        NSLog(@"isValidViewControllerWithClass: class %@ not found", class);
     }
-    else if(! isValidNib) {
-#if DEBUG_COBALT
-        NSLog(@"ERROR: nibName %@ does not exist !", nibName);
-#endif
+    
+    if(! isValidNib) {
+        NSLog(@"isValidViewControllerWithClass: %@ nib does not exist!", nib);
     }
+#endif
     
     return isValidClass && isValidNib;
 }
@@ -815,7 +803,7 @@ NSString * popupPageName;
         [popUpWebview setKeyboardDisplayRequiresUserAction:NO];
     }
     
-    [self loadContentInWebView:popUpWebview FromFileNamed:popupPageName atPath:[self ressourcePath] withRessourcesAtPath: [self ressourcePath]];
+    [self loadContentInWebView:popUpWebview FromFileNamed:popupPageName atPath:[CobaltViewController ressourcePath] withRessourcesAtPath: [CobaltViewController ressourcePath]];
     popUpWebview.opaque = NO;
     [popUpWebview setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     [popUpWebview setAlpha:0.0];
@@ -864,7 +852,7 @@ NSString * popupPageName;
     NSRange range = [requestString rangeOfString:haploidSpecialJSKey];
     if (range.location != NSNotFound) {
         NSString * jsonString = [requestString substringFromIndex:range.location + haploidSpecialJSKey.length];
-        NSDictionary * jsonObj = [self parseJSONFromString:jsonString];
+        NSDictionary * jsonObj = [CobaltViewController JSONObjectWithString:jsonString];
         
         [fromJavaScriptOperationQueue addOperationWithBlock:^{
             [self handleDictionarySentByJavaScript:jsonObj];
@@ -894,7 +882,7 @@ NSString * popupPageName;
 }
 
 
--(void) sendSimpleAcquitmentToJS
+- (void)sendSimpleAcquitmentToJS
 {
     NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeCallBack, kJSType,
                                                                         JSCallbackSimpleAcquitment, kJSCallback,
@@ -1022,7 +1010,7 @@ NSString * popupPageName;
  */
 - (void)loadWebViewDataSource
 {
-    [self didRefresh];
+    [self pullToRefreshDidRefresh];
 }
 
 //*********************************
@@ -1045,10 +1033,10 @@ NSString * popupPageName;
 // DID REFRESH *
 //**************
 /*!
- @method		- (void)didRefresh
+ @method		- (void)pullToRefreshDidRefresh
  @abstract		Tells the table view it has been refreshed.
  */
-- (void)didRefresh {
+- (void)pullToRefreshDidRefresh {
     _isRefreshing = NO;
     
     [UIView beginAnimations:nil context:nil];
@@ -1076,7 +1064,7 @@ NSString * popupPageName;
 {
     if (isPullToRefreshActive
         && _isRefreshing) {
-        [self didRefresh];
+        [self pullToRefreshDidRefresh];
         NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeEvent, kJSType,
                                                                             JSPullToRefreshCancelled, kJSName,
                                                                             nil];
@@ -1106,7 +1094,7 @@ NSString * popupPageName;
     [self executeScriptInWebView:self.webView WithDictionary:dict];
 }
 
-- (void)moreItemsHaveBeenLoaded
+- (void)infiniteScrollDidRefresh
 {
     _isLoadingMore = NO;
     

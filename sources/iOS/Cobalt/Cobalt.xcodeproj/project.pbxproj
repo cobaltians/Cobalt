@@ -60,7 +60,7 @@
 				71B4B1971885C7CE0027AC4F /* Cobalt.h */,
 				71B4B1981885C7CE0027AC4F /* Cobalt.m */,
 				71B4B1991885C7CE0027AC4F /* Controllers */,
-				71B4B1A61885C7CE0027AC4F /* Views */,
+				71B4B1A61885C7CE0027AC4F /* Toast */,
 			);
 			path = Cobalt;
 			sourceTree = "<group>";
@@ -77,8 +77,6 @@
 		71B4B1A61885C7CE0027AC4F /* Toast */ = {
 			isa = PBXGroup;
 			children = (
-				71B4B1A41885C7CE0027AC4F /* iToast.h */,
-				71B4B1A51885C7CE0027AC4F /* iToast.m */,
 				71B4B1A71885C7CE0027AC4F /* CobaltToast.h */,
 				71B4B1A81885C7CE0027AC4F /* CobaltToast.m */,
 			);
