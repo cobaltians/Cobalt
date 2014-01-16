@@ -272,19 +272,20 @@ NSString * popupPageName;
                 && [callback isKindOfClass:[NSString class]]) {
                 if ([callback isEqualToString:JSCallbackPullToRefreshDidRefresh]) {
                     [self performSelectorOnMainThread:@selector(didRefresh) withObject:nil waitUntilDone:YES];
-                    return YES;
                 }
                 else if ([callback isEqualToString:JSCallbackInfiniteScrollDidRefresh]) {
                     [self performSelectorOnMainThread:@selector(moreItemsHaveBeenLoaded) withObject:nil waitUntilDone:YES];
-                    return YES;
                 }
                 else {
 #if DEBUG_COBALT
                     NSLog(@"handleDictionarySentByJavaScript: unhandled callback %@", [dict description]);
 #endif
                     // TODO: add onUnhandledCallback method
-                    //[self onUnhandledCallback:callback withData:data];
+                    // return [self onUnhandledCallback:callback withData:data];
+                    return NO;
                 }
+                
+                
             }
             else {
 #if DEBUG_COBALT
@@ -313,7 +314,8 @@ NSString * popupPageName;
                 NSLog(@"handleDictionarySentByJavaScript: unhandled event %@", [dict description]);
 #endif
                 // TODO: add onUnhandledEvent method
-                //[self onUnhandledEvent:event withData:data andCallback:callback];
+                //return [self onUnhandledEvent:event withData:data andCallback:callback];
+                return NO;
             }
             else {
 #if DEBUG_COBALT
@@ -323,14 +325,14 @@ NSString * popupPageName;
         }
         
         // LOG
-        if ([type isEqualToString:JSTypeLog]) {
+        else if ([type isEqualToString:JSTypeLog]) {
             NSString * text = [dict objectForKey:kJSValue];
             if (text
                 && [text isKindOfClass:[NSString class]]) {
 #if DEBUG_COBALT
                 NSLog(@"JS LOG: %@", text);
 #endif
-                return YES;
+                
             }
         }
         
@@ -353,7 +355,6 @@ NSString * popupPageName;
                                                                                                 controller, kJSNavigationController,
                                                                                                 nil];
                             [self performSelectorOnMainThread:@selector(pushWebViewControllerWithDict:) withObject:dict waitUntilDone:YES];
-                            return YES;
                         }
                         else {
 #if DEBUG_COBALT
@@ -370,7 +371,6 @@ NSString * popupPageName;
                 //POP
                 else if ([action isEqualToString:JSActionNavigationPop]) {
                     [self performSelectorOnMainThread:@selector(popWebViewController) withObject:nil waitUntilDone:YES];
-                    return YES;
                 }
                 //MODALE
                 else if ([action isEqualToString:JSActionNavigationModale]) {
@@ -385,7 +385,6 @@ NSString * popupPageName;
                                                                                                 controller, kJSNavigationController,
                                                                                                 nil];
                             [self performSelectorOnMainThread:@selector(presentWebViewControllerWithDict:) withObject:dict waitUntilDone:YES];
-                            return YES;
                         }
                         else {
 #if DEBUG_COBALT
@@ -402,15 +401,16 @@ NSString * popupPageName;
                 //DISMISS
                 else if ([action isEqualToString:JSActionNavigationDismiss]) {
                     [self performSelectorOnMainThread:@selector(dismissWebViewController) withObject:nil waitUntilDone:YES];
-                    return YES;
                 }
                 else {
 #if DEBUG_COBALT
                     NSLog(@"handleDictionarySentByJavaScript: unhandled navigation %@", [dict description]);
 #endif
                     // TODO: add onUnhandledMessage method
-                    //[self onUnhandledMessage:dict];
+                    //return [self onUnhandledMessage:dict];
+                    return NO;
                 }
+                
             }
             else {
 #if DEBUG_COBALT
@@ -443,7 +443,6 @@ NSString * popupPageName;
                             else {
                                 [toast performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
                             }
-                            return YES;
                         }
                         else {
 #if DEBUG_COBALT
@@ -461,7 +460,6 @@ NSString * popupPageName;
                 // ALERT
                 else if([control isEqualToString:JSControlAlert]) {
                     [self showAlertWithDict:dict];
-                    return YES;
                 }
                 
                 else {
@@ -469,7 +467,8 @@ NSString * popupPageName;
                     NSLog(@"handleDictionarySentByJavaScript: unhandled message %@", [dict description]);
 #endif
                     // TODO: add onUnhandledMessage method
-                    //[self onUnhandledMessage:dict];
+                    //return [self onUnhandledMessage:dict];
+                    return NO;
                 }
             }
             else {
@@ -488,13 +487,11 @@ NSString * popupPageName;
                 // SHOW
                 if([action isEqualToString:JSActionWebLayerShow]) {
                     [self performSelectorOnMainThread:@selector(showPopUpWebviewWithDict:) withObject:dict waitUntilDone:YES];
-                    return YES;
                 }
                 
                 // DISMISS
                 else if([action isEqualToString:JSActionWebLayerDismiss]) {
                     [self performSelectorOnMainThread:@selector(dismissPopUpWebviewWithDict:) withObject:dict waitUntilDone:YES];
-                    return YES;
                 }
             }
             else {
@@ -509,7 +506,8 @@ NSString * popupPageName;
             NSLog(@"handleDictionarySentByJavaScript: unhandled message %@", [dict description]);
 #endif
             // TODO: add onUnhandledMessage method
-            //[self onUnhandledMessage:dict];
+            //return [self onUnhandledMessage:dict];
+            return NO;
         }
     }
     else {
@@ -517,9 +515,11 @@ NSString * popupPageName;
         NSLog(@"handleDictionarySentByJavaScript: unhandled message %@", [dict description]);
 #endif
         // TODO: add onUnhandledMessage method
-        //[self onUnhandledMessage:dict];
+        //return [self onUnhandledMessage:dict];
         return NO;
     }
+    
+    return YES;
 }
 
 - (NSString *)ressourcePath
