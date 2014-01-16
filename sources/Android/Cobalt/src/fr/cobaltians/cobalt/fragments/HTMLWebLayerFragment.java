@@ -73,16 +73,15 @@ public class HTMLWebLayerFragment extends HTMLFragment {
 	@JavascriptInterface
 	public boolean handleMessageSentByJavaScript(String message) {
 		try {
-			JSONObject jsonObj = new JSONObject(message);
+			final JSONObject jsonObj = new JSONObject(message);
 			String type = jsonObj.optString(kJSType);
 			if (type.equals(JSTypeWebLayer)) {
 				String action = jsonObj.getString(kJSAction);
 				if (action.equals(JSActionWebLayerDismiss)) {
-					final JSONObject data = jsonObj.optJSONObject(kJSData);
 					mHandler.post(new Runnable() {
 						@Override
 						public void run() {
-							dismissWebLayer(data);
+							dismissWebLayer(jsonObj);
 						}
 					});
 					return true;
@@ -126,8 +125,7 @@ public class HTMLWebLayerFragment extends HTMLFragment {
 		fTransition = getActivity().getSupportFragmentManager().beginTransaction();
 		
 		if(jsonObject != null) {
-			mData = jsonObject.optJSONObject(kJSData);
-			
+			mData = jsonObject.optJSONObject(kJSData);	
 			double fadeDuration = jsonObject.optDouble(kJSWebLayerFadeDuration, 0);
 			
 			if(fadeDuration > 0) {
