@@ -31,116 +31,117 @@
 #import "iToast.h"
 #import "Cobalt.h"
 
-#define haploidSpecialJSKey                 @"h@ploid#k&y"
+#define haploidSpecialJSKey     @"h@ploid#k&y"
 
 // CONFIGURATION FILE
-#define confFileName                        @"cobalt.conf"
-#define kIosController                      @"iosController"
-#define kIosNibName                         @"iosNibName"
-#define kPullToRefreshEnabled               @"pullToRefresh"
-#define kInfiniteScrollEnabled              @"infiniteScroll"
-
-@interface CobaltViewController ()
-
-@end
+#define confFileName            @"cobalt.conf"
+#define kIosController          @"iosController"
+#define kIosNibName             @"iosNibName"
+#define kPullToRefreshEnabled   @"pullToRefresh"
+#define kInfiniteScrollEnabled  @"infiniteScroll"
 
 @implementation CobaltViewController
 
-@synthesize webView,activityIndicator,pageName,popUpWebview, pullToRefreshTableHeaderView,isPullToRefreshActive;
+@synthesize activityIndicator,
+            isInfiniteScrollActive,
+            isPullToRefreshActive,
+            pageName,
+            popUpWebview,
+            pullToRefreshTableHeaderView,
+            webView;
 
-NSMutableDictionary *alertCallbacks;
+NSMutableDictionary * alertCallbacks;
 
-NSMutableArray *toastsToShow;
+NSMutableArray * toastsToShow;
 BOOL toastIsShown;
 
-NSString *popupPageName;
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+NSString * popupPageName;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     // Do any additional setup after loading the view from its nib.
     [self customWebView];
-    [self.webView setDelegate:self];
+    [webView setDelegate:self];
     
     toJavaScriptOperationQueue = [[NSOperationQueue alloc] init] ;
     [toJavaScriptOperationQueue setSuspended:YES];
     
     fromJavaScriptOperationQueue = [[NSOperationQueue alloc] init] ;
-    [activityIndicator setHidesWhenStopped:YES];
     
     alertCallbacks = [[NSMutableDictionary alloc] init];
     toastsToShow = [[NSMutableArray alloc] init];
     
-    [self.activityIndicator startAnimating];
+    [activityIndicator startAnimating];
     
-    if([self.webView respondsToSelector:@selector(setKeyboardDisplayRequiresUserAction:)])
-        [self.webView setKeyboardDisplayRequiresUserAction:NO];
-    
-    if(!self.pageName || self.pageName.length == 0)
-    {
-        self.pageName = defaultHtmlPage;
+    if ([webView respondsToSelector:@selector(setKeyboardDisplayRequiresUserAction:)]) {
+        [webView setKeyboardDisplayRequiresUserAction:NO];
     }
     
-    // Add pull to refresh table header view
-    if(self.isPullToRefreshActive)
-    {
+    if (! pageName
+        || pageName.length == 0) {
+        pageName = defaultHtmlPage;
+    }
+    
+    // Add pull-to-refresh table header view
+    if (isPullToRefreshActive) {
         [self customPullToRefreshDefaultView];
         
-        self.pullToRefreshTableHeaderView.state = RefreshStateNormal;
-        self.pullToRefreshTableHeaderView.loadingHeight = self.pullToRefreshTableHeaderView.frame.size.height;
-        self.pullToRefreshTableHeaderView.frame = CGRectMake(0.0, -self.webView.bounds.size.height, self.webView.bounds.size.width, self.webView.bounds.size.height);
+        pullToRefreshTableHeaderView.state = RefreshStateNormal;
+        pullToRefreshTableHeaderView.loadingHeight = pullToRefreshTableHeaderView.frame.size.height;
+        pullToRefreshTableHeaderView.frame = CGRectMake(0.0, -self.webView.bounds.size.height,
+                                                        self.webView.bounds.size.width, self.webView.bounds.size.height);
         
-        if(self.pullToRefreshTableHeaderView)
-        {
-            [self.webView.scrollView addSubview:self.pullToRefreshTableHeaderView];
+        if(pullToRefreshTableHeaderView) {
+            [webView.scrollView addSubview:pullToRefreshTableHeaderView];
         }
 #if DEBUG_COBALT
-        else
-        {
-            NSLog(@"WARNING : no pullToRefreshTableHeaderView set !");
+        else {
+            NSLog(@"WARNING: no pullToRefreshTableHeaderView set!");
         }
 #endif
-        [self.webView.scrollView setDelegate:self];
+        [webView.scrollView setDelegate:self];
     }
 
-    [self loadContentInWebView:self.webView FromFileNamed:self.pageName atPath:[self ressourcePath] withRessourcesAtPath:[self ressourcePath]];
+    [self loadContentInWebView:webView FromFileNamed:pageName atPath:[self ressourcePath] withRessourcesAtPath:[self ressourcePath]];
 }
 
-- (void)viewDidUnload {
-    self.webView.delegate = nil;
+- (void)viewDidUnload
+{
+    pullToRefreshTableHeaderView = nil;
+    
+    [webView.scrollView setDelegate:nil];
+    webView.delegate = nil;
     [self setWebView:nil];
+    
     [self setActivityIndicator:nil];
+    
     toJavaScriptOperationQueue = nil;
-    self.pullToRefreshTableHeaderView = nil;
-    [self.webView.scrollView setDelegate:nil];
+    
     [super viewDidUnload];
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    if(self.pullToRefreshTableHeaderView && self.pullToRefreshTableHeaderView.superview)
-    {
-        [self.pullToRefreshTableHeaderView setHidden: YES];
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    if (pullToRefreshTableHeaderView
+        && pullToRefreshTableHeaderView.superview) {
+        [pullToRefreshTableHeaderView setHidden: YES];
     }
-    [super willRotateToInterfaceOrientation: toInterfaceOrientation duration: duration];
+    
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    if(self.pullToRefreshTableHeaderView && self.pullToRefreshTableHeaderView.superview)
-    {
-        [self.pullToRefreshTableHeaderView setHidden: NO];
-        self.pullToRefreshTableHeaderView.frame = CGRectMake(0.0, -self.webView.bounds.size.height, self.webView.bounds.size.width, self.webView.bounds.size.height);
-        //self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+1);
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    if (pullToRefreshTableHeaderView
+        && pullToRefreshTableHeaderView.superview) {
+        [pullToRefreshTableHeaderView setHidden: NO];
+        pullToRefreshTableHeaderView.frame = CGRectMake(0.0, -self.webView.bounds.size.height,
+                                                        self.webView.bounds.size.width, self.webView.bounds.size.height);
     }
-    [super didRotateFromInterfaceOrientation: fromInterfaceOrientation];
+    
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -150,90 +151,83 @@ NSString *popupPageName;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
--(void) customWebView
+- (void)customWebView
 {
-    /*
-     This is the default implementation.
-     */
+    
 }
 
 -(void) customPullToRefreshDefaultView
 {
-    if(!self.pullToRefreshTableHeaderView)
-    {
-        CGRect frame = CGRectMake(0.0, 0.0, self.webView.bounds.size.width,60.0);
-        self.pullToRefreshTableHeaderView = [[PullToRefreshTableHeaderView alloc] initWithFrame:frame];
-        [self.pullToRefreshTableHeaderView setAutoresizingMask:UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin];
+    if (! pullToRefreshTableHeaderView) {
+        CGRect frame = CGRectMake(0.0, 0.0,
+                                  webView.bounds.size.width, 60.0);
+        pullToRefreshTableHeaderView = [[PullToRefreshTableHeaderView alloc] initWithFrame:frame];
+        [pullToRefreshTableHeaderView setAutoresizingMask:UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin];
         
-        self.pullToRefreshTableHeaderView.statusLabel = [[UILabel alloc] initWithFrame:frame];
-        [self.pullToRefreshTableHeaderView.statusLabel setTextAlignment:NSTextAlignmentCenter];
-        [self.pullToRefreshTableHeaderView.statusLabel setTextColor:[UIColor blackColor]];
-        [self.pullToRefreshTableHeaderView.statusLabel setBackgroundColor:[UIColor clearColor]];
-        [self.pullToRefreshTableHeaderView.statusLabel setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleLeftMargin];
-        [self.pullToRefreshTableHeaderView addSubview:self.pullToRefreshTableHeaderView.statusLabel];
+        pullToRefreshTableHeaderView.statusLabel = [[UILabel alloc] initWithFrame:frame];
+        [pullToRefreshTableHeaderView.statusLabel setTextAlignment:NSTextAlignmentCenter];
+        [pullToRefreshTableHeaderView.statusLabel setTextColor:[UIColor blackColor]];
+        [pullToRefreshTableHeaderView.statusLabel setBackgroundColor:[UIColor clearColor]];
+        [pullToRefreshTableHeaderView.statusLabel setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleLeftMargin];
+        [pullToRefreshTableHeaderView addSubview:pullToRefreshTableHeaderView.statusLabel];
         
         
-        self.pullToRefreshTableHeaderView.progressView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        [self.pullToRefreshTableHeaderView.progressView setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin];
-        [self.pullToRefreshTableHeaderView.progressView setColor:[UIColor blackColor]];
-        [self.pullToRefreshTableHeaderView.progressView setFrame:CGRectMake(0, 0, 60, 60)];
-        [self.pullToRefreshTableHeaderView addSubview:self.pullToRefreshTableHeaderView.progressView];
+        pullToRefreshTableHeaderView.progressView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        [pullToRefreshTableHeaderView.progressView setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin];
+        [pullToRefreshTableHeaderView.progressView setColor:[UIColor blackColor]];
+        [pullToRefreshTableHeaderView.progressView setFrame:CGRectMake(0, 0,
+                                                                       60, 60)];
+        [pullToRefreshTableHeaderView addSubview:pullToRefreshTableHeaderView.progressView];
     }
 }
 
--(void)loadContentInWebView:(UIWebView *)mWebView FromFileNamed:(NSString *)filename atPath:(NSString *)path withRessourcesAtPath:(NSString *)pathOfRessources
+- (void)loadContentInWebView:(UIWebView *)mWebView FromFileNamed:(NSString *)filename atPath:(NSString *)path withRessourcesAtPath:(NSString *)pathOfRessources
 {
-    /*
-     NSString *contentToDisplay = [self getStringFromFileNamed:filename atPath:path];
-     NSURL *u = (pathOfRessources) ? [NSURL fileURLWithPath:pathOfRessources] : nil;
-     [self.webView loadHTMLString:contentToDisplay baseURL:u];
-     //*/
-    //*
-    NSURL *baseURL = [NSURL fileURLWithPath:[path stringByAppendingPathComponent:filename]];
-    NSURLRequest *request = [NSURLRequest requestWithURL:baseURL];
+    NSURL * baseURL = [NSURL fileURLWithPath:[path stringByAppendingPathComponent:filename]];
+    NSURLRequest * request = [NSURLRequest requestWithURL:baseURL];
     [mWebView loadRequest:request];
-    //*/
 }
 
 
--(NSString *)getStringFromFileNamed:(NSString *)filename atPath:(NSString *)path
+- (NSString *)getStringFromFileNamed:(NSString *)filename atPath:(NSString *)path
 {
-    NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@",path,filename] isDirectory:NO];
-    NSError *error;
-    NSString *stringFromFileAtURL = [[NSString alloc] initWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
+    NSURL * url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@", path, filename] isDirectory:NO];
+    NSError * error;
+    NSString * stringFromFileAtURL = [[NSString alloc] initWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
 
 #if DEBUG_COBALT
     if (stringFromFileAtURL == nil) {
-        NSLog(@"Error reading file at %@\n%@",url, [error localizedFailureReason]);
+        NSLog(@"Error reading file at %@\n%@", url, [error localizedFailureReason]);
     }
 #endif
     
     return stringFromFileAtURL;
 }
 
--(id) parseJSONFromString:(NSString *) jsonString
+- (id)parseJSONFromString:(NSString *)jsonString
 {
-    NSError *e;
-    NSData* data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    if(data)
-    {
-        return [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&e];
+    NSError * error;
+    NSData * data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    if (data) {
+        return [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
     }
-    else return nil;
+    else {
+        return nil;
+    }
 }
 
--(void) executeScriptInWebView:(UIWebView *)mWebView WithDictionary:(NSDictionary *)dict
+- (void)executeScriptInWebView:(UIWebView *)mWebView WithDictionary:(NSDictionary *)dict
 {
     [toJavaScriptOperationQueue addOperationWithBlock:^{
-        if([NSJSONSerialization isValidJSONObject:dict])
-        {
-            NSError *e;
-            NSString *jsonMsg =[[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:&e] encoding:NSUTF8StringEncoding];
+        if ([NSJSONSerialization isValidJSONObject:dict]) {
+            NSError * error;
+            NSString * jsonMsg =[[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:&error] encoding:NSUTF8StringEncoding];
             
             //ensure there is no raw newline in any part of the json string.
             jsonMsg = [[jsonMsg componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@""];
 
-            NSString *javaScriptCommand = [NSString stringWithFormat:@"nativeBridge.execute(%@);",jsonMsg];
+            NSString * javaScriptCommand = [NSString stringWithFormat:@"nativeBridge.execute(%@);", jsonMsg];
             
             // TDOD - pourquoi attendre la fin de l'exécution dans le main thread sachant que tu es dans un thread ???
             [mWebView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:javaScriptCommand waitUntilDone:NO];
@@ -241,171 +235,297 @@ NSString *popupPageName;
     }];
 }
 
--(void) sendCallbackResponseWithID:(NSString *)callbackId andObject:(NSObject *)object
+- (void)sendCallbackResponseWithID:(NSString *)callbackId andObject:(NSObject *)object
 {
-    if(callbackId && callbackId.length > 0)
-    {
-        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-                              JSTypeCallBack, kJSType,
-                              callbackId, kJSCallback,
-                              object, kJSData,
-                              nil];
+    if(callbackId
+       && callbackId.length > 0) {
+        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:JSTypeCallBack, kJSType,
+                                                                        callbackId, kJSCallback,
+                                                                        object, kJSData,
+                                                                        nil];
         
         // pourquoi executer ça dans la main thread ??? (d'autant plus que tu y es déjà !!)
         //[self performSelectorOnMainThread:@selector(executeScriptInWebViewWithDictionary:) withObject:dict waitUntilDone:YES];
-        [self executeScriptInWebView:self.webView WithDictionary:dict];
+        [self executeScriptInWebView:webView WithDictionary:dict];
     }
 #if DEBUG_COBALT
-    else NSLog(@"ERROR : web callbackID invalid (null or empty)");
+    else {
+        NSLog(@"ERROR : web callbackID invalid (null or empty)");
+    }
 #endif
-    
 }
 
 
--(BOOL)handleDictionarySentByJavaScript:(NSDictionary *)dict
+- (BOOL)handleDictionarySentByJavaScript:(NSDictionary *)dict
 {
-    NSString *type = [dict objectForKey:kJSType];
-    if(type && [type isKindOfClass:[NSString class]] && type.length > 0)
-    {
-        //LOG
-        if([type isEqualToString:JSTypeLog])
-        {
-            NSString *value = [dict objectForKey:kJSValue];
-            if(value && [value isKindOfClass:[NSString class]] && value.length >0)
-            {
-#if DEBUG_COBALT
-                NSLog(@"JS LOGS : %@",value);
-#endif
-                
-                return YES;
-            }
-        }
-        //EVENT
-        else if([type isEqualToString:JSTypeEvent])
-        {
-            NSString *name = [dict objectForKey:kJSEvent];
-            //EVENT = TOAST
-            if(name && [name isKindOfClass:[NSString class]] &&name.length >0 && [name isEqualToString:JSControlToast])
-            {
-                NSString *value = [dict objectForKey:kJSValue];
-                CobaltToast *t = (CobaltToast *)[[CobaltToast makeText:value] setGravity:iToastGravityBottom];
-                [t setDelegate:self];
-                if(toastIsShown)
-                {
-                    [toastsToShow addObject:t];
-                }
-                else
-                {
-                    [t performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
-                }
-                return YES;
-            }
-        }
-        //NAVIGATE
-        else if([type isEqualToString:JSTypeNavigation])
-        {
-            NSString *navType = [dict objectForKey:kJSAction];
-            //PUSH
-            if(navType && [navType isKindOfClass:[NSString class]] && navType.length >0)
-            {
-                if([navType isEqualToString:JSActionNavigationPush])
-                {
-                    NSString *vcId = [dict objectForKey:kJSNavigationController] ? [dict objectForKey:kJSNavigationController] : @"";
-                    NSString *pageNamed = [dict objectForKey:kJSPage] ? [dict objectForKey:kJSPage] : @"";
-                    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:vcId, kJSNavigationController,
-                                                                                    pageNamed, kJSPage,
-                                                                                    nil];
-                    [self performSelectorOnMainThread:@selector(pushWebViewControllerWithDict:) withObject:dict waitUntilDone:YES];
-                    
+    NSString * type = [dict objectForKey:kJSType];
+    
+    if (type
+        && [type isKindOfClass:[NSString class]]) {
+        
+        // CALLBACK
+        if ([type isEqualToString:JSTypeCallBack]) {
+            NSString * callback = [dict objectForKey:kJSCallback];
+            NSDictionary * data = [dict objectForKey:kJSData];
+            
+            if (callback
+                && [callback isKindOfClass:[NSString class]]) {
+                if ([callback isEqualToString:JSCallbackPullToRefreshDidRefresh]) {
+                    [self performSelectorOnMainThread:@selector(didRefresh) withObject:nil waitUntilDone:YES];
                     return YES;
                 }
+                else if ([callback isEqualToString:JSCallbackInfiniteScrollDidRefresh]) {
+                    [self performSelectorOnMainThread:@selector(moreItemsHaveBeenLoaded) withObject:nil waitUntilDone:YES];
+                    return YES;
+                }
+                else {
+#if DEBUG_COBALT
+                    NSLog(@"handleDictionarySentByJavaScript: unhandled callback %@", [dict description]);
+#endif
+                    // TODO: add onUnhandledCallback method
+                    //[self onUnhandledCallback:callback withData:data];
+                }
+            }
+            else {
+#if DEBUG_COBALT
+                NSLog(@"handleDictionarySentByJavaScript: callback field missing or not a string (message: %@)", [dict description]);
+#endif
+            }
+        }
+        
+        // COBALT IS READY
+        else if ([type isEqualToString:JSTypeCobaltIsReady]) {
+            [toJavaScriptOperationQueue setSuspended:NO];
+#if DEBUG_COBALT
+            NSLog(@"handleDictionarySentByJavaScript: CobaltIsReady!");
+#endif
+        }
+        
+        // EVENT
+        else if ([type isEqualToString:JSTypeEvent]) {
+            NSString * event = [dict objectForKey:kJSEvent];
+            NSDictionary * data = [dict objectForKey:kJSData];
+            NSString * callback = [dict objectForKey:kJSCallback];
+            
+            if (event &&
+                [event isKindOfClass:[NSString class]]) {
+#if DEBUG_COBALT
+                NSLog(@"handleDictionarySentByJavaScript: unhandled event %@", [dict description]);
+#endif
+                // TODO: add onUnhandledEvent method
+                //[self onUnhandledEvent:event withData:data andCallback:callback];
+            }
+            else {
+#if DEBUG_COBALT
+                NSLog(@"handleDictionarySentByJavaScript: event field missing or not a string (message: %@)", [dict description]);
+#endif
+            }
+        }
+        
+        // LOG
+        if ([type isEqualToString:JSTypeLog]) {
+            NSString * text = [dict objectForKey:kJSValue];
+            if (text
+                && [text isKindOfClass:[NSString class]]) {
+#if DEBUG_COBALT
+                NSLog(@"JS LOG: %@", text);
+#endif
+                return YES;
+            }
+        }
+        
+        // NAVIGATION
+        else if([type isEqualToString:JSTypeNavigation]) {
+            NSString * action = [dict objectForKey:kJSAction];
+            
+            if (action
+                && [action isKindOfClass:[NSString class]]) {
+                // PUSH
+                if ([action isEqualToString:JSActionNavigationPush]) {
+                    NSDictionary * data = [dict objectForKey:kJSData];
+                    if (data
+                        && [data isKindOfClass:[NSDictionary class]]) {
+                        NSString * page = [data objectForKey:kJSPage];
+                        NSString * controller = [data objectForKey:kJSNavigationController];
+                        if (page
+                            && [page isKindOfClass:[NSString class]]) {
+                            NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   page, kJSPage,
+                                                                                                controller, kJSNavigationController,
+                                                                                                nil];
+                            [self performSelectorOnMainThread:@selector(pushWebViewControllerWithDict:) withObject:dict waitUntilDone:YES];
+                            return YES;
+                        }
+                        else {
+#if DEBUG_COBALT
+                            NSLog(@"handleDictionarySentByJavaScript: page field missing or not a string (message: %@)", [dict description]);
+#endif
+                        }
+                    }
+                    else {
+#if DEBUG_COBALT
+                        NSLog(@"handleDictionarySentByJavaScript: data field missing or not an object (message: %@)", [dict description]);
+#endif
+                    }
+                }
                 //POP
-                else if(navType && navType.length >0 && [navType isEqualToString:JSActionNavigationPop])
-                {
+                else if ([action isEqualToString:JSActionNavigationPop]) {
                     [self performSelectorOnMainThread:@selector(popWebViewController) withObject:nil waitUntilDone:YES];
-                    
                     return YES;
                 }
                 //MODALE
-                else if(navType && navType.length >0 && [navType isEqualToString:JSActionNavigationModale])
-                {
-                    NSString *vcId = [dict objectForKey:kJSNavigationController] ? [dict objectForKey:kJSNavigationController] : @"";
-                    NSString *pageNamed = [dict objectForKey:kJSPage] ? [dict objectForKey:kJSPage] : @"";
-                    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:vcId, kJSNavigationController,
-                                                                                    pageNamed, kJSPage,
-                                                                                    nil];
-                    [self performSelectorOnMainThread:@selector(presentWebViewControllerWithDict:) withObject:dict waitUntilDone:YES];
-                    
-                    return YES;
+                else if ([action isEqualToString:JSActionNavigationModale]) {
+                    NSDictionary * data = [dict objectForKey:kJSData];
+                    if (data
+                        && [data isKindOfClass:[NSDictionary class]]) {
+                        NSString * page = [data objectForKey:kJSPage];
+                        NSString * controller = [data objectForKey:kJSNavigationController];
+                        if (page
+                            && [page isKindOfClass:[NSString class]]) {
+                            NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   page, kJSPage,
+                                                                                                controller, kJSNavigationController,
+                                                                                                nil];
+                            [self performSelectorOnMainThread:@selector(presentWebViewControllerWithDict:) withObject:dict waitUntilDone:YES];
+                            return YES;
+                        }
+                        else {
+#if DEBUG_COBALT
+                            NSLog(@"handleDictionarySentByJavaScript: page field missing or not a string (message: %@)", [dict description]);
+#endif
+                        }
+                    }
+                    else {
+#if DEBUG_COBALT
+                        NSLog(@"handleDictionarySentByJavaScript: data field missing or not an object (message: %@)", [dict description]);
+#endif
+                    }
                 }
                 //DISMISS
-                else if(navType && navType.length >0 && [navType isEqualToString:JSActionNavigationDismiss])
-                {
+                else if ([action isEqualToString:JSActionNavigationDismiss]) {
                     [self performSelectorOnMainThread:@selector(dismissWebViewController) withObject:nil waitUntilDone:YES];
                     return YES;
                 }
+                else {
+#if DEBUG_COBALT
+                    NSLog(@"handleDictionarySentByJavaScript: unhandled navigation %@", [dict description]);
+#endif
+                    // TODO: add onUnhandledMessage method
+                    //[self onUnhandledMessage:dict];
+                }
+            }
+            else {
+#if DEBUG_COBALT
+                NSLog(@"handleDictionarySentByJavaScript: action field missing or not a string (message: %@)", [dict description]);
+#endif
             }
         }
-        //ALERT
-        else if([type isEqualToString:JSControlAlert])
-        {
-            [self showAlertWithDict:dict];
-            return YES;
+        
+        // UI
+        else if ([type isEqualToString:JSTypeUI]) {
+            NSString * control = [dict objectForKey:kJSUIControl];
+            NSDictionary * data = [dict objectForKey:kJSData];
+            NSString * callback = [dict objectForKey:kJSCallback];
             
+            if (control
+                && [control isKindOfClass:[NSString class]]) {
+                
+                // TOAST
+                if ([control isEqualToString:JSControlToast]) {
+                    if (data
+                        && [data isKindOfClass:[NSDictionary class]]) {
+                        NSString * message = [data objectForKey:kJSAlertMessage];
+                        if (message
+                            && [message isKindOfClass: [NSString class]]) {
+                            CobaltToast * toast = (CobaltToast *)[[CobaltToast makeText:message] setGravity:iToastGravityBottom];
+                            [toast setDelegate:self];
+                            if (toastIsShown) {
+                                [toastsToShow addObject:toast];
+                            }
+                            else {
+                                [toast performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+                            }
+                            return YES;
+                        }
+                        else {
+#if DEBUG_COBALT
+                            NSLog(@"handleDictionarySentByJavaScript: message field missing or not a string (message: %@)", [dict description]);
+#endif
+                        }
+                    }
+                    else {
+#if DEBUG_COBALT
+                        NSLog(@"handleDictionarySentByJavaScript: data field missing or not an object (message: %@)", [dict description]);
+#endif
+                    }
+                }
+                
+                // ALERT
+                else if([control isEqualToString:JSControlAlert]) {
+                    [self showAlertWithDict:dict];
+                    return YES;
+                }
+                
+                else {
+#if DEBUG_COBALT
+                    NSLog(@"handleDictionarySentByJavaScript: unhandled message %@", [dict description]);
+#endif
+                    // TODO: add onUnhandledMessage method
+                    //[self onUnhandledMessage:dict];
+                }
+            }
+            else {
+#if DEBUG_COBALT
+                NSLog(@"handleDictionarySentByJavaScript: control field missing or not a string (message: %@)", [dict description]);
+#endif
+            }
         }
-        //WEB ALERT
-        else if([type isEqualToString:JSTypeWebLayer])
-        {
-            NSString *name = [dict objectForKey:kJSAction];
-            if(name && [name isKindOfClass:[NSString class]] && name.length >0)
-            {
-                if([name isEqualToString:JSActionWebLayerShow])
-                {
+        
+        // WEB LAYER
+        else if ([type isEqualToString:JSTypeWebLayer]) {
+            NSString * action = [dict objectForKey:kJSAction];
+            if (action
+               && [action isKindOfClass:[NSString class]]) {
+                
+                // SHOW
+                if([action isEqualToString:JSActionWebLayerShow]) {
                     [self performSelectorOnMainThread:@selector(showPopUpWebviewWithDict:) withObject:dict waitUntilDone:YES];
                     return YES;
                 }
-                else if([name isEqualToString:JSActionWebLayerDismiss])
-                {
+                
+                // DISMISS
+                else if([action isEqualToString:JSActionWebLayerDismiss]) {
                     [self performSelectorOnMainThread:@selector(dismissPopUpWebviewWithDict:) withObject:dict waitUntilDone:YES];
                     return YES;
                 }
             }
-        }
-        // CALLBACKS
-        else if([type isEqualToString:JSTypeCallBack])
-        {
-            NSString *name = [dict objectForKey:kJSCallback];
-            if(name && [name isKindOfClass:[NSString class]] && [name isEqualToString:JSCallbackPullToRefreshDidRefresh])
-            {
-                [self performSelectorOnMainThread:@selector(didRefresh) withObject:nil waitUntilDone:YES];
-                return YES;
-            }
-            else if (name && [name isKindOfClass:[NSString class]] && [name isEqualToString:JSCallbackInfiniteScrollDidRefresh])
-            {
-                [self performSelectorOnMainThread:@selector(moreItemsHaveBeenLoaded) withObject:nil waitUntilDone:YES];
-                return YES;
-            }
-        }
-        //JS READY EVENT
-        else if([type isEqualToString:JSTypeCobaltIsReady])
-        {
-            [toJavaScriptOperationQueue setSuspended:NO];
+            else {
 #if DEBUG_COBALT
-            NSLog(@"Received NativeBridgeIsReady");
+                NSLog(@"handleDictionarySentByJavaScript: action field missing or not a string (message: %@)", [dict description]);
 #endif
+            }
+        }
+        
+        else {
+#if DEBUG_COBALT
+            NSLog(@"handleDictionarySentByJavaScript: unhandled message %@", [dict description]);
+#endif
+            // TODO: add onUnhandledMessage method
+            //[self onUnhandledMessage:dict];
         }
     }
+    else {
 #if DEBUG_COBALT
-    else NSLog(@"ERROR : type is undefined. Impossible to handle JavaScriptEvent !");
+        NSLog(@"handleDictionarySentByJavaScript: unhandled message %@", [dict description]);
 #endif
-    return NO;
+        // TODO: add onUnhandledMessage method
+        //[self onUnhandledMessage:dict];
+        return NO;
+    }
 }
 
 - (NSString *)ressourcePath
 {
-    return [NSString stringWithFormat:@"%@%@",[[NSBundle mainBundle] resourcePath],@"/www/"];
+    return [NSString stringWithFormat:@"%@%@",[[NSBundle mainBundle] resourcePath], @"/www/"];
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -413,18 +533,14 @@ NSString *popupPageName;
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
--(void) pushWebViewControllerWithDict:(NSDictionary *)dict
+- (void)pushWebViewControllerWithDict:(NSDictionary *)dict
 {
-    NSString *viewControllerId = [dict objectForKey:kJSNavigationController] ? [dict objectForKey:kJSNavigationController] : @"";
-    NSString *pageNameToShow = [dict objectForKey:kJSPage]  ? [dict objectForKey:kJSPage] : @"";
-    CobaltViewController *viewControllerToPush = [self getControllerFromId:viewControllerId];
-    if(viewControllerToPush)
-    {
-        
+    NSString * viewControllerId = [dict objectForKey:kJSNavigationController] ? [dict objectForKey:kJSNavigationController] : @"";
+    NSString * pageNameToShow = [dict objectForKey:kJSPage] ? [dict objectForKey:kJSPage] : @"";
+    CobaltViewController * viewControllerToPush = [self getControllerFromId:viewControllerId];
+    if (viewControllerToPush) {
         //set ressourcePath and fileName
-        //viewControllerToPush.ressourcePath = self.ressourcePath;
         viewControllerToPush.pageName = pageNameToShow;
-        
         
         //push the corresponding viewController
         [self.navigationController pushViewController:viewControllerToPush animated:YES];
@@ -432,21 +548,19 @@ NSString *popupPageName;
 }
 
 
--(void) popWebViewController
+- (void)popWebViewController
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 
--(void) presentWebViewControllerWithDict:(NSDictionary *)dict
+- (void)presentWebViewControllerWithDict:(NSDictionary *)dict
 {
-    NSString *viewControllerId = [dict objectForKey:kJSNavigationController];
-    NSString *pageNameToShow = [dict objectForKey:kJSPage];
-    CobaltViewController *viewControllerToPresent = [self getControllerFromId:viewControllerId];
-    if(viewControllerToPresent)
-    {
+    NSString * viewControllerId = [dict objectForKey:kJSNavigationController];
+    NSString * pageNameToShow = [dict objectForKey:kJSPage];
+    CobaltViewController * viewControllerToPresent = [self getControllerFromId:viewControllerId];
+    if (viewControllerToPresent) {
         //set ressourcePath and fileName
-        //viewControllerToPresent.ressourcePath = self.ressourcePath;
         viewControllerToPresent.pageName = pageNameToShow;
         
         //present the corresponding viewController
@@ -455,40 +569,44 @@ NSString *popupPageName;
 }
 
 
--(void) dismissWebViewController
+- (void)dismissWebViewController
 {
-    if(self.presentingViewController)
+    if (self.presentingViewController) {
         [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    }
 #if DEBUG_COBALT
-    else NSLog(@"Error : no controller is presented");
+    else {
+        NSLog(@"Error : no controller is presented");
+    }
 #endif
 }
 
 
--(CobaltViewController *) getControllerFromId:(NSString *) viewControllerId
+- (CobaltViewController *)getControllerFromId:(NSString *)viewControllerId
 {
-    NSString *confToParse = [self getStringFromFileNamed:confFileName atPath: [self ressourcePath]];
-    NSString *className,*nibName;
-    BOOL pullToRefreshActive,infiniteScrollActive;
+    NSString * confToParse = [self getStringFromFileNamed:confFileName atPath: [self ressourcePath]];
+    NSString * className,
+             * nibName;
+    BOOL pullToRefreshActive,
+         infiniteScrollActive;
     
-    if(confToParse && confToParse.length > 0)
-    {
-        NSDictionary *confDictionary = [self parseJSONFromString:confToParse];
+    if (confToParse
+        && confToParse.length > 0) {
+        NSDictionary * confDictionary = [self parseJSONFromString:confToParse];
         
-        if(confDictionary && ![confDictionary isKindOfClass:[NSNull class]])
-        {
-            if(viewControllerId && ![viewControllerId isKindOfClass:[NSNull class]])
-            {
+        if (confDictionary
+            && ! [confDictionary isKindOfClass:[NSNull class]]) {
+            if (viewControllerId
+                && ! [viewControllerId isKindOfClass:[NSNull class]]) {
                 className = [[confDictionary objectForKey:viewControllerId] objectForKey:kIosController];
                 nibName = [[confDictionary objectForKey:viewControllerId] objectForKey:kIosNibName];
                 pullToRefreshActive = [[[confDictionary objectForKey:viewControllerId] objectForKey:kPullToRefreshEnabled] boolValue];
                 infiniteScrollActive = [[[confDictionary objectForKey:viewControllerId] objectForKey:kInfiniteScrollEnabled] boolValue];
             }
             
-            if(!className)
-            {
+            if (! className) {
 #if DEBUG_COBALT
-                NSLog(@"WARNING : className for ID %@ not found. Look for default class ID",viewControllerId);
+                NSLog(@"WARNING: className for ID %@ not found. Look for default class ID", viewControllerId);
 #endif
                 className = [[confDictionary objectForKey:JSNavigationControllerDefault] objectForKey:kIosController];
                 nibName = [[confDictionary objectForKey:JSNavigationControllerDefault] objectForKey:kIosNibName];
@@ -498,83 +616,89 @@ NSString *popupPageName;
             }
             
             //if nibName is not defined in conf file -> use same as className !
-            if(!nibName && className)
-            {
+            if(! nibName
+               && className) {
                 nibName = className;
             }
         }
-        else
-        {
+        else {
 #if DEBUG_COBALT
-            NSLog(@"ERROR : Syntax error in Conf file");
+            NSLog(@"ERROR: Syntax error in Conf file");
 #endif
             return nil;
         }
         
     }
-    else
-    {
+    else {
 #if DEBUG_COBALT
-        NSLog(@"ERROR : Conf file may be missing or not at the root of ressources folder.");
+        NSLog(@"ERROR: Conf file may be missing or not at the root of ressources folder.");
 #endif
         return nil;
     }
     
-    if([self isValidControllerWithClassName:className andNibName:nibName])
-    {
-        if([NSClassFromString(className) isSubclassOfClass:[CobaltViewController class]])
-        {
-            CobaltViewController *c = [[NSClassFromString(className) alloc] initWithNibName:nibName bundle:[NSBundle mainBundle]];
+    if ([self isValidControllerWithClassName:className andNibName:nibName]) {
+        if ([NSClassFromString(className) isSubclassOfClass:[CobaltViewController class]]) {
+            CobaltViewController * viewController = [[NSClassFromString(className) alloc] initWithNibName:nibName bundle:[NSBundle mainBundle]];
+            
             if (pullToRefreshActive) {
-                c.isPullToRefreshActive = YES;
+                viewController.isPullToRefreshActive = YES;
             }
-            else c.isPullToRefreshActive = NO;
+            else {
+                viewController.isPullToRefreshActive = NO;
+            }
+            
             if (infiniteScrollActive) {
-                c.isInfiniteScrollActive = YES;
+                viewController.isInfiniteScrollActive = YES;
             }
-            else c.isInfiniteScrollActive = NO;
-            return c;
+            else {
+                viewController.isInfiniteScrollActive = NO;
+            }
+            
+            return viewController;
         }
+        
         return [[NSClassFromString(className) alloc] initWithNibName:nibName bundle:[NSBundle mainBundle]];
     }
-    else
-    {
+    else {
 #if DEBUG_COBALT
-        NSLog(@"ERROR : no view Controller named %@ was found for given ID %@. Nothing will happen...",className,viewControllerId);
+        NSLog(@"ERROR: no view Controller named %@ was found for given ID %@. Nothing will happen...", className, viewControllerId);
 #endif
         return nil;
     }
 }
 
 
--(BOOL) isValidControllerWithClassName:(NSString *)className andNibName:(NSString *)nibName
+- (BOOL)isValidControllerWithClassName:(NSString *)className andNibName:(NSString *)nibName
 {
-    BOOL b1 = (className && NSClassFromString(className) && [NSClassFromString(className) isSubclassOfClass:[CobaltViewController class]]);
-    BOOL b2 = (nibName && nibName.length > 0 && [[NSBundle mainBundle] pathForResource:nibName ofType:@"nib"] != nil);
+    BOOL isValidClass = (className
+                         && NSClassFromString(className)
+                         && [NSClassFromString(className) isSubclassOfClass:[CobaltViewController class]]);
+    BOOL isValidNib = (nibName
+                       && nibName.length > 0
+                       && [[NSBundle mainBundle] pathForResource:nibName ofType:@"nib"] != nil);
     
-    if(!b1)
-    {
-        if(!className || (className && !NSClassFromString(className)))
-        {
+    if (! isValidClass) {
+        if (! className
+            || (className && ! NSClassFromString(className))) {
 #if DEBUG_COBALT
-            NSLog(@"ERROR : classNotFound %@",className);
+            NSLog(@"ERROR: classNotFound %@", className);
 #endif
         }
-        else if(className && NSClassFromString(className) && ![NSClassFromString(className) isSubclassOfClass:[CobaltViewController class]])
-        {
+        else if(className
+                && NSClassFromString(className)
+                && ! [NSClassFromString(className) isSubclassOfClass:[CobaltViewController class]]) {
 #if DEBUG_COBALT
-            NSLog(@"ERROR : impossible to show %@ for it does not inherit from CobaltViewController",className);
+            NSLog(@"ERROR: impossible to show %@ for it does not inherit from CobaltViewController", className);
 #endif
         }
     }
-    else if(!b2)
-    {
+    else if(! isValidNib) {
 #if DEBUG_COBALT
-        NSLog(@"ERROR : nibName %@ does not exist !",nibName);
+        NSLog(@"ERROR: nibName %@ does not exist !", nibName);
 #endif
     }
     
-    return b1&&b2;
+    return isValidClass && isValidNib;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -582,104 +706,89 @@ NSString *popupPageName;
 #pragma mark ALERTS METHODS
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
--(void) showAlertWithDict:(NSDictionary *)dict
+- (void)showAlertWithDict:(NSDictionary *)dict
 {
-    if(dict)
-    {
-        NSString *title = ([dict objectForKey:kJSAlertTitle]  && [[dict objectForKey:kJSAlertTitle] isKindOfClass:[NSString class]])? [dict objectForKey:kJSAlertTitle] : @"";
-        NSString *message = ([dict objectForKey:kJSAlertMessage]  && [[dict objectForKey:kJSAlertMessage] isKindOfClass:[NSString class]])? [dict objectForKey:kJSAlertMessage] : @"";
-        NSArray *buttons = ([dict objectForKey:kJSAlertButtons] && [[dict objectForKey:kJSAlertButtons] isKindOfClass:[NSArray class]])? [dict objectForKey:kJSAlertButtons] : [NSArray array];
-        NSString *receiverType = ([dict objectForKey:kJSAlertCallbackReceiver] && [[dict objectForKey:kJSAlertCallbackReceiver] isKindOfClass:[NSString class]])? [dict objectForKey:kJSAlertCallbackReceiver] : @"";
+    if (dict) {
+        NSString * title = ([dict objectForKey:kJSAlertTitle] && [[dict objectForKey:kJSAlertTitle] isKindOfClass:[NSString class]]) ? [dict objectForKey:kJSAlertTitle] : @"";
+        NSString * message = ([dict objectForKey:kJSAlertMessage] && [[dict objectForKey:kJSAlertMessage] isKindOfClass:[NSString class]])? [dict objectForKey:kJSAlertMessage] : @"";
+        NSArray * buttons = ([dict objectForKey:kJSAlertButtons] && [[dict objectForKey:kJSAlertButtons] isKindOfClass:[NSArray class]]) ? [dict objectForKey:kJSAlertButtons] : [NSArray array];
+        NSString * receiverType = ([dict objectForKey:kJSAlertCallbackReceiver] && [[dict objectForKey:kJSAlertCallbackReceiver] isKindOfClass:[NSString class]]) ? [dict objectForKey:kJSAlertCallbackReceiver] : @"";
         
-        UIAlertView *a;
+        UIAlertView * alertView;
         //CREATE ALERTVIEW WITH DELEGATE SET
-        if(receiverType && receiverType.length > 0)
-        {
-            
-            if(buttons && buttons.count >=1)
-            {
-                a = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:[buttons objectAtIndex:0] otherButtonTitles:nil];
+        if (receiverType
+            && receiverType.length > 0) {
+            if (buttons
+                && buttons.count >=1) {
+                alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:[buttons objectAtIndex:0] otherButtonTitles:nil];
             }
-            else
-            {
-                a = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            else {
+                alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             }
             
-            NSNumber *alertId = [dict objectForKey:kJSAlertID] ? [dict objectForKey:kJSAlertID] : [NSNumber numberWithInteger:-1];
-            [a setTag:alertId.integerValue];
+            NSNumber * alertId = [dict objectForKey:kJSAlertID] ? [dict objectForKey:kJSAlertID] : [NSNumber numberWithInteger:-1];
+            [alertView setTag:alertId.integerValue];
             
             //save the callbackId to send it later to web
-            if([receiverType isEqualToString:JSAlertCallbackReceiverWeb])
-            {
-                NSString *callbackId = [NSString stringWithFormat:@"%@",[dict objectForKey:kJSCallback]];
-                if(callbackId && callbackId.length > 0)
-                {
+            if ([receiverType isEqualToString:JSAlertCallbackReceiverWeb]) {
+                NSString * callbackId = [NSString stringWithFormat:@"%@", [dict objectForKey:kJSCallback]];
+                if (callbackId
+                    && callbackId.length > 0) {
                     [alertCallbacks setObject:callbackId forKey:[NSString stringWithFormat:@"%d",alertId.intValue]];
                 }
-                else
-                {
+                else {
 #if DEBUG_COBALT
-                    NSLog(@"WARNING : invalid callback name for alertView with webCallback (null or empty)");
+                    NSLog(@"WARNING: invalid callback name for alertView with webCallback (null or empty)");
 #endif
                 }
             }
-            else if(![receiverType isEqualToString:JSAlertCallbackReceiverNative])
-            {
+            else if(! [receiverType isEqualToString:JSAlertCallbackReceiverNative]) {
 #if DEBUG_COBALT
-                NSLog(@"WARNING : invalid callback receiver for alertView : %@",receiverType);
+                NSLog(@"WARNING: invalid callback receiver for alertView: %@", receiverType);
 #endif
             }
-            
         }
         //NO CALLBACK TO CALL ON CLICK ON BUTTONS
-        else
-        {
-            if(buttons && buttons.count >=1)
-            {
-                a = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:[buttons objectAtIndex:0] otherButtonTitles:nil];
+        else {
+            if (buttons
+                && buttons.count >=1) {
+                alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:[buttons objectAtIndex:0] otherButtonTitles:nil];
             }
-            else
-            {
-                a = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            else {
+                alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             }
         }
         
         //Add buttons
         int i = 0;
-        for(i = 1 ; i < buttons.count ; i++)
-        {
-            [a addButtonWithTitle:[buttons objectAtIndex:i]];
+        for (i = 1 ; i < buttons.count ; i++) {
+            [alertView addButtonWithTitle:[buttons objectAtIndex:i]];
         }
-        [a performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+        
+        [alertView performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
     }
 }
 
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     NSInteger alertViewId = alertView.tag;
     
-    if([alertCallbacks objectForKey:[NSString stringWithFormat:@"%d",alertViewId]] && [[alertCallbacks objectForKey:[NSString stringWithFormat:@"%d",alertViewId]] isKindOfClass:[NSString class]])
-    {
-        NSString *callbackId = [alertCallbacks objectForKey:[NSString stringWithFormat:@"%d",alertViewId]];
-        
-        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:alertViewId], kJSAlertID,
-                                                                        [NSNumber numberWithInteger:buttonIndex], kJSAlertButtonIndex,
-                                                                        nil];
-        
+    if ([alertCallbacks objectForKey:[NSString stringWithFormat:@"%d",alertViewId]]
+        && [[alertCallbacks objectForKey:[NSString stringWithFormat:@"%d",alertViewId]] isKindOfClass:[NSString class]]) {
+        NSString * callbackId = [alertCallbacks objectForKey:[NSString stringWithFormat:@"%d",alertViewId]];
+        NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:alertViewId], kJSAlertID,
+                                                                            [NSNumber numberWithInteger:buttonIndex], kJSAlertButtonIndex,
+                                                                            nil];
         [self sendCallbackResponseWithID:callbackId andObject:dict];
-        
     }
-    else
-    {
+    else {
         [self alertView:alertView WithTag:alertViewId clickedButtonAtIndex:buttonIndex];
     }
 }
 
--(void) alertView:(UIAlertView *)alertView WithTag:(NSInteger)tag clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)alertView:(UIAlertView *)alertView WithTag:(NSInteger)tag clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    /*
-     * This is default implementation
-     */
+    
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -688,60 +797,61 @@ NSString *popupPageName;
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
--(void) showPopUpWebviewWithDict:(NSDictionary *)dict
+- (void)showPopUpWebviewWithDict:(NSDictionary *)dict
 {
-    if(self.popUpWebview && self.popUpWebview.superview)
-    {
-        [self.popUpWebview removeFromSuperview];
-        [self.popUpWebview setDelegate:nil];
-        self.popUpWebview = nil;
+    if (popUpWebview
+        && popUpWebview.superview) {
+        [popUpWebview removeFromSuperview];
+        [popUpWebview setDelegate:nil];
+        popUpWebview = nil;
     }
     
-    popupPageName = ([dict objectForKey:kJSPage]  && [[dict objectForKey:kJSPage] isKindOfClass:[NSString class]])? [dict objectForKey:kJSPage] : @"";
-    NSNumber *fadeDuration = ([dict objectForKey:kJSWebLayerFadeDuration]  && [[dict objectForKey:kJSWebLayerFadeDuration] isKindOfClass:[NSNumber class]])? [dict objectForKey:kJSWebLayerFadeDuration] : [NSNumber numberWithFloat:0.3];
+    popupPageName = ([dict objectForKey:kJSPage] && [[dict objectForKey:kJSPage] isKindOfClass:[NSString class]]) ? [dict objectForKey:kJSPage] : @"";
+    NSNumber * fadeDuration = ([dict objectForKey:kJSWebLayerFadeDuration] && [[dict objectForKey:kJSWebLayerFadeDuration] isKindOfClass:[NSNumber class]]) ? [dict objectForKey:kJSWebLayerFadeDuration] : [NSNumber numberWithFloat:0.3];
     
-    self.popUpWebview = [[UIWebView alloc] initWithFrame:self.view.frame];
+    popUpWebview = [[UIWebView alloc] initWithFrame:self.view.frame];
     
-    [self.popUpWebview setDelegate:self];
-    [self.popUpWebview setBackgroundColor:[UIColor clearColor]];
-    [self.popUpWebview.scrollView setBounces:NO];
-    if([self.popUpWebview respondsToSelector:@selector(setKeyboardDisplayRequiresUserAction:)])
-        [self.popUpWebview setKeyboardDisplayRequiresUserAction:NO];
+    [popUpWebview setDelegate:self];
+    [popUpWebview setBackgroundColor:[UIColor clearColor]];
+    [popUpWebview.scrollView setBounces:NO];
+    if ([popUpWebview respondsToSelector:@selector(setKeyboardDisplayRequiresUserAction:)]) {
+        [popUpWebview setKeyboardDisplayRequiresUserAction:NO];
+    }
     
-    [self loadContentInWebView:self.popUpWebview FromFileNamed:popupPageName atPath:[self ressourcePath] withRessourcesAtPath: [self ressourcePath]];
-    self.popUpWebview.opaque = NO;
-    [self.popUpWebview setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-    [self.popUpWebview setAlpha:0.0];
-    [self.view addSubview:self.popUpWebview];
+    [self loadContentInWebView:popUpWebview FromFileNamed:popupPageName atPath:[self ressourcePath] withRessourcesAtPath: [self ressourcePath]];
+    popUpWebview.opaque = NO;
+    [popUpWebview setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
+    [popUpWebview setAlpha:0.0];
+    [self.view addSubview:popUpWebview];
     [UIView animateWithDuration:fadeDuration.floatValue animations:^{
-        [self.popUpWebview setAlpha:1.0];
+        [popUpWebview setAlpha:1.0];
     } completion:nil];
 }
 
 
--(void) dismissPopUpWebviewWithDict:(NSDictionary *)dict
+- (void)dismissPopUpWebviewWithDict:(NSDictionary *)dict
 {
-    NSNumber *fadeDuration = ([dict objectForKey:kJSWebLayerFadeDuration]  && [[dict objectForKey:kJSWebLayerFadeDuration] isKindOfClass:[NSNumber class]])? [dict objectForKey:kJSWebLayerFadeDuration] : [NSNumber numberWithFloat:0.3];
+    NSNumber * fadeDuration = ([dict objectForKey:kJSWebLayerFadeDuration] && [[dict objectForKey:kJSWebLayerFadeDuration] isKindOfClass:[NSNumber class]]) ? [dict objectForKey:kJSWebLayerFadeDuration] : [NSNumber numberWithFloat:0.3];
     
     [UIView animateWithDuration:fadeDuration.floatValue animations:^{
-        [self.popUpWebview setAlpha:0.0];
+        [popUpWebview setAlpha:0.0];
     } completion:^(BOOL finished) {
-        [self.popUpWebview removeFromSuperview];
-        [self.popUpWebview setDelegate:nil];
-        self.popUpWebview = nil;
+        [popUpWebview removeFromSuperview];
+        [popUpWebview setDelegate:nil];
+        popUpWebview = nil;
 
         [self onWebPopupDismissed:popupPageName];
         popupPageName = nil;
     }];
 }
 
--(void)onWebPopupDismissed:(NSString *)filename
+- (void)onWebPopupDismissed:(NSString *)filename
 {
-   NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:JSTypeEvent, kJSType,
-                                                                JSEventWebLayerOnDismiss, kJSEvent,
-                                                                filename, kJSValue,
-                                                                nil];
-    [self executeScriptInWebView:self.webView WithDictionary:d];
+   NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:JSTypeEvent, kJSType,
+                                                                    JSEventWebLayerOnDismiss, kJSEvent,
+                                                                    filename, kJSValue,
+                                                                    nil];
+    [self executeScriptInWebView:webView WithDictionary:dict];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -750,15 +860,14 @@ NSString *popupPageName;
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    
-    NSString *requestString = [[[request URL] absoluteString] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    NSString * requestString = [[[request URL] absoluteString] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     //if requestString contains haploidSpecialJSKey -> the JSON received is extracted.
-    NSRange r = [requestString rangeOfString:haploidSpecialJSKey];
-    if(r.location  != NSNotFound)
-    {
-        NSString *jsonString = [requestString substringFromIndex:r.location+haploidSpecialJSKey.length];
-        NSDictionary *jsonObj = [self parseJSONFromString:jsonString];
+    NSRange range = [requestString rangeOfString:haploidSpecialJSKey];
+    if (range.location != NSNotFound) {
+        NSString * jsonString = [requestString substringFromIndex:range.location + haploidSpecialJSKey.length];
+        NSDictionary * jsonObj = [self parseJSONFromString:jsonString];
         
         [fromJavaScriptOperationQueue addOperationWithBlock:^{
             [self handleDictionarySentByJavaScript:jsonObj];
@@ -769,11 +878,10 @@ NSString *popupPageName;
         return NO;
     }
     
-    [self.activityIndicator startAnimating];
+    [activityIndicator startAnimating];
     
     // stop queues until we load the webview
     [toJavaScriptOperationQueue setSuspended:YES];
-    //[fromJavaScriptOperationQueue setSuspended:YES];
     
     // Return YES to make sure regular navigation works as expected.
     return YES;
@@ -782,11 +890,10 @@ NSString *popupPageName;
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    // start queues
+    // start queue
     [toJavaScriptOperationQueue setSuspended:NO];
-    //[fromJavaScriptOperationQueue setSuspended:NO];
     
-    [self.activityIndicator stopAnimating];
+    [activityIndicator stopAnimating];
 }
 
 
@@ -795,30 +902,20 @@ NSString *popupPageName;
     NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeCallBack, kJSType,
                                                                         JSCallbackSimpleAcquitment, kJSCallback,
                                                                         nil];
-    [self executeScriptInWebView:self.webView WithDictionary:dict];
+    [self executeScriptInWebView:webView WithDictionary:dict];
     
-    if(self.popUpWebview)
-        [self executeScriptInWebView:self.popUpWebview WithDictionary:dict];
+    if (popUpWebview) {
+        [self executeScriptInWebView:popUpWebview WithDictionary:dict];
+    }
 }
 
-
-/*why not to call callBacks automatically, knowing their name (would avoid a switch on the callback names...
- 
- -(void) performSelectorNamed:(NSString *)methodName withDict:(NSDictionary *)dict
- {
- SEL s = NSSelectorFromString(methodName);
- if([self respondsToSelector:s])
- [self performSelector:s withObject:dict];
- }
- //*/
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark HPTOAST DELEGATE METHODS
+#pragma mark COBALT TOAST DELEGATE METHODS
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
--(void) toastwillShow:(CobaltToast *)toast
+- (void)toastwillShow:(CobaltToast *)toast
 {
     toastIsShown = YES;
 #if DEBUG_COBALT
@@ -826,16 +923,14 @@ NSString *popupPageName;
 #endif
 }
 
--(void) toastwillHide:(CobaltToast *)toast
+- (void)toastwillHide:(CobaltToast *)toast
 {
     toastIsShown = NO;
-    if(toastsToShow.count > 0)
-    {
-        CobaltToast *t = [toastsToShow objectAtIndex:0];
-        [t performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+    if (toastsToShow.count > 0) {
+        CobaltToast * toast = [toastsToShow objectAtIndex:0];
+        [toast performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
         [toastsToShow removeObjectAtIndex:0];
     }
-    
 }
 
 
@@ -852,15 +947,22 @@ NSString *popupPageName;
  @abstract      Tells the delegate when the user scrolls the content view within the receiver.
  @param         scrollView  The scroll-view object in which the scrolling occurred.
  */
-- (void)scrollViewDidScroll:(UIScrollView *)_scrollView {
-    if(self.isPullToRefreshActive && self.pullToRefreshTableHeaderView && self.pullToRefreshTableHeaderView.superview)
-    {
+- (void)scrollViewDidScroll:(UIScrollView *)_scrollView
+{
+    if (isPullToRefreshActive
+        && pullToRefreshTableHeaderView
+        && pullToRefreshTableHeaderView.superview) {
         if (_scrollView.isDragging) {
-            if (self.pullToRefreshTableHeaderView.state == RefreshStatePulling && _scrollView.contentOffset.y > -65.0 && self.webView.scrollView.contentOffset.y < 0.0 && !_isRefreshing) {
-                self.pullToRefreshTableHeaderView.state = RefreshStateNormal;
+            if (pullToRefreshTableHeaderView.state == RefreshStatePulling
+                && _scrollView.contentOffset.y > -65.0
+                && webView.scrollView.contentOffset.y < 0.0
+                && ! _isRefreshing) {
+                pullToRefreshTableHeaderView.state = RefreshStateNormal;
             }
-            else if (self.pullToRefreshTableHeaderView.state == RefreshStateNormal && _scrollView.contentOffset.y < -65.0 && !_isRefreshing) {
-                self.pullToRefreshTableHeaderView.state = RefreshStatePulling;
+            else if (pullToRefreshTableHeaderView.state == RefreshStateNormal
+                     && _scrollView.contentOffset.y < -65.0
+                     && ! _isRefreshing) {
+                pullToRefreshTableHeaderView.state = RefreshStatePulling;
             }
         }
     }
@@ -875,10 +977,13 @@ NSString *popupPageName;
  @param         scrollView  The scroll-view object that finished scrolling the content view.
  @param         decelerate  YES if the scrolling movement will continue, but decelerate, after a touch-up gesture during a dragging operation.
  */
-- (void)scrollViewDidEndDragging:(UIScrollView *)_scrollView willDecelerate:(BOOL)decelerate {
-    if(self.isPullToRefreshActive && self.pullToRefreshTableHeaderView && self.pullToRefreshTableHeaderView.superview)
-    {
-        if (_scrollView.contentOffset.y <= -65.0 && !_isRefreshing) {
+- (void)scrollViewDidEndDragging:(UIScrollView *)_scrollView willDecelerate:(BOOL)decelerate
+{
+    if (isPullToRefreshActive
+        && pullToRefreshTableHeaderView
+        && pullToRefreshTableHeaderView.superview) {
+        if (_scrollView.contentOffset.y <= -65.0
+            && ! _isRefreshing) {
             [self refresh];
         }
     }
@@ -897,13 +1002,14 @@ NSString *popupPageName;
  @abstract		Tells the web view to refresh its content.
  */
 - (void)refresh {
-    if(self.isPullToRefreshActive)
-    {
+    if (isPullToRefreshActive) {
         _isRefreshing = YES;
-        self.pullToRefreshTableHeaderView.state = RefreshStateLoading;
+        pullToRefreshTableHeaderView.state = RefreshStateLoading;
+        
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.2];
-        self.webView.scrollView.contentInset = UIEdgeInsetsMake(self.pullToRefreshTableHeaderView.loadingHeight, 0.0f, 0.0f, 0.0f);
+        webView.scrollView.contentInset = UIEdgeInsetsMake(pullToRefreshTableHeaderView.loadingHeight, 0.0f,
+                                                           0.0f, 0.0f);
         [UIView commitAnimations];
         
         [self refreshWebViewDataSource];
@@ -917,7 +1023,8 @@ NSString *popupPageName;
  @method		- (void)loadTableViewDataSource
  @abstract		Simulates loading of the table view data source.
  */
-- (void)loadWebViewDataSource {
+- (void)loadWebViewDataSource
+{
     [self didRefresh];
 }
 
@@ -928,12 +1035,13 @@ NSString *popupPageName;
  @method		- (void)refreshTableViewDataSource
  @abstract		Starts refreshing the table view data source.
  */
-- (void)refreshWebViewDataSource {
-    NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeEvent, kJSType,
-                                                                    JSEventPullToRefresh, kJSEvent,
-                                                                    JSCallbackPullToRefreshDidRefresh, kJSCallback,
-                                                                    nil];
-    [self executeScriptInWebView:self.webView WithDictionary:d];
+- (void)refreshWebViewDataSource
+{
+    NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeEvent, kJSType,
+                                                                        JSEventPullToRefresh, kJSEvent,
+                                                                        JSCallbackPullToRefreshDidRefresh, kJSCallback,
+                                                                        nil];
+    [self executeScriptInWebView:webView WithDictionary:dict];
 }
 
 //**************
@@ -945,11 +1053,13 @@ NSString *popupPageName;
  */
 - (void)didRefresh {
     _isRefreshing = NO;
+    
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.3];
     [UIView setAnimationDelegate:self];
     [UIView setAnimationDidStopSelector:@selector(didStop)];
-    self.webView.scrollView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
+    webView.scrollView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f,
+                                                       0.0f, 0.0f);
 	[UIView commitAnimations];
 }
 
@@ -960,19 +1070,20 @@ NSString *popupPageName;
  @method		- (void)didStop
  @abstract		Tells the table view the refresh animation has stopped.
  */
-- (void)didStop {
-    self.pullToRefreshTableHeaderView.state = RefreshStateNormal;
+- (void)didStop
+{
+    pullToRefreshTableHeaderView.state = RefreshStateNormal;
 }
 
--(void) stopPullToRefreshRefreshing
+- (void)stopPullToRefreshRefreshing
 {
-    if(self.isPullToRefreshActive && _isRefreshing)
-    {
+    if (isPullToRefreshActive
+        && _isRefreshing) {
         [self didRefresh];
-        NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeEvent, kJSType,
-                                                                        JSPullToRefreshCancelled, kJSName,
-                                                                        nil];
-        [self executeScriptInWebView:self.webView WithDictionary:d];
+        NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeEvent, kJSType,
+                                                                            JSPullToRefreshCancelled, kJSName,
+                                                                            nil];
+        [self executeScriptInWebView:self.webView WithDictionary:dict];
     }
 }
 
@@ -989,35 +1100,36 @@ NSString *popupPageName;
     [self loadMoreContentInWebview];
 }
 
--(void) loadMoreContentInWebview
+- (void)loadMoreContentInWebview
 {
-    NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeEvent, kJSType,
-                                                                    JSEventInfiniteScroll, kJSEvent,
-                                                                    JSCallbackInfiniteScrollDidRefresh, kJSCallback,
-                                                                    nil];
-    [self executeScriptInWebView:self.webView WithDictionary:d];
+    NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeEvent, kJSType,
+                                                                        JSEventInfiniteScroll, kJSEvent,
+                                                                        JSCallbackInfiniteScrollDidRefresh, kJSCallback,
+                                                                        nil];
+    [self executeScriptInWebView:self.webView WithDictionary:dict];
 }
 
--(void)moreItemsHaveBeenLoaded
+- (void)moreItemsHaveBeenLoaded
 {
     _isLoadingMore = NO;
+    
     [self moreItemsLoaded];
 }
 
--(void)moreItemsLoaded
+- (void)moreItemsLoaded
 {
-    /*
-     * default implementation
-     */
+
 }
 
--(void) stopInfiniteScrollRefreshing
+- (void)stopInfiniteScrollRefreshing
 {
-    if(self.isInfiniteScrollActive && _isLoadingMore)
-    {
+    if (isInfiniteScrollActive
+        && _isLoadingMore) {
         _isLoadingMore = NO;
-        NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:JSTypeEvent,kJSType,JSInfiniteScrollCancelled,kJSName,nil];
-        [self executeScriptInWebView:self.webView WithDictionary:d];
+        NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeEvent, kJSType,
+                                                                            JSInfiniteScrollCancelled, kJSName,
+                                                                            nil];
+        [self executeScriptInWebView:webView WithDictionary:dict];
     }
 }
 
@@ -1039,7 +1151,12 @@ NSString *popupPageName;
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@synthesize loadingHeight, progressView, arrowImageView, lastUpdatedLabel, statusLabel, state;
+@synthesize arrowImageView,
+            lastUpdatedLabel,
+            loadingHeight,
+            progressView,
+            state,
+            statusLabel;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -1054,8 +1171,9 @@ NSString *popupPageName;
  @abstract		Sets the last updated text.
  @param         lastUpdated The last updated text to set.
  */
-- (void)setLastUpdated:(NSString *)lastUpdated {
-    self.lastUpdatedLabel.text = lastUpdated;
+- (void)setLastUpdated:(NSString *)lastUpdated
+{
+    lastUpdatedLabel.text = lastUpdated;
 }
 
 //************
@@ -1066,35 +1184,33 @@ NSString *popupPageName;
  @abstract		Sets the refresh state.
  @param         newState    The refresh state to set.
  */
-- (void)setState:(RefreshState)newState {
+- (void)setState:(RefreshState)newState
+{
     switch (newState) {
         case RefreshStateNormal:
             if (state == RefreshStatePulling) {
                 [UIView beginAnimations:nil context:nil];
                 [UIView setAnimationDuration:0.2];
-                self.arrowImageView.transform = CGAffineTransformIdentity;
+                arrowImageView.transform = CGAffineTransformIdentity;
                 [UIView commitAnimations];
             }
-            self.statusLabel.text = [self textForState:newState];
-            [self.progressView stopAnimating];
-            self.arrowImageView.hidden = NO;
-            self.arrowImageView.transform = CGAffineTransformIdentity;
+            statusLabel.text = [self textForState:newState];
+            [progressView stopAnimating];
+            arrowImageView.hidden = NO;
+            arrowImageView.transform = CGAffineTransformIdentity;
             break;
-            
         case RefreshStatePulling:
-            self.statusLabel.text = [self textForState:newState];
+            statusLabel.text = [self textForState:newState];
             [UIView beginAnimations:nil context:nil];
             [UIView setAnimationDuration:0.2];
-            self.arrowImageView.transform = CGAffineTransformMakeRotation(M_PI);
+            arrowImageView.transform = CGAffineTransformMakeRotation(M_PI);
             [UIView commitAnimations];
             break;
-            
         case RefreshStateLoading:
-            self.statusLabel.text = [self textForState:newState];
-            [self.progressView startAnimating];
-            self.arrowImageView.hidden = YES;
+            statusLabel.text = [self textForState:newState];
+            [progressView startAnimating];
+            arrowImageView.hidden = YES;
             break;
-            
         default:
             break;
     }
@@ -1112,7 +1228,8 @@ NSString *popupPageName;
  @return        a NSString containing the string to display for the given mode.
  @discussion    This method may be overriden in subclasses.
  */
-- (NSString *)textForState:(RefreshState)newState {
+- (NSString *)textForState:(RefreshState)newState
+{
     switch (newState) {
         case RefreshStateNormal:
             return NSLocalizedString(@"Tirez pour rafraîchir...", nil);

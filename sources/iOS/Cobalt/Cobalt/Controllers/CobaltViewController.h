@@ -28,6 +28,7 @@
  */
 
 #import <UIKit/UIKit.h>
+
 #import "CobaltToast.h"
 
 @class PullToRefreshTableHeaderView;
@@ -78,8 +79,8 @@
 #define JSCallbackInfiniteScrollDidRefresh  @"infiniteScrollDidRefresh"
 
 // UI
-#define JSTypeUI                            @"ui";
-#define kJSUIControl                        @"control";
+#define JSTypeUI                            @"ui"
+#define kJSUIControl                        @"control"
 
 // ALERT
 #define JSControlAlert                      @"alert"
@@ -106,20 +107,22 @@
 #pragma mark INTERFACE
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*!
  @class			CobaltViewController
  @abstract		Base class for a webView controller that allows javascript/native dialogs
  */
-@interface CobaltViewController : UIViewController <UIWebViewDelegate,UIAlertViewDelegate, CobaltToastDelegate, UIScrollViewDelegate>
+@interface CobaltViewController : UIViewController <UIAlertViewDelegate, UIScrollViewDelegate, UIWebViewDelegate, CobaltToastDelegate>
 {
     // Javascript queues
-    NSOperationQueue *toJavaScriptOperationQueue;
-    NSOperationQueue *fromJavaScriptOperationQueue;
+    NSOperationQueue * toJavaScriptOperationQueue;
+    NSOperationQueue * fromJavaScriptOperationQueue;
     
     // UI components
-    PullToRefreshTableHeaderView *pullToRefreshTableHeaderView;
+    PullToRefreshTableHeaderView * pullToRefreshTableHeaderView;
     
 @private
+    
 	BOOL _isLoadingMore;
     BOOL _isRefreshing;
 }
@@ -133,28 +136,28 @@
  @property		webView
  @abstract		the webView displaying content
  */
-@property (strong, nonatomic) UIWebView *webView;
+@property (strong, nonatomic) UIWebView * webView;
 
 /*!
  @property		activityIndicator
  @abstract		an activity indicator shown- while the webView is loading
  */
-@property (strong, nonatomic) UIActivityIndicatorView *activityIndicator;
+@property (strong, nonatomic) UIActivityIndicatorView * activityIndicator;
 
 /*!
  @property		pageName
  @abstract		the name of the HTML file with the content to display in the webview
  @discussion    the file must be located at ressourcePath
  */
-@property (strong, nonatomic) NSString *pageName;
+@property (strong, nonatomic) NSString * pageName;
 
-@property (strong, nonatomic) UIWebView *popUpWebview;
+@property (strong, nonatomic) UIWebView * popUpWebview;
 
 /*!
  @property		pullToRefreshTableHeaderView
  @abstract		The pull to refresh table header view.
  */
-@property (nonatomic, strong) PullToRefreshTableHeaderView *pullToRefreshTableHeaderView;
+@property (nonatomic, strong) PullToRefreshTableHeaderView * pullToRefreshTableHeaderView;
 
 /*!
  @property		isPullToRefreshActive
@@ -181,13 +184,14 @@
  @return        a string representing the ressource path to be used in the webview
  @discussion    must be subclassed in subclasses
  */
--(NSString *)ressourcePath;
+- (NSString *)ressourcePath;
 
 /*!
  @method		-(void) customView
  @abstract		a method to custom the webView
+ @discussion    must be subclassed in subclasses
  */
--(void) customWebView;
+- (void)customWebView;
 
 /*!
  @method		-(void)loadContentInWebView:(UIWebView *)mWebView FromFileNamed:(NSString *)filename atPath:(NSString *)path withRessourcesAtPath:(NSString *)pathOfRessources
@@ -198,7 +202,7 @@
  @param         path : the path where to find this file
  @param         pathOfRessources : the path where to find the ressources (css and js files)
  */
--(void)loadContentInWebView:(UIWebView *)mWebView FromFileNamed:(NSString *)filename atPath:(NSString *)path withRessourcesAtPath:(NSString *)pathOfRessources
+- (void)loadContentInWebView:(UIWebView *)mWebView FromFileNamed:(NSString *)filename atPath:(NSString *)path withRessourcesAtPath:(NSString *)pathOfRessources
 ;
 
 /*!
@@ -208,7 +212,7 @@
  @param         path : the path where to find this file
  @return        the content of the specified file or nil if an error occured
  */
--(NSString *)getStringFromFileNamed:(NSString *)filename atPath:(NSString *)path;
+- (NSString *)getStringFromFileNamed:(NSString *)filename atPath:(NSString *)path;
 
 /*!
  @method		-(void) executeScriptInWebView:(UIWebView *)mWebView WithDictionary:(NSDictionary *)dict
@@ -218,7 +222,7 @@
  @discussion    the webView MUST have a function "nativeBridge.execute(%@);" that receives the JSON (representing dict) as parameter
  @discussion    This method should NOT be overridden in subclasses.
  */
--(void) executeScriptInWebView:(UIWebView *)mWebView WithDictionary:(NSDictionary *)dict;
+- (void)executeScriptInWebView:(UIWebView *)mWebView WithDictionary:(NSDictionary *)dict;
 
 /*!
  @method		-(void) sendCallbackResponseWithID:(NSString *)callbackId andObject:(NSObject *)object
@@ -227,7 +231,7 @@
  @param         object : the object to send to the JS method which corresponds to the callbackId given
  @discussion    This method should NOT be overridden in subclasses.
  */
--(void) sendCallbackResponseWithID:(NSString *)callbackId andObject:(NSObject *)object;
+- (void)sendCallbackResponseWithID:(NSString *)callbackId andObject:(NSObject *)object;
 
 /*!
  @method		-(void)handleDictionarySentByJavaScript:(NSDictionary *)dict
@@ -236,14 +240,14 @@
  @result        BOOL : if YES, the action to do by the controller has been completed. Otherwise, returns NO.
  @discussion    This method MUST be overridden in subclasses.
  */
--(BOOL)handleDictionarySentByJavaScript:(NSDictionary *)dict;
+- (BOOL)handleDictionarySentByJavaScript:(NSDictionary *)dict;
 
 /*!
  @method		-(void) sendAcquitmentToJS
  @abstract		sends a simple acquitment to JS as soon as a JS action is received
  @discussion    This is the default acquitment way. More complex acquitment methods may be implemented but on iOS, every call received by JavaScript should send at least this acquitment.
  */
--(void) sendSimpleAcquitmentToJS;
+- (void)sendSimpleAcquitmentToJS;
 
 /*!
  @method		-(void) alertView:(UIAlertView *)alertView WithTag:(NSInteger) tag clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -255,7 +259,7 @@
  @discussion    It is called in the delegate method -(void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
  @discussion    This delegate method -(void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex; SHOULD NOT be overriden.
  */
--(void) alertView:(UIAlertView *)alertView WithTag:(NSInteger)tag clickedButtonAtIndex:(NSInteger)buttonIndex;
+- (void)alertView:(UIAlertView *)alertView WithTag:(NSInteger)tag clickedButtonAtIndex:(NSInteger)buttonIndex;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -285,7 +289,7 @@
  @abstract		stop the pullToRefresh from its refreshing state.
  @discussion	call this method when you want to reset the pullToRefresh state.
  */
--(void) stopPullToRefreshRefreshing;
+- (void)stopPullToRefreshRefreshing;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -302,20 +306,20 @@
  @method		-(void) loadMoreContentInWebview
  @abstract		Starts loading more content in webview
  */
--(void) loadMoreContentInWebview;
+- (void)loadMoreContentInWebview;
 
 /*!
  @method		-(void)moreItemsLoaded
  @abstract		Tells the web view more items have been loaded
  */
--(void)moreItemsLoaded;
+- (void)moreItemsLoaded;
 
 /*!
  @method		- (void)stopInfiniteScrollRefreshing
  @abstract		stop the pullToRefresh from its refreshing state.
  @discussion	call this method when you want to reset the infinite scroll state.
  */
--(void) stopInfiniteScrollRefreshing;
+- (void)stopInfiniteScrollRefreshing;
 
 @end
 
@@ -336,12 +340,11 @@ typedef enum {
  @abstract		Class for header of table view that pull to refresh.
  */
 @interface PullToRefreshTableHeaderView : UIView {
-    
     CGFloat loadingHeight;
-    UIActivityIndicatorView *progressView;
-    UIImageView *arrowImageView;
-    UILabel *lastUpdatedLabel;
-    UILabel *statusLabel;
+    UIActivityIndicatorView * progressView;
+    UIImageView * arrowImageView;
+    UILabel * lastUpdatedLabel;
+    UILabel * statusLabel;
     RefreshState state;
 }
 
@@ -360,25 +363,25 @@ typedef enum {
  @property		progressView
  @abstract		The progress view.
  */
-@property (nonatomic, retain) UIActivityIndicatorView *progressView;
+@property (nonatomic, retain) UIActivityIndicatorView * progressView;
 
 /*!
  @property		arrowImageView
  @abstract		The arrow image view.
  */
-@property (nonatomic, retain) UIImageView *arrowImageView;
+@property (nonatomic, retain) UIImageView * arrowImageView;
 
 /*!
  @property		lastUpdatedLabel
  @abstract		The last updated label.
  */
-@property (nonatomic, retain)  UILabel *lastUpdatedLabel;
+@property (nonatomic, retain)  UILabel * lastUpdatedLabel;
 
 /*!
  @property		statusLabel
  @abstract		The status label.
  */
-@property (nonatomic, retain) UILabel *statusLabel;
+@property (nonatomic, retain) UILabel * statusLabel;
 
 /*!
  @property		state
