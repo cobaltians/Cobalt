@@ -266,49 +266,69 @@ NSString * popupPageName;
     
     id dictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
     
-    #if DEBUG_COBALT
+#if DEBUG_COBALT
     if (! dictionary) {
         NSLog(@"JSONObjectWithString: Error while reading JSON %@\n%@", string, [error localizedFailureReason]);
     }
-    #endif
+#endif
     
     return dictionary;
 }
 
-- (void)executeScriptInWebView:(UIWebView *)mWebView WithDictionary:(NSDictionary *)dict
+- (void)executeScriptInWebView:(UIWebView *)mWebView withDictionary:(NSDictionary *)dict
 {
     [toJavaScriptOperationQueue addOperationWithBlock:^{
         if ([NSJSONSerialization isValidJSONObject:dict]) {
             NSError * error;
-            NSString * jsonMsg =[[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:&error] encoding:NSUTF8StringEncoding];
+            NSString * message =[[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:&error] encoding:NSUTF8StringEncoding];
             
-            //ensure there is no raw newline in any part of the json string.
-            jsonMsg = [[jsonMsg componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@""];
-
-            NSString * javaScriptCommand = [NSString stringWithFormat:@"nativeBridge.execute(%@);", jsonMsg];
-            
-            // TDOD - pourquoi attendre la fin de l'exécution dans le main thread sachant que tu es dans un thread ???
-            [mWebView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:javaScriptCommand waitUntilDone:NO];
+            if (message) {
+                // Ensures there is no raw newLine in message.
+                message = [[message componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@""];
+                
+                NSString * script = [NSString stringWithFormat:@"nativeBridge.execute(%@);", message];
+                
+                [mWebView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:script waitUntilDone:NO];
+            }
+#if DEBUG_COBALT
+            else {
+                NSLog(@"executeScriptInWebView: Error while generating JSON %@\n%@", [dict description], [error localizedFailureReason]);
+            }
+#endif
         }
     }];
 }
 
-- (void)sendCallbackResponseWithID:(NSString *)callbackId andObject:(NSObject *)object
+- (void)sendCallback:(NSString *)callback withData:(NSObject *)data
 {
-    if(callbackId
-       && callbackId.length > 0) {
-        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:JSTypeCallBack, kJSType,
-                                                                        callbackId, kJSCallback,
-                                                                        object, kJSData,
-                                                                        nil];
-        
-        // pourquoi executer ça dans la main thread ??? (d'autant plus que tu y es déjà !!)
-        //[self performSelectorOnMainThread:@selector(executeScriptInWebViewWithDictionary:) withObject:dict waitUntilDone:YES];
-        [self executeScriptInWebView:webView WithDictionary:dict];
+    if (callback
+        && callback.length > 0) {
+        NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeCallBack, kJSType,
+                                                                            callback, kJSCallback,
+                                                                            data, kJSData,
+                                                                            nil];
+        [self executeScriptInWebView:webView withDictionary:dict];
     }
 #if DEBUG_COBALT
     else {
-        NSLog(@"ERROR : web callbackID invalid (null or empty)");
+        NSLog(@"sendCallback: invalid callback (null or empty)");
+    }
+#endif
+}
+
+- (void)sendEvent:(NSString *)event withData:(NSObject *)data
+{
+    if (event
+        && event.length > 0) {
+        NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:  JSTypeEvent, kJSType,
+                                                                           event, kJSEvent,
+                                                                           data, kJSData,
+                                                                           nil];
+        [self executeScriptInWebView:webView withDictionary:dict];
+    }
+#if DEBUG_COBALT
+    else {
+        NSLog(@"sendEvent: invalid event (null or empty)");
     }
 #endif
 }
@@ -447,8 +467,6 @@ NSString * popupPageName;
 #endif
         }
         
-        // TODO: FROM HERE
-        
         // UI
         else if ([type isEqualToString:JSTypeUI]) {
             NSString * control = [dict objectForKey:kJSUIControl];
@@ -507,6 +525,8 @@ NSString * popupPageName;
             }
 #endif
         }
+        
+        // TODO: FROM HERE
         
         // WEB LAYER
         else if ([type isEqualToString:JSTypeWebLayer]) {
@@ -746,7 +766,7 @@ NSString * popupPageName;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark POP UP WEBVIEW
+#pragma mark WEB LAYER
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -804,7 +824,7 @@ NSString * popupPageName;
                                                                     JSEventWebLayerOnDismiss, kJSEvent,
                                                                     filename, kJSValue,
                                                                     nil];
-    [self executeScriptInWebView:webView WithDictionary:dict];
+    [self executeScriptInWebView:webView withDictionary:dict];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -855,10 +875,10 @@ NSString * popupPageName;
     NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeCallBack, kJSType,
                                                                         JSCallbackSimpleAcquitment, kJSCallback,
                                                                         nil];
-    [self executeScriptInWebView:webView WithDictionary:dict];
+    [self executeScriptInWebView:webView withDictionary:dict];
     
     if (popUpWebview) {
-        [self executeScriptInWebView:popUpWebview WithDictionary:dict];
+        [self executeScriptInWebView:popUpWebview withDictionary:dict];
     }
 }
 
@@ -994,7 +1014,7 @@ NSString * popupPageName;
                                                                         JSEventPullToRefresh, kJSEvent,
                                                                         JSCallbackPullToRefreshDidRefresh, kJSCallback,
                                                                         nil];
-    [self executeScriptInWebView:webView WithDictionary:dict];
+    [self executeScriptInWebView:webView withDictionary:dict];
 }
 
 //**************
@@ -1036,7 +1056,7 @@ NSString * popupPageName;
         NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeEvent, kJSType,
                                                                             JSPullToRefreshCancelled, kJSName,
                                                                             nil];
-        [self executeScriptInWebView:self.webView WithDictionary:dict];
+        [self executeScriptInWebView:self.webView withDictionary:dict];
     }
 }
 
@@ -1059,7 +1079,7 @@ NSString * popupPageName;
                                                                         JSEventInfiniteScroll, kJSEvent,
                                                                         JSCallbackInfiniteScrollDidRefresh, kJSCallback,
                                                                         nil];
-    [self executeScriptInWebView:self.webView WithDictionary:dict];
+    [self executeScriptInWebView:self.webView withDictionary:dict];
 }
 
 - (void)infiniteScrollDidRefresh
@@ -1082,7 +1102,7 @@ NSString * popupPageName;
         NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeEvent, kJSType,
                                                                             JSInfiniteScrollCancelled, kJSName,
                                                                             nil];
-        [self executeScriptInWebView:webView WithDictionary:dict];
+        [self executeScriptInWebView:webView withDictionary:dict];
     }
 }
 
