@@ -46,7 +46,7 @@
             isInfiniteScrollActive,
             isPullToRefreshActive,
             pageName,
-            popUpWebview,
+            webLayer,
             pullToRefreshTableHeaderView,
             webView;
 
@@ -55,7 +55,7 @@ NSMutableDictionary * alertCallbacks;
 NSMutableArray * toastsToShow;
 BOOL toastIsShown;
 
-NSString * popupPageName;
+NSString * webLayerPage;
 
 - (void)viewDidLoad
 {
@@ -471,7 +471,6 @@ NSString * popupPageName;
         else if ([type isEqualToString:JSTypeUI]) {
             NSString * control = [dict objectForKey:kJSUIControl];
             NSDictionary * data = [dict objectForKey:kJSData];
-            NSString * callback = [dict objectForKey:kJSCallback];
             
             if (control
                 && [control isKindOfClass:[NSString class]]) {
@@ -526,22 +525,31 @@ NSString * popupPageName;
 #endif
         }
         
-        // TODO: FROM HERE
-        
         // WEB LAYER
         else if ([type isEqualToString:JSTypeWebLayer]) {
             NSString * action = [dict objectForKey:kJSAction];
+            NSDictionary * data = [dict objectForKey:kJSData];
+            
             if (action
-               && [action isKindOfClass:[NSString class]]) {
+                && [action isKindOfClass:[NSString class]]) {
                 
                 // SHOW
-                if([action isEqualToString:JSActionWebLayerShow]) {
-                    [self performSelectorOnMainThread:@selector(showPopUpWebviewWithDict:) withObject:dict waitUntilDone:YES];
+                if ([action isEqualToString:JSActionWebLayerShow]) {
+                    if (data
+                        && [data isKindOfClass:[NSDictionary class]]) {
+                        [self performSelectorOnMainThread:@selector(showWebLayer:) withObject:data waitUntilDone:YES];
+                    }
+#if DEBUG_COBALT
+                    else {
+                        NSLog(@"handleDictionarySentByJavaScript: data field missing or not an object (message: %@)", [dict description]);
+                        
+                    }
+#endif
                 }
                 
                 // DISMISS
                 else if([action isEqualToString:JSActionWebLayerDismiss]) {
-                    [self performSelectorOnMainThread:@selector(dismissPopUpWebviewWithDict:) withObject:dict waitUntilDone:YES];
+                    [self performSelectorOnMainThread:@selector(dismissWebLayer:) withObject:data waitUntilDone:YES];
                 }
             }
 #if DEBUG_COBALT
@@ -760,7 +768,7 @@ NSString * popupPageName;
         && [callback isKindOfClass:[NSString class]]) {
         NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys:   [NSNumber numberWithInteger:buttonIndex], kJSAlertButtonIndex,
                                                                             nil];
-        [self sendCallbackResponseWithID:callback andObject:data];
+        [self sendCallback:callback withData:data];
     }
 }
 
@@ -770,61 +778,67 @@ NSString * popupPageName;
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)showPopUpWebviewWithDict:(NSDictionary *)dict
+- (void)showWebLayer:(NSDictionary *)data
 {
-    if (popUpWebview
-        && popUpWebview.superview) {
-        [popUpWebview removeFromSuperview];
-        [popUpWebview setDelegate:nil];
-        popUpWebview = nil;
+    if (webLayer
+        && webLayer.superview) {
+        [webLayer removeFromSuperview];
+        [webLayer setDelegate:nil];
+        webLayer = nil;
     }
     
-    popupPageName = ([dict objectForKey:kJSPage] && [[dict objectForKey:kJSPage] isKindOfClass:[NSString class]]) ? [dict objectForKey:kJSPage] : @"";
-    NSNumber * fadeDuration = ([dict objectForKey:kJSWebLayerFadeDuration] && [[dict objectForKey:kJSWebLayerFadeDuration] isKindOfClass:[NSNumber class]]) ? [dict objectForKey:kJSWebLayerFadeDuration] : [NSNumber numberWithFloat:0.3];
+    webLayerPage = [data objectForKey:kJSPage];
+    NSNumber * fadeDuration = ([data objectForKey:kJSWebLayerFadeDuration] && [[data objectForKey:kJSWebLayerFadeDuration] isKindOfClass:[NSNumber class]]) ? [data objectForKey:kJSWebLayerFadeDuration] : [NSNumber numberWithFloat:0.3];
     
-    popUpWebview = [[UIWebView alloc] initWithFrame:self.view.frame];
-    
-    [popUpWebview setDelegate:self];
-    [popUpWebview setBackgroundColor:[UIColor clearColor]];
-    [popUpWebview.scrollView setBounces:NO];
-    if ([popUpWebview respondsToSelector:@selector(setKeyboardDisplayRequiresUserAction:)]) {
-        [popUpWebview setKeyboardDisplayRequiresUserAction:NO];
+    if (webLayerPage) {
+        webLayer = [[UIWebView alloc] initWithFrame:self.view.frame];
+        [webLayer setDelegate:self];
+        [webLayer setAlpha:0.0];
+        [webLayer setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
+        [webLayer setBackgroundColor:[UIColor clearColor]];
+        [webLayer setOpaque:NO];
+        [webLayer.scrollView setBounces:NO];
+        
+        if ([webLayer respondsToSelector:@selector(setKeyboardDisplayRequiresUserAction:)]) {
+            [webLayer setKeyboardDisplayRequiresUserAction:NO];
+        }
+        
+        [self loadContentInWebView:webLayer FromFileNamed:webLayerPage atPath:[CobaltViewController ressourcePath] withRessourcesAtPath: [CobaltViewController ressourcePath]];
+        
+        [self.view addSubview:webLayer];
+        [UIView animateWithDuration:fadeDuration.floatValue animations:^{
+            [webLayer setAlpha:1.0];
+        } completion:nil];
     }
-    
-    [self loadContentInWebView:popUpWebview FromFileNamed:popupPageName atPath:[CobaltViewController ressourcePath] withRessourcesAtPath: [CobaltViewController ressourcePath]];
-    popUpWebview.opaque = NO;
-    [popUpWebview setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-    [popUpWebview setAlpha:0.0];
-    [self.view addSubview:popUpWebview];
-    [UIView animateWithDuration:fadeDuration.floatValue animations:^{
-        [popUpWebview setAlpha:1.0];
-    } completion:nil];
+#if DEBUG_COBALT
+    else {
+        NSLog(@"showWebLayer: page field missing or not a string (data: %@)", data);
+    }
+#endif
 }
 
-
-- (void)dismissPopUpWebviewWithDict:(NSDictionary *)dict
+// TODO: like Android code, implement getDataForDismiss
+- (void)dismissWebLayer:(NSDictionary *)data
 {
-    NSNumber * fadeDuration = ([dict objectForKey:kJSWebLayerFadeDuration] && [[dict objectForKey:kJSWebLayerFadeDuration] isKindOfClass:[NSNumber class]]) ? [dict objectForKey:kJSWebLayerFadeDuration] : [NSNumber numberWithFloat:0.3];
+    NSNumber * fadeDuration = (data && [data objectForKey:kJSWebLayerFadeDuration] && [[data objectForKey:kJSWebLayerFadeDuration] isKindOfClass:[NSNumber class]]) ? [data objectForKey:kJSWebLayerFadeDuration] : [NSNumber numberWithFloat:0.3];
     
     [UIView animateWithDuration:fadeDuration.floatValue animations:^{
-        [popUpWebview setAlpha:0.0];
+        [webLayer setAlpha:0.0];
     } completion:^(BOOL finished) {
-        [popUpWebview removeFromSuperview];
-        [popUpWebview setDelegate:nil];
-        popUpWebview = nil;
+        [webLayer removeFromSuperview];
+        [webLayer setDelegate:nil];
+        webLayer = nil;
 
-        [self onWebPopupDismissed:popupPageName];
-        popupPageName = nil;
+        [self onWebLayerDismissed:webLayerPage];
+        webLayerPage = nil;
     }];
 }
 
-- (void)onWebPopupDismissed:(NSString *)filename
+- (void)onWebLayerDismissed:(NSString *)page
 {
-   NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:JSTypeEvent, kJSType,
-                                                                    JSEventWebLayerOnDismiss, kJSEvent,
-                                                                    filename, kJSValue,
-                                                                    nil];
-    [self executeScriptInWebView:webView withDictionary:dict];
+    NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys:   page, kJSPage,
+                                                                        nil];
+    [self sendEvent:JSEventWebLayerOnDismiss withData:data];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -877,8 +891,8 @@ NSString * popupPageName;
                                                                         nil];
     [self executeScriptInWebView:webView withDictionary:dict];
     
-    if (popUpWebview) {
-        [self executeScriptInWebView:popUpWebview withDictionary:dict];
+    if (webLayer) {
+        [self executeScriptInWebView:webLayer withDictionary:dict];
     }
 }
 

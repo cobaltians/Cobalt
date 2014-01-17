@@ -152,7 +152,7 @@
  */
 @property (strong, nonatomic) NSString * pageName;
 
-@property (strong, nonatomic) UIWebView * popUpWebview;
+@property (strong, nonatomic) UIWebView * webLayer;
 
 /*!
  @property		pullToRefreshTableHeaderView
@@ -225,13 +225,13 @@
 - (void)executeScriptInWebView:(UIWebView *)mWebView withDictionary:(NSDictionary *)dict;
 
 /*!
- @method		-(void) sendCallbackResponseWithID:(NSString *)callbackId andObject:(NSObject *)object
+ @method		-(void) sendCallback:(NSString *)callbackId withData:(NSObject *)data
  @abstract		this methods sends a callback with the givent callbackId and the object as parameter of the methods which is called in JS
  @param         callbackId : the callbackID given by a former JS call, so that JS calls the appropriate method
  @param         object : the object to send to the JS method which corresponds to the callbackId given
  @discussion    This method should NOT be overridden in subclasses.
  */
-- (void)sendCallbackResponseWithID:(NSString *)callbackId andObject:(NSObject *)object;
+- (void)sendCallback:(NSString *)callback withData:(NSObject *)data;
 
 /*!
  @method		-(void)handleDictionarySentByJavaScript:(NSDictionary *)dict
