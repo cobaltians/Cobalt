@@ -123,6 +123,7 @@
     
 @private
     
+    int _alertViewCounter;
 	BOOL _isLoadingMore;
     BOOL _isRefreshing;
 }
@@ -247,18 +248,6 @@
  @discussion    This is the default acquitment way. More complex acquitment methods may be implemented but on iOS, every call received by JavaScript should send at least this acquitment.
  */
 - (void)sendSimpleAcquitmentToJS;
-
-/*!
- @method		-(void) alertView:(UIAlertView *)alertView WithTag:(NSInteger) tag clickedButtonAtIndex:(NSInteger)buttonIndex
- @abstract		this method is executed when an alertView has been clicked and a custom behaviour should be implemented in the native class.
- @param         alertView : the alertView containing the button
- @param         tag : the tag of the alertView
- @param         buttonIndex : The index of the button that was clicked. The button indices start at 0.
- @discussion    this method should be overriden in subclasses if alertViews are necessary. 
- @discussion    It is called in the delegate method -(void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
- @discussion    This delegate method -(void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex; SHOULD NOT be overriden.
- */
-- (void)alertView:(UIAlertView *)alertView WithTag:(NSInteger)tag clickedButtonAtIndex:(NSInteger)buttonIndex;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -

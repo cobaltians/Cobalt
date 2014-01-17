@@ -70,6 +70,7 @@ NSString * popupPageName;
     
     fromJavaScriptOperationQueue = [[NSOperationQueue alloc] init] ;
     
+    _alertViewCounter = 0;
     alertCallbacks = [[NSMutableDictionary alloc] init];
     toastsToShow = [[NSMutableArray alloc] init];
     
@@ -488,7 +489,7 @@ NSString * popupPageName;
                 
                 // ALERT
                 else if([control isEqualToString:JSControlAlert]) {
-                    [self showAlertWithDict:dict];
+                    [self showAlert:dict];
                 }
                 
                 else {
@@ -691,89 +692,56 @@ NSString * popupPageName;
 #pragma mark ALERTS METHODS
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)showAlertWithDict:(NSDictionary *)dict
+- (void)showAlert:(NSDictionary *)dict
 {
-    if (dict) {
-        NSString * title = ([dict objectForKey:kJSAlertTitle] && [[dict objectForKey:kJSAlertTitle] isKindOfClass:[NSString class]]) ? [dict objectForKey:kJSAlertTitle] : @"";
+    NSDictionary * data = [dict objectForKey:kJSData];
+    NSString * callback = [dict objectForKey:kJSCallback];
+    
+    if (data
+        && [data isKindOfClass:[NSDictionary class]]) {
+        NSString * title = ([data objectForKey:kJSAlertTitle] && [[data objectForKey:kJSAlertTitle] isKindOfClass:[NSString class]]) ? [data objectForKey:kJSAlertTitle] : @"";
         NSString * message = ([dict objectForKey:kJSAlertMessage] && [[dict objectForKey:kJSAlertMessage] isKindOfClass:[NSString class]])? [dict objectForKey:kJSAlertMessage] : @"";
         NSArray * buttons = ([dict objectForKey:kJSAlertButtons] && [[dict objectForKey:kJSAlertButtons] isKindOfClass:[NSArray class]]) ? [dict objectForKey:kJSAlertButtons] : [NSArray array];
-        NSString * receiverType = ([dict objectForKey:kJSAlertCallbackReceiver] && [[dict objectForKey:kJSAlertCallbackReceiver] isKindOfClass:[NSString class]]) ? [dict objectForKey:kJSAlertCallbackReceiver] : @"";
         
         UIAlertView * alertView;
-        //CREATE ALERTVIEW WITH DELEGATE SET
-        if (receiverType
-            && receiverType.length > 0) {
-            if (buttons
-                && buttons.count >=1) {
-                alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:[buttons objectAtIndex:0] otherButtonTitles:nil];
-            }
-            else {
-                alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            }
-            
-            NSNumber * alertId = [dict objectForKey:kJSAlertID] ? [dict objectForKey:kJSAlertID] : [NSNumber numberWithInteger:-1];
-            [alertView setTag:alertId.integerValue];
-            
-            //save the callbackId to send it later to web
-            if ([receiverType isEqualToString:JSAlertCallbackReceiverWeb]) {
-                NSString * callbackId = [NSString stringWithFormat:@"%@", [dict objectForKey:kJSCallback]];
-                if (callbackId
-                    && callbackId.length > 0) {
-                    [alertCallbacks setObject:callbackId forKey:[NSString stringWithFormat:@"%d",alertId.intValue]];
-                }
-                else {
-#if DEBUG_COBALT
-                    NSLog(@"WARNING: invalid callback name for alertView with webCallback (null or empty)");
-#endif
-                }
-            }
-            else if(! [receiverType isEqualToString:JSAlertCallbackReceiverNative]) {
-#if DEBUG_COBALT
-                NSLog(@"WARNING: invalid callback receiver for alertView: %@", receiverType);
-#endif
-            }
+        id delegate = (callback && [callback isKindOfClass:[NSString class]]) ? self : nil;
+        
+        if (! buttons.count) {
+            alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:delegate cancelButtonTitle:@"OK" otherButtonTitles:nil];
         }
-        //NO CALLBACK TO CALL ON CLICK ON BUTTONS
         else {
-            if (buttons
-                && buttons.count >=1) {
-                alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:[buttons objectAtIndex:0] otherButtonTitles:nil];
-            }
-            else {
-                alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:delegate cancelButtonTitle:[buttons objectAtIndex:0] otherButtonTitles:nil];
+            
+            // Add other buttons
+            for (int i = 1 ; i < buttons.count ; i++) {
+                [alertView addButtonWithTitle:[buttons objectAtIndex:i]];
             }
         }
         
-        //Add buttons
-        int i = 0;
-        for (i = 1 ; i < buttons.count ; i++) {
-            [alertView addButtonWithTitle:[buttons objectAtIndex:i]];
+        if (delegate) {
+            alertView.tag = ++_alertViewCounter;
+            [alertCallbacks setObject:callback forKey:[NSString stringWithFormat:@"%d", alertView.tag]];
         }
         
         [alertView performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
     }
+#if DEBUG_COBALT
+    else {
+        NSLog(@"showAlert: data field missing or not an object (message: %@)", [dict description]);
+    }
+#endif
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSInteger alertViewId = alertView.tag;
+    NSString * callback = [alertCallbacks objectForKey:[NSString stringWithFormat:@"%d", alertView.tag]];
     
-    if ([alertCallbacks objectForKey:[NSString stringWithFormat:@"%d",alertViewId]]
-        && [[alertCallbacks objectForKey:[NSString stringWithFormat:@"%d",alertViewId]] isKindOfClass:[NSString class]]) {
-        NSString * callbackId = [alertCallbacks objectForKey:[NSString stringWithFormat:@"%d",alertViewId]];
-        NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:alertViewId], kJSAlertID,
-                                                                            [NSNumber numberWithInteger:buttonIndex], kJSAlertButtonIndex,
+    if (callback
+        && [callback isKindOfClass:[NSString class]]) {
+        NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys:   [NSNumber numberWithInteger:buttonIndex], kJSAlertButtonIndex,
                                                                             nil];
-        [self sendCallbackResponseWithID:callbackId andObject:dict];
+        [self sendCallbackResponseWithID:callback andObject:data];
     }
-    else {
-        [self alertView:alertView WithTag:alertViewId clickedButtonAtIndex:buttonIndex];
-    }
-}
-
-- (void)alertView:(UIAlertView *)alertView WithTag:(NSInteger)tag clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
