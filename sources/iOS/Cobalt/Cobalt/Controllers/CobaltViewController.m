@@ -43,8 +43,8 @@
 @implementation CobaltViewController
 
 @synthesize activityIndicator,
-            isInfiniteScrollActive,
-            isPullToRefreshActive,
+            isInfiniteScrollEnabled,
+            isPullToRefreshEnabled,
             pageName,
             webLayer,
             pullToRefreshTableHeaderView,
@@ -86,7 +86,7 @@ NSString * webLayerPage;
     }
     
     // Add pull-to-refresh table header view
-    if (isPullToRefreshActive) {
+    if (isPullToRefreshEnabled) {
         [self customPullToRefreshDefaultView];
         
         pullToRefreshTableHeaderView.state = RefreshStateNormal;
@@ -104,8 +104,8 @@ NSString * webLayerPage;
 #endif
         [webView.scrollView setDelegate:self];
     }
-
-    [self loadContentInWebView:webView FromFileNamed:pageName atPath:[CobaltViewController ressourcePath] withRessourcesAtPath:[CobaltViewController ressourcePath]];
+    
+    [self loadPage:pageName inWebView:webView];
 }
 
 - (void)viewDidUnload
@@ -151,6 +151,12 @@ NSString * webLayerPage;
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+- (void)setDelegate:(id)delegate
+{
+    if (delegate) {
+        _delegate = delegate;
+    }
+}
 
 - (void)customWebView
 {
@@ -172,7 +178,6 @@ NSString * webLayerPage;
         [pullToRefreshTableHeaderView.statusLabel setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleLeftMargin];
         [pullToRefreshTableHeaderView addSubview:pullToRefreshTableHeaderView.statusLabel];
         
-        
         pullToRefreshTableHeaderView.progressView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         [pullToRefreshTableHeaderView.progressView setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin];
         [pullToRefreshTableHeaderView.progressView setColor:[UIColor blackColor]];
@@ -182,11 +187,11 @@ NSString * webLayerPage;
     }
 }
 
-- (void)loadContentInWebView:(UIWebView *)mWebView FromFileNamed:(NSString *)filename atPath:(NSString *)path withRessourcesAtPath:(NSString *)pathOfRessources
+- (void)loadPage:(NSString *)page inWebView:(UIWebView *)mWebView
 {
-    NSURL * baseURL = [NSURL fileURLWithPath:[path stringByAppendingPathComponent:filename]];
-    NSURLRequest * request = [NSURLRequest requestWithURL:baseURL];
-    [mWebView loadRequest:request];
+    NSURL * fileURL = [NSURL fileURLWithPath:[[CobaltViewController ressourcePath] stringByAppendingPathComponent:page]];
+    NSURLRequest * requestURL = [NSURLRequest requestWithURL:fileURL];
+    [mWebView loadRequest:requestURL];
 }
 
 - (NSDictionary *)getConfigurationForController:(NSString *)controller
@@ -316,14 +321,20 @@ NSString * webLayerPage;
 #endif
 }
 
-- (void)sendEvent:(NSString *)event withData:(NSObject *)data
+- (void)sendEvent:(NSString *)event withData:(NSObject *)data andCallback:(NSString *)callback
 {
     if (event
         && event.length > 0) {
-        NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:  JSTypeEvent, kJSType,
-                                                                           event, kJSEvent,
-                                                                           data, kJSData,
-                                                                           nil];
+        NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithObjectsAndKeys: JSTypeEvent, kJSType,
+                                                                                        event, kJSEvent,
+                                                                                        nil];
+        if (data) {
+            [dict setObject:data forKey:kJSData];
+        }
+        if (callback) {
+            [dict setObject:callback forKey:kJSCallback];
+        }
+        
         [self executeScriptInWebView:webView withDictionary:dict];
     }
 #if DEBUG_COBALT
@@ -348,18 +359,22 @@ NSString * webLayerPage;
             if (callback
                 && [callback isKindOfClass:[NSString class]]) {
                 if ([callback isEqualToString:JSCallbackPullToRefreshDidRefresh]) {
-                    [self performSelectorOnMainThread:@selector(pullToRefreshDidRefresh) withObject:nil waitUntilDone:YES];
+                    [self performSelectorOnMainThread:@selector(onPullToRefreshDidRefresh) withObject:nil waitUntilDone:YES];
                 }
                 else if ([callback isEqualToString:JSCallbackInfiniteScrollDidRefresh]) {
-                    [self performSelectorOnMainThread:@selector(infiniteScrollDidRefresh) withObject:nil waitUntilDone:YES];
+                    [self performSelectorOnMainThread:@selector(onInfiniteScrollDidRefresh) withObject:nil waitUntilDone:YES];
                 }
                 else {
 #if DEBUG_COBALT
                     NSLog(@"handleDictionarySentByJavaScript: unhandled callback %@", [dict description]);
 #endif
-                    // TODO: add onUnhandledCallback method
-                    // return [self onUnhandledCallback:callback withData:data];
-                    return NO;
+                    if (_delegate != nil
+                        && [_delegate respondsToSelector:@selector(onUnhandledCallback:withData:)]) {
+                        return [_delegate onUnhandledCallback:callback withData:data];
+                    }
+                    else {
+                        return NO;
+                    }
                 }
                 
                 
@@ -390,9 +405,13 @@ NSString * webLayerPage;
 #if DEBUG_COBALT
                 NSLog(@"handleDictionarySentByJavaScript: unhandled event %@", [dict description]);
 #endif
-                // TODO: add onUnhandledEvent method
-                //return [self onUnhandledEvent:event withData:data andCallback:callback];
-                return NO;
+                if (_delegate != nil
+                    && [_delegate respondsToSelector:@selector(onUnhandledEvent:withData:andCallback:)]) {
+                    return [_delegate onUnhandledEvent:event withData:data andCallback:callback];
+                }
+                else {
+                    return NO;
+                }
             }
 #if DEBUG_COBALT
             else {
@@ -454,9 +473,13 @@ NSString * webLayerPage;
 #if DEBUG_COBALT
                     NSLog(@"handleDictionarySentByJavaScript: unhandled navigation %@", [dict description]);
 #endif
-                    // TODO: add onUnhandledMessage method
-                    //return [self onUnhandledMessage:dict];
-                    return NO;
+                    if (_delegate != nil
+                        && [_delegate respondsToSelector:@selector(onUnhandledMessage:)]) {
+                        return [_delegate onUnhandledMessage:dict];
+                    }
+                    else {
+                        return NO;
+                    }
                 }
                 
             }
@@ -513,9 +536,13 @@ NSString * webLayerPage;
 #if DEBUG_COBALT
                     NSLog(@"handleDictionarySentByJavaScript: unhandled message %@", [dict description]);
 #endif
-                    // TODO: add onUnhandledMessage method
-                    //return [self onUnhandledMessage:dict];
-                    return NO;
+                    if (_delegate != nil
+                        && [_delegate respondsToSelector:@selector(onUnhandledMessage:)]) {
+                        return [_delegate onUnhandledMessage:dict];
+                    }
+                    else {
+                        return NO;
+                    }
                 }
             }
 #if DEBUG_COBALT
@@ -564,18 +591,26 @@ NSString * webLayerPage;
 #if DEBUG_COBALT
             NSLog(@"handleDictionarySentByJavaScript: unhandled message %@", [dict description]);
 #endif
-            // TODO: add onUnhandledMessage method
-            //return [self onUnhandledMessage:dict];
-            return NO;
+            if (_delegate != nil
+                && [_delegate respondsToSelector:@selector(onUnhandledMessage:)]) {
+                return [_delegate onUnhandledMessage:dict];
+            }
+            else {
+                return NO;
+            }
         }
     }
     else {
 #if DEBUG_COBALT
         NSLog(@"handleDictionarySentByJavaScript: unhandled message %@", [dict description]);
 #endif
-        // TODO: add onUnhandledMessage method
-        //return [self onUnhandledMessage:dict];
-        return NO;
+        if (_delegate != nil
+            && [_delegate respondsToSelector:@selector(onUnhandledMessage:)]) {
+            return [_delegate onUnhandledMessage:dict];
+        }
+        else {
+            return NO;
+        }
     }
     
     return YES;
@@ -683,8 +718,8 @@ NSString * webLayerPage;
         if ([CobaltViewController isValidViewControllerWithClass:class andNib:nib]) {
             if ([NSClassFromString(class) isSubclassOfClass:[CobaltViewController class]]) {
                 CobaltViewController * viewController = [[NSClassFromString(class) alloc] initWithNibName:nib bundle:[NSBundle mainBundle]];
-                viewController.isPullToRefreshActive = pullToRefreshEnabled;
-                viewController.isInfiniteScrollActive = infiniteScrollEnabled;
+                viewController.isPullToRefreshEnabled = pullToRefreshEnabled;
+                viewController.isInfiniteScrollEnabled = infiniteScrollEnabled;
                 return viewController;
             }
             else {
@@ -803,7 +838,7 @@ NSString * webLayerPage;
             [webLayer setKeyboardDisplayRequiresUserAction:NO];
         }
         
-        [self loadContentInWebView:webLayer FromFileNamed:webLayerPage atPath:[CobaltViewController ressourcePath] withRessourcesAtPath: [CobaltViewController ressourcePath]];
+        [self loadPage:webLayerPage inWebView:webLayer];
         
         [self.view addSubview:webLayer];
         [UIView animateWithDuration:fadeDuration.floatValue animations:^{
@@ -838,7 +873,7 @@ NSString * webLayerPage;
 {
     NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys:   page, kJSPage,
                                                                         nil];
-    [self sendEvent:JSEventWebLayerOnDismiss withData:data];
+    [self sendEvent:JSEventWebLayerOnDismiss withData:data andCallback:nil];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -849,28 +884,29 @@ NSString * webLayerPage;
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    NSString * requestString = [[[request URL] absoluteString] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    //if requestString contains haploidSpecialJSKey -> the JSON received is extracted.
-    NSRange range = [requestString rangeOfString:haploidSpecialJSKey];
+    NSString * requestURL = [[[request URL] absoluteString] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    // if requestURL contains haploidSpecialJSKey, extracts the JSON received.
+    NSRange range = [requestURL rangeOfString:haploidSpecialJSKey];
     if (range.location != NSNotFound) {
-        NSString * jsonString = [requestString substringFromIndex:range.location + haploidSpecialJSKey.length];
-        NSDictionary * jsonObj = [CobaltViewController JSONObjectWithString:jsonString];
+        NSString * json = [requestURL substringFromIndex:range.location + haploidSpecialJSKey.length];
+        NSDictionary * jsonObj = [CobaltViewController JSONObjectWithString:json];
         
         [fromJavaScriptOperationQueue addOperationWithBlock:^{
             [self handleDictionarySentByJavaScript:jsonObj];
         }];
         
-        [self sendSimpleAcquitmentToJS];
+        [self sendACK];
         
         return NO;
     }
     
     [activityIndicator startAnimating];
     
-    // stop queues until we load the webview
+    // Stops queues until Web view is loaded
     [toJavaScriptOperationQueue setSuspended:YES];
     
-    // Return YES to make sure regular navigation works as expected.
+    // Returns YES to ensure regular navigation working as expected.
     return YES;
 }
 
@@ -884,14 +920,14 @@ NSString * webLayerPage;
 }
 
 
-- (void)sendSimpleAcquitmentToJS
+- (void)sendACK
 {
-    NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeCallBack, kJSType,
-                                                                        JSCallbackSimpleAcquitment, kJSCallback,
-                                                                        nil];
-    [self executeScriptInWebView:webView withDictionary:dict];
+    [self sendCallback:JSCallbackSimpleAcquitment withData:nil];
     
     if (webLayer) {
+        NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeCallBack, kJSType,
+                                                                            JSCallbackSimpleAcquitment, kJSCallback,
+                                                                            nil];
         [self executeScriptInWebView:webLayer withDictionary:dict];
     }
 }
@@ -906,7 +942,7 @@ NSString * webLayerPage;
 {
     toastIsShown = YES;
 #if DEBUG_COBALT
-    NSLog(@"show");
+    NSLog(@"toastwillShow");
 #endif
 }
 
@@ -936,7 +972,7 @@ NSString * webLayerPage;
  */
 - (void)scrollViewDidScroll:(UIScrollView *)_scrollView
 {
-    if (isPullToRefreshActive
+    if (isPullToRefreshEnabled
         && pullToRefreshTableHeaderView
         && pullToRefreshTableHeaderView.superview) {
         if (_scrollView.isDragging) {
@@ -966,7 +1002,7 @@ NSString * webLayerPage;
  */
 - (void)scrollViewDidEndDragging:(UIScrollView *)_scrollView willDecelerate:(BOOL)decelerate
 {
-    if (isPullToRefreshActive
+    if (isPullToRefreshEnabled
         && pullToRefreshTableHeaderView
         && pullToRefreshTableHeaderView.superview) {
         if (_scrollView.contentOffset.y <= -65.0
@@ -989,7 +1025,7 @@ NSString * webLayerPage;
  @abstract		Tells the web view to refresh its content.
  */
 - (void)refresh {
-    if (isPullToRefreshActive) {
+    if (isPullToRefreshEnabled) {
         _isRefreshing = YES;
         pullToRefreshTableHeaderView.state = RefreshStateLoading;
         
@@ -999,52 +1035,36 @@ NSString * webLayerPage;
                                                            0.0f, 0.0f);
         [UIView commitAnimations];
         
-        [self refreshWebViewDataSource];
+        [self refreshWebView];
     }
 }
 
-//******************************
-// LOAD TABLE VIEW DATA SOURCE *
-//******************************
+//*******************
+// REFRESH WEB VIEW *
+//*******************
 /*!
- @method		- (void)loadTableViewDataSource
- @abstract		Simulates loading of the table view data source.
+ @method		- (void)refreshWebView
+ @abstract		Sends event to refresh Web view content.
  */
-- (void)loadWebViewDataSource
+- (void)refreshWebView
 {
-    [self pullToRefreshDidRefresh];
-}
-
-//*********************************
-// REFRESH TABLE VIEW DATA SOURCE *
-//*********************************
-/*!
- @method		- (void)refreshTableViewDataSource
- @abstract		Starts refreshing the table view data source.
- */
-- (void)refreshWebViewDataSource
-{
-    NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeEvent, kJSType,
-                                                                        JSEventPullToRefresh, kJSEvent,
-                                                                        JSCallbackPullToRefreshDidRefresh, kJSCallback,
-                                                                        nil];
-    [self executeScriptInWebView:webView withDictionary:dict];
+    [self sendEvent:JSEventPullToRefresh withData:nil andCallback:JSCallbackPullToRefreshDidRefresh];
 }
 
 //**************
 // DID REFRESH *
 //**************
 /*!
- @method		- (void)pullToRefreshDidRefresh
+ @method		- (void)onPullToRefreshDidRefresh
  @abstract		Tells the table view it has been refreshed.
  */
-- (void)pullToRefreshDidRefresh {
+- (void)onPullToRefreshDidRefresh {
     _isRefreshing = NO;
     
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.3];
     [UIView setAnimationDelegate:self];
-    [UIView setAnimationDidStopSelector:@selector(didStop)];
+    [UIView setAnimationDidStopSelector:@selector(onPullToRefreshDidStop)];
     webView.scrollView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f,
                                                        0.0f, 0.0f);
 	[UIView commitAnimations];
@@ -1054,24 +1074,12 @@ NSString * webLayerPage;
 // DID STOP *
 //***********
 /*!
- @method		- (void)didStop
+ @method		- (void)onPullToRefreshDidStop
  @abstract		Tells the table view the refresh animation has stopped.
  */
-- (void)didStop
+- (void)onPullToRefreshDidStop
 {
     pullToRefreshTableHeaderView.state = RefreshStateNormal;
-}
-
-- (void)stopPullToRefreshRefreshing
-{
-    if (isPullToRefreshActive
-        && _isRefreshing) {
-        [self pullToRefreshDidRefresh];
-        NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeEvent, kJSType,
-                                                                            JSPullToRefreshCancelled, kJSName,
-                                                                            nil];
-        [self executeScriptInWebView:self.webView withDictionary:dict];
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1080,6 +1088,7 @@ NSString * webLayerPage;
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// TODO: How can IS works with these methods? O_o
 - (void)loadMoreItems
 {
     _isLoadingMore = YES;
@@ -1089,40 +1098,15 @@ NSString * webLayerPage;
 
 - (void)loadMoreContentInWebview
 {
-    NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeEvent, kJSType,
-                                                                        JSEventInfiniteScroll, kJSEvent,
-                                                                        JSCallbackInfiniteScrollDidRefresh, kJSCallback,
-                                                                        nil];
-    [self executeScriptInWebView:self.webView withDictionary:dict];
+    [self sendEvent:JSEventInfiniteScroll withData:nil andCallback:JSCallbackInfiniteScrollDidRefresh];
 }
 
-- (void)infiniteScrollDidRefresh
+- (void)onInfiniteScrollDidRefresh
 {
     _isLoadingMore = NO;
-    
-    [self moreItemsLoaded];
 }
-
-- (void)moreItemsLoaded
-{
-
-}
-
-- (void)stopInfiniteScrollRefreshing
-{
-    if (isInfiniteScrollActive
-        && _isLoadingMore) {
-        _isLoadingMore = NO;
-        NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeEvent, kJSType,
-                                                                            JSInfiniteScrollCancelled, kJSName,
-                                                                            nil];
-        [self executeScriptInWebView:webView withDictionary:dict];
-    }
-}
-
 
 @end
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -

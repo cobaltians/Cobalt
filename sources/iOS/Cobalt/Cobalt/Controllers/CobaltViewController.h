@@ -104,6 +104,20 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
+#pragma mark PROTOCOL
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+@protocol CobaltDelegate <NSObject>
+
+- (BOOL)onUnhandledMessage:(NSDictionary *)message;
+- (BOOL)onUnhandledEvent:(NSString *)event withData:(NSDictionary *)data andCallback:(NSString *)callback;
+- (BOOL)onUnhandledCallback:(NSString *)callback withData:(NSDictionary *)data;
+
+@end
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 #pragma mark INTERFACE
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -123,6 +137,7 @@
     
 @private
     
+    id<CobaltDelegate> _delegate;
     int _alertViewCounter;
 	BOOL _isLoadingMore;
     BOOL _isRefreshing;
@@ -161,16 +176,16 @@
 @property (nonatomic, strong) PullToRefreshTableHeaderView * pullToRefreshTableHeaderView;
 
 /*!
- @property		isPullToRefreshActive
+ @property		isPullToRefreshEnabled
  @abstract		allows or not the pullToRefresh functionality
  */
-@property BOOL isPullToRefreshActive;
+@property BOOL isPullToRefreshEnabled;
 
 /*!
- @property		isInfiniteScrollActive
+ @property		isInfiniteScrollEnabled
  @abstract		allows or not the infinite scroll functionality
  */
-@property BOOL isInfiniteScrollActive;
+@property BOOL isInfiniteScrollEnabled;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -178,6 +193,12 @@
 #pragma mark COBALT METHODS
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
+ @method		- (void)setDelegate:(id)delegate
+ @abstract		this method sets the delegate which responds to CobaltDelegate protocol
+ */
+- (void)setDelegate:(id<CobaltDelegate>)delegate;
 
 /*!
  @method		-(NSString *)ressourcePath
@@ -195,16 +216,12 @@
 - (void)customWebView;
 
 /*!
- @method		-(void)loadContentInWebView:(UIWebView *)mWebView FromFileNamed:(NSString *)filename atPath:(NSString *)path withRessourcesAtPath:(NSString *)pathOfRessources
-
- @abstract		this method loads the content of the File named filename at path path in the webview with the ressources that can be found at pathOfRessources.
- @param         mWebView : the webview where to load the file
- @param         filename : the name of the file
- @param         path : the path where to find this file
- @param         pathOfRessources : the path where to find the ressources (css and js files)
+ @method		- (void)loadPage:(NSString *)page inWebView:(UIWebView *)mWebView
+ @abstract		this method loads the page in ressourcePath in the Web view.
+ @param         mWebView : Web view to load the page into
+ @param         page: the page file
  */
-- (void)loadContentInWebView:(UIWebView *)mWebView FromFileNamed:(NSString *)filename atPath:(NSString *)path withRessourcesAtPath:(NSString *)pathOfRessources
-;
+- (void)loadPage:(NSString *)page inWebView:(UIWebView *)mWebView;
 
 /*!
  @method		+ (NSString *)stringWithContentsOfFile:(NSString *)path
@@ -243,11 +260,11 @@
 - (BOOL)handleDictionarySentByJavaScript:(NSDictionary *)dict;
 
 /*!
- @method		-(void) sendAcquitmentToJS
- @abstract		sends a simple acquitment to JS as soon as a JS action is received
- @discussion    This is the default acquitment way. More complex acquitment methods may be implemented but on iOS, every call received by JavaScript should send at least this acquitment.
+ @method		- (void)sendACK
+ @abstract		Sends an ACK event as soon as a JS message is received
+ @discussion    This is the default acquitment way. More complex acquitment methods may be implemented but on iOS, every call received by JS should send at least this acquitment.
  */
-- (void)sendSimpleAcquitmentToJS;
+- (void)sendACK;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -261,23 +278,16 @@
 - (void)refresh;
 
 /*!
- @method		- (void)refreshWebViewDataSource
- @abstract		Starts refreshing the web view data source.
+ @method		- (void)refreshWebView
+ @abstract		Sends event to refresh Web view content.
  */
-- (void)refreshWebViewDataSource;
+- (void)refreshWebView;
 
 /*!
- @method		- (void)pullToRefreshDidRefresh
+ @method		- (void)onPullToRefreshDidRefresh
  @abstract		Tells the web view it has been refreshed.
  */
-- (void)pullToRefreshDidRefresh;
-
-/*!
- @method		- (void)stopPullToRefreshRefreshing
- @abstract		stop the pullToRefresh from its refreshing state.
- @discussion	call this method when you want to reset the pullToRefresh state.
- */
-- (void)stopPullToRefreshRefreshing;
+- (void)onPullToRefreshDidRefresh;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -295,19 +305,6 @@
  @abstract		Starts loading more content in webview
  */
 - (void)loadMoreContentInWebview;
-
-/*!
- @method		-(void)moreItemsLoaded
- @abstract		Tells the web view more items have been loaded
- */
-- (void)moreItemsLoaded;
-
-/*!
- @method		- (void)stopInfiniteScrollRefreshing
- @abstract		stop the pullToRefresh from its refreshing state.
- @discussion	call this method when you want to reset the infinite scroll state.
- */
-- (void)stopInfiniteScrollRefreshing;
 
 @end
 
