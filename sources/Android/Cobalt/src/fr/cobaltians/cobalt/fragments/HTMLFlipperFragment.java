@@ -146,4 +146,16 @@ public class HTMLFlipperFragment extends HTMLFragment implements IGestureListene
 			}
 		});
 	}
+
+	@Override
+	protected void onPullToRefreshRefreshed() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onInfiniteScrollRefreshed() {
+		// TODO Auto-generated method stub
+		
+	}
 }

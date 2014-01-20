@@ -2,10 +2,10 @@ package fr.cobaltians.cobaltcatalog.fragments;
 
 import org.json.JSONObject;
 
-import fr.cobaltians.cobalt.fragments.HTMLPullToRefreshFragment;
+import fr.cobaltians.cobalt.fragments.HTMLFragment;
 import fr.cobaltians.cobaltcatalog.R;
 
-public class PullToRefreshCustomFragment extends HTMLPullToRefreshFragment {
+public class PullToRefreshCustomFragment extends HTMLFragment {
 	
 	@Override
 	protected int getLayoutToInflate() {

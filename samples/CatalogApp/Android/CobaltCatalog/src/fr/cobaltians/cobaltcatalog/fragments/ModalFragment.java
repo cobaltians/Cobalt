@@ -17,4 +17,10 @@ public class ModalFragment extends HTMLFragment {
 	protected boolean onUnhandledCallback(String name, JSONObject data) {
 		return false;
 	}
+	@Override
+	protected void onPullToRefreshRefreshed() {
+	}
+	@Override
+	protected void onInfiniteScrollRefreshed() {		
+	}
 }

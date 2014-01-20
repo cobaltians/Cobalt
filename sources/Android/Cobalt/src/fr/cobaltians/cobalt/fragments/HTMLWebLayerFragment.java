@@ -154,4 +154,16 @@ public class HTMLWebLayerFragment extends HTMLFragment {
 	public JSONObject getDataForDismiss() {
 		return mData;
 	}
+
+	@Override
+	protected void onPullToRefreshRefreshed() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onInfiniteScrollRefreshed() {
+		// TODO Auto-generated method stub
+		
+	}
 }

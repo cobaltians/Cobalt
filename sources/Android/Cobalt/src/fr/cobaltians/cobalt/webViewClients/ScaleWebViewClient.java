@@ -32,20 +32,19 @@ package fr.cobaltians.cobalt.webViewClients;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import fr.cobaltians.cobalt.fragments.HTMLFragment;
-import fr.cobaltians.cobalt.fragments.HTMLPullToRefreshFragment;
 
 public class ScaleWebViewClient extends WebViewClient {
 
 	/**
 	 * Fragment handling scale events of the OverScrollingWebView
 	 */
-	protected HTMLPullToRefreshFragment mScaleListener;
+	protected HTMLFragment mScaleListener;
 	
 	public HTMLFragment getScaleListener() {
 		return mScaleListener;
 	}
 
-	public void setScaleListener(HTMLPullToRefreshFragment scaleListener) {
+	public void setScaleListener(HTMLFragment scaleListener) {
 		mScaleListener = scaleListener;
 	}
 	
