@@ -102,8 +102,9 @@ NSString * webLayerPage;
             NSLog(@"WARNING: no pullToRefreshTableHeaderView set!");
         }
 #endif
-        [webView.scrollView setDelegate:self];
     }
+    
+    [webView.scrollView setDelegate:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -977,20 +978,28 @@ NSString * webLayerPage;
  */
 - (void)scrollViewDidScroll:(UIScrollView *)_scrollView
 {
-    if (isPullToRefreshEnabled
-        && pullToRefreshTableHeaderView
-        && pullToRefreshTableHeaderView.superview) {
-        if (_scrollView.isDragging) {
-            if (pullToRefreshTableHeaderView.state == RefreshStatePulling
-                && _scrollView.contentOffset.y > -65.0
-                && webView.scrollView.contentOffset.y < 0.0
-                && ! _isRefreshing) {
-                pullToRefreshTableHeaderView.state = RefreshStateNormal;
-            }
-            else if (pullToRefreshTableHeaderView.state == RefreshStateNormal
-                     && _scrollView.contentOffset.y < -65.0
-                     && ! _isRefreshing) {
-                pullToRefreshTableHeaderView.state = RefreshStatePulling;
+    if (_scrollView.isDragging) {
+        if (isPullToRefreshEnabled
+            && pullToRefreshTableHeaderView
+            && pullToRefreshTableHeaderView.superview) {
+            
+                if (pullToRefreshTableHeaderView.state == RefreshStatePulling
+                    && _scrollView.contentOffset.y > -65.0
+                    && webView.scrollView.contentOffset.y < 0.0
+                    && ! _isRefreshing) {
+                    pullToRefreshTableHeaderView.state = RefreshStateNormal;
+                }
+                else if (pullToRefreshTableHeaderView.state == RefreshStateNormal
+                         && _scrollView.contentOffset.y < -65.0
+                         && ! _isRefreshing) {
+                    pullToRefreshTableHeaderView.state = RefreshStatePulling;
+                }
+        }
+        
+        if (isInfiniteScrollEnabled) {
+            if (webView.scrollView.contentOffset.y > (_scrollView.contentSize.height - _scrollView.frame.size.height)
+               && !_isLoadingMore){
+                [self loadMoreItems];
             }
         }
     }
