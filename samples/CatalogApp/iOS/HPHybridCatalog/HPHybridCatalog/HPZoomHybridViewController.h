@@ -8,15 +8,14 @@
 
 #import "CobaltViewController.h"
 
-@interface HPZoomHybridViewController : CobaltViewController
+@interface HPZoomHybridViewController : CobaltViewController<CobaltDelegate>
 
-@property (strong, nonatomic) IBOutlet UIButton *zoomOutButton;
-@property (strong, nonatomic) IBOutlet UIButton *zoomInButton;
+@property (strong, nonatomic) IBOutlet UIButton * zoomOutButton;
+@property (strong, nonatomic) IBOutlet UIButton * zoomInButton;
 
-
-@property (strong,nonatomic) NSNumber *textSizeCurrentZoomLevel;
-@property (strong,nonatomic) NSNumber *textSizeMaxZoomLevel;
-@property (strong,nonatomic) NSNumber *textSizeMinZoomLevel;
+@property (strong,nonatomic) NSNumber * textSizeCurrentZoomLevel;
+@property (strong,nonatomic) NSNumber * textSizeMaxZoomLevel;
+@property (strong,nonatomic) NSNumber * textSizeMinZoomLevel;
 
 /*!
  @method		- (IBAction)onZoomInButton:(id)sender

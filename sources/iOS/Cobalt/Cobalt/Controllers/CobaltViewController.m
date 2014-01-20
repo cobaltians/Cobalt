@@ -296,7 +296,7 @@ NSString * webLayerPage;
                 // Ensures there is no raw newLine in message.
                 message = [[message componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@""];
                 
-                NSString * script = [NSString stringWithFormat:@"nativeBridge.execute(%@);", message];
+                NSString * script = [NSString stringWithFormat:@"cobalt.execute(%@);", message];
                 
                 [mWebView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:script waitUntilDone:NO];
             }
@@ -740,7 +740,7 @@ NSString * webLayerPage;
 {
     BOOL isValidClass = NSClassFromString(class) != nil;
     BOOL isValidNib = (nib.length > 0
-                       && ! [[NSBundle mainBundle] pathForResource:nib ofType:@"nib"]);
+                       && [[NSBundle mainBundle] pathForResource:nib ofType:@"nib"] != nil);
     
 #if DEBUG_COBALT
     if (! isValidClass) {
@@ -768,8 +768,8 @@ NSString * webLayerPage;
     if (data
         && [data isKindOfClass:[NSDictionary class]]) {
         NSString * title = ([data objectForKey:kJSAlertTitle] && [[data objectForKey:kJSAlertTitle] isKindOfClass:[NSString class]]) ? [data objectForKey:kJSAlertTitle] : @"";
-        NSString * message = ([dict objectForKey:kJSAlertMessage] && [[dict objectForKey:kJSAlertMessage] isKindOfClass:[NSString class]])? [dict objectForKey:kJSAlertMessage] : @"";
-        NSArray * buttons = ([dict objectForKey:kJSAlertButtons] && [[dict objectForKey:kJSAlertButtons] isKindOfClass:[NSArray class]]) ? [dict objectForKey:kJSAlertButtons] : [NSArray array];
+        NSString * message = ([data objectForKey:kJSAlertMessage] && [[data objectForKey:kJSAlertMessage] isKindOfClass:[NSString class]]) ? [data objectForKey:kJSAlertMessage] : @"";
+        NSArray * buttons = ([data objectForKey:kJSAlertButtons] && [[data objectForKey:kJSAlertButtons] isKindOfClass:[NSArray class]]) ? [data objectForKey:kJSAlertButtons] : [NSArray array];
         
         UIAlertView * alertView;
         id delegate = (callback && [callback isKindOfClass:[NSString class]]) ? self : nil;
@@ -943,15 +943,15 @@ NSString * webLayerPage;
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)toastwillShow:(CobaltToast *)toast
+- (void)toastWillShow:(CobaltToast *)toast
 {
     toastIsShown = YES;
 #if DEBUG_COBALT
-    NSLog(@"toastwillShow");
+    NSLog(@"toastWillShow");
 #endif
 }
 
-- (void)toastwillHide:(CobaltToast *)toast
+- (void)toastWillHide:(CobaltToast *)toast
 {
     toastIsShown = NO;
     if (toastsToShow.count > 0) {

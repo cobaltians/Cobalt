@@ -49,7 +49,8 @@
 
 - (void)show:(iToastType)type
 {
-    if (self.delegate) {
+    if (self.delegate != nil
+        && [self.delegate respondsToSelector:@selector(toastWillShow:)]) {
         [self.delegate toastWillShow:self];
     }
     
@@ -60,7 +61,8 @@
 
 - (void)hideToast:(NSTimer *)pTimer
 {
-    if (self.delegate) {
+    if (self.delegate != nil
+        && [self.delegate respondsToSelector:@selector(toastWillHide:)]) {
         [self.delegate toastWillHide:self];
     }
     

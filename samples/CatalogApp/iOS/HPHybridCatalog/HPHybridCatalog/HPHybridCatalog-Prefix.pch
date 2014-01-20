@@ -5,7 +5,7 @@
 #import <Availability.h>
 
 #ifndef __IPHONE_3_0
-#warning "This project uses features only available in iOS SDK 3.0 and later."
+    #warning "This project uses features only available in iOS SDK 3.0 and later."
 #endif
 
 #ifdef __OBJC__
@@ -13,4 +13,6 @@
     #import <Foundation/Foundation.h>
 #endif
 
-#define RESSOURCE_PATH [NSString stringWithFormat:@"%@%@",[[NSBundle mainBundle] resourcePath],@"/www/"]
+#define RESSOURCE_PATH [NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] resourcePath], @"/www/"]
+
+#define DEBUG_COBALT      1

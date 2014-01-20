@@ -8,7 +8,8 @@
 
 #import "CobaltViewController.h"
 
-@interface HPToastAlertViewController : CobaltViewController
+@interface HPToastAlertViewController : CobaltViewController<CobaltDelegate>
 
-@property (strong, nonatomic) IBOutlet UILabel *messageLabel;
+@property (strong, nonatomic) IBOutlet UILabel * messageLabel;
+
 @end

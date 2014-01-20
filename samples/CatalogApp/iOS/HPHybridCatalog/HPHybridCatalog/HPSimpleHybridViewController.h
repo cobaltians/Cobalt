@@ -8,8 +8,6 @@
 
 #import "CobaltViewController.h"
 
-
-
-@interface HPSimpleHybridViewController : CobaltViewController
+@interface HPSimpleHybridViewController : CobaltViewController<CobaltDelegate>
 
 @end

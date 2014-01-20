@@ -8,35 +8,43 @@
 
 #import "HPHybridPullToRefreshViewController.h"
 
-@interface HPHybridPullToRefreshViewController ()
-
-@end
-
 @implementation HPHybridPullToRefreshViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark LIFE CYCLE
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    [self setDelegate:self];
     [self.navigationController setNavigationBarHidden:YES];
     
-    self.isPullToRefreshActive = YES;
-    [self loadContentInWebView:self.webView FromFileNamed:self.pageName atPath:RESSOURCE_PATH withRessourcesAtPath:RESSOURCE_PATH];
+    self.isPullToRefreshEnabled = YES;
 }
 
-- (void)didReceiveMemoryWarning
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark COBALT DELEGATE METHODS
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (BOOL)onUnhandledMessage:(NSDictionary *)message
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    return NO;
+}
+
+- (BOOL)onUnhandledEvent:(NSString *)event withData:(NSDictionary *)data andCallback:(NSString *)callback
+{
+    return NO;
+}
+
+- (BOOL)onUnhandledCallback:(NSString *)callback withData:(NSDictionary *)data
+{
+    return NO;
 }
 
 @end

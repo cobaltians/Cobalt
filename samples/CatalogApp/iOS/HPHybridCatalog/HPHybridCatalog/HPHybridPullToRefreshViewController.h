@@ -8,6 +8,6 @@
 
 #import "CobaltViewController.h"
 
-@interface HPHybridPullToRefreshViewController : CobaltViewController
+@interface HPHybridPullToRefreshViewController : CobaltViewController<CobaltDelegate>
 
 @end
