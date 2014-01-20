@@ -219,7 +219,7 @@ var cobalt={
 				cobalt.send({type:"webLayer", action:"dismiss", data: data});
 			break;
 			case "show":
-				if (page){
+				if (data){
 					cobalt.send({type:"webLayer", action:"show", data :{ page:data, fadeDuration:fadeDuration }})
 				}
 			break;
