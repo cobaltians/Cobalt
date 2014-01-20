@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html class="webLayer">
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+    </head>
+    <body>
+
+        <div class="webLayer webLayer2">
+	        <h1>Lache tes com'</h1>
+	        <textarea id="text">salut</textarea>
+	        <a id="close">Fermer</a>
+        </div>
+
+
+  		<div id="cobalt_logdiv" style="display:none;"></div>
+
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
+
+        <!-- for cobalt dev only
+		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
+		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
+		-->
+
+        <script>
+
+	        Zepto(function($){
+
+	            cobalt.init({
+		            debug:true
+		            //sendingToNative:false,
+		        });
+                cobalt.log("webLayer cobalt is ready!")
+
+                  setTimeout(function(){
+                             $('#text').focus();
+                  },200);
+
+                $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
+                $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
+
+		       $('#close').on('tap click',function(){
+		       		$('#text').blur();
+		       		setTimeout(function(){
+		       			//using setTimeout because otherwise, android kills the webview too fast
+		       			cobalt.webLayer("dismiss",{ value : $('#text').val() });
+		       		},500)
+			       
+	            	return false;
+	            });
+	            
+	            $('a.pop').on('tap click',function(){
+		        	cobalt.navigate('pop');
+		            return false;
+	            });
+
+	        })
+
+
+        </script>
+
+    </body>
+</html>

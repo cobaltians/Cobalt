@@ -21,8 +21,13 @@
 		
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
-        <script type="text/javascript" src="js/utils.storage.js"></script>
         <script type="text/javascript" src="js/functions.js"></script>
+
+		<!-- for cobalt dev only
+		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
+		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
+		-->
+
         <script>
             
             Zepto(function($){
@@ -32,9 +37,9 @@
 		            //sendingToNative:false,
 	            });
 
-                utils.storage.enable();
-				cobalt.log("init dismissInformations : "+utils.storage.getItem("dismissInformations"), false);
-				cobalt.log("init testLocalStorageKey : "+utils.storage.getItem("testLocalStorageKey"), false);
+                cobalt.storage.enable();
+				cobalt.log("init dismissInformations : "+cobalt.storage.getItem("dismissInformations"), false);
+				cobalt.log("init testLocalStorageKey : "+cobalt.storage.getItem("testLocalStorageKey"), false);
 				
 				$('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
                 $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});

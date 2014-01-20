@@ -9,14 +9,26 @@
 
         <a href="javascript:;" class="pop">POP</a><br/>
 
-  		<p>Test de charge </p>
+  		<p>Test des alertes web </p>
 
-  		<div id="images">
+  		<p>TEST 01 - Ouvrir cette webLayer.</p>
 
-		</div>
+        <a id="test1">Ouvrir</a><br/>
 
-        <p>TEST 01 - Ajoutez des images via le bouton suivant. Cela utilise l'api google image pour insérer des images de test. Au bout de 8 fois (64 resultats), l'API ne répondra plus bien. A partir de ce moment là, ce test va doubler la taille de la webview à chaque fois en dupliquant la liste d'image. Le but et de voir combien de temps ça peut durer et si ça génère des crashs. Vous allez devoir aimer scroller...</p>
-		<a id="test1">Ajouter du contenu</a><br/>
+        <p>TEST 02 - Ouvrir cette même webLayer mais avec un effet de fadeIn plus long.</p>
+
+        <a id="test2">Ouvrir</a><br/>
+
+        <p>TEST 03 - Ouvrir cette même webLayer mais avec un effet de fadeIn à 0.</p>
+
+        <a id="test3">Ouvrir</a><br/>
+
+         <p>TEST 04 - Ouvrir cette webLayer d'edition de commentaire, verifier que le champs texte est dans la partie haute de l'ecran, et que le clavier sort tout seul comme un grand.</p>
+
+        <a id="test4">Ouvrir</a><br/>
+
+        <p>TEST 05 - Quand cette webLayer est fermé, un toast s'affiche avec le texte entré dans le webLAyer</p>
+
 
   		<p>Ci dessous le log de la lib d'echange</p>
   		<input id="monBouton3" type="button" value="nettoyage logs"/>
@@ -25,45 +37,25 @@
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
 
-        <!-- for cobalt dev only
+		<!-- for cobalt dev only
 		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
 		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
 		-->
 
-
         <script>
-			var count=0;
-			addContent=function(){
-				cobalt.log('chargement...')
-				var url="https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=test&imgsz=medium&start="+count*8;
-				$.ajax({url:url, type:"GET", dataType:"json",
-					success : function(data){
-						if (data && data.responseData && data.responseData.results){
-							cobalt.log('ok')
-							var images="";
-							$.each(data.responseData.results,function(index,item){
-								images+='<img src="'+item.url+'" width="300" height="200" /><br>';
-							});
-							$('#images').append(images)
-							count++;
 
-						}else{
-							cobalt.log('Google API error : '+data.responseDetails, false)
-							cobalt.log('duplicating webview images content ! ', false)
-							$('#images').append($('#images').html());
-						}
-
-					},error: function(req,err){
-						cobalt.log('ajax call failed')
-					}
-				});
-			}
-
-
-            Zepto(function($){
+	        Zepto(function($){
 
 	            cobalt.init({
 		            debug:true,
+		            events:{
+			            "onWebLayerDismissed":function(data, callback){
+				            cobalt.toast('webLayer '+data.page+' closed')
+				            if (data.data){
+					            cobalt.toast('webLayer result is '+JSON.stringify(data.data))
+				            }
+			            }
+		            }
 		            //sendingToNative:false,
 		        });
 
@@ -71,9 +63,22 @@
                 $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
 
 		       $('#test1').on('tap click',function(){
-					addContent();
+			        cobalt.webLayer("show","tests_12_webLayerContent.html");
 		            return false;
 	            });
+				$('#test2').on('tap click',function(){
+					cobalt.webLayer("show","tests_12_webLayerContent.html",1.2);
+		            return false;
+	            });
+				$('#test3').on('tap click',function(){
+					cobalt.webLayer("show","tests_12_webLayerContent.html",0);
+		            return false;
+	            });
+		        $('#test4').on('tap click',function(){
+			        cobalt.webLayer("show","tests_12_webLayerContentEdit.html");
+		            return false;
+	            });
+
 
 	            $('#monBouton3').on('tap click',function(){
 					if (cobalt.ios_adapter){
