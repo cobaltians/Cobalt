@@ -104,6 +104,11 @@ NSString * webLayerPage;
 #endif
         [webView.scrollView setDelegate:self];
     }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     
     [self loadPage:pageName inWebView:webView];
 }
@@ -210,8 +215,8 @@ NSString * webLayerPage;
 
                 NSLog(@"getConfigurationForController: no configuration found for %@ controller.\n\
                       Trying to return default controller configuration", controller);
-#endif
             }
+#endif
         }
         
         NSDictionary * defaultControllerConfiguration = [configuration objectForKey:JSNavigationControllerDefault];
@@ -220,11 +225,11 @@ NSString * webLayerPage;
             && [defaultControllerConfiguration isKindOfClass:[NSDictionary class]]) {
             return defaultControllerConfiguration;
         }
-        else {
 #if DEBUG_COBALT
+        else {
             NSLog(@"getConfigurationForController: no configuration found for default controller");
-#endif
         }
+#endif
     }
     
     return nil;

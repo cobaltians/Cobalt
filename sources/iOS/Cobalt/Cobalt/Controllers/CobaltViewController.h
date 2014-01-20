@@ -251,6 +251,16 @@
 - (void)sendCallback:(NSString *)callback withData:(NSObject *)data;
 
 /*!
+ @method		- (void)sendEvent:(NSString *)event withData:(NSObject *)data andCallback:(NSString *)callback
+ @abstract		this method sends an event with a data object and an optional callback
+ @param         event: event fired
+ @param         data: data object to send to JS
+ @param         callback: the callback JS should calls when message is treated
+ @discussion    This method should NOT be overridden in subclasses.
+ */
+- (void)sendEvent:(NSString *)event withData:(NSObject *)data andCallback:(NSString *)callback;
+
+/*!
  @method		-(void)handleDictionarySentByJavaScript:(NSDictionary *)dict
  @abstract		this method gets a JSON from the webView to use so as to fire native methods (allows interactions from the webView to the native)
  @param        dict : the NSDictionary given by the webView to handle with
