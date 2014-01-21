@@ -219,7 +219,7 @@ var cobalt={
 				cobalt.send({type:"webLayer", action:"dismiss", data: data});
 			break;
 			case "show":
-				if (page){
+				if (data){
 					cobalt.send({type:"webLayer", action:"show", data :{ page:data, fadeDuration:fadeDuration }})
 				}
 			break;
@@ -335,7 +335,7 @@ var cobalt={
 			cobalt.send({ "type":"navigation", "action":"modale", data : { page :page, controller: controller }});
 		},
 		dismissFromModale:function(){
-			cobalt.send({ "type":"typeNavigation", "action":"dismiss"});
+			cobalt.send({ "type":"navigation", "action":"dismiss"});
 		},
 		initStorage:function(){
 			return cobalt.storage.enable()
