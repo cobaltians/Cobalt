@@ -121,27 +121,32 @@ public class HTMLWebLayerFragment extends HTMLFragment {
 	 * DISMISS
 	 *******************************************************************************************/
 	protected void dismissWebLayer(JSONObject jsonObject) {
-		android.support.v4.app.FragmentTransaction fTransition;
-		fTransition = getActivity().getSupportFragmentManager().beginTransaction();
-		
-		if(jsonObject != null) {
-			mData = jsonObject.optJSONObject(kJSData);	
-			double fadeDuration = jsonObject.optDouble(kJSWebLayerFadeDuration, 0);
+		if (getActivity() != null) {
+			android.support.v4.app.FragmentTransaction fTransition;
+			fTransition = getActivity().getSupportFragmentManager().beginTransaction();
 			
-			if(fadeDuration > 0) {
-				fTransition.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, 
-												android.R.anim.fade_in, android.R.anim.fade_out);
+			if(jsonObject != null) {
+				mData = jsonObject.optJSONObject(kJSData);	
+				double fadeDuration = jsonObject.optDouble(kJSWebLayerFadeDuration, 0);
+				
+				if(fadeDuration > 0) {
+					fTransition.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, 
+													android.R.anim.fade_in, android.R.anim.fade_out);
+				}
+				else {
+					fTransition.setTransition(FragmentTransaction.TRANSIT_NONE);
+				}
 			}
 			else {
 				fTransition.setTransition(FragmentTransaction.TRANSIT_NONE);
 			}
+			
+			fTransition.remove(this);
+			fTransition.commit();
 		}
 		else {
-			fTransition.setTransition(FragmentTransaction.TRANSIT_NONE);
+			Log.e(getClass().getSimpleName(), "dismissWebLayer: Web layer is not attached to an activity.");
 		}
-		
-		fTransition.remove(this);
-		fTransition.commit();
 	}
 
 	private void onDismiss() {
