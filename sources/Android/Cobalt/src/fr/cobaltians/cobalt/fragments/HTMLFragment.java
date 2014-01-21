@@ -81,6 +81,7 @@ import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
 import fr.cobaltians.cobalt.customviews.PullToRefreshOverScrollWebview;
 import fr.cobaltians.cobalt.database.LocalStorage;
 import fr.cobaltians.cobalt.webViewClients.ScaleWebViewClient;
+import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.R;
 
 /**
@@ -92,7 +93,6 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	
 	// RESOURCES
 	private final static String ASSETS_PATH = "file:///android_asset/";
-	private final static String kResourcePath = "resourcePath";
 		
 	// CONFIGURATION FILE
 	private final static String CONF_FILE = "cobalt.conf";
@@ -186,7 +186,6 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	 ********************************************************/
 	protected boolean mDebug = false;
 	
-	protected String mRessourcePath;
 	protected String mPage;
 	
 	protected OverScrollingWebView mWebView;
@@ -358,18 +357,16 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	}
 	
 	private void preloadContent() {
-		// TODO: resourcePath & mPage setting. Do we keep this behavior?
+		// TODO: mPage setting. Do we keep this behavior?
 		Bundle arguments = getArguments();
 		
 		if (arguments != null) {
-			mRessourcePath = arguments.getString(kResourcePath);
 			mPage = arguments.getString(kPage);
 		}
-		mRessourcePath = (mRessourcePath != null) ? mRessourcePath : "www/";
 		mPage = (mPage != null) ? mPage : "index.html";
 		
 		if (mPreloadOnCreateView) {
-			loadFileFromAssets(mRessourcePath, mPage);
+			loadFileFromAssets(Cobalt.getResourcePath(), mPage);
 		}
 	}
 	
@@ -959,7 +956,6 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 					pClass = Class.forName(activity);
 					// Instantiates intent only if class inherits from Activity
 					if (Activity.class.isAssignableFrom(pClass)) {
-						configuration.putString(kResourcePath, mRessourcePath);
 						configuration.putString(kPage, page);
 						
 						intent = new Intent(mContext, pClass);
@@ -1019,14 +1015,14 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	}
 	
 	private JSONObject getConfiguration() {
-		String configuration = readFileFromAssets(mRessourcePath + CONF_FILE);
+		String configuration = readFileFromAssets(Cobalt.getResourcePath() + CONF_FILE);
 
 		try {
 			JSONObject jsonObj = new JSONObject(configuration);
 			return jsonObj;
 		} 
 		catch (JSONException exception) {
-			if (mDebug) Log.e(getClass().getSimpleName(), "getConfiguration: check cobalt.conf. File is missing or not at " + ASSETS_PATH + mRessourcePath + CONF_FILE);
+			if (mDebug) Log.e(getClass().getSimpleName(), "getConfiguration: check cobalt.conf. File is missing or not at " + ASSETS_PATH + Cobalt.getResourcePath() + CONF_FILE);
 			exception.printStackTrace();
 		}
 		
@@ -1098,7 +1094,6 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			// Instantiates intent only if class inherits from Activity
 			if (Activity.class.isAssignableFrom(pClass)) {
 				Bundle bundle = new Bundle();
-				bundle.putString(kResourcePath, mRessourcePath);
 				bundle.putString(kPage, page);
 
 				Intent intent = new Intent(mContext, pClass);
@@ -1159,7 +1154,6 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 				double fadeDuration = data.optDouble(kJSWebLayerFadeDuration, 0.3);
 
 				Bundle bundle = new Bundle();
-				bundle.putString(kResourcePath, mRessourcePath);
 				bundle.putString(kPage, page);
 				
 				HTMLWebLayerFragment webLayerFragment = getWebLayerFragment();
