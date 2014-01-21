@@ -8,6 +8,7 @@
 
 #import "HPAppDelegate.h"
 
+#import "Cobalt.h"
 #import "HPSimpleHybridViewController.h"
 
 @implementation HPAppDelegate
@@ -17,6 +18,8 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor clearColor];
+    
+    [Cobalt setResourcePath:RESOURCE_PATH];
     
     HPSimpleHybridViewController *nbvc = [[HPSimpleHybridViewController alloc] initWithNibName:@"HPSimpleHybridViewController" bundle:nil];
     nbvc.pageName = @"index.html";

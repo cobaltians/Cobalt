@@ -195,7 +195,7 @@ NSString * webLayerPage;
 
 - (void)loadPage:(NSString *)page inWebView:(UIWebView *)mWebView
 {
-    NSURL * fileURL = [NSURL fileURLWithPath:[[CobaltViewController ressourcePath] stringByAppendingPathComponent:page]];
+    NSURL * fileURL = [NSURL fileURLWithPath:[[Cobalt resourcePath] stringByAppendingPathComponent:page]];
     NSURLRequest * requestURL = [NSURLRequest requestWithURL:fileURL];
     [mWebView loadRequest:requestURL];
 }
@@ -238,7 +238,7 @@ NSString * webLayerPage;
 
 - (NSDictionary *)getConfiguration
 {
-    NSString * configuration = [CobaltViewController stringWithContentsOfFile:[NSString stringWithFormat:@"%@%@", [CobaltViewController ressourcePath], confFileName]];
+    NSString * configuration = [CobaltViewController stringWithContentsOfFile:[NSString stringWithFormat:@"%@%@", [Cobalt resourcePath], confFileName]];
     if (configuration) {
         return [CobaltViewController JSONObjectWithString:configuration];
     }
@@ -620,11 +620,6 @@ NSString * webLayerPage;
     }
     
     return YES;
-}
-
-+ (NSString *)ressourcePath
-{
-    return [NSString stringWithFormat:@"%@%@",[[NSBundle mainBundle] resourcePath], @"/www/"];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

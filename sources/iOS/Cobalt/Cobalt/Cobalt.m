@@ -31,4 +31,27 @@
 
 @implementation Cobalt
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark RESOURCE PATH
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static NSString * sResourcePath = nil;
+
++ (void)setResourcePath:(NSString *)resourcePath
+{
+    sResourcePath = resourcePath;
+}
+
++ (NSString *)resourcePath
+{
+    if (sResourcePath != nil) {
+        return sResourcePath;
+    }
+    else {
+        return [NSString stringWithFormat:@"%@%@",[[NSBundle mainBundle] resourcePath], @"/www/"];
+    }
+}
+
 @end

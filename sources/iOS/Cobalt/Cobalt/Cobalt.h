@@ -33,4 +33,23 @@
 
 @interface Cobalt : NSObject
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark RESOURCE PATH
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
+ @method		+ (void)setResourcePath:(NSString *)resourcePath;
+ @param         resourcePath
+ @abstract		this method sets the resource path for the whole application
+ */
++ (void)setResourcePath:(NSString *)resourcePath;
+
+/*!
+ @method		+ (NSString *)resourcePath;
+ @abstract		this method gets the resource path for the whole application
+ */
++ (NSString *)resourcePath;
+
 @end

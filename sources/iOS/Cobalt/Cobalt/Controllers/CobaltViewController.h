@@ -201,14 +201,6 @@
 - (void)setDelegate:(id<CobaltDelegate>)delegate;
 
 /*!
- @method		-(NSString *)ressourcePath
- @abstract		this method returns the ressource path
- @return        a string representing the ressource path to be used in the webview
- @discussion    must be subclassed in subclasses
- */
-+ (NSString *)ressourcePath;
-
-/*!
  @method		-(void) customView
  @abstract		a method to custom the webView
  @discussion    must be subclassed in subclasses
