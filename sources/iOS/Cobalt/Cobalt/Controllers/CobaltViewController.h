@@ -268,6 +268,14 @@
  */
 - (void)sendACK;
 
+/*!
+ @method		+ (UIViewController *)getViewControllerForController:(NSString *)controller andPage:(NSString *)page;
+ @abstract		Returns an allocated and initialized view controller from its id in cobalt configuration file and HTML page
+ @param         controller: view controller id
+ @param         page: HTML page
+ */
++ (UIViewController *)getViewControllerForController:(NSString *)controller andPage:(NSString *)page;
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark PULL TO REFRESH METHODS

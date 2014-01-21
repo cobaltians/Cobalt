@@ -28,8 +28,9 @@
  */
 
 #import "CobaltViewController.h"
-#import "iToast.h"
+
 #import "Cobalt.h"
+#import "iToast.h"
 
 #define haploidSpecialJSKey     @"h@ploid#k&y"
 
@@ -200,9 +201,9 @@ NSString * webLayerPage;
     [mWebView loadRequest:requestURL];
 }
 
-- (NSDictionary *)getConfigurationForController:(NSString *)controller
++ (NSDictionary *)getConfigurationForController:(NSString *)controller
 {
-    NSDictionary * configuration = [self getConfiguration];
+    NSDictionary * configuration = [CobaltViewController getConfiguration];
     if (configuration) {
         if (controller) {
             NSDictionary * controllerConfiguration = [configuration objectForKey:controller];
@@ -236,7 +237,7 @@ NSString * webLayerPage;
     return nil;
 }
 
-- (NSDictionary *)getConfiguration
++ (NSDictionary *)getConfiguration
 {
     NSString * configuration = [CobaltViewController stringWithContentsOfFile:[NSString stringWithFormat:@"%@%@", [Cobalt resourcePath], confFileName]];
     if (configuration) {
@@ -635,13 +636,8 @@ NSString * webLayerPage;
     
     if (page
         && [page isKindOfClass:[NSString class]]) {
-        UIViewController * viewController = [self getViewControllerForController:controller];
+        UIViewController * viewController = [CobaltViewController getViewControllerForController:controller andPage:page];
         if (viewController) {
-            if ([[viewController class] isSubclassOfClass:[CobaltViewController class]]) {
-                // Sets page
-                ((CobaltViewController *)viewController).pageName = page;
-            }
-            
             // Push corresponding viewController
             [self.navigationController pushViewController:viewController animated:YES];
         }
@@ -665,13 +661,8 @@ NSString * webLayerPage;
     NSString * controller = [data objectForKey:kJSNavigationController];
     if (page
         && [page isKindOfClass:[NSString class]]) {
-        UIViewController * viewController = [self getViewControllerForController:controller];
+        UIViewController * viewController = [CobaltViewController getViewControllerForController:controller andPage:page];
         if (viewController) {
-            if ([[viewController class] isSubclassOfClass:[CobaltViewController class]]) {
-                // Sets page
-                ((CobaltViewController *)viewController).pageName = page;
-            }
-            
             [self presentViewController:[[UINavigationController alloc] initWithRootViewController:viewController] animated:YES completion:nil];
         }
     }
@@ -694,9 +685,22 @@ NSString * webLayerPage;
 #endif
 }
 
-- (UIViewController *)getViewControllerForController:(NSString *)controller
++ (UIViewController *)getViewControllerForController:(NSString *)controller andPage:(NSString *)page
 {
-    NSDictionary * configuration = [self getConfigurationForController:controller];
+    UIViewController * viewController = [CobaltViewController getViewControllerForController:controller];
+    
+    if (viewController
+        && [[viewController class] isSubclassOfClass:[CobaltViewController class]]) {
+        // Sets page
+        ((CobaltViewController *)viewController).pageName = page;
+    }
+    
+    return viewController;
+}
+
++ (UIViewController *)getViewControllerForController:(NSString *)controller
+{
+    NSDictionary * configuration = [CobaltViewController getConfigurationForController:controller];
     
     if (configuration) {
         NSString * class = [configuration objectForKey:kIosController];
