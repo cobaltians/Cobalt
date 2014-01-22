@@ -91,6 +91,8 @@ import fr.cobaltians.cobalt.R;
  */
 public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	
+	// TAG
+	private final static String TAG = "HTMLFragment";
 	// RESOURCES
 	private final static String ASSETS_PATH = "file:///android_asset/";
 		
@@ -184,7 +186,8 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	/*********************************************************
 	 * MEMBERS
 	 ********************************************************/
-	protected boolean mDebug = false;
+	protected static boolean sDebug = false;
+	protected static Context sContext;
 	
 	protected String mPage;
 	
@@ -193,7 +196,6 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	protected FrameLayout mWebViewPlaceholder;
 	protected boolean mWebViewContentHasBeenLoaded;
 	
-	protected Context mContext;
 	protected Handler mHandler;
 
 	private ArrayList<JSONObject> mWaitingJavaScriptCallsQueue;
@@ -219,7 +221,10 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 		
 		setRetainInstance(true);
 		
-		mContext = (Context) getActivity().getApplicationContext();
+		if (sContext == null) {
+			sContext = (Context) getActivity().getApplicationContext();
+		}
+		
 		mHandler = new Handler();
 		
 		mWaitingJavaScriptCallsQueue = new ArrayList<JSONObject>();
@@ -332,14 +337,14 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	protected void addWebView() {
 				
 		if(mWebView == null) {
-			mWebView = new OverScrollingWebView(mContext);
+			mWebView = new OverScrollingWebView(sContext);
 			setWebViewSettings(this);
 		}	
 		
 		mPullToRefreshActivate = pullToRefreshActivate();
 		if (mPullToRefreshActivate) {
 			if (mPullToRefreshWebView == null) {
-				mPullToRefreshWebView = new PullToRefreshOverScrollWebview(mContext);
+				mPullToRefreshWebView = new PullToRefreshOverScrollWebview(sContext);
 				mWebView = mPullToRefreshWebView.getRefreshableView();
 				setWebViewSettings(this);
 			}
@@ -352,7 +357,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			else mWebViewPlaceholder.addView(mWebView);
 		}	
 		else  {
-			if(mDebug) Log.e(getClass().getSimpleName(), "addWebView: you must set up Web view placeholder in setUpViews!");
+			if(sDebug) Log.e(TAG, "addWebView: you must set up Web view placeholder in setUpViews!");
 		}		
 	}
 	
@@ -383,7 +388,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 				mWebViewPlaceholder.removeView(mWebView);
 			}
 		}
-		else if(mDebug) Log.e(getClass().getSimpleName(), "removeWebViewFromPlaceholder: you must set up Web view placeholder in setUpViews!");
+		else if(sDebug) Log.e(TAG, "removeWebViewFromPlaceholder: you must set up Web view placeholder in setUpViews!");
 	}
 	
 	@SuppressLint("SetJavaScriptEnabled")
@@ -400,7 +405,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			webSettings.setDomStorageEnabled(true); 
 			webSettings.setDatabaseEnabled(true);
 			//@deprecated since API 19. But calling this method have simply no effect for API 19+
-			webSettings.setDatabasePath(mContext.getFilesDir().getParentFile().getPath()+"/databases/");
+			webSettings.setDatabasePath(sContext.getFilesDir().getParentFile().getPath()+"/databases/");
 			
 			// Enables cross-domain calls for Ajax
 			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
@@ -430,7 +435,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 
 			// Add JavaScript interface so JavaScript can call native functions.
 			mWebView.addJavascriptInterface(javascriptInterface, "Android");
-			mWebView.addJavascriptInterface(new LocalStorageJavaScriptInterface(mContext), "LocalStorage");
+			mWebView.addJavascriptInterface(new LocalStorageJavaScriptInterface(sContext), "LocalStorage");
 
 			ScaleWebViewClient scaleWebViewClient = new ScaleWebViewClient() {
 				@Override
@@ -452,7 +457,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			mWebView.setWebViewClient(scaleWebViewClient);
 		}
 		else {
-			if(mDebug) Log.e(getClass().getSimpleName(), "setWebViewSettings: Web view is null.");
+			if(sDebug) Log.e(TAG, "setWebViewSettings: Web view is null.");
 		}
 	}
 	
@@ -484,12 +489,12 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	 * LOGGING
 	 ****************************************/
 	
-	public boolean isLoggingEnabled() {
-		return mDebug;
+	public static boolean isLoggingEnabled() {
+		return sDebug;
 	}
 
-	public void enableLogging(boolean debug) {
-		mDebug = debug;
+	public static void enableLogging(boolean debug) {
+		sDebug = debug;
 	}
 	
 	/****************************************************************************************
@@ -514,7 +519,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 							mWebView.loadUrl(url);		
 						}
 						else {
-							if(mDebug) Log.e(getClass().getSimpleName(), "executeScriptInWebView: message cannot been sent to empty Web view");
+							if(sDebug) Log.e(TAG, "executeScriptInWebView: message cannot been sent to empty Web view");
 						}						
 					}
 				});
@@ -529,7 +534,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 		int mWaitingJavaScriptCallsQueueLength = mWaitingJavaScriptCallsQueue.size();
 		
 		for (int i = 0 ; i < mWaitingJavaScriptCallsQueueLength ; i++) {
-			if (mDebug) Log.i(getClass().getSimpleName(), "executeWaitingCalls: execute " + mWaitingJavaScriptCallsQueue.get(i).toString());
+			if (sDebug) Log.i(TAG, "executeWaitingCalls: execute " + mWaitingJavaScriptCallsQueue.get(i).toString());
 			executeScriptInWebView(mWaitingJavaScriptCallsQueue.get(i));
 		}
 		
@@ -725,7 +730,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	}
 	
 	protected void onReady() {
-		if (mDebug) Log.i(getClass().getSimpleName(), "onReady");
+		if (sDebug) Log.i(TAG, "onReady");
 
 		mCobaltIsReady = true;
 		executeWaitingCalls();
@@ -814,7 +819,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			// TOAST
 			else if(control.equals(JSControlToast)) {
 				String message = data.getString(kJSAlertMessage);
-				Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+				Toast.makeText(sContext, message, Toast.LENGTH_SHORT).show();
 				return true;
 			}
 		} 
@@ -941,6 +946,39 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	/********************************************************************************************************************
 	 * CONFIGURATION FILE
 	 *******************************************************************************************************************/
+	
+	public static HTMLFragment getFragmentForController(Context applicationContext, Class<?> HTMLFragmentClass, String controller, String page) {
+		HTMLFragment fragment = null;
+		
+		if (sContext == null) {
+			sContext = applicationContext;
+		}
+		
+		try {
+			if (HTMLFragment.class.isAssignableFrom(HTMLFragmentClass)) {
+				fragment = (HTMLFragment) HTMLFragmentClass.newInstance();
+				
+				Bundle configuration = getConfigurationForController(controller);
+				
+				if (configuration != null) {
+					configuration.putString(kPage, page);
+					fragment.setArguments(configuration);
+				}
+			}
+			else {
+				if (sDebug) Log.e(TAG, "getFragmentForController: " + HTMLFragmentClass.getSimpleName() + " does not inherit from HTMLFragment!");
+			}
+		} 
+		catch (java.lang.InstantiationException exception) {
+			exception.printStackTrace();
+		} 
+		catch (IllegalAccessException exception) {
+			exception.printStackTrace();
+		}
+		
+		return fragment;
+	}
+	
 	private Intent getIntentForController(String controller, String page) {
 		Intent intent = null;
 		
@@ -958,15 +996,15 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 					if (Activity.class.isAssignableFrom(pClass)) {
 						configuration.putString(kPage, page);
 						
-						intent = new Intent(mContext, pClass);
+						intent = new Intent(sContext, pClass);
 						intent.putExtra(kExtras, configuration);
 					}
 					else {
-						if (mDebug) Log.e(getClass().getSimpleName(), "getIntentForController: " + activity + " does not inherit from Activity!");
+						if (sDebug) Log.e(TAG, "getIntentForController: " + activity + " does not inherit from Activity!");
 					}
 				} 
 				catch (ClassNotFoundException exception) {
-					if (mDebug) Log.e(getClass().getSimpleName(), "getIntentForController: " + activity + " class not found for id " + controller + "!");
+					if (sDebug) Log.e(TAG, "getIntentForController: " + activity + " class not found for id " + controller + "!");
 					exception.printStackTrace();
 				}
 			}
@@ -975,7 +1013,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 		return intent;
 	}
 	
-	protected Bundle getConfigurationForController(String controller) {
+	protected static Bundle getConfigurationForController(String controller) {
 		Bundle bundle = null;
 		
 		JSONObject configuration = getConfiguration();
@@ -999,7 +1037,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			}
 		}
 		catch (JSONException exception) {
-			Log.e(getClass().getSimpleName(), 	"getConfigurationForController: check cobalt.conf. Known issues: \n "
+			Log.e(TAG, 	"getConfigurationForController: check cobalt.conf. Known issues: \n "
 												+ "- \t" + controller + " controller not found and no " + JSNavigationControllerDefault + " controller defined \n "
 												+ "- \t" + controller + " or " + JSNavigationControllerDefault + "controller found but no " + kAndroidController + "defined \n ");
 			exception.printStackTrace();
@@ -1014,7 +1052,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 		return bundle;
 	}
 	
-	private JSONObject getConfiguration() {
+	private static JSONObject getConfiguration() {
 		String configuration = readFileFromAssets(Cobalt.getResourcePath() + CONF_FILE);
 
 		try {
@@ -1022,16 +1060,16 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			return jsonObj;
 		} 
 		catch (JSONException exception) {
-			if (mDebug) Log.e(getClass().getSimpleName(), "getConfiguration: check cobalt.conf. File is missing or not at " + ASSETS_PATH + Cobalt.getResourcePath() + CONF_FILE);
+			if (sDebug) Log.e(TAG, "getConfiguration: check cobalt.conf. File is missing or not at " + ASSETS_PATH + Cobalt.getResourcePath() + CONF_FILE);
 			exception.printStackTrace();
 		}
 		
 		return new JSONObject();
 	}
 	
-	private String readFileFromAssets(String file) {
+	private static String readFileFromAssets(String file) {
 		try {
-			AssetManager assetManager = mContext.getAssets();
+			AssetManager assetManager = sContext.getAssets();
 			InputStream inputStream = assetManager.open(file);
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 			StringBuilder fileContent = new StringBuilder();
@@ -1044,7 +1082,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			return fileContent.toString();
 		} 
 		catch (FileNotFoundException exception) {
-			if (mDebug) Log.e(getClass().getSimpleName(), "getFileContentFromAssets: " + file + "not found.");
+			if (sDebug) Log.e(TAG, "getFileContentFromAssets: " + file + "not found.");
 		} 
 		catch (IOException exception) {
 			exception.printStackTrace();
@@ -1061,7 +1099,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 		if(intent != null) {
 			getActivity().startActivity(intent);
 		}
-		else if (mDebug) Log.w(getClass().getSimpleName(), "push: Unable to push " + controller + " controller");
+		else if (sDebug) Log.w(TAG, "push: Unable to push " + controller + " controller");
 	}
 	
 	private void pop() {
@@ -1084,7 +1122,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 				exception.printStackTrace();
 			}
 		}
-		else if (mDebug) Log.e(getClass().getSimpleName(), "presentModale: Unable to present modale " + controller + " controller");
+		else if (sDebug) Log.e(TAG, "presentModale: Unable to present modale " + controller + " controller");
 	}
 
 	private void dismissModale(String controller, String page) {
@@ -1096,15 +1134,15 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 				Bundle bundle = new Bundle();
 				bundle.putString(kPage, page);
 
-				Intent intent = new Intent(mContext, pClass);
+				Intent intent = new Intent(sContext, pClass);
 				intent.putExtra(kExtras, bundle);
 
 				NavUtils.navigateUpTo(getActivity(), intent);
 			}
-			else if(mDebug) Log.e(getClass().getSimpleName(), "dismissModale: unable to dismiss modale since " + controller + " does not inherit from Activity");
+			else if(sDebug) Log.e(TAG, "dismissModale: unable to dismiss modale since " + controller + " does not inherit from Activity");
 		} 
 		catch (ClassNotFoundException exception) {
-			if (mDebug) Log.e(getClass().getSimpleName(), "dismissModale: " + controller + "not found");
+			if (sDebug) Log.e(TAG, "dismissModale: " + controller + "not found");
 			exception.printStackTrace();
 		}
 	}
@@ -1129,7 +1167,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			if (activity != null) {
 				activity.back();
 			}
-			else if(mDebug) Log.e(getClass().getSimpleName(), "onBackButtonPressed: activity is null, cannot call back");
+			else if(sDebug) Log.e(TAG, "onBackButtonPressed: activity is null, cannot call back");
 		}
 		else {
 			onBackDenied();
@@ -1141,7 +1179,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	 * @details This method may be overridden in subclasses.
 	 */
 	protected void onBackDenied() {
-		if(mDebug) Log.i(getClass().getSimpleName(), "onBackDenied: onBackPressed event denied by Web view");
+		if(sDebug) Log.i(TAG, "onBackDenied: onBackPressed event denied by Web view");
 	}
 	
 	/***********************************************************************************************************************************
@@ -1184,14 +1222,14 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 						fragmentTransition.add(activity.getFragmentContainerId(), webLayerFragment);
 						fragmentTransition.commit();
 					}
-					else if(mDebug) Log.e(getClass().getSimpleName(), "showWebLayer: fragment container not found");
+					else if(sDebug) Log.e(TAG, "showWebLayer: fragment container not found");
 				}
 			} 
 			catch (JSONException exception) {
 				exception.printStackTrace();
 			}
 		}
-		else if(mDebug) Log.e(getClass().getSimpleName(), "showWebLayer: unable to show a Web layer from a fragment not attached to an activity!");
+		else if(sDebug) Log.e(TAG, "showWebLayer: unable to show a Web layer from a fragment not attached to an activity!");
 	}
 	
 	/**
@@ -1336,7 +1374,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 		if (mPullToRefreshWebView != null) {
 			mPullToRefreshWebView.setMode(Mode.PULL_FROM_START);
 		}
-		else if(mDebug) Log.e(getClass().getSimpleName(), "Unable to enable pull-to-refresh feature. mPullToRefreshWebView must be set.");
+		else if(sDebug) Log.e(TAG, "Unable to enable pull-to-refresh feature. mPullToRefreshWebView must be set.");
 	}
 	
 	/**
@@ -1348,7 +1386,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			mPullToRefreshWebView.setMode(Mode.DISABLED);
 			mPullToRefreshActivate = false;
 		}
-		else if(mDebug && mPullToRefreshActivate) Log.e(getClass().getSimpleName(), "Unable to disable pull-to-refresh feature. mPullToRefreshWebView must be set.");
+		else if(sDebug && mPullToRefreshActivate) Log.e(TAG, "Unable to disable pull-to-refresh feature. mPullToRefreshWebView must be set.");
 	}
 	
 	/**
@@ -1439,7 +1477,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	
 	@Override
 	public void onOverScrolled(int scrollX, int scrollY,int oldscrollX, int oldscrollY) {
-		float density = mContext.getResources().getDisplayMetrics().density;
+		float density = sContext.getResources().getDisplayMetrics().density;
 		// Round density in case it is too precise (and big)
 		if (density > 1) {
 			density = (float) (Math.floor(density * 10) / 10.0);

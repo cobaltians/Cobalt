@@ -1,15 +1,15 @@
 package fr.cobaltians.cobaltcatalog.activities;
 
 import android.view.Menu;
-import fr.cobaltians.cobaltcatalog.fragments.SimpleHybridFragment;
 import fr.cobaltians.cobalt.activities.HTMLActivity;
 import fr.cobaltians.cobalt.fragments.HTMLFragment;
 import fr.cobaltians.cobaltcatalog.R;
+import fr.cobaltians.cobaltcatalog.fragments.SimpleHybridFragment;
 
 public class SimpleHybridActivity extends HTMLActivity {
 	
-	protected HTMLFragment getFragment(){
-		return new SimpleHybridFragment();
+	protected HTMLFragment getFragment() {
+		return HTMLFragment.getFragmentForController(getApplicationContext(), SimpleHybridFragment.class, "default", "index.html");
 	}
 
 	@Override

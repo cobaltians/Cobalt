@@ -151,14 +151,14 @@ public class MainFragment extends HTMLFragment {
 					{
 						String value = jsonObj.optString(kJSData);
 						if(value != null)
-							Toast.makeText(mContext, "Callback with value "+value, Toast.LENGTH_SHORT).show();
+							Toast.makeText(sContext, "Callback with value "+value, Toast.LENGTH_SHORT).show();
 						return true;
 					}
 					else if(callbackID != null && callbackID.length() >0 && callbackID.equals(JSNameTestCallbackAsync))
 					{
 						String value = jsonObj.optString(kJSData);
 						if(value != null)
-							Toast.makeText(mContext, "Callback ASYNC with value "+value, Toast.LENGTH_SHORT).show();
+							Toast.makeText(sContext, "Callback ASYNC with value "+value, Toast.LENGTH_SHORT).show();
 						return true;
 					}
 				}

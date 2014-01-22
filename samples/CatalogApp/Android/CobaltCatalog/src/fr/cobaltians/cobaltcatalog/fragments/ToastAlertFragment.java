@@ -24,7 +24,7 @@ public class ToastAlertFragment extends HTMLFragment {
 	
 	public void alertDialogClickedButton(long tag,int buttonIndex)
 	{
-		Toast.makeText(mContext, "tag = "+tag+" || buttonIndex = "+(-1-buttonIndex), Toast.LENGTH_SHORT).show();
+		Toast.makeText(sContext, "tag = "+tag+" || buttonIndex = "+(-1-buttonIndex), Toast.LENGTH_SHORT).show();
 	}
 	
 	//  unhandled JS messages

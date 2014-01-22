@@ -89,7 +89,7 @@ public class HTMLWebLayerFragment extends HTMLFragment {
 			}
 		} 
 		catch (JSONException exception) {
-			if (mDebug) Log.e(getClass().getSimpleName(), "handleMessageSentByJavaScript: cannot handle message for JSON \n" + message);
+			if (sDebug) Log.e(getClass().getSimpleName(), "handleMessageSentByJavaScript: cannot handle message for JSON \n" + message);
 			exception.printStackTrace();
 		}
 		

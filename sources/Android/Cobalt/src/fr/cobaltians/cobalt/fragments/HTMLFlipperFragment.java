@@ -70,7 +70,7 @@ public class HTMLFlipperFragment extends HTMLFragment implements IGestureListene
 	@Override
 	protected void addWebView() {
 		if(mWebView == null) {
-			mWebView = new GestureWebView(mContext);
+			mWebView = new GestureWebView(sContext);
 			setWebViewSettings(this);
 		}
 		
@@ -132,11 +132,11 @@ public class HTMLFlipperFragment extends HTMLFragment implements IGestureListene
 					jsonObj.put(kJSType,JSTypeEvent);
 					if (direction == GESTURE_SWIPE_LEFT) {
 						jsonObj.put(kJSEvent, JSEventSwipeLeft);
-						if (mDebug) Log.i(getClass().getSimpleName(), "swipe: next");
+						if (sDebug) Log.i(getClass().getSimpleName(), "swipe: next");
 					}
 					else if (direction == GESTURE_SWIPE_RIGHT) {
 						jsonObj.put(kJSEvent, JSEventSwipeRight);
-						if (mDebug) Log.i(getClass().getSimpleName(), "swipe: previous");
+						if (sDebug) Log.i(getClass().getSimpleName(), "swipe: previous");
 					}
 					executeScriptInWebView(jsonObj);
 				}

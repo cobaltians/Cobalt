@@ -4,32 +4,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
-
-import fr.cobaltians.cobalt.Cobalt;
-import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
 import fr.cobaltians.cobalt.fragments.HTMLFragment;
 import fr.cobaltians.cobaltcatalog.R;
 
 public class SimpleHybridFragment extends HTMLFragment {
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-
-		View view = super.onCreateView(inflater, container, savedInstanceState);
-		
-		if(! mWebViewContentHasBeenLoaded)
-		{
-			loadFileFromAssets(Cobalt.getResourcePath(), (mPage != null) ? mPage : "index.html");
-		}
-		
-		return view;
-	}
 	
 	@Override
 	protected int getLayoutToInflate()

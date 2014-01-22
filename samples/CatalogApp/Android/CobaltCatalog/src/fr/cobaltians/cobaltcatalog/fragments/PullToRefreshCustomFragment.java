@@ -28,7 +28,7 @@ public class PullToRefreshCustomFragment extends HTMLFragment {
 				"Chargement...", 
 				"Relâchez pour actualiser", 
 				null, 
-				mContext.getResources().getDrawable(R.drawable.ic_launcher),
+				sContext.getResources().getDrawable(R.drawable.ic_launcher),
 				null);
 		
 		if (getArguments() == null) {
