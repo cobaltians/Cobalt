@@ -110,6 +110,7 @@
 
 @protocol CobaltDelegate <NSObject>
 
+- (void)onCobaltIsReady;
 - (BOOL)onUnhandledMessage:(NSDictionary *)message;
 - (BOOL)onUnhandledEvent:(NSString *)event withData:(NSDictionary *)data andCallback:(NSString *)callback;
 - (BOOL)onUnhandledCallback:(NSString *)callback withData:(NSDictionary *)data;

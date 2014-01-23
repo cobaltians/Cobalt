@@ -396,6 +396,10 @@ NSString * webLayerPage;
         // COBALT IS READY
         else if ([type isEqualToString:JSTypeCobaltIsReady]) {
             [toJavaScriptOperationQueue setSuspended:NO];
+            if (_delegate != nil
+                && [_delegate respondsToSelector:@selector(onCobaltIsReady)]) {
+                [_delegate onCobaltIsReady];
+            }
 #if DEBUG_COBALT
             NSLog(@"handleDictionarySentByJavaScript: CobaltIsReady!");
 #endif
