@@ -130,6 +130,18 @@ NSString * webLayerPage;
     [super viewDidUnload];
 }
 
+- (void)dealloc
+{
+    toJavaScriptOperationQueue = nil;
+    fromJavaScriptOperationQueue = nil;
+    pullToRefreshTableHeaderView = nil;
+    _delegate = nil;
+    webView = nil;
+    activityIndicator = nil;
+    pageName = nil;
+    webLayer = nil;
+}
+
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     if (pullToRefreshTableHeaderView
@@ -1151,6 +1163,15 @@ NSString * webLayerPage;
 #pragma mark METHODS
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)dealloc
+{
+    progressView = nil;
+    arrowImageView = nil;;
+    lastUpdatedLabel = nil;
+    statusLabel = nil;
+}
+
 //*******************
 // SET LAST UPDATED *
 //*******************

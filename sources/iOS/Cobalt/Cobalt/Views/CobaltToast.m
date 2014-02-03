@@ -31,6 +31,8 @@
 
 @implementation CobaltToast
 
+@synthesize delegate;
+
 + (CobaltToast *)makeText:(NSString *)text
 {
     CobaltToast * toast = [[CobaltToast alloc] initWithText:text];
@@ -45,6 +47,11 @@
 	}
 	
 	return self;
+}
+
+- (void)dealloc
+{
+    delegate = nil;
 }
 
 - (void)show:(iToastType)type
