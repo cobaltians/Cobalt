@@ -106,13 +106,13 @@ NSString * webLayerPage;
     }
     
     [webView.scrollView setDelegate:self];
+    
+    [self loadPage:pageName inWebView:webView];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    [self loadPage:pageName inWebView:webView];
 }
 
 - (void)viewDidUnload
