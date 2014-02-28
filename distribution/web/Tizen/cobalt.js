@@ -151,13 +151,13 @@ var cobalt={
 			case "pop":
 				cobalt.send({ "type":"navigation", "action":"pop"});
 			break;
-			case "modale":
+			case "modal":
 				if (page){
-					cobalt.adapter.navigateToModale(page, controller);
+					cobalt.adapter.navigateToModal(page, controller);
 				}
 			break;
 			case "dismiss":
-				cobalt.adapter.dismissFromModale();
+				cobalt.adapter.dismissFromModal();
 			break;
 		}
 	},
@@ -331,10 +331,10 @@ var cobalt={
 			    break;
 	        }
 	    },
-		navigateToModale:function(page, controller){
-			cobalt.send({ "type":"navigation", "action":"modale", data : { page :page, controller: controller }});
+		navigateToModal:function(page, controller){
+			cobalt.send({ "type":"navigation", "action":"modal", data : { page :page, controller: controller }});
 		},
-		dismissFromModale:function(){
+		dismissFromModal:function(){
 			cobalt.send({ "type":"navigation", "action":"dismiss"});
 		},
 		initStorage:function(){
@@ -451,13 +451,13 @@ cobalt.tizen_adapter={
 			case "pop":
 				cobalt.send({ type: "navigation", action : "pop"});
 			break;
-			case "modale":
+			case "modal":
 				if (navigationPageName){
-					cobalt.adapter.navigateToModale(navigationPageName, navigationClassId);
+					cobalt.adapter.navigateToModal(navigationPageName, navigationClassId);
 				}
 			break;
 			case "dismiss":
-				cobalt.adapter.dismissFromModale();
+				cobalt.adapter.dismissFromModal();
 			break;
 		}
 	},
@@ -490,8 +490,8 @@ cobalt.tizen_adapter={
     },
 	//default behaviours
     handleCallback : cobalt.defaultBehaviors.handleCallback,
-    navigateToModale : cobalt.defaultBehaviors.navigateToModale,
-	dismissFromModale : cobalt.defaultBehaviors.dismissFromModale,
+    navigateToModal : cobalt.defaultBehaviors.navigateToModal,
+	dismissFromModal : cobalt.defaultBehaviors.dismissFromModal,
 	initStorage : cobalt.defaultBehaviors.initStorage
 };
 cobalt.adapter=cobalt.tizen_adapter;

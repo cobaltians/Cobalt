@@ -16,7 +16,7 @@ Container {
     property alias nativeBridgeIsReady: nativeBridgeWV.nativeBridgeIsReady
     
     signal messageSentByJavascript(variant jsonObj)
-    signal modaleDismissed
+    signal modalDismissed
     
     background: Color.Transparent
     verticalAlignment: VerticalAlignment.Fill
@@ -49,14 +49,14 @@ Container {
     }
 
 	/**
-	 * Modale
+	 * Modal
 	 */
     function closeSheet() {
-        modaleSheet.close();
-        modaleDismissed();
+        modalSheet.close();
+        modalDismissed();
         var script = {
             "type": "typeEvent",
-            "name": "onModaleDismissed"
+            "name": "onModalDismissed"
         };
         executeScriptInWebview(script);
     }

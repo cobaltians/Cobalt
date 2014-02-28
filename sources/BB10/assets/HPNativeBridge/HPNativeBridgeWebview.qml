@@ -12,7 +12,7 @@ ScrollView {
     id : scrollView
     
     property string baseUrl : "local:///assets/www/"
-    property bool isModale: false
+    property bool isModal: false
     property bool isInfiniteScrollActive: false
     property bool isPullToRefreshActive: false
     property bool nativeBridgeIsReady: false    
@@ -97,7 +97,7 @@ ScrollView {
                     source: ""
                 },
                 Sheet {
-                    id: modaleSheet
+                    id: modalSheet
                 },
                 LayoutUpdateHandler {
                     id: webViewHandler

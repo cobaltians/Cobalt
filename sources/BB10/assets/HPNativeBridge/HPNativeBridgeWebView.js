@@ -10,7 +10,7 @@ function handleMessageSentByJavaScript(jsonObj)
 		switch(jsonObj.navigationType){
 		case "push" :	push(jsonObj);	break;
 		case "pop" : 		pop(); 			break;
-		case "modale" :		modale(jsonObj); break;
+		case "modal" :		modal(jsonObj); break;
 		case "dismiss" :	dismiss(); 		break;
 		} 
 		break;
@@ -456,37 +456,37 @@ function inflatePage(properties, parent) {
 
 function push(jsonObj)
 {
-	if (!nativeBridgeContainer.nativeBridgeWV.isModale){
+	if (!nativeBridgeContainer.nativeBridgeWV.isModal){
 		cancelInfiniteScroll();
 		cancelPullToRefresh();
 		var properties = getPropertiesForId(jsonObj);
 		var page = inflatePage(properties,null);
 		navigationPane.push(page);
 	}else{
-		console.log('WARNING skipped push : push into modale not available on BB10 for now.');
+		console.log('WARNING skipped push : push into modal not available on BB10 for now.');
 	}
 
 }
 
-function modale(jsonObj)
+function modal(jsonObj)
 {
 	cancelInfiniteScroll();
 	cancelPullToRefresh();
 	var properties = getPropertiesForId(jsonObj);
 	var page = inflatePage(properties,null);
-	page.nativeBridgeContainer.nativeBridgeWV.isModale=true;
-	modaleSheet.content = page;
-	modaleSheet.open();
+	page.nativeBridgeContainer.nativeBridgeWV.isModal=true;
+	modalSheet.content = page;
+	modalSheet.open();
 }
 
 function pop()
 {
-	if (!nativeBridgeContainer.nativeBridgeWV.isModale){
+	if (!nativeBridgeContainer.nativeBridgeWV.isModal){
 		if (navigationPane.count() > 1) 
 			navigationPane.pop();
 		else console.log("nothing in NavigationPane to pop ");
 	}else{
-		console.log('WARNING skipped pop : pop into modale not available on BB10 for now.');
+		console.log('WARNING skipped pop : pop into modal not available on BB10 for now.');
 	}	
 }
 

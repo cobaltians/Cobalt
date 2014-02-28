@@ -31,13 +31,13 @@ cobalt.android_adapter={
 
         }
     },
-	//modale stuffs. really basic on ios, more complex on android.
-	navigateToModale:function(page, controller){
+	//modal stuffs. really basic on ios, more complex on android.
+	navigateToModal:function(page, controller){
 		if ( cobalt.checkDependency('storage') ){
-			cobalt.send({ "type":"navigation", "action":"modale", data : { page :page, controller: controller }}, 'cobalt.adapter.storeModaleInformations');
+			cobalt.send({ "type":"navigation", "action":"modal", data : { page :page, controller: controller }}, 'cobalt.adapter.storeModalInformations');
 		}
 	},
-	dismissFromModale:function(){
+	dismissFromModal:function(){
 		if ( cobalt.checkDependency('storage') ){
 			var dismissInformations= cobalt.storage.getItem("dismissInformations","json");
 			if (dismissInformations && dismissInformations.page && dismissInformations.controller){
@@ -50,7 +50,7 @@ cobalt.android_adapter={
 
 
 	},
-	storeModaleInformations:function(params){
+	storeModalInformations:function(params){
 		//cobalt.log("storing informations for the dismiss :", false)
 		if ( cobalt.checkDependency('storage') ){
 			cobalt.log(params, false)

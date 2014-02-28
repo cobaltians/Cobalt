@@ -43,8 +43,8 @@ cobalt.ios_adapter={
     },
 	//default behaviours
 	handleEvent : cobalt.defaultBehaviors.handleEvent,
-	navigateToModale : cobalt.defaultBehaviors.navigateToModale,
-	dismissFromModale : cobalt.defaultBehaviors.dismissFromModale,
+	navigateToModal : cobalt.defaultBehaviors.navigateToModal,
+	dismissFromModal : cobalt.defaultBehaviors.dismissFromModal,
 	initStorage : cobalt.defaultBehaviors.initStorage
 
 };

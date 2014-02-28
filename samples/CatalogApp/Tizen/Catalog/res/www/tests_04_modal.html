@@ -13,21 +13,16 @@
 		
   		<p>TEST 01 - Ouvrez ces liens dans une modale si vous êtes cap!</p> 
 		<ul>
-  		<li><a class="modale" href="javascript:;" data-href="tests_04_modaleContentView1.html">Contenu modale page1</a>
-  		<li><a class="modale" href="javascript:;" data-href="tests_04_modaleContentView2.html">Contenu modale page2</a>
+  		<li><a class="modal" href="javascript:;" data-href="tests_04_modalContentView1.html">Contenu modale page1</a>
+  		<li><a class="modal" href="javascript:;" data-href="tests_04_modalContentView2.html">Contenu modale page2</a>
   		</ul>
 		
 		<div id="cobalt_logdiv"></div>
 		
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
+        <script type="text/javascript" src="js/utils.storage.js"></script>
         <script type="text/javascript" src="js/functions.js"></script>
-
-		<!-- for cobalt dev only
-		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
-		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
-		-->
-
         <script>
             
             Zepto(function($){
@@ -37,9 +32,9 @@
 		            //sendingToNative:false,
 	            });
 
-                cobalt.storage.enable();
-				cobalt.log("init dismissInformations : "+cobalt.storage.getItem("dismissInformations"), false);
-				cobalt.log("init testLocalStorageKey : "+cobalt.storage.getItem("testLocalStorageKey"), false);
+                utils.storage.enable();
+				cobalt.log("init dismissInformations : "+utils.storage.getItem("dismissInformations"), false);
+				cobalt.log("init testLocalStorageKey : "+utils.storage.getItem("testLocalStorageKey"), false);
 				
 				$('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
                 $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
@@ -49,8 +44,8 @@
 		            return false;
 	            });
 	            
-	            $('a.modale').on('tap click',function(){
-					cobalt.navigate('modale',$(this).attr('data-href'));
+	            $('a.modal').on('tap click',function(){
+					cobalt.navigate('modal',$(this).attr('data-href'));
 		            return false;
 	            });
 	            
