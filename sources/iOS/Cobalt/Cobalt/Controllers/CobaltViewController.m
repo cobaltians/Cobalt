@@ -475,8 +475,8 @@ NSString * webLayerPage;
                 else if ([action isEqualToString:JSActionNavigationPop]) {
                     [self performSelectorOnMainThread:@selector(popViewController) withObject:nil waitUntilDone:YES];
                 }
-                //MODALE
-                else if ([action isEqualToString:JSActionNavigationModale]) {
+                //MODAL
+                else if ([action isEqualToString:JSActionNavigationModal]) {
                     NSDictionary * data = [dict objectForKey:kJSData];
                     if (data
                         && [data isKindOfClass:[NSDictionary class]]) {

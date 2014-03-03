@@ -139,7 +139,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	protected final static String JSTypeNavigation = "navigation";
 	protected final static String JSActionNavigationPush = "push";
 	protected final static String JSActionNavigationPop ="pop";
-	protected final static String JSActionNavigationModale = "modale";
+	protected final static String JSActionNavigationModal = "modal";
 	protected final static String JSActionNavigationDismiss = "dismiss";
 	protected final static String kJSNavigationController = "controller";
 	protected final static String JSNavigationControllerDefault = "default";
@@ -652,13 +652,13 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 						return true;
 					}
 					
-					// MODALE
-					else if (action.equals(JSActionNavigationModale)) {
+					// MODAL
+					else if (action.equals(JSActionNavigationModal)) {
 						JSONObject data = jsonObj.getJSONObject(kJSData);
 						String page = data.getString(kJSPage);
 						String controller = data.optString(kJSNavigationController, null);
 						String callBackId = jsonObj.optString(kJSCallback, null);
-						presentModale(controller, page, callBackId);
+						presentModal(controller, page, callBackId);
 						return true;
 					}
 					
@@ -668,7 +668,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 						JSONObject data = jsonObj.getJSONObject(kJSData);
 						String controller = data.getString(kJSNavigationController);
 						String page = data.getString(kJSPage);
-						dismissModale(controller, page);
+						dismissModal(controller, page);
 						return true;
 					}
 					
@@ -1106,7 +1106,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 		onBackPressed(true);
 	}
 	
-	private void presentModale(String controller, String page, String callBackID) {
+	private void presentModal(String controller, String page, String callBackID) {
 		Intent intent = getIntentForController(controller, page);
 		
 		if (intent != null) {
@@ -1122,10 +1122,10 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 				exception.printStackTrace();
 			}
 		}
-		else if (sDebug) Log.e(TAG, "presentModale: Unable to present modale " + controller + " controller");
+		else if (sDebug) Log.e(TAG, "presentModal: Unable to present modal " + controller + " controller");
 	}
 
-	private void dismissModale(String controller, String page) {
+	private void dismissModal(String controller, String page) {
 		try {
 			Class<?> pClass = Class.forName(controller);
 
@@ -1139,10 +1139,10 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 
 				NavUtils.navigateUpTo(getActivity(), intent);
 			}
-			else if(sDebug) Log.e(TAG, "dismissModale: unable to dismiss modale since " + controller + " does not inherit from Activity");
+			else if(sDebug) Log.e(TAG, "dismissModal: unable to dismiss modal since " + controller + " does not inherit from Activity");
 		} 
 		catch (ClassNotFoundException exception) {
-			if (sDebug) Log.e(TAG, "dismissModale: " + controller + "not found");
+			if (sDebug) Log.e(TAG, "dismissModal: " + controller + "not found");
 			exception.printStackTrace();
 		}
 	}

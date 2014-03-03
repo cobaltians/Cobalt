@@ -59,8 +59,8 @@ cobalt.bb10_adapter={
     },
 	//default behaviours
     handleCallback : cobalt.defaultBehaviors.handleCallback,
-    navigateToModale : cobalt.defaultBehaviors.navigateToModale,
-	dismissFromModale : cobalt.defaultBehaviors.dismissFromModale,
+    navigateToModal : cobalt.defaultBehaviors.navigateToModal,
+	dismissFromModal : cobalt.defaultBehaviors.dismissFromModal,
 	initStorage : cobalt.defaultBehaviors.initStorage
 };
 cobalt.adapter=cobalt.bb10_adapter;

@@ -5,20 +5,17 @@
 			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
 	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
     </head>
-    <body class="red">
+    <body class="green">
   		
-  		<a href="javascript:;" class="dismiss">DISMISS</a><br/>
   		<a href="javascript:;" class="pop">POP</a><br/>
-  		
-		<p>Contenu modale 2</p>
+
+		<p>test des modales</p>
 		
-  		<p>TEST 05 - Appuyez sur dismiss. vous devriez revenir à l'index des modales.</p>
-  		
-  		<p>TEST 06 - Appuyez sur pop. <b>si vous venez de l'autre contenu de la modale</b> vous devriez y retourner.</p> 
-  		<p>TEST 07 - Appuyez sur pop. <b>sinon</b> vous devriez revenir à l'index des modales.</p> 
-  		
-  		<p>TEST 08 - Pushez l'autre contenu de modale et verifiez la logique du truc.</p>
-		<a class="push" href="javascript:;" data-href="tests_04_modaleContentView1.html">Contenu modale page1</a>
+  		<p>TEST 01 - Ouvrez ces liens dans une modale si vous êtes cap!</p> 
+		<ul>
+  		<li><a class="modal" href="javascript:;" data-href="tests_04_modalContentView1.html">Contenu modale page1</a>
+  		<li><a class="modal" href="javascript:;" data-href="tests_04_modalContentView2.html">Contenu modale page2</a>
+  		</ul>
 		
 		<div id="cobalt_logdiv"></div>
 		
@@ -43,22 +40,20 @@
                 cobalt.storage.enable();
 				cobalt.log("init dismissInformations : "+cobalt.storage.getItem("dismissInformations"), false);
 				cobalt.log("init testLocalStorageKey : "+cobalt.storage.getItem("testLocalStorageKey"), false);
-
-	            $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
+				
+				$('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
                 $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
 
-                $('a.dismiss').on('tap click',function(){
-		        	cobalt.navigate('dismiss');
-		            return false;
-	            });
-				$('a.pop').on('tap click',function(){
+                $('a.pop').on('tap click',function(){
 		        	cobalt.navigate('pop');
 		            return false;
 	            });
-	            $('a.push').on('tap click',function(){
-	            	cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
+	            
+	            $('a.modal').on('tap click',function(){
+					cobalt.navigate('modal',$(this).attr('data-href'));
 		            return false;
 	            });
+	            
 	            
 
             })

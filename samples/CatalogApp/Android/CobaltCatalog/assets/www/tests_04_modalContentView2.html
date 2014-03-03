@@ -18,14 +18,19 @@
   		<p>TEST 07 - Appuyez sur pop. <b>sinon</b> vous devriez revenir à l'index des modales.</p> 
   		
   		<p>TEST 08 - Pushez l'autre contenu de modale et verifiez la logique du truc.</p>
-		<a class="push" href="javascript:;" data-href="tests_04_modaleContentView1.html">Contenu modale page1</a>
+		<a class="push" href="javascript:;" data-href="tests_04_modalContentView1.html">Contenu modale page1</a>
 		
 		<div id="cobalt_logdiv"></div>
 		
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
-        <script type="text/javascript" src="js/utils.storage.js"></script>
         <script type="text/javascript" src="js/functions.js"></script>
+
+		<!-- for cobalt dev only
+		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
+		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
+		-->
+
         <script>
             
             Zepto(function($){
@@ -35,9 +40,9 @@
 		            //sendingToNative:false,
 	            });
 
-                utils.storage.enable();
-				cobalt.log("init dismissInformations : "+utils.storage.getItem("dismissInformations"), false);
-				cobalt.log("init testLocalStorageKey : "+utils.storage.getItem("testLocalStorageKey"), false);
+                cobalt.storage.enable();
+				cobalt.log("init dismissInformations : "+cobalt.storage.getItem("dismissInformations"), false);
+				cobalt.log("init testLocalStorageKey : "+cobalt.storage.getItem("testLocalStorageKey"), false);
 
 	            $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
                 $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
