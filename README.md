@@ -5,6 +5,8 @@ Cobalt is a web and native framework to create mobile applications that can mix 
 
 Be sure to read [the intro page first](http://cobaltians.github.io/cobalt/), then [jump to the wiki](https://github.com/cobaltians/cobalt/wiki).
 
+**Disclaimer** : Documentation is still in progress ! please forgive us while we are finishing to work on the website and the wiki...
+
 
 Quick links
 ===========
