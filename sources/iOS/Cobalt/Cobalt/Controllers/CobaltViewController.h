@@ -65,7 +65,7 @@
 #define JSTypeNavigation                    @"navigation"
 #define JSActionNavigationPush              @"push"
 #define JSActionNavigationPop               @"pop"
-#define JSActionNavigationModale            @"modale"
+#define JSActionNavigationModal            @"modal"
 #define JSActionNavigationDismiss           @"dismiss"
 #define kJSNavigationController             @"controller"
 #define JSNavigationControllerDefault       @"default"

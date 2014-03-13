@@ -28,13 +28,13 @@ cobalt.tizen_adapter={
 			case "pop":
 				cobalt.send({ type: "navigation", action : "pop"});
 			break;
-			case "modale":
+			case "modal":
 				if (navigationPageName){
-					cobalt.adapter.navigateToModale(navigationPageName, navigationClassId);
+					cobalt.adapter.navigateToModal(navigationPageName, navigationClassId);
 				}
 			break;
 			case "dismiss":
-				cobalt.adapter.dismissFromModale();
+				cobalt.adapter.dismissFromModal();
 			break;
 		}
 	},
@@ -67,8 +67,8 @@ cobalt.tizen_adapter={
     },
 	//default behaviours
     handleCallback : cobalt.defaultBehaviors.handleCallback,
-    navigateToModale : cobalt.defaultBehaviors.navigateToModale,
-	dismissFromModale : cobalt.defaultBehaviors.dismissFromModale,
+    navigateToModal : cobalt.defaultBehaviors.navigateToModal,
+	dismissFromModal : cobalt.defaultBehaviors.dismissFromModal,
 	initStorage : cobalt.defaultBehaviors.initStorage
 };
 cobalt.adapter=cobalt.tizen_adapter;

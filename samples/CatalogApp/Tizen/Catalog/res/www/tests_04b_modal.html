@@ -13,20 +13,15 @@
 		
   		<p>TEST 01 - Ouvrez ces liens dans une modale si vous êtes cap!</p> 
 		<ul>
-  		<li><a class="modale" href="javascript:;" data-href="tests_04_modaleContentView1.html">Contenu modale page1</a>
-  		<li><a class="modale" href="javascript:;" data-href="tests_04_modaleContentView2.html">Contenu modale page2</a>
+  		<li><a class="modal" href="javascript:;" data-href="tests_04_modalContentView1.html">Contenu modale page1</a>
+  		<li><a class="modal" href="javascript:;" data-href="tests_04_modalContentView2.html">Contenu modale page2</a>
   		</ul>
 		
 		
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
+        <script type="text/javascript" src="js/utils.storage.js"></script>
         <script type="text/javascript" src="js/functions.js"></script>
-
-		<!-- for cobalt dev only
-		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
-		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
-		-->
-
         <script>
             
             Zepto(function($){
@@ -44,8 +39,8 @@
 		            return false;
 	            });
 	            
-	            $('a.modale').on('tap click',function(){
-					cobalt.navigate('modale',$(this).attr('data-href'));
+	            $('a.modal').on('tap click',function(){
+					cobalt.navigate('modal',$(this).attr('data-href'));
 		            return false;
 	            });
 

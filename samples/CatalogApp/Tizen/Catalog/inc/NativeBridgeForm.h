@@ -89,7 +89,7 @@ public:
 	const static String kTypeCallback;
 	const static String kTypePush;
 	const static String kTypePop;
-	const static String kTypeModale;
+	const static String kTypeModal;
 	const static String kTypeDismiss;
 	const static String kCallback;
 	const static String kNameToast;
