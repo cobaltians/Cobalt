@@ -847,7 +847,7 @@ NSString * webLayerPage;
     NSNumber * fadeDuration = ([data objectForKey:kJSWebLayerFadeDuration] && [[data objectForKey:kJSWebLayerFadeDuration] isKindOfClass:[NSNumber class]]) ? [data objectForKey:kJSWebLayerFadeDuration] : [NSNumber numberWithFloat:0.3];
     
     if (webLayerPage) {
-        webLayer = [[UIWebView alloc] initWithFrame:self.view.frame];
+        webLayer = [[UIWebView alloc] initWithFrame:self.view.bounds];
         [webLayer setDelegate:self];
         [webLayer setAlpha:0.0];
         [webLayer setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
