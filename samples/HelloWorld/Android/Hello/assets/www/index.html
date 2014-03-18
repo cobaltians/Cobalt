@@ -24,9 +24,16 @@
                            
                         }
                     }
-                });
+                });				
+				
+				$('p').on('tap',function(){
+					cobalt.webLayer('show','webLayerExample.html');
+				})
                 
             });
+			
+			
+			
 			
 			function refreshContent( callback ){
 				cobalt.log('refreshing content')
