@@ -106,9 +106,7 @@
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
 		<script>
 	        Zepto(function($){            
-	            cobalt.init({
-	            	debug:true
-	            });
+	            cobalt.init();
 				
 				$('#post').on('tap',function(){
 					cobalt.webLayer('dismiss',{ newComment : "42" })
