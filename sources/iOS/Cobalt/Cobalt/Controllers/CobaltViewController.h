@@ -79,8 +79,9 @@
 #define JSCallbackInfiniteScrollDidRefresh  @"infiniteScrollDidRefresh"
 
 // UI
-#define JSTypeUI                            @"ui"
+#define kJSTypeUI                           @"ui"
 #define kJSUIControl                        @"control"
+#define kJSTypeImage                        @"image"
 
 // ALERT
 #define JSControlAlert                      @"alert"

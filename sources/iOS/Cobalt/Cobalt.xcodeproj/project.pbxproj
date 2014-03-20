@@ -10,6 +10,8 @@
 		71B4B1AB1885C7CE0027AC4F /* Cobalt.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1981885C7CE0027AC4F /* Cobalt.m */; };
 		71B4B1AE1885C7CE0027AC4F /* CobaltViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B19F1885C7CE0027AC4F /* CobaltViewController.m */; };
 		71B4B1B21885C7CE0027AC4F /* CobaltToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1A81885C7CE0027AC4F /* CobaltToast.m */; };
+		8EA5A52E18DB199600330396 /* ImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA5A52D18DB199600330396 /* ImageManager.m */; };
+		8EA5A53018DB1AEE00330396 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EA5A52F18DB1AEE00330396 /* AssetsLibrary.framework */; };
 		BE8A3EAB1886D43C00C3B479 /* iToast.m in Sources */ = {isa = PBXBuildFile; fileRef = BE8A3EAA1886D43C00C3B479 /* iToast.m */; };
 		F01A59ED1716EDB50000DD94 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F01A59EC1716EDB50000DD94 /* Foundation.framework */; };
 /* End PBXBuildFile section */
@@ -34,6 +36,9 @@
 		71B4B19F1885C7CE0027AC4F /* CobaltViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltViewController.m; sourceTree = "<group>"; };
 		71B4B1A71885C7CE0027AC4F /* CobaltToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltToast.h; sourceTree = "<group>"; };
 		71B4B1A81885C7CE0027AC4F /* CobaltToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltToast.m; sourceTree = "<group>"; };
+		8EA5A52C18DB199600330396 /* ImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageManager.h; path = Model/ImageManager.h; sourceTree = "<group>"; };
+		8EA5A52D18DB199600330396 /* ImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImageManager.m; path = Model/ImageManager.m; sourceTree = "<group>"; };
+		8EA5A52F18DB1AEE00330396 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		BE8A3EA91886D43C00C3B479 /* iToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iToast.h; path = Cobalt/iToast.h; sourceTree = SOURCE_ROOT; };
 		BE8A3EAA1886D43C00C3B479 /* iToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iToast.m; path = Cobalt/iToast.m; sourceTree = SOURCE_ROOT; };
 		F01A59E91716EDB50000DD94 /* libCobalt.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCobalt.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -46,6 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EA5A53018DB1AEE00330396 /* AssetsLibrary.framework in Frameworks */,
 				F01A59ED1716EDB50000DD94 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -61,6 +67,8 @@
 				71B4B1981885C7CE0027AC4F /* Cobalt.m */,
 				71B4B1991885C7CE0027AC4F /* Controllers */,
 				71B4B1A61885C7CE0027AC4F /* Toast */,
+				8EA5A52C18DB199600330396 /* ImageManager.h */,
+				8EA5A52D18DB199600330396 /* ImageManager.m */,
 			);
 			path = Cobalt;
 			sourceTree = "<group>";
@@ -116,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				C4060B28171D84F6001B393E /* Toast */,
+				8EA5A52F18DB1AEE00330396 /* AssetsLibrary.framework */,
 				F01A59EC1716EDB50000DD94 /* Foundation.framework */,
 			);
 			name = Frameworks;
@@ -174,6 +183,7 @@
 			files = (
 				BE8A3EAB1886D43C00C3B479 /* iToast.m in Sources */,
 				71B4B1AB1885C7CE0027AC4F /* Cobalt.m in Sources */,
+				8EA5A52E18DB199600330396 /* ImageManager.m in Sources */,
 				71B4B1AE1885C7CE0027AC4F /* CobaltViewController.m in Sources */,
 				71B4B1B21885C7CE0027AC4F /* CobaltToast.m in Sources */,
 			);

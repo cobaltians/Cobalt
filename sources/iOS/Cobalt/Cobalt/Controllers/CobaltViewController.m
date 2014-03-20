@@ -514,7 +514,7 @@ NSString * webLayerPage;
         }
         
         // UI
-        else if ([type isEqualToString:JSTypeUI]) {
+        else if ([type isEqualToString:kJSTypeUI]) {
             NSString * control = [dict objectForKey:kJSUIControl];
             NSDictionary * data = [dict objectForKey:kJSData];
             
