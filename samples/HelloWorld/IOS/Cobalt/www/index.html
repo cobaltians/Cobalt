@@ -4,38 +4,43 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
         <link rel="stylesheet" href="css/style.css"/>
-        <title>Hello World</title>
-            
     </head>
     <body>
+       <p>Pull to refresh :)</p>
+
         <script type="text/javascript" src="js/zepto.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
-            
-        
-            
-            <p>Pull to refresh</p>
-                
         
         <script>
             Zepto(function($){
                 
-                cobalt.init({                    	
+                cobalt.init({
+					debug:true,                    	
                     events:{
-                        "pullToRefreshRefresh" : function(event){
+                        "pullToRefresh" : function(data,callback){
                             cobalt.log('Refresh');                           
-                            cobalt.sendCallback(event);
-                            var hellos=new Array("Hello !","Refreshing !","Great !","Fast !", ";-)");
-                            var elemlength = hellos.length;
-                            var randomnum = Math.floor(Math.random()*elemlength);
-                            var randomitem = hellos[randomnum];
-                            $('p').html(randomitem);
+                            refreshContent(function(){
+                            	cobalt.sendCallback(callback);
+                            });
+                           
                         }
                     }
                 });
                 
-                
             });
-            
+			
+			function refreshContent( callback ){
+				cobalt.log('refreshing content')
+			
+	            var hellos=new Array("Hello !","Bonjour !","Guten tag !","Ola !");
+	            var randomitem = hellos[ Math.floor( Math.random() * hellos.length )];
+	            $('p').html(randomitem);
+			
+				if (callback){
+					callback();
+				}
+			
+			}
             
         </script>
     </body>
