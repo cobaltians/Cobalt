@@ -225,7 +225,21 @@ var cobalt={
 			break;
 		}
 	},
-
+	/*
+		open an url in the device browser.
+		//cobalt.openExternalUrl("http://cobaltians.com")
+	*/
+	openExternalUrl:function(url){
+		if (url){
+			cobalt.send({
+				type: "intent",
+				action: "openExternalUrl",
+				data: {
+					url: url
+	    		}
+			});
+		}
+	},
     /* internal, called from native */
     execute:function(json){
     	//cobalt.log(data,false)

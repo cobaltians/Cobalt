@@ -225,7 +225,21 @@ var cobalt={
 			break;
 		}
 	},
-
+	/*
+		open an url in the device browser.
+		//cobalt.openExternalUrl("http://cobaltians.com")
+	*/
+	openExternalUrl:function(url){
+		if (url){
+			cobalt.send({
+				type: "intent",
+				action: "openExternalUrl",
+				data: {
+					url: url
+	    		}
+			});
+		}
+	},
     /* internal, called from native */
     execute:function(json){
     	//cobalt.log(data,false)
@@ -390,21 +404,24 @@ var cobalt={
 		getItem:function(uid, type){
 			if (this.storage){
 				var val=this.storage.getItem(uid);
-				switch(type){
-					case undefined :return val;
-					case "int":     return parseInt(val);
-					case "float":   return parseFloat(val);
-					case "date":    return new Date(val);
-					case "json":    return JSON.parse(val)
+				if (val){
+					switch(type){
+						case undefined :return val;
+						case "int":     return parseInt(val);
+						case "float":   return parseFloat(val);
+						case "date":    return new Date(val);
+						case "json":    return JSON.parse(val)
+					}
+					return val;						
 				}
-				return val;
+				return undefined;
 			}
 		},
 		setItem:function(uid, value, type){
 			if (this.storage){
 				switch ( type ){
-					case undefined :return this.storage.setItem(uid,""+value);
 					case 'json' :   return this.storage.setItem(uid, JSON.stringify(value));
+					default : 		return this.storage.setItem(uid,""+value);
 				}
 			}
 		},
