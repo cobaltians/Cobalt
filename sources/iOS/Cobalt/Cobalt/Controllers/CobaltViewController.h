@@ -100,6 +100,11 @@
 #define kJSWebLayerFadeDuration             @"fadeDuration"
 #define JSEventWebLayerOnDismiss            @"onWebLayerDismissed"
 
+//INTENT
+#define kJSTypeIntent                        @"intent"
+#define kJSActionOpenExternalUrl             @"openExternalUrl"
+#define kJSUrl                               @"url"
+
 // HTML
 #define defaultHtmlPage                     @"index.html"
 

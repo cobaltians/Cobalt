@@ -609,7 +609,23 @@ NSString * webLayerPage;
             }
 #endif
         }
-        
+        // INTENT
+        else if ([type isEqualToString:kJSTypeIntent]) {
+            NSString * action = [dict objectForKey:kJSAction];
+            NSDictionary * data = [dict objectForKey:kJSData];
+            
+            if (action
+                && [action isKindOfClass:[NSString class]]) {
+                
+                // OPEN EXTERNAL URL
+                if ([action isEqualToString: kJSActionOpenExternalUrl]) {
+                    NSString * url = [data objectForKey: kJSUrl];
+                    if([url isKindOfClass: [NSString class]]) {
+                        [[UIApplication sharedApplication] openURL: [NSURL URLWithString: url]];
+                    }
+                }
+            }
+        }
         else {
 #if DEBUG_COBALT
             NSLog(@"handleDictionarySentByJavaScript: unhandled message %@", [dict description]);
