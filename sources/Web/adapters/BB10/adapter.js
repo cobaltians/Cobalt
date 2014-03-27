@@ -7,11 +7,11 @@ cobalt.bb10_adapter={
  		try{
  			navigator.cascades.onmessage = cobalt.execute
  		}catch(e){
- 	        cobalt.log('cant bind JS to native', false)
+ 	        cobalt.log('cant bind JS to native')
  		}
 
 		//fix ajax calls with a native patch
-		if (!cobalt.debugAjax){
+		if (!cobalt.debugInBrowser){
 			var lib=window.Zepto || window.jQuery;
 			lib.ajax=function(options){
 				cobalt.sendEvent('ajax',{options : options},function(params){
@@ -33,7 +33,7 @@ cobalt.bb10_adapter={
 	
 	// handle events sent by native side
     handleEvent:function(json){
-		cobalt.log("----received : "+JSON.stringify(json), false)
+		cobalt.log("received event", json.event )
 		if (cobalt.userEvents && typeof cobalt.userEvents[json.event] === "function"){
 			cobalt.userEvents[json.event](json.data,json.callback);
 	    }else{
@@ -47,12 +47,12 @@ cobalt.bb10_adapter={
     },
     //send native stuff
     send:function(obj){
-        if (obj && cobalt.sendingToNative){
-        	cobalt.log('----sending :'+JSON.stringify(obj), false)
+        if (obj && !cobalt.debugInBrowser){
+        	cobalt.divLog('sending', obj)
 	        try{	        	
 		        navigator.cascades.postMessage(encodeURIComponent(JSON.stringify(obj)));
 	        }catch (e){
-		        cobalt.log('cant connect to native', false)
+		        cobalt.log('cant connect to native')
 	        }
 
         }

@@ -12,10 +12,10 @@ cobalt.ios_adapter={
     handleCallback:function(json){
         switch(json.callback){
             case "callbackSimpleAcquitment":
-                //cobalt.log("received callbackSimpleAcquitment", false)
+                cobalt.divLog("received message acquitment")
                 cobalt.adapter.unpipe();
                 if (cobalt.adapter.pipeline.length==0){
-                    cobalt.log('set pipe running=false', false)
+                    cobalt.divLog('end of ios message stack')
                     cobalt.adapter.pipelineRunning=false;
                 }
                 break;
@@ -26,7 +26,7 @@ cobalt.ios_adapter={
     },
     //send native stuff
     send:function(obj){
-	    cobalt.log('adding to pipe', false)
+	    cobalt.divLog('adding to ios message stack', obj)
         cobalt.adapter.pipeline.push(obj);
         if (!cobalt.adapter.pipelineRunning){
             cobalt.adapter.unpipe()
@@ -36,8 +36,8 @@ cobalt.ios_adapter={
     unpipe:function(){
         cobalt.adapter.pipelineRunning=true;
         var objToSend=cobalt.adapter.pipeline.shift();
-	    if (objToSend && cobalt.sendingToNative){
-            cobalt.log('----sending : '+JSON.stringify(objToSend), false)
+	    if (objToSend && !cobalt.debugInBrowser){
+            cobalt.divLog('sending',objToSend)
             document.location.href=encodeURIComponent("h@ploid#k&y"+JSON.stringify(objToSend));
         }
     },

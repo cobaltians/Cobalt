@@ -41,7 +41,7 @@ cobalt.tizen_adapter={
 	
 	// handle events sent by native side
     handleEvent:function(json){
-		cobalt.log("----received : "+JSON.stringify(json), false)
+		cobalt.log("received event", json.event )
 		if (cobalt.userEvents && typeof cobalt.userEvents[json.event] === "function"){
 			cobalt.userEvents[json.event](json.data,json.callback);
 	    }else{
@@ -55,13 +55,12 @@ cobalt.tizen_adapter={
     },
     //send native stuff
     send:function(obj){
-        if (obj && cobalt.sendingToNative){
-        	cobalt.log('----sending :'+JSON.stringify(obj), false)
-	        try{	        	
-				var jsondata = {name:"HPNativeBridge", data:obj};
-				Tizen.requestToNative(JSON.stringify(jsondata));        
+        if (obj && !cobalt.debugInBrowser){
+        	cobalt.log('sending', obj )
+	        try{
+				Tizen.requestToNative(JSON.stringify({name:"HPNativeBridge", data:obj}));
 			}catch (e){
-		        cobalt.log('cant connect to native : '+e, false)
+		        cobalt.log('cant connect to native : '+e)
 	        }
         }
     },
