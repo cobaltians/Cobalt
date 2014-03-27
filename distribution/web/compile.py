@@ -34,9 +34,12 @@ for str_os in ['iOs', 'Android', 'BB10', 'Tizen']:
         os.chdir(concatened_file_folder_path)
         os.system('uglifyjs {libName}.js > {libName}.min.js'.format(libName=libName))
         
-        
     else:
         print "error : no adapter file for %s" % str_os
+
+print "\n---copying files to samples apps"
+os.chdir(os.pardir)
+os.system('./updateSamples.sh')
     
     
     
