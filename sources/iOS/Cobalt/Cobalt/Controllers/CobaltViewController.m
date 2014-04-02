@@ -363,6 +363,46 @@ NSString * webLayerPage;
 #endif
 }
 
+- (void)sendCallbackToWebLayer:(NSString *)callback withData:(NSObject *)data
+{
+    if (callback
+        && callback.length > 0) {
+        NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeCallBack, kJSType,
+                               callback, kJSCallback,
+                               data, kJSData,
+                               nil];
+        [self executeScriptInWebView:webLayer withDictionary:dict];
+    }
+#if DEBUG_COBALT
+    else {
+        NSLog(@"sendCallbackToWebLayer: invalid callback (null or empty)");
+    }
+#endif
+}
+
+- (void)sendEventToWebLayer:(NSString *)event withData:(NSObject *)data andCallback:(NSString *)callback
+{
+    if (event
+        && event.length > 0) {
+        NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithObjectsAndKeys: JSTypeEvent, kJSType,
+                                      event, kJSEvent,
+                                      nil];
+        if (data) {
+            [dict setObject:data forKey:kJSData];
+        }
+        if (callback) {
+            [dict setObject:callback forKey:kJSCallback];
+        }
+        
+        [self executeScriptInWebView:webLayer withDictionary:dict];
+    }
+#if DEBUG_COBALT
+    else {
+        NSLog(@"sendEventToWebLayer: invalid event (null or empty)");
+    }
+#endif
+}
+
 - (BOOL)handleDictionarySentByJavaScript:(NSDictionary *)dict
 {
     NSString * type = [dict objectForKey:kJSType];
