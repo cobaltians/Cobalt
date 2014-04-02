@@ -259,6 +259,10 @@
  */
 - (void)sendEvent:(NSString *)event withData:(NSObject *)data andCallback:(NSString *)callback;
 
+- (void)sendCallbackToWebLayer:(NSString *)callback withData:(NSObject *)data;
+
+- (void)sendEventToWebLayer:(NSString *)event withData:(NSObject *)data andCallback:(NSString *)callback;
+
 /*!
  @method		-(void)handleDictionarySentByJavaScript:(NSDictionary *)dict
  @abstract		this method gets a JSON from the webView to use so as to fire native methods (allows interactions from the webView to the native)
