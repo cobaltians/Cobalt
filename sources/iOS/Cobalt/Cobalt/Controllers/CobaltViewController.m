@@ -930,9 +930,11 @@ NSString * webLayerPage;
 }
 
 // TODO: like Android code, implement getDataForDismiss
-- (void)dismissWebLayer:(NSDictionary *)data
+- (void)dismissWebLayer:(NSDictionary *)dict
 {
-    NSNumber * fadeDuration = (data && [data objectForKey:kJSWebLayerFadeDuration] && [[data objectForKey:kJSWebLayerFadeDuration] isKindOfClass:[NSNumber class]]) ? [data objectForKey:kJSWebLayerFadeDuration] : [NSNumber numberWithFloat:0.3];
+    NSNumber * fadeDuration = (dict && [dict objectForKey:kJSWebLayerFadeDuration] && [[dict objectForKey:kJSWebLayerFadeDuration] isKindOfClass:[NSNumber class]]) ? [dict objectForKey:kJSWebLayerFadeDuration] : [NSNumber numberWithFloat:0.3];
+    
+    NSDictionary * data = (dict && [dict objectForKey:kJSData] && [[dict objectForKey:kJSData] isKindOfClass:[NSDictionary class]]) ? [dict objectForKey:kJSData] : nil;
     
     [UIView animateWithDuration:fadeDuration.floatValue animations:^{
         [webLayer setAlpha:0.0];
@@ -941,16 +943,17 @@ NSString * webLayerPage;
         [webLayer setDelegate:nil];
         webLayer = nil;
 
-        [self onWebLayerDismissed:webLayerPage];
+        [self onWebLayerDismissed:webLayerPage withData:data];
         webLayerPage = nil;
     }];
 }
 
-- (void)onWebLayerDismissed:(NSString *)page
+- (void)onWebLayerDismissed:(NSString *)page withData:(NSDictionary *)data
 {
-    NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys:   page, kJSPage,
+    NSDictionary * params = [NSDictionary dictionaryWithObjectsAndKeys: page, kJSPage,
+                                                                        data, kJSData,
                                                                         nil];
-    [self sendEvent:JSEventWebLayerOnDismiss withData:data andCallback:nil];
+    [self sendEvent:JSEventWebLayerOnDismiss withData:params andCallback:nil];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
