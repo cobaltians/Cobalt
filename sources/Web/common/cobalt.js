@@ -331,9 +331,11 @@ var cobalt={
 	},
 	toString: function(stuff){
         switch (typeof  stuff){
+            case "string":
+                break;
             case "function":
                 stuff = (""+stuff.call).replace('native','web')//to avoid panic ;)
-                break;
+                break;            
             default:
                 try{
                     stuff=JSON.stringify(stuff)
