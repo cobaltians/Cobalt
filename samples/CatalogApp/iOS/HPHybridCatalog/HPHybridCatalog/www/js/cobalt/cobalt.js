@@ -25,8 +25,9 @@
 var cobalt={
     
     userEvents:{}, //objects of events defined by the user
-	debug:false, //disable stuff for all cobalt. dont send logs to native
-	sendingToNative:true, //enable or disable native calls
+	debug:false,
+	debugInBrowser:false,
+	debugInLogdiv:false,
 
 	callbacks:{},//array of all callbacks by callbackID
 	lastCallbackId:0,
@@ -36,26 +37,23 @@ var cobalt={
 	*/
 	init:function(options){
     	if (options){
-			if (options.sendingToNative===false){
-				this.sendingToNative=false;
-			}
-			if (options.debug===true){
-				this.debug=true;
-				this.createLogDiv();
-			}
-		    if (options.debugAjax===true){
-			    this.debugAjax=true;
-		    }
-			if (options.events){
+            this.debug = ( options.debug === true );
+            this.debugInBrowser = ( options.debugInBrowser === true );
+            this.debugInLogdiv = ( options.debugInLogdiv === true );
+
+		    if (options.events){
 		        this.userEvents=options.events
 	        }
+            if (cobalt.debugInLogdiv){
+			    this.createLogDiv();
+            }
 		}
 		cobalt.storage.enable();
 
 		if (cobalt.adapter.init){
 			cobalt.adapter.init();
 		}
-		//send cobalt is ready event to native
+        //send cobalt is ready event to native
 		cobalt.send({'type':'cobaltIsReady'})
     },
 	addEventListener:function(eventName, handlerFunction){
@@ -68,28 +66,46 @@ var cobalt={
 			this.userEvents[eventName] = undefined;
 		}
 	},
-	/*	cobalt.log(stuff,sendLogToNative)
-		stuff : a string or an object. object will be json-ised
-		sendLogToNative : boolean to call native log function. default to true.
-			be carefull of looping calls !
+	/*	cobalt.log(stuff,...)
+		all arguments can be a string or an object. object will be json-ised and separated with a space.
+		cobalt.log('toto')
+		cobalt.log('a',5,{"hip":"hop"})
 	*/
-	log:function( stuff, sendLogToNative ){
-	    if ( cobalt.debug ){
-		    if (sendLogToNative === undefined) sendLogToNative=true;
-		 	stuff=cobalt.toString(stuff)
-		    var logdiv=$('#cobalt_logdiv')
-		   	if (logdiv.length){
-				try{
-                    logdiv.append("<br/>"+cobalt.HTMLEncode(stuff));
-                }catch(e){
-                    logdiv.append("<br/><b>cobalt.log failed on something.</b>");
-                }
-			}
-		    if( sendLogToNative ){
-			    cobalt.send({ type : "log", value : stuff })
-	        }
-	    }
+	log:function(){
+        var logString=cobalt.argumentsToString(arguments);
+        if ( cobalt.debug ){
+            if (cobalt.debugInBrowser && window.console){
+                console.log(logString);
+            }else{
+                cobalt.send({ type : "log", value : logString })
+            }
+            cobalt.divLog(logString)
+        }
     },
+    //TODO change all dependencies
+    divLog:function(){
+        //TODO document this
+        if (cobalt.debugInLogdiv){
+            var logdiv=$('#cobalt_logdiv')
+            if (logdiv.length){
+                var logString="<br/>"+cobalt.argumentsToString(arguments);
+                try{
+                    logdiv.append(logString);
+                }catch(e){
+                    logdiv.append("<b>cobalt.log failed on something.</b>");
+                }
+            }
+        }
+    },
+    argumentsToString:function(){
+        var stringItems=[];
+        //ensure arguments[0] exists?
+        $.each(arguments[0],function(i,elem){
+            stringItems.push(cobalt.toString(elem))
+        })
+        return stringItems.join(' ');
+    },
+    //TODO change all dependencies, enhance
 	/* internal, create log div if needed */
 	createLogDiv:function(){
 		if ($('#cobalt_logdiv').length==0){
@@ -98,8 +114,10 @@ var cobalt={
 			$('#cobalt_logdiv').on('tap',cobalt.toggleLogDiv).on('click',cobalt.toggleLogDiv);
 		}
 	},
+	//TODO change all dependencies, enhance
 	/* internal, toggle visibility of log div if log div was created by the lib */
 	toggleLogDiv:function(){
+        //TODO remove $() dependencie
 		if ($(this).css('width')!="250px"){
 			$(this).css({ width : '250px', height:'300px', overflow:"scroll"});
 		}else{
@@ -117,6 +135,10 @@ var cobalt={
 				obj.callback = ""+callback;
 			}
 	    }
+        if (cobalt.debugInBrowser){
+            cobalt.log('sending', obj)
+        }
+
 		cobalt.adapter.send(obj, callback)
 	},
 	//Sends an event to native side.
@@ -135,7 +157,7 @@ var cobalt={
 	//See doc for guidelines.
     sendCallback:function(callback, data){
 		if (typeof callback ==="string" && callback.length > 0){
-			//cobalt.log("calling callback with "+JSON.stringify({type:"typeCallback", callback:callback, data: data}))
+			cobalt.divLog("calling callback with callback id = ",callback)
 			cobalt.send({type:"callback", callback : callback, data: data})
 	    }
 	},
@@ -242,7 +264,7 @@ var cobalt={
 	},
     /* internal, called from native */
     execute:function(json){
-    	//cobalt.log(data,false)
+    	cobalt.divLog("received", json)
         /*test if data.type exists, otherwise parse data or die silently */
         if (json && ! json.type){
         	try{
@@ -268,7 +290,7 @@ var cobalt={
     },
 	//internal function to try calling callbackID if it's representing a string or a function.
 	tryToCallCallback:function(callback){
-		//cobalt.log('trying to call web callback')
+		cobalt.divLog('trying to call web callback')
 		var callbackfunction=null;
         if (cobalt.isNumber(callback.callback) && typeof cobalt.callbacks[callback.callback]==="function"){
 	        //if it's a number, a real JS callback should exist in cobalt.callbacks
@@ -308,13 +330,18 @@ var cobalt={
 		return ( Object.prototype.toString.call( arr ) === '[object Array]' );
 	},
 	toString: function(stuff){
-		if (typeof stuff != "string"){
-			try{
-				stuff=JSON.stringify(stuff)
-			}catch (e){
-				stuff = ""+stuff;
-			}
-		}
+        switch (typeof  stuff){
+            case "function":
+                stuff = (""+stuff.call).replace('native','web')//to avoid panic ;)
+                break;
+            default:
+                try{
+                    stuff=JSON.stringify(stuff)
+                }catch (e){
+                    stuff = ""+stuff;
+                }
+
+        }
 		return stuff;
 	},
 	HTMLEncode:function(value){
@@ -323,17 +350,9 @@ var cobalt={
     HTMLDecode:function(value){
         return $('<div/>').html(value || '').text();
     },
-	checkDependency:function(dependency){
-		switch(dependency){
-			case "storage":
-				return cobalt.storage.enable()
-			break;
-		}
-	},
-
-	defaultBehaviors:{
+    defaultBehaviors:{
 		handleEvent:function(json){
-			cobalt.log("received : "+JSON.stringify(json), false)
+			cobalt.log("received event", json.event)
 		    if (cobalt.userEvents && typeof cobalt.userEvents[json.event] === "function"){
 				cobalt.userEvents[json.event](json.data,json.callback);
 		    }
@@ -418,6 +437,7 @@ var cobalt={
 			}
 		},
 		setItem:function(uid, value, type){
+            //TODO Fix BUG when using setItem undefined and type=json
 			if (this.storage){
 				switch ( type ){
 					case 'json' :   return this.storage.setItem(uid, JSON.stringify(value));
@@ -432,10 +452,7 @@ var cobalt={
 		}
 	}
 
-
-
-};
-cobalt.ios_adapter={
+};cobalt.ios_adapter={
 	//
 	//IOS ADAPTER
 	//
@@ -449,10 +466,10 @@ cobalt.ios_adapter={
     handleCallback:function(json){
         switch(json.callback){
             case "callbackSimpleAcquitment":
-                //cobalt.log("received callbackSimpleAcquitment", false)
+                cobalt.divLog("received message acquitment")
                 cobalt.adapter.unpipe();
                 if (cobalt.adapter.pipeline.length==0){
-                    cobalt.log('set pipe running=false', false)
+                    cobalt.divLog('end of ios message stack')
                     cobalt.adapter.pipelineRunning=false;
                 }
                 break;
@@ -463,7 +480,7 @@ cobalt.ios_adapter={
     },
     //send native stuff
     send:function(obj){
-	    cobalt.log('adding to pipe', false)
+	    cobalt.divLog('adding to ios message stack', obj)
         cobalt.adapter.pipeline.push(obj);
         if (!cobalt.adapter.pipelineRunning){
             cobalt.adapter.unpipe()
@@ -473,8 +490,8 @@ cobalt.ios_adapter={
     unpipe:function(){
         cobalt.adapter.pipelineRunning=true;
         var objToSend=cobalt.adapter.pipeline.shift();
-	    if (objToSend && cobalt.sendingToNative){
-            cobalt.log('----sending : '+JSON.stringify(objToSend), false)
+	    if (objToSend && !cobalt.debugInBrowser){
+            cobalt.divLog('sending',objToSend)
             document.location.href=encodeURIComponent("h@ploid#k&y"+JSON.stringify(objToSend));
         }
     },

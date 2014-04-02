@@ -452,10 +452,7 @@ var cobalt={
 		}
 	}
 
-};
-
-
-cobalt.ios_adapter={
+};cobalt.ios_adapter={
 	//
 	//IOS ADAPTER
 	//
