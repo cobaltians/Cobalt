@@ -100,6 +100,11 @@
 #define kJSWebLayerFadeDuration             @"fadeDuration"
 #define JSEventWebLayerOnDismiss            @"onWebLayerDismissed"
 
+//INTENT
+#define kJSTypeIntent                        @"intent"
+#define kJSActionOpenExternalUrl             @"openExternalUrl"
+#define kJSUrl                               @"url"
+
 // HTML
 #define defaultHtmlPage                     @"index.html"
 
@@ -253,6 +258,10 @@
  @discussion    This method should NOT be overridden in subclasses.
  */
 - (void)sendEvent:(NSString *)event withData:(NSObject *)data andCallback:(NSString *)callback;
+
+- (void)sendCallbackToWebLayer:(NSString *)callback withData:(NSObject *)data;
+
+- (void)sendEventToWebLayer:(NSString *)event withData:(NSObject *)data andCallback:(NSString *)callback;
 
 /*!
  @method		-(void)handleDictionarySentByJavaScript:(NSDictionary *)dict

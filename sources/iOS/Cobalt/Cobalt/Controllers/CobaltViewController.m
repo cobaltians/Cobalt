@@ -363,6 +363,46 @@ NSString * webLayerPage;
 #endif
 }
 
+- (void)sendCallbackToWebLayer:(NSString *)callback withData:(NSObject *)data
+{
+    if (callback
+        && callback.length > 0) {
+        NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeCallBack, kJSType,
+                               callback, kJSCallback,
+                               data, kJSData,
+                               nil];
+        [self executeScriptInWebView:webLayer withDictionary:dict];
+    }
+#if DEBUG_COBALT
+    else {
+        NSLog(@"sendCallbackToWebLayer: invalid callback (null or empty)");
+    }
+#endif
+}
+
+- (void)sendEventToWebLayer:(NSString *)event withData:(NSObject *)data andCallback:(NSString *)callback
+{
+    if (event
+        && event.length > 0) {
+        NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithObjectsAndKeys: JSTypeEvent, kJSType,
+                                      event, kJSEvent,
+                                      nil];
+        if (data) {
+            [dict setObject:data forKey:kJSData];
+        }
+        if (callback) {
+            [dict setObject:callback forKey:kJSCallback];
+        }
+        
+        [self executeScriptInWebView:webLayer withDictionary:dict];
+    }
+#if DEBUG_COBALT
+    else {
+        NSLog(@"sendEventToWebLayer: invalid event (null or empty)");
+    }
+#endif
+}
+
 - (BOOL)handleDictionarySentByJavaScript:(NSDictionary *)dict
 {
     NSString * type = [dict objectForKey:kJSType];
@@ -609,7 +649,23 @@ NSString * webLayerPage;
             }
 #endif
         }
-        
+        // INTENT
+        else if ([type isEqualToString:kJSTypeIntent]) {
+            NSString * action = [dict objectForKey:kJSAction];
+            NSDictionary * data = [dict objectForKey:kJSData];
+            
+            if (action
+                && [action isKindOfClass:[NSString class]]) {
+                
+                // OPEN EXTERNAL URL
+                if ([action isEqualToString: kJSActionOpenExternalUrl]) {
+                    NSString * url = [data objectForKey: kJSUrl];
+                    if([url isKindOfClass: [NSString class]]) {
+                        [[UIApplication sharedApplication] openURL: [NSURL URLWithString: url]];
+                    }
+                }
+            }
+        }
         else {
 #if DEBUG_COBALT
             NSLog(@"handleDictionarySentByJavaScript: unhandled message %@", [dict description]);
@@ -876,7 +932,10 @@ NSString * webLayerPage;
 // TODO: like Android code, implement getDataForDismiss
 - (void)dismissWebLayer:(NSDictionary *)data
 {
-    NSNumber * fadeDuration = (data && [data objectForKey:kJSWebLayerFadeDuration] && [[data objectForKey:kJSWebLayerFadeDuration] isKindOfClass:[NSNumber class]]) ? [data objectForKey:kJSWebLayerFadeDuration] : [NSNumber numberWithFloat:0.3];
+    // Guillaume told me that having a customizable fadeDuration is a bad idea. So, it's a fixed fadeDuration...
+    // REMEMBER, So if Guillaume tell me the opposite, it owe me a chocolate croissant :)
+    NSNumber * fadeDuration = [NSNumber numberWithFloat:0.3];
+    //NSNumber * fadeDuration = (dict && [dict objectForKey:kJSWebLayerFadeDuration] && [[dict objectForKey:kJSWebLayerFadeDuration] isKindOfClass:[NSNumber class]]) ? [dict objectForKey:kJSWebLayerFadeDuration] : [NSNumber numberWithFloat:0.3];
     
     [UIView animateWithDuration:fadeDuration.floatValue animations:^{
         [webLayer setAlpha:0.0];
@@ -885,14 +944,15 @@ NSString * webLayerPage;
         [webLayer setDelegate:nil];
         webLayer = nil;
 
-        [self onWebLayerDismissed:webLayerPage];
+        [self onWebLayerDismissed:webLayerPage withData:data];
         webLayerPage = nil;
     }];
 }
 
-- (void)onWebLayerDismissed:(NSString *)page
+- (void)onWebLayerDismissed:(NSString *)page withData:(NSDictionary *)dict
 {
     NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys:   page, kJSPage,
+                                                                        dict, kJSData,
                                                                         nil];
     [self sendEvent:JSEventWebLayerOnDismiss withData:data andCallback:nil];
 }
