@@ -86,6 +86,7 @@ var cobalt={
     divLog:function(){
         //TODO document this
         if (cobalt.debugInLogdiv){
+	        cobalt.createLogDiv();
             var logdiv=$('#cobalt_logdiv')
             if (logdiv.length){
                 var logString="<br/>"+cobalt.argumentsToString(arguments);
@@ -110,8 +111,7 @@ var cobalt={
 	createLogDiv:function(){
 		if ($('#cobalt_logdiv').length==0){
 			//create usefull log div:
-			$('body').append('<div id="cobalt_logdiv" style="position: absolute; top:10px; right: 10px; padding:10px; width:10px; height: 10px; border:1px solid blue; overflow: hidden; "></div>')
-			$('#cobalt_logdiv').on('tap',cobalt.toggleLogDiv).on('click',cobalt.toggleLogDiv);
+			$('body').append('<div id="cobalt_logdiv" style="width:100%; text-align: left; height: 100px; border:1px solid blue; overflow: scroll; background:#eee;"></div>')
 		}
 	},
 	//TODO change all dependencies, enhance
@@ -138,7 +138,6 @@ var cobalt={
         if (cobalt.debugInBrowser){
             cobalt.log('sending', obj)
         }
-
 		cobalt.adapter.send(obj, callback)
 	},
 	//Sends an event to native side.

@@ -22,7 +22,7 @@ cobalt.android_adapter={
     //send native stuff
     send:function(obj){
         if (obj && !cobalt.debugInBrowser){
-        	cobalt.log('sending',obj)
+        	cobalt.divLog('sending',obj)
 	        try{	        	
 		        Android.handleMessageSentByJavaScript(JSON.stringify(obj));
 	        }catch (e){

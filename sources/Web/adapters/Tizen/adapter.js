@@ -56,7 +56,7 @@ cobalt.tizen_adapter={
     //send native stuff
     send:function(obj){
         if (obj && !cobalt.debugInBrowser){
-        	cobalt.log('sending', obj )
+        	cobalt.divLog('sending', obj )
 	        try{
 				Tizen.requestToNative(JSON.stringify({name:"HPNativeBridge", data:obj}));
 			}catch (e){
