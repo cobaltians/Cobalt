@@ -418,10 +418,10 @@ NSString * webLayerPage;
             if (callback
                 && [callback isKindOfClass:[NSString class]]) {
                 if ([callback isEqualToString:JSCallbackPullToRefreshDidRefresh]) {
-                    [self performSelectorOnMainThread:@selector(onPullToRefreshDidRefresh) withObject:nil waitUntilDone:YES];
+                    [self onPullToRefreshDidRefresh];
                 }
                 else if ([callback isEqualToString:JSCallbackInfiniteScrollDidRefresh]) {
-                    [self performSelectorOnMainThread:@selector(onInfiniteScrollDidRefresh) withObject:nil waitUntilDone:YES];
+                    [self onInfiniteScrollDidRefresh];
                 }
                 else {
 #if DEBUG_COBALT
@@ -503,7 +503,7 @@ NSString * webLayerPage;
                     NSDictionary * data = [dict objectForKey:kJSData];
                     if (data
                         && [data isKindOfClass:[NSDictionary class]]) {
-                        [self performSelectorOnMainThread:@selector(pushViewControllerWithData:) withObject:data waitUntilDone:YES];
+                        [self pushViewControllerWithData:data];
                     }
 #if DEBUG_COBALT
                     else {
@@ -513,14 +513,14 @@ NSString * webLayerPage;
                 }
                 //POP
                 else if ([action isEqualToString:JSActionNavigationPop]) {
-                    [self performSelectorOnMainThread:@selector(popViewController) withObject:nil waitUntilDone:YES];
+                    [self popViewController];
                 }
                 //MODAL
                 else if ([action isEqualToString:JSActionNavigationModal]) {
                     NSDictionary * data = [dict objectForKey:kJSData];
                     if (data
                         && [data isKindOfClass:[NSDictionary class]]) {
-                            [self performSelectorOnMainThread:@selector(presentViewControllerWithData:) withObject:data waitUntilDone:YES];
+                            [self presentViewControllerWithData:data];
                     }
 #if DEBUG_COBALT
                     else {
@@ -530,7 +530,7 @@ NSString * webLayerPage;
                 }
                 //DISMISS
                 else if ([action isEqualToString:JSActionNavigationDismiss]) {
-                    [self performSelectorOnMainThread:@selector(dismissViewController) withObject:nil waitUntilDone:YES];
+                    [self dismissViewController];
                 }
                 else {
 #if DEBUG_COBALT
@@ -574,7 +574,7 @@ NSString * webLayerPage;
                                 [toastsToShow addObject:toast];
                             }
                             else {
-                                [toast performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+                                [toast show];
                             }
                         }
 #if DEBUG_COBALT
@@ -627,7 +627,7 @@ NSString * webLayerPage;
                 if ([action isEqualToString:JSActionWebLayerShow]) {
                     if (data
                         && [data isKindOfClass:[NSDictionary class]]) {
-                        [self performSelectorOnMainThread:@selector(showWebLayer:) withObject:data waitUntilDone:YES];
+                        [self showWebLayer:data];
                     }
 #if DEBUG_COBALT
                     else {
@@ -639,7 +639,7 @@ NSString * webLayerPage;
                 
                 // DISMISS
                 else if([action isEqualToString:JSActionWebLayerDismiss]) {
-                    [self performSelectorOnMainThread:@selector(dismissWebLayer:) withObject:data waitUntilDone:YES];
+                    [self dismissWebLayer:data];
                 }
             }
 #if DEBUG_COBALT
@@ -863,7 +863,7 @@ NSString * webLayerPage;
             [alertCallbacks setObject:callback forKey:[NSString stringWithFormat:@"%d", alertView.tag]];
         }
         
-        [alertView performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+        [alertView show];
     }
 #if DEBUG_COBALT
     else {
@@ -974,7 +974,9 @@ NSString * webLayerPage;
         NSDictionary * jsonObj = [CobaltViewController JSONObjectWithString:json];
         
         [fromJavaScriptOperationQueue addOperationWithBlock:^{
-            [self handleDictionarySentByJavaScript:jsonObj];
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [self handleDictionarySentByJavaScript:jsonObj];
+            });
         }];
         
         [self sendACK];
