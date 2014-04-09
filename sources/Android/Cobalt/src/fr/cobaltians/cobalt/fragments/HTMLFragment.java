@@ -163,7 +163,11 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	protected static final String kJSDay = "day";
 	protected static final String kJSMonth = "month";
 	protected static final String kJSYear = "year";
-	
+	protected static final String kJSTexts = "texts";
+	protected static final String kJSTitle ="title";
+	protected static final String kJSDelete = "delete";
+	protected static final String kJSCancel = "cancel";
+	protected static final String kJSValidate = "validate"; 
 	// TOAST
 	protected final static String JSControlToast = "toast";
 
@@ -516,6 +520,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 						String url = "javascript:cobalt.execute(" + message + ");";
 						
 						if(mWebView != null) {
+							Log.i(TAG, "Send event: " + message);
 							mWebView.loadUrl(url);		
 						}
 						else {
@@ -525,6 +530,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 				});
 			}
 			else {
+				Log.i(TAG, "Adding event to queue: " + jsonObj);
 				mWaitingJavaScriptCallsQueue.add(jsonObj);
 			}
 		}
@@ -804,7 +810,13 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 						day = date.getInt(kJSDay);
 					}
 					
-					showDatePickerDialog(year, month, day, callback);
+					JSONObject texts = data.optJSONObject(kJSTexts);
+					String title = texts.optString(kJSTitle, null);
+					String delete = texts.optString(kJSDelete, null);
+					String cancel = texts.optString(kJSCancel, null);
+					String validate = texts.optString(kJSValidate, null);
+					
+					showDatePickerDialog(year, month, day, title, delete, cancel, validate, callback);
 					
 					return true;
 				}
@@ -1328,11 +1340,15 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	/*************************************************************************************
      * DATE PICKER
      ************************************************************************************/
-    protected void showDatePickerDialog(int year, int month, int day, String callbackID) {
+    protected void showDatePickerDialog(int year, int month, int day, String title, String delete, String cancel, String validate, String callbackID) {
     	Bundle args = new Bundle();
     	args.putInt(HTMLDatePickerFragment.ARG_YEAR, year);
     	args.putInt(HTMLDatePickerFragment.ARG_MONTH, month);
     	args.putInt(HTMLDatePickerFragment.ARG_DAY, day);
+    	args.putString(HTMLDatePickerFragment.ARG_TITLE, title);
+    	args.putString(HTMLDatePickerFragment.ARG_DELETE, delete);
+    	args.putString(HTMLDatePickerFragment.ARG_CANCEL, cancel);
+    	args.putString(HTMLDatePickerFragment.ARG_VALIDATE, validate);
     	args.putString(HTMLDatePickerFragment.ARG_CALLBACK_ID, callbackID);
     	
     	HTMLDatePickerFragment newFragment = new HTMLDatePickerFragment();

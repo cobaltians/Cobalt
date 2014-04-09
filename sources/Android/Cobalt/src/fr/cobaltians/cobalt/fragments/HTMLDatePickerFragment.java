@@ -29,12 +29,24 @@
 
 package fr.cobaltians.cobalt.fragments;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
+
+import fr.cobaltians.cobalt.R;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.DatePicker;
+import android.widget.DatePicker.OnDateChangedListener;
 
 public class HTMLDatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
@@ -42,10 +54,14 @@ public class HTMLDatePickerFragment extends DialogFragment implements DatePicker
 	public static final String ARG_MONTH = "MONTH";
 	public static final String ARG_DAY = "DAY";
 	public static final String ARG_CALLBACK_ID = "ARG_CALLBACK_ID";
+	public static final String ARG_TITLE = "TITLE";
+	public static final String ARG_DELETE = "DELETE";
+	public static final String ARG_CANCEL = "CANCEL";
+	public static final String ARG_VALIDATE = "VALIDATE";
 	
     final Calendar cal = Calendar.getInstance();
     private HTMLFragment mListener;
-    private String mCallbackId;
+    private String mCallbackId, mDelete, mCancel, mValidate, mTitle;
     
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -55,6 +71,10 @@ public class HTMLDatePickerFragment extends DialogFragment implements DatePicker
 			int month = args.getInt(ARG_MONTH);
 			int day = args.getInt(ARG_DAY);
 			mCallbackId = args.getString(ARG_CALLBACK_ID);
+			mTitle = args.getString(ARG_TITLE);
+			mDelete = args.getString(ARG_DELETE);
+			mCancel = args.getString(ARG_CANCEL);
+			mValidate = args.getString(ARG_VALIDATE);
 			
 			if (year != 0
 				&& month >= 0
@@ -64,10 +84,97 @@ public class HTMLDatePickerFragment extends DialogFragment implements DatePicker
 				cal.set(Calendar.DAY_OF_MONTH, day);
 			}
 		}
+		
+		if (mDelete == null && mCancel == null && mValidate == null && mTitle == null) {
+	        return new DatePickerDialog(getActivity(), this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+		}
+		
+		else {
+			
+			LayoutInflater inflater = (LayoutInflater) getActivity().getLayoutInflater();
+			AlertDialog.Builder datePickerBuilder = new AlertDialog.Builder(getActivity());
+			View customView = inflater.inflate(R.layout.date_picker_layout, null);
+			datePickerBuilder.setView(customView);
+			
+			final DatePicker datePicker = (DatePicker) customView.findViewById(R.id.date_picker);
 
-        // Create a new instance of DatePickerDialog and return it
-        return new DatePickerDialog(getActivity(), this, 
-        							cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+			final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.FRANCE);
+			
+			Calendar minDate = Calendar.getInstance();
+			try {
+				minDate.setTime(formatter.parse("01.01.1900"));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+			datePicker.setMinDate(minDate.getTimeInMillis());
+			
+			 // View settings
+	        int year = cal.get(Calendar.YEAR);
+	        int month = cal.get(Calendar.MONTH);
+	        int day = cal.get(Calendar.DAY_OF_MONTH);
+	        
+	        if (mTitle != null) {
+	        	datePickerBuilder.setTitle(mTitle);
+	        }
+	        
+	        // Buttons
+	        datePickerBuilder.setNegativeButton(
+	            mDelete, 
+	            new DialogInterface.OnClickListener() {
+	                @Override
+	                public void onClick(DialogInterface dialog, int which) {
+	                	cal.clear();
+	                	if (mListener != null) {
+	            			mListener.sendDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), mCallbackId);
+	            		}
+	                }
+	            }
+	        );
+	        
+	        datePickerBuilder.setNeutralButton(
+	        	mCancel,
+	        	new DialogInterface.OnClickListener() {
+
+	        			@Override
+	        			public void onClick(DialogInterface dialog, int arg1) {
+	        				dialog.dismiss();
+	        			}
+	        		});
+
+	        datePickerBuilder.setPositiveButton(
+	            mValidate, 
+	            new DialogInterface.OnClickListener() {
+	                @Override
+	                public void onClick(DialogInterface dialog, int which) {
+	                    Calendar choosen = Calendar.getInstance();
+	                    cal.set(
+	                        datePicker.getYear(), 
+	                        datePicker.getMonth(), 
+	                        datePicker.getDayOfMonth()
+	                    );
+	                    if (mListener != null) {
+	            			mListener.sendDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), mCallbackId);
+	            		}
+	                    dialog.dismiss();
+	                }
+	            }
+	        );
+	        final AlertDialog dialog = datePickerBuilder.create();
+	        
+	        datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
+				
+				@Override
+				public void onDateChanged(DatePicker view, int year, int month,
+						int day) {
+					cal.set(Calendar.YEAR, year);
+					cal.set(Calendar.MONTH, month);
+					cal.set(Calendar.DAY_OF_MONTH, day);
+				}
+			});
+
+	        return dialog;
+		}		
     }
 
     public void setListener(HTMLFragment listener) {
@@ -76,7 +183,6 @@ public class HTMLDatePickerFragment extends DialogFragment implements DatePicker
 
 	@Override
 	public void onDateSet(DatePicker view, int year, int month, int day) {
-		// Do something with the date chosen by the user
     	cal.set(Calendar.YEAR, year);
     	cal.set(Calendar.MONTH, month);
     	cal.set(Calendar.DAY_OF_MONTH, day);
