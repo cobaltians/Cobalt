@@ -1361,16 +1361,16 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
     protected void sendDate(int year, int month, int day, String callbackID) {
     	try {
     		JSONObject jsonDate = new JSONObject();
-    		jsonDate.put(kJSYear, year);
-    		month++;
-    		jsonDate.put(kJSMonth, month);
-    		jsonDate.put(kJSDay, day);
-    		
-			JSONObject jsonResponse = new JSONObject();
-			jsonResponse.put(kJSType, JSTypeCallBack);
+    		if (year != 0 || month != 0 || day != 0) {	
+    			jsonDate.put(kJSYear, year);
+    			month++;
+    			jsonDate.put(kJSMonth, month);
+    			jsonDate.put(kJSDay, day);
+    		}
+    		JSONObject jsonResponse = new JSONObject();
+    		jsonResponse.put(kJSType, JSTypeCallBack);
 			jsonResponse.put(kJSCallback, callbackID);
 			jsonResponse.put(kJSData, jsonDate);
-			Log.d(getClass().getName(), "sendDate + : " + jsonResponse);
 			executeScriptInWebView(jsonResponse);
 		} catch (JSONException e) {
 			e.printStackTrace();
