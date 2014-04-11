@@ -15,9 +15,8 @@
             Zepto(function($){
                 
                 cobalt.init({
-                    debugInBrowser:true,
-                    //debugInLogdiv:true,
-					debug:true,
+                    debug:true,
+                    //debugInBrowser:true,
                     events:{
                         "pullToRefresh" : function(data,callback){
                             cobalt.log('Refresh');                           
@@ -27,14 +26,23 @@
                            
                         }
                     }
-                });
+                });				
+				
+		/* enable this to test webLayer
+		$('p').on('tap',function(){
+		cobalt.webLayer('show','webLayerExample.html');
+		})
+		*/
+                
             });
-
-
+			
+			
+			
+			
 			function refreshContent( callback ){
-				cobalt.log('refreshing content');
-
-                var hellos = ["Hello !", "Bonjour !", "Guten tag !", "Ola !"];
+				cobalt.log('refreshing content')
+			
+	            var hellos=new Array("Hello !","Bonjour !","Guten tag !","Ola !");
 	            var randomitem = hellos[ Math.floor( Math.random() * hellos.length )];
 	            $('p').html(randomitem);
 			
