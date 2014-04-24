@@ -44,9 +44,9 @@ public class CobaltImageCache {
 		
 		// compressing the image
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+		bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
 		// encode image
-		encodeImage = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+		encodeImage = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT | Base64.NO_WRAP);
 		
 		return encodeImage;
 	}
