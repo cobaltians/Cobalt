@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
+    </head>
+    <body class="red">
+  		
+  		<a href="javascript:;" class="dismiss">DISMISS</a><br/>
+  		<a href="javascript:;" class="pop">POP</a><br/>
+  		
+		<p>Contenu modale 2</p>
+		
+  		<p>TEST 05 - Appuyez sur dismiss. vous devriez revenir à l'index des modales.</p>
+  		
+  		<p>TEST 06 - Appuyez sur pop. <b>si vous venez de l'autre contenu de la modale</b> vous devriez y retourner.</p> 
+  		<p>TEST 07 - Appuyez sur pop. <b>sinon</b> vous devriez revenir à l'index des modales.</p> 
+  		
+  		<p>TEST 08 - Pushez l'autre contenu de modale et verifiez la logique du truc.</p>
+		<a class="push" href="javascript:;" data-href="tests_04_modalContentView1.html">Contenu modale page1</a>
+		
+		<div id="cobalt_logdiv"></div>
+		
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
+        <script type="text/javascript" src="js/utils.storage.js"></script>
+        <script type="text/javascript" src="js/functions.js"></script>
+        <script>
+            
+            Zepto(function($){
+
+	            cobalt.init({
+		            debug:true,
+		            //sendingToNative:false,
+	            });
+
+                utils.storage.enable();
+				cobalt.log("init dismissInformations : "+utils.storage.getItem("dismissInformations"), false);
+				cobalt.log("init testLocalStorageKey : "+utils.storage.getItem("testLocalStorageKey"), false);
+
+	            $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
+                $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
+
+                $('a.dismiss').on('tap click',function(){
+		        	cobalt.navigate('dismiss');
+		            return false;
+	            });
+				$('a.pop').on('tap click',function(){
+		        	cobalt.navigate('pop');
+		            return false;
+	            });
+	            $('a.push').on('tap click',function(){
+	            	cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
+		            return false;
+	            });
+	            
+
+            })
+            
+
+        </script>
+        
+    </body>
+</html>
