@@ -8,6 +8,8 @@
 
 #import "HPAppDelegate.h"
 
+#import "Cobalt.h"
+#import "CobaltViewController.h"
 #import "HPSimpleHybridViewController.h"
 
 @implementation HPAppDelegate
@@ -18,11 +20,9 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor clearColor];
     
-    HPSimpleHybridViewController *nbvc = [[HPSimpleHybridViewController alloc] initWithNibName:@"HPSimpleHybridViewController" bundle:nil];
-    nbvc.pageName = @"index.html";
-    //nbvc.ressourcePath = kResourcePath;
-    
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:nbvc];
+    [Cobalt setResourcePath:RESOURCE_PATH];
+    UIViewController * viewController = [CobaltViewController getViewControllerForController:@"HPSimpleHybridViewController" andPage:@"index.html"];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
     self.window.rootViewController = navController;
     
     [self.window makeKeyAndVisible];

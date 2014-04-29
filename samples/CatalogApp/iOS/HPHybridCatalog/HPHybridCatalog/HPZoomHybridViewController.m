@@ -8,105 +8,114 @@
 
 #import "HPZoomHybridViewController.h"
 
-#define kDefaultTextZoomLevel @"textSizeZoomLevel"
-#define defaultTextZoomLevel 10
-
-@interface HPZoomHybridViewController ()
-
-@end
+#define JSNameSetZoom           @"JSNameSetZoom"
+#define kDefaultTextZoomLevel   @"textSizeZoomLevel"
+#define defaultTextZoomLevel    10
 
 @implementation HPZoomHybridViewController
-@synthesize textSizeCurrentZoomLevel,textSizeMaxZoomLevel,textSizeMinZoomLevel,zoomInButton,zoomOutButton;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+@synthesize textSizeCurrentZoomLevel,
+            textSizeMaxZoomLevel,
+            textSizeMinZoomLevel,
+            zoomInButton,
+            zoomOutButton;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark LIFE CYCLE
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    [self setDelegate:self];
     [self.navigationController setNavigationBarHidden:YES];
-    
-    //load content in webView
-    [self loadContentInWebView:self.webView FromFileNamed:self.pageName atPath:RESSOURCE_PATH withRessourcesAtPath:RESSOURCE_PATH];
 
-    self.textSizeMaxZoomLevel = [NSNumber numberWithInt:20];
-    self.textSizeMinZoomLevel = [NSNumber numberWithInt:5];
-    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+    textSizeMaxZoomLevel = [NSNumber numberWithInt:20];
+    textSizeMinZoomLevel = [NSNumber numberWithInt:5];
+    NSUserDefaults * standardUserDefaults = [NSUserDefaults standardUserDefaults];
     NSInteger currentSize = [standardUserDefaults integerForKey:kDefaultTextZoomLevel];
-    currentSize =  (currentSize && currentSize >= self.textSizeMinZoomLevel.integerValue && self.textSizeMaxZoomLevel.integerValue >= currentSize) ? currentSize : defaultTextZoomLevel;
-    self.textSizeCurrentZoomLevel =[NSNumber numberWithInteger:currentSize];
+    currentSize = (currentSize && currentSize >= textSizeMinZoomLevel.integerValue && textSizeMaxZoomLevel.integerValue >= currentSize) ? currentSize : defaultTextZoomLevel;
+    textSizeCurrentZoomLevel =[NSNumber numberWithInteger:currentSize];
     [self setZoomLevelInWebView];
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark COBALT DELEGATE METHODS
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+- (BOOL)onUnhandledMessage:(NSDictionary *)message
+{
+    return NO;
+}
 
-- (IBAction)onZoomInButton:(id)sender {
+- (BOOL)onUnhandledEvent:(NSString *)event withData:(NSDictionary *)data andCallback:(NSString *)callback
+{
+    return NO;
+}
+
+- (BOOL)onUnhandledCallback:(NSString *)callback withData:(NSDictionary *)data
+{
+    return NO;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark METHODS
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (IBAction)onZoomInButton:(id)sender
+{
     BOOL enabled = YES;
     
-    self.textSizeCurrentZoomLevel = [NSNumber numberWithInt:([textSizeCurrentZoomLevel intValue]+1)];
-    if([textSizeCurrentZoomLevel intValue] >= [textSizeMaxZoomLevel intValue])
+    textSizeCurrentZoomLevel = [NSNumber numberWithInt:([textSizeCurrentZoomLevel intValue] + 1)];
+    if ([textSizeCurrentZoomLevel intValue] >= [textSizeMaxZoomLevel intValue]) {
         enabled = NO;
+    }
     
-    [self.zoomInButton setEnabled:enabled];
-    [self.zoomOutButton setEnabled:YES];
+    [zoomInButton setEnabled:enabled];
+    [zoomOutButton setEnabled:YES];
     
     [self setZoomLevelInWebView];
-    [self saveZoomLevelToUserDefaults:self.textSizeCurrentZoomLevel];
+    [self saveZoomLevelToUserDefaults:textSizeCurrentZoomLevel];
 }
 
-
-- (IBAction)onZoomOutButton:(id)sender {
+- (IBAction)onZoomOutButton:(id)sender
+{
     BOOL enabled = YES;
     
-    self. textSizeCurrentZoomLevel = [NSNumber numberWithInt:([self.textSizeCurrentZoomLevel intValue]-1)];
-    if([textSizeCurrentZoomLevel intValue] <= [textSizeMinZoomLevel intValue])
+    textSizeCurrentZoomLevel = [NSNumber numberWithInt:([textSizeCurrentZoomLevel intValue] - 1)];
+    
+    if ([textSizeCurrentZoomLevel intValue] <= [textSizeMinZoomLevel intValue]) {
         enabled = NO;
+    }
     
-    [self.zoomOutButton setEnabled:enabled];
-    [self.zoomInButton setEnabled:YES];
-    
+    [zoomOutButton setEnabled:enabled];
+    [zoomInButton setEnabled:YES];
     
     [self setZoomLevelInWebView];
-    [self saveZoomLevelToUserDefaults:self.textSizeCurrentZoomLevel];
+    [self saveZoomLevelToUserDefaults:textSizeCurrentZoomLevel];
 }
 
--(void) setZoomLevelInWebView
+- (void)setZoomLevelInWebView
 {
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-                          JSTypeEvent, kJSType,
-                          JSNameSetZoom, kJSName,
-                          self.textSizeCurrentZoomLevel,kJSValue,
-                          nil];
-    [self executeScriptInWebView:self.webView WithDictionary:dict];
+    [self sendEvent:JSNameSetZoom withData:[NSDictionary dictionaryWithObjectsAndKeys:textSizeCurrentZoomLevel, kJSValue, nil] andCallback:nil];
 }
 
 
--(void)saveZoomLevelToUserDefaults:(NSNumber*)zoomLevel
+- (void)saveZoomLevelToUserDefaults:(NSNumber *)zoomLevel
 {
-    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults * standardUserDefaults = [NSUserDefaults standardUserDefaults];
     
     if (standardUserDefaults) {
         [standardUserDefaults setInteger:[zoomLevel integerValue] forKey:kDefaultTextZoomLevel];
         [standardUserDefaults synchronize];
     }
 }
-
-
-
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-
 
 @end

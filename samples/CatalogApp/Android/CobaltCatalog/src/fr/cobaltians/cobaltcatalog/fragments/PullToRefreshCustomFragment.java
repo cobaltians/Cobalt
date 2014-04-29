@@ -1,9 +1,11 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
-import fr.cobaltians.cobalt.fragments.HTMLPullToRefreshFragment;
+import org.json.JSONObject;
+
+import fr.cobaltians.cobalt.fragments.HTMLFragment;
 import fr.cobaltians.cobaltcatalog.R;
 
-public class PullToRefreshCustomFragment extends HTMLPullToRefreshFragment {
+public class PullToRefreshCustomFragment extends HTMLFragment {
 	
 	@Override
 	protected int getLayoutToInflate() {
@@ -26,12 +28,29 @@ public class PullToRefreshCustomFragment extends HTMLPullToRefreshFragment {
 				"Chargement...", 
 				"Relâchez pour actualiser", 
 				null, 
-				mContext.getResources().getDrawable(R.drawable.ic_launcher),
+				sContext.getResources().getDrawable(R.drawable.ic_launcher),
 				null);
 		
 		if (getArguments() == null) {
 			enablePullToRefresh();
 			disableInfiniteScroll();
 		}
+	}
+
+	@Override
+	protected void onPullToRefreshRefreshed() { }
+	@Override
+	protected void onInfiniteScrollRefreshed() { }
+	
+	// unhandled JS messages
+	@Override
+	protected void onUnhandledMessage(JSONObject message) { }
+	@Override
+	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
+		return false;
+	}
+	@Override
+	protected boolean onUnhandledCallback(String name, JSONObject data) {
+		return false;
 	}
 }

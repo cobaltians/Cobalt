@@ -25,8 +25,6 @@ public class MainFragment extends HTMLFragment {
 	private Button callBackButton,callbackAsyncButton,validButton;
 	private EditText nativeEditText;
 
-
-
 	@Override
 	protected int getLayoutToInflate() {
 		return R.layout.main_fragment;
@@ -52,11 +50,8 @@ public class MainFragment extends HTMLFragment {
 					ArrayList<Integer> l = new ArrayList<Integer>();
 					l.add(51);
 					l.add(42);
-					j.put(kJSType, JSTypeEvent);
-					j.put(kJSName, JSNameTestCallback);
-					j.put(kJSCallbackID, JSNameTestCallback);
 					j.put(kJSValue,new JSONArray(l));
-					executeScriptInWebView(j);
+					sendEvent(JSNameTestCallback, j, JSNameTestCallback);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -71,11 +66,8 @@ public class MainFragment extends HTMLFragment {
 					ArrayList<String> l = new ArrayList<String>();
 					l.add("Bonjour");
 					l.add("Guillaume");
-					j.put(kJSType, JSTypeEvent);
-					j.put(kJSName, JSNameTestCallbackAsync);
-					j.put(kJSCallbackID, JSNameTestCallbackAsync);
 					j.put(kJSValue,new JSONArray(l));
-					executeScriptInWebView(j);
+					sendEvent(JSNameTestCallbackAsync, j, JSNameTestCallbackAsync);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -88,9 +80,8 @@ public class MainFragment extends HTMLFragment {
 			public void onClick(View arg0) {
 				JSONObject j = new JSONObject();
 				try {
-					j.put(kJSType, JSTypeLog);
-					j.put(kJSValue,nativeEditText.getText().toString());
-					executeScriptInWebView(j);
+					j.put(kJSValue, nativeEditText.getText().toString());
+					sendEvent("logThis", j, null);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -113,18 +104,18 @@ public class MainFragment extends HTMLFragment {
 				//TYPE = EVENT
 				if(type != null && type.length() >0 && type.equals(JSTypeEvent))
 				{
-					String name = jsonObj.optString(kJSName);
+					String name = jsonObj.optString(kJSEvent);
 					if(name != null && name.length() >0 && name.equals(JSNameTestCallback))
 					{
-
-						final String value = jsonObj.optString(kJSValue);
+						JSONObject data = jsonObj.getJSONObject(kJSData);
+						final String value = data.getString(kJSValue);
 						if(value != null)
 							getActivity().runOnUiThread(new Runnable() {
 								public void run() {
 									nativeEditText.setText(value);
 								}
 							});
-						String callbackId = jsonObj.optString(kJSCallbackID);
+						String callbackId = jsonObj.optString(kJSCallback);
 
 						if(callbackId != null && callbackId.length() >0)
 						{
@@ -134,7 +125,8 @@ public class MainFragment extends HTMLFragment {
 					}
 					else if(name != null && name.length() >0 && name.equals(JSNameTestCallbackAsync))
 					{
-						final String value = jsonObj.optString(kJSValue);
+						JSONObject data = jsonObj.getJSONObject(kJSData);
+						final String value = data.getString(kJSValue);
 						if(value != null)
 							getActivity().runOnUiThread(new Runnable() {
 								public void run() {
@@ -142,7 +134,7 @@ public class MainFragment extends HTMLFragment {
 								}
 							});
 
-						String callbackId = jsonObj.optString(kJSCallbackID);
+						String callbackId = jsonObj.optString(kJSCallback);
 						if(callbackId != null && callbackId.length() >0)
 						{
 							changeNameForWebCallBackAsync(callbackId,value);
@@ -154,19 +146,19 @@ public class MainFragment extends HTMLFragment {
 				//CALLBACKS
 				else if(type != null && type.length () >0 && type.equals(JSTypeCallBack))
 				{
-					String callbackID = jsonObj.optString(kJSCallbackID);
+					String callbackID = jsonObj.optString(kJSCallback);
 					if(callbackID != null && callbackID.length() >0 && callbackID.equals(JSNameTestCallback))
 					{
-						String value = jsonObj.optString(kJSParams);
+						String value = jsonObj.optString(kJSData);
 						if(value != null)
-							Toast.makeText(mContext, "Callback with value "+value, Toast.LENGTH_SHORT).show();
+							Toast.makeText(sContext, "Callback with value "+value, Toast.LENGTH_SHORT).show();
 						return true;
 					}
 					else if(callbackID != null && callbackID.length() >0 && callbackID.equals(JSNameTestCallbackAsync))
 					{
-						String value = jsonObj.optString(kJSParams);
+						String value = jsonObj.optString(kJSData);
 						if(value != null)
-							Toast.makeText(mContext, "Callback ASYNC with value "+value, Toast.LENGTH_SHORT).show();
+							Toast.makeText(sContext, "Callback ASYNC with value "+value, Toast.LENGTH_SHORT).show();
 						return true;
 					}
 				}
@@ -180,7 +172,13 @@ public class MainFragment extends HTMLFragment {
 
 	private void changeNameForWebCallBack(String callbackId, String value) {
 		String nValue = "Je m'appelle "+value;
-		sendCallbackResponse(callbackId, nValue);
+		JSONObject data = new JSONObject();
+		try {
+			data.put(kJSValue, nValue);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		sendCallback(callbackId, data);
 	}
 
 
@@ -188,5 +186,27 @@ public class MainFragment extends HTMLFragment {
 		String nValue = "Je m'appelle "+value;
 
 		new GoogleAsyncTask(this,callbackId,nValue).execute("http://google.fr");
+	}
+
+	// unhandled JS messages
+	@Override
+	protected void onUnhandledMessage(JSONObject message) {
+		
+	}
+	@Override
+	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
+		return false;
+	}
+	@Override
+	protected boolean onUnhandledCallback(String name, JSONObject data) {
+		return false;
+	}
+
+	@Override
+	protected void onPullToRefreshRefreshed() {
+	}
+
+	@Override
+	protected void onInfiniteScrollRefreshed() {		
 	}
 }

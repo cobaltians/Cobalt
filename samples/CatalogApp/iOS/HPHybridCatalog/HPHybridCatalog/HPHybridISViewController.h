@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 Haploid. All rights reserved.
 //
 
-#import "HPPtrIsViewController.h"
+#import "CobaltViewController.h"
 
-@interface HPHybridISViewController : HPPtrIsViewController
+@interface HPHybridISViewController : CobaltViewController<CobaltDelegate>
 
 @end

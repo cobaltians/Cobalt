@@ -1,3 +1,32 @@
+/**
+ *
+ * OverScrollingWebView
+ * Cobalt
+ *
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014 Cobaltians
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ */
+
 package fr.cobaltians.cobalt.customviews;
 
 import android.content.Context;
@@ -9,76 +38,53 @@ import fr.cobaltians.cobalt.fragments.HTMLFragment;
 public class OverScrollingWebView extends WebView {
 
 	/**
-	 * the fragment that handles the scroll events of the OverScrollingWebView
+	 * Fragment handling scroll events
 	 */
 	protected HTMLFragment mScrollListener;
 
-	/*
-	 * CONSTRUCTORS
-	 */
 	public OverScrollingWebView(Context context) {
 		super(context);
 	}
 
-
-	public OverScrollingWebView(Context context, AttributeSet attrs,int defStyle) {
-		super(context, attrs, defStyle);
+	public OverScrollingWebView(Context context, AttributeSet attributes) {
+		super(context, attributes);
 	}
-
-
-	public OverScrollingWebView(Context context, AttributeSet attrs) {
-		super(context, attrs);
+	
+	public OverScrollingWebView(Context context, AttributeSet attributes, int defaultStyle) {
+		super(context, attributes, defaultStyle);
 	}
-
-
-	/*
-	 * GETTERS/SETTERS
-	 */
-	public HTMLFragment getmScrollListener() {
+	
+	public HTMLFragment getScrollListener() {
 		return mScrollListener;
 	}
 
-	public void setScrollListener(HTMLFragment mScrollListener) {
-		this.mScrollListener = mScrollListener;
+	public void setScrollListener(HTMLFragment scrollListener) {
+		mScrollListener = scrollListener;
 	}
-
-
-	/**
-	 * This methods passes all informations about the scrolling of the OverScrollingWebview to the mScrollListener
-	 */
-//	@Override
-//	protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY)
-//	{
-//		super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
-//		if(mScrollListener != null && IScrollListener.class.isAssignableFrom(mScrollListener.getClass()))
-//		{
-//			((IScrollListener) mScrollListener).onOverScrolled(scrollX, scrollY, clampedX, clampedY);
-//		}
-//	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			int scrollY = getScrollY();
 
-		if (event.getAction() == MotionEvent.ACTION_DOWN){
-			//Log.d("DEBUG ::: ", "in onTouchEvent() ---> ACTION_DOWN");
-			int temp_ScrollY = getScrollY();
-
-			//TODO INSANE : Scrolls the webview one pixel down and one pixel up to avoid the feeling of freeze...
+			// TODO: this is INSANE! Scrolls the webview one pixel down then one pixel up to avoid the freeze feeling...
 			scrollTo(0, getScrollY() + 1);
-			scrollTo(0, temp_ScrollY);
-
-			//Log.d("  DEBUG COORDS::: ", "X=" + Integer.toString(getScrollX()) + " Y=" + Integer.toString(getScrollY()) + " Y2=" + Integer.toString(temp_ScrollY));
+			scrollTo(0, scrollY);
 		}
+		
 		return super.onTouchEvent(event);
 	}
 
-
+	/**
+	 * Notifies listener of scrolling
+	 */
 	@Override
-	protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-		super.onScrollChanged(l, t, oldl, oldt);
-		if(mScrollListener != null && IScrollListener.class.isAssignableFrom(mScrollListener.getClass()))
-		{
-			((IScrollListener) mScrollListener).onOverScrolled(l, t, oldl, oldt);
+	protected void onScrollChanged(int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+		super.onScrollChanged(scrollX, scrollY, oldScrollX, oldScrollY);
+		
+		if(	mScrollListener != null 
+			&& IScrollListener.class.isAssignableFrom(mScrollListener.getClass())) {
+			((IScrollListener) mScrollListener).onOverScrolled(scrollX, scrollY, oldScrollX, oldScrollY);
 		}
 	}	
 }

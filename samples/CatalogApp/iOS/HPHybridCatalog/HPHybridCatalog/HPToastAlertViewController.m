@@ -7,48 +7,61 @@
 //
 
 #import "HPToastAlertViewController.h"
-#import "iToast.h"
-
-@interface HPToastAlertViewController ()
-
-@end
 
 @implementation HPToastAlertViewController
+
 @synthesize messageLabel;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark LIFE CYCLE
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-    [self.navigationController setNavigationBarHidden:YES];
     
-    //load content in webView
-    [self loadContentInWebView:self.webView FromFileNamed:self.pageName atPath:RESSOURCE_PATH withRessourcesAtPath:RESSOURCE_PATH];
-}
-
-
--(void) alertView:(UIAlertView *)alertView WithTag:(NSInteger)tag clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    [[iToast makeText:[NSString stringWithFormat:@"button index = %d, alertId = %d",buttonIndex,tag]] show];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    // Do any additional setup after loading the view from its nib.
+    [self setDelegate:self];
+    [self.navigationController setNavigationBarHidden:YES];
 }
 
 - (void)viewDidUnload {
     [self setMessageLabel:nil];
     [super viewDidUnload];
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark COBALT DELEGATE METHODS
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (BOOL)onUnhandledMessage:(NSDictionary *)message
+{
+    return NO;
+}
+
+- (BOOL)onUnhandledEvent:(NSString *)event withData:(NSDictionary *)data andCallback:(NSString *)callback
+{
+    return NO;
+}
+
+- (BOOL)onUnhandledCallback:(NSString *)callback withData:(NSDictionary *)data
+{
+    return NO;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark ALERT VIEW DELEGATE METHODS
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)alertView:(UIAlertView *)alertView WithTag:(NSInteger)tag clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    [[CobaltToast makeText:[NSString stringWithFormat:@"button index = %d, alertId = %d",buttonIndex,tag]] show];
+}
+
 @end

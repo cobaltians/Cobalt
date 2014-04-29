@@ -18,57 +18,56 @@ cobalt.tizen_adapter={
 			case "push":
 				if (navigationPageName){
 					if ( cobalt.checkDependency('storage') ){
-						var pushNumber= utils.storage.getItem('cobalt_pushNumber','int') || 0;
+						var pushNumber= cobalt.storage.getItem('cobalt_pushNumber','int') || 0;
 						pushNumber++;
-						utils.storage.setItem('cobalt_pushNumber',pushNumber)
-						cobalt.send({ "type":"typeNavigation", "navigationType":"push", "navigationPageName":navigationPageName, "navigationClassId": navigationClassId, 'pushNumber':pushNumber});
+						cobalt.storage.setItem('cobalt_pushNumber',pushNumber)
+						cobalt.send({ type:"navigation", action:"push", data : { page  : navigationPageName, controller: navigationClassId, pushNumber :pushNumber} });
 					}
 				}
 			break;
 			case "pop":
-				cobalt.send({ "type":"typeNavigation", "navigationType":"pop"});
+				cobalt.send({ type: "navigation", action : "pop"});
 			break;
-			case "modale":
+			case "modal":
 				if (navigationPageName){
-					cobalt.adapter.navigateToModale(navigationPageName, navigationClassId);
+					cobalt.adapter.navigateToModal(navigationPageName, navigationClassId);
 				}
 			break;
 			case "dismiss":
-				cobalt.adapter.dismissFromModale();
+				cobalt.adapter.dismissFromModal();
 			break;
 		}
 	},
 	
 	// handle events sent by native side
-    handleEvent:function(event){
-		cobalt.log("----received : "+JSON.stringify(event), false)
-		if (cobalt.userEvents && typeof cobalt.userEvents[event.name] === "function"){
-			cobalt.userEvents[event.name](event);
+    handleEvent:function(json){
+		cobalt.log("received event", json.event )
+		if (cobalt.userEvents && typeof cobalt.userEvents[json.event] === "function"){
+			cobalt.userEvents[json.event](json.data,json.callback);
 	    }else{
-	        switch (event.name){
+	        switch (json.event){
 		        case "onBackButtonPressed":
 				    cobalt.log('sending OK for a native back')
-			        cobalt.sendCallback(event,true);
+			        cobalt.sendCallback(json.callback,{value : true});
 			    break;
 	        }
         }
     },
     //send native stuff
     send:function(obj){
-        if (obj && cobalt.sendingToNative){
-        	cobalt.log('----sending :'+JSON.stringify(obj), false)
-	        try{	        	
-				var jsondata = {name:"HPNativeBridge", data:obj};
-				Tizen.requestToNative(JSON.stringify(jsondata));        
+        if (obj && !cobalt.debugInBrowser){
+        	cobalt.divLog('sending', obj )
+	        try{
+				Tizen.requestToNative(JSON.stringify({name:"HPNativeBridge", data:obj}));
 			}catch (e){
-		        cobalt.log('cant connect to native : '+e, false)
+		        cobalt.log('cant connect to native : '+e)
 	        }
         }
     },
 	//default behaviours
     handleCallback : cobalt.defaultBehaviors.handleCallback,
-    navigateToModale : cobalt.defaultBehaviors.navigateToModale,
-	dismissFromModale : cobalt.defaultBehaviors.dismissFromModale,
+    navigateToModal : cobalt.defaultBehaviors.navigateToModal,
+	dismissFromModal : cobalt.defaultBehaviors.dismissFromModal,
 	initStorage : cobalt.defaultBehaviors.initStorage
 };
 cobalt.adapter=cobalt.tizen_adapter;

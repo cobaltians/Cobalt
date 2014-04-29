@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "HPNativeBridgePullToRefreshViewController.h"
+#import "CobaltViewController.h"
 
-@interface ViewController : HPNativeBridgePullToRefreshViewController
+@interface ViewController : CobaltViewController
 @end

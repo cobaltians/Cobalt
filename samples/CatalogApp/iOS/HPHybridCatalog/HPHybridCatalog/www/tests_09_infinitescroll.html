@@ -34,9 +34,14 @@
 		<div id="cobalt_logdiv"></div>
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
-        <script type="text/javascript" src="js/utils.storage.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
         <script type="text/javascript" src="js/setTimeoutWorkaround.js"></script>
+
+		<!-- for cobalt dev only
+		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
+		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
+		-->
+
         <script>
 
             Zepto(function($){
@@ -44,13 +49,13 @@
 		            //debug:true,
 		            //sendingToNative:false,
                     events:{
-                       "infiniteScrollRefresh" : function(event){
+                       "infiniteScroll" : function(data, callback){
                                cobalt.log('native asked to load more content');
 	                           $('#loading').show();
 	                           setTimeout(function(){
                                    $('#loading').hide();
 		                           $('#list').append('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>');
-		                           cobalt.sendCallback(event);
+		                           cobalt.sendCallback(callback);
 	                           },1000, true);
                         }
                                   

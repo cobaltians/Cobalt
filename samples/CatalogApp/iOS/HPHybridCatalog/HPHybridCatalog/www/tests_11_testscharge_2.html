@@ -11,12 +11,11 @@
 
   		<p>Test de charge </p>
 
-  		<p>TEST 01 - Cette webview est grosse… Vérifier que en pushant cette webview un grand nombre de fois, la navigation ne plante pas.</p>
+  		<p>TEST 01 - Cette webview est grosse… Vérifier qu'en pushant cette webview un grand nombre de fois, la navigation ne plante pas.</p>
 
         <a class="push" href="javascript:;" data-href="tests_11_testscharge_2.html">11b. tests de charge - big WV navigation</a>
 
 
-        <p>TEST 02 - Cette webview est sombre. Vérifier qu'en passant d'une webview à l'autre on a pas du blanc pendant la transition.</p>
 
 
 		<div id="images">
@@ -33,8 +32,12 @@
   		<div id="cobalt_logdiv"></div>
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
-        <script type="text/javascript" src="js/utils.storage.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
+
+        <!-- for cobalt dev only
+		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
+		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
+		-->
 
         <script>
 			var count=0;
@@ -85,8 +88,10 @@
 	            });
 
 	            $('#monBouton3').on('tap click',function(){
-					cobalt.ios_adapter.pipeline=[];
-					cobalt.ios_adapter.pipelineRunning=false;
+					if (cobalt.ios_adapter){
+						cobalt.ios_adapter.pipeline=[];
+						cobalt.ios_adapter.pipelineRunning=false;
+					}
                     $('#cobalt_logdiv').html('');
                     return false;
 				});

@@ -15,10 +15,10 @@
   		<img src="img/ic_launcher.png" alt=""/>
   		
         <br/>
-        <p>TEST 02 - Ci dessous il devrait y avoir une zone rectangulaire moche. avec la meme image en background image. Elle vient de la CSS.</p>
+        <p>TEST 02 - Ci dessous il devrait y avoir une zone rectangulaire moche, avec la même image en background image. Elle vient de la CSS.</p>
         <div class="awfull"></div>
         
-        <p>TEST 03 - Dans la console native il devrait apparaitre "JSLOG : cobalt is ready!"</p>
+        <p>TEST 03 - Dans la console native il devrait apparaitre "JSLOG : onReady!"</p>
         
         <p>TEST 04 - Le bouton POP devrait revenir √† l'index des tests</p>
         
@@ -28,6 +28,11 @@
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
         <script type="text/javascript" src="js/functions.js"></script>
+		 <!-- for cobalt dev only
+		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
+		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
+		-->
+
         <script>
             
             Zepto(function($){
@@ -36,7 +41,7 @@
 		            debug:true,
 		            //sendingToNative:false,
 		            events:{
-			            "nameSetZoom":function(event){
+			            "nameSetZoom":function(data, callback){
 			                cobalt.log('received setZoom at '+new Date().getTime())
                             setZoom(event.value)
 				        }

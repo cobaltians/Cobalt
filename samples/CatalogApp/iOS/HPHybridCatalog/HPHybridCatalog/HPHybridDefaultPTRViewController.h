@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 Haploid. All rights reserved.
 //
 
-#import "HPNativeBridgePullToRefreshViewController.h"
+#import "CobaltViewController.h"
 
-@interface HPHybridDefaultPTRViewController : HPNativeBridgePullToRefreshViewController
+@interface HPHybridDefaultPTRViewController : CobaltViewController<CobaltDelegate>
 
 @end

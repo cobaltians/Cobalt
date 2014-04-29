@@ -10,9 +10,10 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import fr.cobaltians.cobalt.fragments.HTMLFragment;
-
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -60,7 +61,14 @@ class GoogleAsyncTask extends AsyncTask<String, String, String>{
         super.onPostExecute(result);
         if(this.callBackID != null && this.value != null && result != null)
         {
-        	f.sendCallbackResponse(this.callBackID, this.value+" "+result);
+        	Log.i(getClass().getSimpleName(), "onPostExecute: update sendCallbackResponse call with result & value(" + result + ", " + value + ")");
+        	try {
+        		JSONObject data = new JSONObject();
+				data.put("value", this.value+" "+result);
+				f.sendCallback(this.callBackID, data);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
         }
         else Log.e(getClass().getName(), "ERROR IN ON POST EXECUTE");
     }

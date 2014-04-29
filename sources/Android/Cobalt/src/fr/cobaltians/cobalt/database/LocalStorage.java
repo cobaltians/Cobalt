@@ -1,3 +1,32 @@
+/**
+ *
+ * LocalStorage
+ * Cobalt
+ *
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014 Cobaltians
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ */
+
 package fr.cobaltians.cobalt.database;
 
 import android.content.Context;
@@ -12,56 +41,56 @@ import android.util.Log;
  */
 public class LocalStorage extends SQLiteOpenHelper {
 
-	private static LocalStorage mInstance;
+	protected final static boolean sDebug = false;
+	
+	private static LocalStorage sInstance;
 	
 	/**
-	 * the name of the table 
+	 * Name of LocalStorage table
 	 */
 	public static final String LOCALSTORAGE_TABLE_NAME = "local_storage_table";
-	
 	/**
-	 * the id column of the table LOCALSTORAGE_TABLE_NAME
+	 * ID column of LocalStorage table
 	 */
 	public static final String LOCALSTORAGE_ID = "_id";
-	
 	/**
-	 * the value column of the table LOCALSTORAGE_TABLE_NAME
+	 * Value column of LocalStorage table
 	 */
 	public static final String LOCALSTORAGE_VALUE = "value";
 	
 	private static final int DATABASE_VERSION = 2;
 	private static final String DATABASE_NAME = "local_storage.db";
-	private static final String DICTIONARY_TABLE_CREATE = "CREATE TABLE " + LOCALSTORAGE_TABLE_NAME 
-			+ " (" + LOCALSTORAGE_ID + " TEXT PRIMARY KEY, "
-			+ LOCALSTORAGE_VALUE + " TEXT NOT NULL);";
-	
+	private static final String CREATE_TABLE = 	"CREATE TABLE " + LOCALSTORAGE_TABLE_NAME + " (" 
+													+ LOCALSTORAGE_ID + " TEXT PRIMARY KEY, "
+													+ LOCALSTORAGE_VALUE + " TEXT NOT NULL" 
+												+ ");";
 
 	/**
-	 * Returns an instance of LocalStorage
-	 * @param ctx : a Context used to create the database
-	 * @return the instance of LocalStorage of the application or a new one if it has not been created before.
+	 * Returns the instance of LocalStorage
+	 * @param context: context used to create the database
+	 * @return the instance of LocalStorage of the application.
 	 */
-	public static LocalStorage getInstance(Context ctx) {
-		if (mInstance == null) {
-			mInstance = new LocalStorage(ctx.getApplicationContext());
+	public static LocalStorage getInstance(Context context) {
+		if (sInstance == null) {
+			sInstance = new LocalStorage(context.getApplicationContext());
 		}
-		return mInstance;
+		
+		return sInstance;
 	}
 
-
 	private LocalStorage(Context context) {
-		super(context,DATABASE_NAME,null,DATABASE_VERSION);
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(DICTIONARY_TABLE_CREATE);
+		db.execSQL(CREATE_TABLE);
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase db,int oldVersion, int newVersion) {
-		Log.w(LocalStorage.class.getName(),
-				"Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		if (sDebug) Log.w(getClass().getName(), "Upgrading database from version " + oldVersion + " to " + newVersion + ", All data will be lost.");
+		
 		db.execSQL("DROP TABLE IF EXISTS " + LOCALSTORAGE_TABLE_NAME);
 		onCreate(db);
 	}

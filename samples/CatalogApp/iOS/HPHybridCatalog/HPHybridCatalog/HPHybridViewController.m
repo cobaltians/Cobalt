@@ -8,110 +8,89 @@
 
 #import "HPHybridViewController.h"
 
-#define JSNameTestCallback @"nameTestCallback"
+#define JSNameTestCallback      @"nameTestCallback"
 #define JSNameTestCallbackAsync @"nameTestCallbackAsync"
-
-@interface HPHybridViewController ()
-
-@end
 
 @implementation HPHybridViewController
 
 @synthesize messageToSendToWebTextField;
 
-NSOperationQueue *queue;
+NSOperationQueue * queue;
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark LIFE CYCLE
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-    [self.navigationController setNavigationBarHidden:YES];
     
-    [self loadContentInWebView:self.webView FromFileNamed:self.pageName atPath:RESSOURCE_PATH withRessourcesAtPath:RESSOURCE_PATH];
+    // Do any additional setup after loading the view from its nib.
+    [self setDelegate:self];
+    [self.navigationController setNavigationBarHidden:YES];
     
     queue = [[NSOperationQueue alloc] init];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark WEBVIEW METHODS
+#pragma mark COBALT DELEGATE METHODS
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
--(BOOL)handleDictionarySentByJavaScript:(NSDictionary *)dict
+- (BOOL)onUnhandledMessage:(NSDictionary *)message
 {
-    NSString *type = [dict objectForKey:kJSType];
-    if(type && type.length >0 && [type isKindOfClass:[NSString class]])
-    {
-        if([type isEqualToString:JSTypeEvent])
-        {
-            NSString *name = [dict objectForKey:kJSName];
-            if(name && [name isKindOfClass:[NSString class]] && name.length >0)
-            {
-                if([name isEqualToString:JSNameTestCallback])
-                {
-                    NSString *value = [dict objectForKey:kJSValue];
-                    self.messageToSendToWebTextField.text = value;
-                    
-                    NSString *callbackID = [NSString stringWithFormat:@"%@",[dict objectForKey:kJSCallbackID]];
-                    if(callbackID && callbackID.length >0)
-                    {
-                        [self changeNameForWebCallBack:callbackID withValue:value];
-                    }
-                    return YES;
-                }
-                else if([name isEqualToString:JSNameTestCallbackAsync])
-                {
-                    NSString *value = [dict objectForKey:kJSValue];
-                    self.messageToSendToWebTextField.text = value;
-                    
-                    NSString *callbackID = [NSString stringWithFormat:@"%@",[dict objectForKey:kJSCallbackID]];
-                    if(callbackID && callbackID.length >0)
-                    {
-                        [self changeNameForWebCallBackAsync:callbackID withValue:value];
-                    }
-                    return YES;
-                }
-            }
+    return NO;
+}
+
+- (BOOL)onUnhandledEvent:(NSString *)event withData:(NSDictionary *)data andCallback:(NSString *)callback
+{
+    if ([event isEqualToString:JSNameTestCallback]) {
+        NSString * value = [data objectForKey:kJSValue];
+        [messageToSendToWebTextField performSelectorOnMainThread:@selector(setText:) withObject:value waitUntilDone:YES];
+        
+        if (callback
+            && callback.length > 0) {
+            [self changeNameForWebCallBack:callback withValue:value];
         }
-        else if([type isEqualToString:JSTypeCallBack])
-        {
-            NSString *callbackID = [dict objectForKey:kJSCallbackID];
-            if(callbackID && callbackID.length >0 && [callbackID isKindOfClass:[NSString class]])
-            {
-                if([callbackID isEqualToString:JSNameTestCallback])
-                {
-                    NSString *value = [dict objectForKey:kJSParams];
-                    UIAlertView *a = [[UIAlertView alloc] initWithTitle:@"Toast JS callback" message:value delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                    [a performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
-                    return YES;
-                }
-                else if([callbackID isEqualToString:JSNameTestCallbackAsync])
-                {
-                    NSString *value = [dict objectForKey:kJSParams];
-                    UIAlertView *a = [[UIAlertView alloc] initWithTitle:@"Toast JS callback Async" message:value delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                    [a performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
-                    return YES;
-                }
-            }
-            
-        }
+        
+        return YES;
     }
-    return [super handleDictionarySentByJavaScript:dict];
+    else if([event isEqualToString:JSNameTestCallbackAsync]) {
+        NSString * value = [data objectForKey:kJSValue];
+        [messageToSendToWebTextField performSelectorOnMainThread:@selector(setText:) withObject:value waitUntilDone:YES];
+        
+        if (callback
+            && callback.length > 0) {
+            [self changeNameForWebCallBackAsync:callback withValue:value];
+        }
+        
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (BOOL)onUnhandledCallback:(NSString *)callback withData:(NSDictionary *)data
+{
+    if ([callback isEqualToString:JSNameTestCallback]) {
+        NSString * value = [data objectForKey:kJSValue];
+        UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Toast JS callback" message:value delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertView performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+        
+        return YES;
+    }
+    else if ([callback isEqualToString:JSNameTestCallbackAsync]) {
+        NSString * value = [data objectForKey:kJSValue];
+        UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Toast JS callback Async" message:value delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertView performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+        
+        return YES;
+    }
+    
+    return NO;
 }
 
 
@@ -121,41 +100,38 @@ NSOperationQueue *queue;
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
--(void) changeNameForWebCallBackAsync:(NSString *)callBackID withValue:(NSString *)value
+- (void)changeNameForWebCallBackAsync:(NSString *)callBackID withValue:(NSString *)value
 {
-    NSString *nValue = [NSString stringWithFormat:@"Je m'appelle %@",value];
+    NSString * nValue = [NSString stringWithFormat:@"Je m'appelle %@", value];
     
-    NSURL *url = [NSURL URLWithString:@"http://google.fr"];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSURL * url = [NSURL URLWithString:@"http://google.fr"];
+    NSURLRequest * request = [NSURLRequest requestWithURL:url];
     
-    [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse* response, NSData* data, NSError* error)
-     {
-         if(error)
-         {
-             NSLog(@"Connection failed ! Error - %@ %@",[error localizedDescription],[[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
+    [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse * response, NSData * data, NSError * error) {
+        if (error) {
+            NSLog(@"Connection failed! Error - %@ %@",  [error localizedDescription],
+                                                        [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
+        }
+        
+        if (data) {
+            NSString * string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            if (! string) {
+                 string = [[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding];
+            }
+            //string = @"google loaded!";
+            NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%@ && %@", nValue, string], kJSValue, nil];
+            [self sendCallback:callBackID withData:data];
          }
-         
-         if(data)
-         {
-             NSString *s = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-             if(!s)
-                 s = [[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding];
-             
-             //s = @"google loaded!";
-             [self sendCallbackResponseWithID:callBackID andObject:[NSString stringWithFormat:@"%@ && %@",nValue,s]];
-         }
-     }];
-    
+    }];
 }
 
 
--(void) changeNameForWebCallBack:(NSString *)callBackID withValue:(NSString *)value
+- (void)changeNameForWebCallBack:(NSString *)callBackID withValue:(NSString *)value
 {
-    NSString *nValue = [NSString stringWithFormat:@"Je m'appelle %@",value];
+    NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Je m'appelle %@", value], kJSValue, nil];
     
-    [self sendCallbackResponseWithID:callBackID andObject:nValue];
+    [self sendCallback:callBackID withData:data];
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -163,28 +139,16 @@ NSOperationQueue *queue;
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
 - (IBAction)testCallback:(id)sender {
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-                          JSTypeEvent, kJSType,
-                          JSNameTestCallback, kJSName,
-                          [NSArray arrayWithObjects:[NSNumber numberWithInt:51],[NSNumber numberWithFloat:42], nil],kJSValue,
-                          JSNameTestCallback, kJSCallbackID,
-                          
-                          nil];
-    [self executeScriptInWebView:self.webView WithDictionary:dict];
+    NSArray * value = [NSArray arrayWithObjects:[NSNumber numberWithInt:51],[NSNumber numberWithFloat:42], nil];
+    NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys: value, kJSValue, nil];
+    [self sendEvent:JSNameTestCallback withData:data andCallback:JSNameTestCallback];
 }
 
 - (IBAction)testCallbackAsync:(id)sender {
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-                          JSTypeEvent, kJSType,
-                          JSNameTestCallbackAsync, kJSName,
-                          [NSArray arrayWithObjects:@"Bonjour",@"Guillaume", nil],kJSValue,
-                          JSNameTestCallbackAsync, kJSCallbackID,
-                          
-                          nil];
-    [self executeScriptInWebView:self.webView WithDictionary:dict];
+    NSArray * value = [NSArray arrayWithObjects:@"Bonjour", @"Guillaume", nil];
+    NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys: value, kJSValue, nil];
+    [self sendEvent:JSNameTestCallbackAsync withData:data andCallback:JSNameTestCallbackAsync];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -196,25 +160,11 @@ NSOperationQueue *queue;
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
-    NSString *text = textField.text;
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-                          JSTypeLog, kJSType,
-                          text,kJSValue,
-                          nil];
-    [self executeScriptInWebView:self.webView WithDictionary:dict];
+    
+    NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys:textField.text, kJSValue, nil];
+    [self sendEvent:@"logThis" withData:data andCallback:nil];
     
     return YES;
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark MEMORY MANAGEMENT
-#pragma mark -
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

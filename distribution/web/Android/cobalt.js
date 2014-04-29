@@ -1,9 +1,33 @@
-/* helper object to communicate with native */
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014 Cobaltians
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 var cobalt={
     
     userEvents:{}, //objects of events defined by the user
-	debug:false, //disable stuff for all cobalt. dont send logs to native
-	sendingToNative:true, //enable or disable native calls
+	debug:false,
+	debugInBrowser:false,
+	debugInLogdiv:false,
 
 	callbacks:{},//array of all callbacks by callbackID
 	lastCallbackId:0,
@@ -13,63 +37,87 @@ var cobalt={
 	*/
 	init:function(options){
     	if (options){
-			if (options.sendingToNative===false){
-				this.sendingToNative=false;
-			}
-			if (options.debug===true){
-				this.debug=true;
-				this.createLogDiv();
-			}
-		    if (options.debugAjax===true){
-			    this.debugAjax=true;
-		    }
-			if (options.events){
+            this.debug = ( options.debug === true );
+            this.debugInBrowser = ( options.debugInBrowser === true );
+            this.debugInLogdiv = ( options.debugInLogdiv === true );
+
+		    if (options.events){
 		        this.userEvents=options.events
 	        }
-		    if (options.storage===true){
-			    cobalt.initStorage();
-		    }
+            if (cobalt.debugInLogdiv){
+			    this.createLogDiv();
+            }
 		}
+		cobalt.storage.enable();
+
 		if (cobalt.adapter.init){
 			cobalt.adapter.init();
 		}
-		//send cobalt is ready event to native
+        //send cobalt is ready event to native
 		cobalt.send({'type':'cobaltIsReady'})
     },
-
-
-	/*	cobalt.log(stuff,sendLogToNative)
-		stuff : a string or an object. object will be json-ised
-		sendLogToNative : boolean to call native log function. default to true.
-			be carefull of looping calls !
+	addEventListener:function(eventName, handlerFunction){
+		if (typeof eventName === "string" && typeof handlerFunction === "function"){
+			this.userEvents[eventName] = handlerFunction;
+		}
+	},
+	removeEventListener:function(eventName){
+		if (typeof eventName === "string" && this.userEvents[eventName] ){
+			this.userEvents[eventName] = undefined;
+		}
+	},
+	/*	cobalt.log(stuff,...)
+		all arguments can be a string or an object. object will be json-ised and separated with a space.
+		cobalt.log('toto')
+		cobalt.log('a',5,{"hip":"hop"})
 	*/
-	log:function( stuff, sendLogToNative ){
-	    if ( cobalt.debug ){
-		    if (sendLogToNative === undefined) sendLogToNative=true;
-		 	stuff=cobalt.toString(stuff)
-		    var logdiv=$('#cobalt_logdiv')
-		   	if (logdiv.length){
-				try{
-                    logdiv.append("<br/>"+cobalt.HTMLEncode(stuff));
-                }catch(e){
-                    logdiv.append("<br/><b>cobalt.log failed on something.</b>");
-                }
-			}
-		    if( sendLogToNative ){
-			    cobalt.send({"type":"typeLog","value":stuff})
-	        }
-	    }
+	log:function(){
+        var logString=cobalt.argumentsToString(arguments);
+        if ( cobalt.debug ){
+            if (cobalt.debugInBrowser && window.console){
+                console.log(logString);
+            }else{
+                cobalt.send({ type : "log", value : logString })
+            }
+            cobalt.divLog(logString)
+        }
     },
+    //TODO change all dependencies
+    divLog:function(){
+        //TODO document this
+        if (cobalt.debugInLogdiv){
+	        cobalt.createLogDiv();
+            var logdiv=$('#cobalt_logdiv')
+            if (logdiv.length){
+                var logString="<br/>"+cobalt.argumentsToString(arguments);
+                try{
+                    logdiv.append(logString);
+                }catch(e){
+                    logdiv.append("<b>cobalt.log failed on something.</b>");
+                }
+            }
+        }
+    },
+    argumentsToString:function(){
+        var stringItems=[];
+        //ensure arguments[0] exists?
+        $.each(arguments[0],function(i,elem){
+            stringItems.push(cobalt.toString(elem))
+        })
+        return stringItems.join(' ');
+    },
+    //TODO change all dependencies, enhance
 	/* internal, create log div if needed */
 	createLogDiv:function(){
 		if ($('#cobalt_logdiv').length==0){
 			//create usefull log div:
-			$('body').append('<div id="cobalt_logdiv" style="position: absolute; top:10px; right: 10px; padding:10px; width:10px; height: 10px; border:1px solid blue; overflow: hidden; "></div>')
-			$('#cobalt_logdiv').on('tap',cobalt.toggleLogDiv).on('click',cobalt.toggleLogDiv);
+			$('body').append('<div id="cobalt_logdiv" style="width:100%; text-align: left; height: 100px; border:1px solid blue; overflow: scroll; background:#eee;"></div>')
 		}
 	},
+	//TODO change all dependencies, enhance
 	/* internal, toggle visibility of log div if log div was created by the lib */
 	toggleLogDiv:function(){
+        //TODO remove $() dependencie
 		if ($(this).css('width')!="250px"){
 			$(this).css({ width : '250px', height:'300px', overflow:"scroll"});
 		}else{
@@ -81,58 +129,62 @@ var cobalt={
 	send:function(obj, callback){
 		if (callback){
 			if (typeof callback==="function"){
-				obj.callbackID = cobalt.lastCallbackId++;
-				cobalt.callbacks[obj.callbackID]=callback;
+				obj.callback = ""+(cobalt.lastCallbackId++);
+				cobalt.callbacks[obj.callback]=callback;
 			}else if (typeof callback==="string"){
-				obj.callbackID = ""+callback;
+				obj.callback = ""+callback;
 			}
 	    }
+        if (cobalt.debugInBrowser){
+            cobalt.log('sending', obj)
+        }
 		cobalt.adapter.send(obj, callback)
 	},
 	//Sends an event to native side.
 	//See doc for guidelines.
     sendEvent:function(eventName, params, callback){
 	    if (eventName){
-		    var obj = params || {};
-		    obj.type = "typeEvent";
-		    obj.name = eventName;
+		    var obj = {
+			    type : "event",
+			    event : eventName,
+			    data : params || {}
+		    };
 		    cobalt.send(obj, callback);
 	    }
 	},
 	//Sends a callback to native side.
 	//See doc for guidelines.
-    sendCallback:function(originalEvent, params){
-		var event=originalEvent;
-		if (typeof event.callbackID ==="string" && event.callbackID.length > 0){
-			//cobalt.log("calling callback with "+JSON.stringify({type:"typeCallback", callbackID:event.callbackID, params: params}))
-			cobalt.send({type:"typeCallback", callbackID:event.callbackID, params: params})
+    sendCallback:function(callback, data){
+		if (typeof callback ==="string" && callback.length > 0){
+			cobalt.divLog("calling callback with callback id = ",callback)
+			cobalt.send({type:"callback", callback : callback, data: data})
 	    }
 	},
 	//Navigate to an other page or do some special navigation actions
 	//See doc for guidelines.
-	navigate:function(navigationType, navigationPageName, navigationClassId){
+	navigate:function(navigationType, page, controller){
 		switch (navigationType){
 			case "push":
-				if (navigationPageName){
-					cobalt.send({ "type":"typeNavigation", "navigationType":"push", "navigationPageName":navigationPageName, "navigationClassId": navigationClassId});
+				if (page){
+					cobalt.send({ "type":"navigation", "action":"push", data : { page :page, controller: controller }});
 				}
 			break;
 			case "pop":
-				cobalt.send({ "type":"typeNavigation", "navigationType":"pop"});
+				cobalt.send({ "type":"navigation", "action":"pop"});
 			break;
-			case "modale":
-				if (navigationPageName){
-					cobalt.adapter.navigateToModale(navigationPageName, navigationClassId);
+			case "modal":
+				if (page){
+					cobalt.adapter.navigateToModal(page, controller);
 				}
 			break;
 			case "dismiss":
-				cobalt.adapter.dismissFromModale();
+				cobalt.adapter.dismissFromModal();
 			break;
 		}
 	},
 	/* sends a toast request to native */
 	toast:function(text){
-		cobalt.sendEvent("nameToast", { "value" : cobalt.toString(text) });
+		cobalt.send({ type : "ui", control : "toast", data : { message : cobalt.toString(text) } } );
 	},
 
 	/*  Raise a native alert with options
@@ -140,94 +192,96 @@ var cobalt={
 
 		//full web
 		cobalt.alert("Texte");
-		cobalt.alert("Title", "Texte", ["Ok"], { callback:function(index){console.log('popup dismissed') }});
-		cobalt.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", alertId:12 });
-
-		//native callbacks
-		cobalt.alert("Title", "Texte", ["Ok"], { callbackType:"native", alertId:12 });
+		cobalt.alert("Title", "Texte", ["Ok"], { callback:function(data){cobalt.log('popup dismissed '+data.index) }});
+		cobalt.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", cancelable : true });
 
 	 */
 	alert:function(title, text, buttons, options){
 		if (title || text){
-			var obj={ type:"typeAlert"}
+			var obj={ type : "ui", control : "alert", data : {
+				message : text,
+				title : title
+			}};
 			var callback;
-			if (text) obj.alertMessage = text;
-			if (title) obj.alertTitle = title;
 
-			//Add buttons if any
 			if (buttons && cobalt.isArray(buttons) && buttons.length){
-				obj.alertButtons=buttons;
+				obj.data.buttons=buttons;
 			}
+
 			//check options
 			if ( options ){
 				//add web callback if any
 				if (typeof options.callback === "string" || typeof options.callback === "function"){
-					obj.alertReceiver="web";
 					callback=options.callback;
 				}
-				//add alertIdentifier
-				obj.alertId=parseInt(options.alertId);
-				//set callbacks as native if asked
-				if (options.callbackType === "native"){
-					obj.alertReceiver="native";
-					if (callback){
-						cobalt.log("warning : alert callback has been set to native, web callback won't be called.");
-					}
-					callback=undefined;
-				}
-				if ( options.mandatory === true ){
-					obj.alertIsCancelable=false;
+				if ( options.cancelable ){
+					obj.data.cancelable=true;
 				}
 			}
+
 			//enforce alertId presence :
-			if (!obj.alertId || !cobalt.isNumber(obj.alertId)){
-				obj.alertId=0;
+			if (!obj.data.id || !cobalt.isNumber(obj.data.id)){
+				obj.data.id=0;
 			}
 			cobalt.send(obj, callback);
 		}
 	},
 	/*
-		show a web page as an alert.
+		show a web page as an layer.
 		//see doc for guidelines.
-		//cobalt.webAlert("show","tests_12_webAlertContent.html",1.2);
-		//cobalt.webAlert("dismiss");
+		//cobalt.webLayer("show","tests_12_webAlertContent.html",1.2);
+		//cobalt.webLayer("dismiss");
+		//in next example, foobar object will be sent in onWebLayerDismissed :
+		//cobalt.webLayer("dismiss",{ foo : "bar"});
 	 */
-	webAlert:function(action, pageName, fadeDuration){
+	webLayer:function(action, data, fadeDuration){
 		switch (action){
 			case "dismiss":
-				cobalt.send({type:"typeWebAlert", name:"dismiss"});
+				cobalt.send({type:"webLayer", action:"dismiss", data: data});
 			break;
 			case "show":
-				if (pageName){
-					cobalt.send({type:"typeWebAlert", name:"show", pageName:pageName, fadeDuration:fadeDuration})
+				if (data){
+					cobalt.send({type:"webLayer", action:"show", data :{ page:data, fadeDuration:fadeDuration }})
 				}
 			break;
 		}
 	},
+	/*
+		open an url in the device browser.
+		//cobalt.openExternalUrl("http://cobaltians.com")
+	*/
+	openExternalUrl:function(url){
+		if (url){
+			cobalt.send({
+				type: "intent",
+				action: "openExternalUrl",
+				data: {
+					url: url
+	    		}
+			});
+		}
+	},
     /* internal, called from native */
-    execute:function(data){
-    	//cobalt.log(data,false)
+    execute:function(json){
+    	cobalt.divLog("received", json)
         /*test if data.type exists, otherwise parse data or die silently */
-        if (data && ! data.type){
+        if (json && ! json.type){
         	try{
-                data = JSON.parse(data);
+                json = JSON.parse(json);
             }catch(e){
-                data = {};
+                json = {};
             }
         }
         try{
-	        switch (data.type){
-	        	case "typeEvent":
-                    cobalt.adapter.handleEvent(data)
-	            break
-	            case "typeCallback":
-                    cobalt.adapter.handleCallback(data)
+	        switch (json.type){
+	        	case "event":
+                    cobalt.adapter.handleEvent(json)
+	                break;
+	            case "callback":
+                    cobalt.adapter.handleCallback(json)
                     break;
-                case "typeLog":
-                    cobalt.log('LOG '+decodeURIComponent(data.value), data.logBack)
-                break
-	        	default:
-	        		cobalt.log('received unhandled data type : '+data.type)        		
+		        default:
+	        		cobalt.log('received unhandled data type : '+json.type)
 	        }
 	    }catch(e){
             cobalt.log('cobalt.execute failed : '+e)
@@ -235,21 +289,21 @@ var cobalt={
     },
 	//internal function to try calling callbackID if it's representing a string or a function.
 	tryToCallCallback:function(callback){
-		//cobalt.log('trying to call web callback')
+		cobalt.divLog('trying to call web callback')
 		var callbackfunction=null;
-        if (cobalt.isNumber(callback.callbackID) && typeof cobalt.callbacks[callback.callbackID]==="function"){
+        if (cobalt.isNumber(callback.callback) && typeof cobalt.callbacks[callback.callback]==="function"){
 	        //if it's a number, a real JS callback should exist in cobalt.callbacks
-	        callbackfunction=cobalt.callbacks[callback.callbackID]
+	        callbackfunction=cobalt.callbacks[callback.callback]
 
-		}else if (typeof callback.callbackID === "string"){
+		}else if (typeof callback.callback === "string"){
 	        //if it's a string, check if function exists
-	        callbackfunction=eval(callback.callbackID)
+	        callbackfunction=eval(callback.callback)
 		}
 		if (typeof callbackfunction === "function"){
 	        try{
-		        callbackfunction(callback.params)
+		        callbackfunction(callback.data)
 	        }catch(e){
-		        cobalt.log('Failed calling callback #'+callback.callbackID+'.')
+		        cobalt.log('Failed calling callback : ' + e)
 	        }
         }
 	},
@@ -275,13 +329,20 @@ var cobalt={
 		return ( Object.prototype.toString.call( arr ) === '[object Array]' );
 	},
 	toString: function(stuff){
-		if (typeof stuff != "string"){
-			try{
-				stuff=JSON.stringify(stuff)
-			}catch (e){
-				stuff = ""+stuff;
-			}
-		}
+        switch (typeof  stuff){
+            case "string":
+                break;
+            case "function":
+                stuff = (""+stuff.call).replace('native','web')//to avoid panic ;)
+                break;            
+            default:
+                try{
+                    stuff=JSON.stringify(stuff)
+                }catch (e){
+                    stuff = ""+stuff;
+                }
+
+        }
 		return stuff;
 	},
 	HTMLEncode:function(value){
@@ -290,44 +351,109 @@ var cobalt={
     HTMLDecode:function(value){
         return $('<div/>').html(value || '').text();
     },
-	checkDependency:function(dependency){
-		switch(dependency){
-			case "storage":
-				if ( ! window.utils || ! window.utils.storage){
-					cobalt.log('WARNING : window.utils.storage is not set. it is required for some navigate calls')
-					return false;
-
-				}
-				return cobalt.initStorage();
-			break;
-		}
-	},
-
-	defaultBehaviors:{
-		handleCallback:function(callback){
-	        switch(callback.callbackID){
+    defaultBehaviors:{
+		handleEvent:function(json){
+			cobalt.log("received event", json.event)
+		    if (cobalt.userEvents && typeof cobalt.userEvents[json.event] === "function"){
+				cobalt.userEvents[json.event](json.data,json.callback);
+		    }
+	    },
+		handleCallback:function(json){
+	        switch(json.callback){
 	            default:
-				    cobalt.tryToCallCallback(callback)
+				    cobalt.tryToCallCallback(json)
 			    break;
 	        }
 	    },
-		navigateToModale:function(navigationPageName, navigationClassId){
-			cobalt.send({ "type":"typeNavigation", "navigationType":"modale", "navigationPageName":navigationPageName, "navigationClassId": navigationClassId});
+		navigateToModal:function(page, controller){
+			cobalt.send({ "type":"navigation", "action":"modal", data : { page :page, controller: controller }});
 		},
-		dismissFromModale:function(){
-			cobalt.send({ "type":"typeNavigation", "navigationType":"dismiss"});
+		dismissFromModal:function(){
+			cobalt.send({ "type":"navigation", "action":"dismiss"});
 		},
 		initStorage:function(){
-			if (window.utils && utils.storage){
-				return utils.storage.enable();
+			return cobalt.storage.enable()
+		}
+	},
+
+
+	storage : {
+		/*	localStorage helper
+
+			cobalt.storage.setItem('town','Lannion');
+			cobalt.storage.getItem('town');
+				//returns 'Lannion'
+
+			cobalt.storage.setItem('age',12);
+			cobalt.storage.getItem('age');
+				//returns '12' (string)
+			cobalt.storage.getItem('age','int'); //there is also float, date, json
+				//returns 12 (number)
+
+			//experimental :
+			cobalt.storage.setItem('user',{name:'toto',age:6},'json');
+			cobalt.storage.getItem('user','json');
+				//returns {name:'toto',age:6} (object)
+
+		 */
+		storage:false,
+		enable:function(){
+			var storage,
+					fail,
+					uid;
+			try {
+				uid = new Date;
+				(storage = window.localStorage).setItem(uid, uid);
+				fail = storage.getItem(uid) != uid;
+				storage.removeItem(uid);
+				fail && (storage = false);
+			} catch(e) {}
+
+			if (!storage){
+				return false;
 			}else{
-				cobalt.log('WARNING : you should include utils.storage to use storage')
+				this.storage=storage;
+				return true;
 			}
-			return false;
+		},
+		clear:function(){
+			if (this.storage){
+				this.storage.clear();
+			}
+		},
+		getItem:function(uid, type){
+			if (this.storage){
+				var val=this.storage.getItem(uid);
+				if (val){
+					switch(type){
+						case undefined :return val;
+						case "int":     return parseInt(val);
+						case "float":   return parseFloat(val);
+						case "date":    return new Date(val);
+						case "json":    return JSON.parse(val)
+					}
+					return val;						
+				}
+				return undefined;
+			}
+		},
+		setItem:function(uid, value, type){
+            //TODO Fix BUG when using setItem undefined and type=json
+			if (this.storage){
+				switch ( type ){
+					case 'json' :   return this.storage.setItem(uid, JSON.stringify(value));
+					default : 		return this.storage.setItem(uid,""+value);
+				}
+			}
+		},
+		removeItem:function(uid){
+			if (this.storage){
+				return this.storage.removeItem(uid)
+			}
 		}
 	}
-};
-cobalt.android_adapter={
+
+};cobalt.android_adapter={
 	//
 	//ANDROID ADAPTER
 	//
@@ -335,61 +461,49 @@ cobalt.android_adapter={
 		cobalt.platform="Android";
 	},
 	// handle events sent by native side
-    handleEvent:function(event){
-		cobalt.log("----received : "+JSON.stringify(event), false)
-        if (cobalt.userEvents && typeof cobalt.userEvents[event.name] === "function"){
-			cobalt.userEvents[event.name](event);
+    handleEvent:function(json){
+		cobalt.log("received event", json.event)
+        if (cobalt.userEvents && typeof cobalt.userEvents[json.event] === "function"){
+			cobalt.userEvents[json.event](json.data,json.callback);
 	    }else{
-	        switch (event.name){
+	        switch (json.event){
 		        case "onBackButtonPressed":
 				    cobalt.log('sending OK for a native back')
-			        cobalt.sendCallback(event,true);
+			        cobalt.sendCallback(json.callback,{value : true});
 			    break;
 	        }
         }
     },
     //send native stuff
     send:function(obj){
-        if (obj && cobalt.sendingToNative){
-        	cobalt.log('----sending :'+JSON.stringify(obj), false)
+        if (obj && !cobalt.debugInBrowser){
+        	cobalt.divLog('sending',obj)
 	        try{	        	
 		        Android.handleMessageSentByJavaScript(JSON.stringify(obj));
 	        }catch (e){
-		        cobalt.log('cant connect to native', false)
+		        cobalt.log('ERROR : cant connect to native')
 	        }
 
         }
     },
-	//modale stuffs. really basic on ios, more complex on android.
-	navigateToModale:function(navigationPageName, navigationClassId){
-		if ( cobalt.checkDependency('storage') ){
-			cobalt.send({ "type":"typeNavigation", "navigationType":"modale", "navigationPageName":navigationPageName, 
-								"navigationClassId": navigationClassId, "callbackID":"cobalt.adapter.storeModaleInformations"});
-		}
+	//modal stuffs. really basic on ios, more complex on android.
+	navigateToModal:function(page, controller){
+		cobalt.send({ "type":"navigation", "action":"modal", data : { page :page, controller: controller }}, 'cobalt.adapter.storeModalInformations');
 	},
-	dismissFromModale:function(){
-		if ( cobalt.checkDependency('storage') ){
-			var dismissInformations= utils.storage.getItem("dismissInformations","json");
-			if (dismissInformations && dismissInformations.navigationPageName && dismissInformations.navigationClassName){
-				cobalt.send({  "type":"typeNavigation","navigationType":"dismiss",
-					                  navigationPageName : dismissInformations.navigationPageName,
-					                  navigationClassName:dismissInformations.navigationClassName
-				                  });
-				utils.storage.removeItem("dismissInformations");
-			}else{
-				cobalt.log("dismissInformations are not available in storage")
-			}
-		}
-
+	dismissFromModal:function(){
+        var dismissInformations= cobalt.storage.getItem("dismissInformations","json");
+        if (dismissInformations && dismissInformations.page && dismissInformations.controller){
+            cobalt.send({ "type":"navigation", "action":"dismiss", data : { page : dismissInformations.page, controller:dismissInformations.controller }});
+            cobalt.storage.removeItem("dismissInformations");
+        }else{
+            cobalt.log("WANRING : dismissInformations are not available in storage")
+        }
 
 	},
-	storeModaleInformations:function(params){
-		//cobalt.log("storing informations for the dismiss :", false)
-		if ( cobalt.checkDependency('storage') ){
-			cobalt.log(params, false)
-			utils.storage.setItem("dismissInformations",params, "json")
+	storeModalInformations:function(params){
+		cobalt.divLog("storing informations for the dismiss :", params)
+		cobalt.storage.setItem("dismissInformations",params, "json")
 
-		}
 	},
 	//localStorage stuff
 	initStorage:function(){
@@ -397,9 +511,9 @@ cobalt.android_adapter={
 		try{
 			window.localStorage=LocalStorage;
 		}catch(e){
-			cobalt.log("LocalStorage ERROR : can't find android class LocalStorage. switching to raw localStorage")
+			cobalt.log("LocalStorage WARNING : can't find android class LocalStorage. switching to raw localStorage")
 		}
-		return utils.storage.enable();
+		return cobalt.storage.enable();
 	},
 	//default behaviours
     handleCallback : cobalt.defaultBehaviors.handleCallback

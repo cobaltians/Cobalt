@@ -8,34 +8,25 @@ cobalt.ios_adapter={
 	init:function(){
 		cobalt.platform="iOs";
 	},
-	// handle events sent by native side
-    handleEvent:function(event){
-		cobalt.log("<b>received</b> : "+JSON.stringify(event), false)
-	    if (cobalt.userEvents && typeof cobalt.userEvents[event.name] === "function"){
-			cobalt.userEvents[event.name](event);
-	    }
-    },
-    // handle callbacks sent by native side
-    handleCallback:function(callback){
-        switch(callback.callbackID){
+	// handle callbacks sent by native side
+    handleCallback:function(json){
+        switch(json.callback){
             case "callbackSimpleAcquitment":
-                //cobalt.log("received callbackSimpleAcquitment", false)
+                cobalt.divLog("received message acquitment")
                 cobalt.adapter.unpipe();
-                
                 if (cobalt.adapter.pipeline.length==0){
-                    cobalt.log('set pipe running=false', false)
+                    cobalt.divLog('end of ios message stack')
                     cobalt.adapter.pipelineRunning=false;
                 }
-                
                 break;
 	        default:
-			    cobalt.tryToCallCallback(callback)
+			    cobalt.tryToCallCallback(json)
 		    break;
         }
     },
     //send native stuff
     send:function(obj){
-	    cobalt.log('adding to pipe', false)
+	    cobalt.divLog('adding to ios message stack', obj)
         cobalt.adapter.pipeline.push(obj);
         if (!cobalt.adapter.pipelineRunning){
             cobalt.adapter.unpipe()
@@ -45,14 +36,15 @@ cobalt.ios_adapter={
     unpipe:function(){
         cobalt.adapter.pipelineRunning=true;
         var objToSend=cobalt.adapter.pipeline.shift();
-	    if (objToSend && cobalt.sendingToNative){
-            cobalt.log('----sending : '+JSON.stringify(objToSend), false)
+	    if (objToSend && !cobalt.debugInBrowser){
+            cobalt.divLog('sending',objToSend)
             document.location.href=encodeURIComponent("h@ploid#k&y"+JSON.stringify(objToSend));
         }
     },
 	//default behaviours
-	navigateToModale : cobalt.defaultBehaviors.navigateToModale,
-	dismissFromModale : cobalt.defaultBehaviors.dismissFromModale,
+	handleEvent : cobalt.defaultBehaviors.handleEvent,
+	navigateToModal : cobalt.defaultBehaviors.navigateToModal,
+	dismissFromModal : cobalt.defaultBehaviors.dismissFromModal,
 	initStorage : cobalt.defaultBehaviors.initStorage
 
 };

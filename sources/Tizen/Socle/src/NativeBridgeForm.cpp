@@ -27,7 +27,7 @@ const String NativeBridgeForm::kTypeNavigation = (L"typeNavigation");
 const String NativeBridgeForm::kTypeCallback = (L"typeCallback");
 const String NativeBridgeForm::kTypePush = (L"push");
 const String NativeBridgeForm::kTypePop = (L"pop");
-const String NativeBridgeForm::kTypeModale = (L"modale");
+const String NativeBridgeForm::kTypeModal = (L"modal");
 const String NativeBridgeForm::kTypeDismiss = (L"dismiss");
 const String NativeBridgeForm::kCallback = (L"callback");
 const String NativeBridgeForm::kNameToast = (L"nameToast");
@@ -392,7 +392,7 @@ NativeBridgeForm::TreatData(IJsonValue* pJSData)
 		{
 			PopWebViewActivity();
 		}
-		else if (pJSStringNavigationType->CompareTo(kTypeModale) == 0)
+		else if (pJSStringNavigationType->CompareTo(kTypeModal) == 0)
 		{
 
 		}

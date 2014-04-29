@@ -1,9 +1,11 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
-import fr.cobaltians.cobalt.fragments.HTMLPullToRefreshFragment;
+import org.json.JSONObject;
+
+import fr.cobaltians.cobalt.fragments.HTMLFragment;
 import fr.cobaltians.cobaltcatalog.R;
 
-public class PullToRefreshFragment extends HTMLPullToRefreshFragment {
+public class PullToRefreshFragment extends HTMLFragment {
 
 	protected int layoutToInflate()
 	{
@@ -26,5 +28,22 @@ public class PullToRefreshFragment extends HTMLPullToRefreshFragment {
 			enablePullToRefresh();
 			disableInfiniteScroll();
 		}
+	}
+	
+	@Override
+	protected void onPullToRefreshRefreshed() { }
+	@Override
+	protected void onInfiniteScrollRefreshed() { }
+	
+	// unhandled JS messages
+	@Override
+	protected void onUnhandledMessage(JSONObject message) { }
+	@Override
+	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
+		return false;
+	}
+	@Override
+	protected boolean onUnhandledCallback(String name, JSONObject data) {
+		return false;
 	}
 }

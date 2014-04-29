@@ -7,11 +7,11 @@ cobalt.bb10_adapter={
  		try{
  			navigator.cascades.onmessage = cobalt.execute
  		}catch(e){
- 	        cobalt.log('cant bind JS to native', false)
+ 	        cobalt.log('cant bind JS to native')
  		}
 
 		//fix ajax calls with a native patch
-		if (!cobalt.debugAjax){
+		if (!cobalt.debugInBrowser){
 			var lib=window.Zepto || window.jQuery;
 			lib.ajax=function(options){
 				cobalt.sendEvent('ajax',{options : options},function(params){
@@ -32,28 +32,35 @@ cobalt.bb10_adapter={
 	},
 	
 	// handle events sent by native side
-    handleEvent:function(event){
-		cobalt.log("----received : "+JSON.stringify(event), false)
-        if (cobalt.userEvents && typeof cobalt.userEvents[event.name] === "function"){
-			cobalt.userEvents[event.name](event);
-	    }
+    handleEvent:function(json){
+		cobalt.log("received event", json.event )
+		if (cobalt.userEvents && typeof cobalt.userEvents[json.event] === "function"){
+			cobalt.userEvents[json.event](json.data,json.callback);
+	    }else{
+	        switch (json.event){
+		        case "onBackButtonPressed":
+				    cobalt.log('sending OK for a native back')
+			        cobalt.sendCallback(json.callback,{value : true});
+			    break;
+	        }
+        }
     },
     //send native stuff
     send:function(obj){
-        if (obj && cobalt.sendingToNative){
-        	cobalt.log('----sending :'+JSON.stringify(obj), false)
+        if (obj && !cobalt.debugInBrowser){
+        	cobalt.divLog('sending', obj)
 	        try{	        	
 		        navigator.cascades.postMessage(encodeURIComponent(JSON.stringify(obj)));
 	        }catch (e){
-		        cobalt.log('cant connect to native', false)
+		        cobalt.log('cant connect to native')
 	        }
 
         }
     },
 	//default behaviours
     handleCallback : cobalt.defaultBehaviors.handleCallback,
-    navigateToModale : cobalt.defaultBehaviors.navigateToModale,
-	dismissFromModale : cobalt.defaultBehaviors.dismissFromModale,
+    navigateToModal : cobalt.defaultBehaviors.navigateToModal,
+	dismissFromModal : cobalt.defaultBehaviors.dismissFromModal,
 	initStorage : cobalt.defaultBehaviors.initStorage
 };
 cobalt.adapter=cobalt.bb10_adapter;

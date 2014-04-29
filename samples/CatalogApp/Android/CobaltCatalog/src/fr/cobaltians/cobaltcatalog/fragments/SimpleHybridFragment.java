@@ -4,31 +4,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
-import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
 import fr.cobaltians.cobalt.fragments.HTMLFragment;
 import fr.cobaltians.cobaltcatalog.R;
 
 public class SimpleHybridFragment extends HTMLFragment {
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-
-		View view = super.onCreateView(inflater, container, savedInstanceState);
-		
-		this.ressourcePath = "www/";
-		if(!webviewContentHasBeenLoaded)
-		{
-			loadFileContentFromAssets(this.ressourcePath, (this.pageName != null) ? this.pageName : "index.html");
-		}
-		
-		return view;
-	}
 	
 	@Override
 	protected int getLayoutToInflate()
@@ -58,16 +39,18 @@ public class SimpleHybridFragment extends HTMLFragment {
 				//TYPE = EVENT
 				if(type != null && type.length() >0 && type.equals(JSTypeEvent))
 				{
-					String name = jsonObj.optString(kJSName);
+					String name = jsonObj.optString(kJSEvent);
 					if(name != null && name.length() >0 && name.equals("getBigData"))
 					{
 						final int value = jsonObj.optInt(kJSValue);
 
-						String callbackId = jsonObj.optString(kJSCallbackID);
+						String callbackId = jsonObj.optString(kJSCallback);
 						if(callbackId != null && callbackId.length() >0)
 						{
 							JSONArray a = generateBigData(value);
-							sendCallbackResponse(callbackId, a);
+							JSONObject data = new JSONObject();
+							data.put(kJSValue, a);
+							sendCallback(callbackId, data);
 						}
 						return true;
 
@@ -104,5 +87,24 @@ public class SimpleHybridFragment extends HTMLFragment {
 		}
 		return a;
 	}
-	
+
+	//  unhandled JS messages
+	@Override
+	protected void onUnhandledMessage(JSONObject message) { }
+	@Override
+	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
+		return false;
+	}
+	@Override
+	protected boolean onUnhandledCallback(String name, JSONObject data) {
+		return false;
+	}
+
+	@Override
+	protected void onPullToRefreshRefreshed() {		
+	}
+
+	@Override
+	protected void onInfiniteScrollRefreshed() {		
+	}
 }

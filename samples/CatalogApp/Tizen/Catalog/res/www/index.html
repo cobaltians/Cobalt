@@ -13,7 +13,7 @@
   		<li><a class="push" href="javascript:;" data-href="tests_01_cssAndJs.html">01. tests basiques CSS et JS</a></li>
   		<li><a class="push" href="javascript:;" data-href="tests_02_basicExchanges.html" data-classid="zoomHybrid">02. tests d'échanges basiques</a></li>
   		<li><a class="push" href="javascript:;" data-href="tests_03_callbacks.html" data-classid="customHybrid">03. tests des fonctions de callbacks</a></li>
-  		<li><a class="push" href="javascript:;" data-href="tests_04_modale.html" data-classid="modalTest">04. tests des modales</a></li>
+  		<li><a class="push" href="javascript:;" data-href="tests_04_modal.html" data-classid="modalTest">04. tests des modales</a></li>
  		<li><a class="push disabled" href="javascript:;" data-href="tests_05_forms.html">05. éléments de formulaires</a></li>
  		<li><a class="push" href="javascript:;" data-href="tests_06_toasts.html" data-classid="toastAlert">06. toasts et alertes</a></li>
  		<li><a class="push" href="javascript:;" data-href="tests_07_localstorage_page1.html">07. echanges de données (localStorage)</a></li>
@@ -32,24 +32,24 @@
 
   		<p>Ci dessous le log de la lib d'echange</p>
   		<input id="monBouton3" type="button" value="nettoyage logs"/>
-  		<div id="nativeBridge_logdiv"></div>
+  		<div id="cobalt_logdiv"></div>
   		
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/utils.storage.js"></script>
-        <script type="text/javascript" src="js/nativeBridge/nativeBridge.js"></script>
+        <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
         
         <script>
             
             Zepto(function($){
 
-	            nativeBridge.init({
+	            cobalt.init({
 		            debug:true,
 		            //sendingToNative:false,
 		            events:{
 			            "onBackButtonPressed":function(event){
-				            nativeBridge.alert('Quitter?',"Êtes-vous sûr de vouloir quitter l'application catalogue?", ["Confirmer","Annuler"],{ callback:function(params){
+				            cobalt.alert('Quitter?',"Êtes-vous sûr de vouloir quitter l'application catalogue?", ["Confirmer","Annuler"],{ callback:function(params){
 					            if (params.index===0){
-						            nativeBridge.sendCallback(event,true);
+						            cobalt.sendCallback(event,true);
 					            }
 				            }})
 			            }
@@ -62,16 +62,16 @@
 
                 $('a.push').on('tap',function(){
 	            	if ( ! $(this).hasClass('disabled') ){
-	            		nativeBridge.log('tap')
-	            		nativeBridge.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
+	            		cobalt.log('tap')
+	            		cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
 	            	}
 		            return false;
 	            });
 	            
 	            $('#monBouton3').on('tap click',function(){
-					nativeBridge.ios_adapter.pipeline=[];
-					nativeBridge.ios_adapter.pipelineRunning=false;
-                    $('#nativeBridge_logdiv').html('');
+					cobalt.ios_adapter.pipeline=[];
+					cobalt.ios_adapter.pipelineRunning=false;
+                    $('#cobalt_logdiv').html('');
                     return false;                    
 				});
 	            

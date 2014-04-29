@@ -82,6 +82,7 @@ public class ZoomHybridFragment extends HTMLFragment {
 
 	private void setZoomLevelInWebView(int nZoomLevel)
 	{
+		/*
 		JSONObject obj = new JSONObject();
 		try {
 			obj.put(kJSType, JSTypeEvent);
@@ -91,5 +92,28 @@ public class ZoomHybridFragment extends HTMLFragment {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		*/
+	}
+
+	//  unhandled JS messages
+	@Override
+	protected void onUnhandledMessage(JSONObject message) { }
+	@Override
+	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
+		return false;
+	}
+	@Override
+	protected boolean onUnhandledCallback(String name, JSONObject data) {
+		return false;
+	}
+
+
+	@Override
+	protected void onPullToRefreshRefreshed() {		
+	}
+
+
+	@Override
+	protected void onInfiniteScrollRefreshed() {		
 	}
 }
