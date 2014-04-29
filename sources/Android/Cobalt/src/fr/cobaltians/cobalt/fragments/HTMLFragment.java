@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import fr.cobaltians.cobalt.BuildConfig;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -90,9 +91,10 @@ import fr.cobaltians.cobalt.R;
  * @author Diane Moebs
  */
 public abstract class HTMLFragment extends Fragment implements IScrollListener {
-	
-	// TAG
-	private final static String TAG = "HTMLFragment";
+
+    // TAG
+    protected final static String TAG = HTMLFragment.class.getSimpleName();
+
 	// RESOURCES
 	private final static String ASSETS_PATH = "file:///android_asset/";
 		
@@ -190,7 +192,6 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	/*********************************************************
 	 * MEMBERS
 	 ********************************************************/
-	protected static boolean sDebug = false;
 	protected static Context sContext;
 	
 	protected String mPage;
@@ -361,7 +362,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			else mWebViewPlaceholder.addView(mWebView);
 		}	
 		else  {
-			if(sDebug) Log.e(TAG, "addWebView: you must set up Web view placeholder in setUpViews!");
+			if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - addWebView: you must set up Web view placeholder in setUpViews!");
 		}		
 	}
 	
@@ -392,7 +393,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 				mWebViewPlaceholder.removeView(mWebView);
 			}
 		}
-		else if(sDebug) Log.e(TAG, "removeWebViewFromPlaceholder: you must set up Web view placeholder in setUpViews!");
+		else if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - removeWebViewFromPlaceholder: you must set up Web view placeholder in setUpViews!");
 	}
 	
 	@SuppressLint("SetJavaScriptEnabled")
@@ -461,7 +462,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			mWebView.setWebViewClient(scaleWebViewClient);
 		}
 		else {
-			if(sDebug) Log.e(TAG, "setWebViewSettings: Web view is null.");
+			if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - setWebViewSettings: Web view is null.");
 		}
 	}
 	
@@ -489,18 +490,6 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 		}
 	}
 	
-	/*****************************************
-	 * LOGGING
-	 ****************************************/
-	
-	public static boolean isLoggingEnabled() {
-		return sDebug;
-	}
-
-	public static void enableLogging(boolean debug) {
-		sDebug = debug;
-	}
-	
 	/****************************************************************************************
 	 * SCRIPT EXECUTION
 	 ***************************************************************************************/
@@ -520,17 +509,17 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 						String url = "javascript:cobalt.execute(" + message + ");";
 						
 						if(mWebView != null) {
-							Log.i(TAG, "Send event: " + message);
+							if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: {" + message + "}");
 							mWebView.loadUrl(url);		
 						}
 						else {
-							if(sDebug) Log.e(TAG, "executeScriptInWebView: message cannot been sent to empty Web view");
+							if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - executeScriptInWebView: message cannot been sent to empty Web view");
 						}						
 					}
 				});
 			}
 			else {
-				Log.i(TAG, "Adding event to queue: " + jsonObj);
+				if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: adding message to queue {" + jsonObj + "}");
 				mWaitingJavaScriptCallsQueue.add(jsonObj);
 			}
 		}
@@ -540,7 +529,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 		int mWaitingJavaScriptCallsQueueLength = mWaitingJavaScriptCallsQueue.size();
 		
 		for (int i = 0 ; i < mWaitingJavaScriptCallsQueueLength ; i++) {
-			if (sDebug) Log.i(TAG, "executeWaitingCalls: execute " + mWaitingJavaScriptCallsQueue.get(i).toString());
+			if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeWaitingCalls: execute {" + mWaitingJavaScriptCallsQueue.get(i).toString() + "}");
 			executeScriptInWebView(mWaitingJavaScriptCallsQueue.get(i));
 		}
 		
@@ -635,7 +624,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 				// LOG
 				else if (type.equals(JSTypeLog)) {
 					String text = jsonObj.getString(kJSValue);
-					Log.d("JS LOG", text);
+					if (BuildConfig.DEBUG) Log.d(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: JS LOG \"" + text + "\"");
 					return true;
 				}
 				
@@ -736,7 +725,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	}
 	
 	protected void onReady() {
-		if (sDebug) Log.i(TAG, "onReady");
+		if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - onReady");
 
 		mCobaltIsReady = true;
 		executeWaitingCalls();
@@ -978,7 +967,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 				}
 			}
 			else {
-				if (sDebug) Log.e(TAG, "getFragmentForController: " + HTMLFragmentClass.getSimpleName() + " does not inherit from HTMLFragment!");
+				if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getFragmentForController: " + HTMLFragmentClass.getSimpleName() + " does not inherit from HTMLFragment!");
 			}
 		} 
 		catch (java.lang.InstantiationException exception) {
@@ -1012,11 +1001,11 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 						intent.putExtra(kExtras, configuration);
 					}
 					else {
-						if (sDebug) Log.e(TAG, "getIntentForController: " + activity + " does not inherit from Activity!");
+						if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getIntentForController: " + activity + " does not inherit from Activity!");
 					}
 				} 
 				catch (ClassNotFoundException exception) {
-					if (sDebug) Log.e(TAG, "getIntentForController: " + activity + " class not found for id " + controller + "!");
+					if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getIntentForController: " + activity + " class not found for id " + controller + "!");
 					exception.printStackTrace();
 				}
 			}
@@ -1049,9 +1038,9 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			}
 		}
 		catch (JSONException exception) {
-			Log.e(TAG, 	"getConfigurationForController: check cobalt.conf. Known issues: \n "
-												+ "- \t" + controller + " controller not found and no " + JSNavigationControllerDefault + " controller defined \n "
-												+ "- \t" + controller + " or " + JSNavigationControllerDefault + "controller found but no " + kAndroidController + "defined \n ");
+			if (BuildConfig.DEBUG) Log.e(Cobalt.TAG,    TAG + " - getConfigurationForController: check cobalt.conf. Known issues: \n "
+												        + "\t - " + controller + " controller not found and no " + JSNavigationControllerDefault + " controller defined \n "
+												        + "\t - " + controller + " or " + JSNavigationControllerDefault + "controller found but no " + kAndroidController + "defined \n ");
 			exception.printStackTrace();
 			return bundle; // null
 		}
@@ -1072,7 +1061,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			return jsonObj;
 		} 
 		catch (JSONException exception) {
-			if (sDebug) Log.e(TAG, "getConfiguration: check cobalt.conf. File is missing or not at " + ASSETS_PATH + Cobalt.getResourcePath() + CONF_FILE);
+			if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getConfiguration: check cobalt.conf. File is missing or not at " + ASSETS_PATH + Cobalt.getResourcePath() + CONF_FILE);
 			exception.printStackTrace();
 		}
 		
@@ -1094,7 +1083,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			return fileContent.toString();
 		} 
 		catch (FileNotFoundException exception) {
-			if (sDebug) Log.e(TAG, "getFileContentFromAssets: " + file + "not found.");
+			if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - readFileFromAssets: " + file + "not found.");
 		} 
 		catch (IOException exception) {
 			exception.printStackTrace();
@@ -1111,7 +1100,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 		if(intent != null) {
 			getActivity().startActivity(intent);
 		}
-		else if (sDebug) Log.w(TAG, "push: Unable to push " + controller + " controller");
+		else if (BuildConfig.DEBUG) Log.w(Cobalt.TAG,  TAG + " - push: Unable to push " + controller + " controller");
 	}
 	
 	private void pop() {
@@ -1134,7 +1123,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 				exception.printStackTrace();
 			}
 		}
-		else if (sDebug) Log.e(TAG, "presentModal: Unable to present modal " + controller + " controller");
+		else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG,  TAG + " - presentModal: Unable to present modal " + controller + " controller");
 	}
 
 	private void dismissModal(String controller, String page) {
@@ -1151,10 +1140,10 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 
 				NavUtils.navigateUpTo(getActivity(), intent);
 			}
-			else if(sDebug) Log.e(TAG, "dismissModal: unable to dismiss modal since " + controller + " does not inherit from Activity");
+			else if(BuildConfig.DEBUG) Log.e(Cobalt.TAG,  TAG + " - dismissModal: unable to dismiss modal since " + controller + " does not inherit from Activity");
 		} 
 		catch (ClassNotFoundException exception) {
-			if (sDebug) Log.e(TAG, "dismissModal: " + controller + "not found");
+			if (BuildConfig.DEBUG) Log.e(Cobalt.TAG,  TAG + " - dismissModal: " + controller + "not found");
 			exception.printStackTrace();
 		}
 	}
@@ -1179,7 +1168,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			if (activity != null) {
 				activity.back();
 			}
-			else if(sDebug) Log.e(TAG, "onBackButtonPressed: activity is null, cannot call back");
+			else if(BuildConfig.DEBUG) Log.e(Cobalt.TAG,  TAG + " - onBackPressed: activity is null, cannot call back");
 		}
 		else {
 			onBackDenied();
@@ -1191,7 +1180,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	 * @details This method may be overridden in subclasses.
 	 */
 	protected void onBackDenied() {
-		if(sDebug) Log.i(TAG, "onBackDenied: onBackPressed event denied by Web view");
+		if(BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - onBackDenied: onBackPressed event denied by Web view");
 	}
 	
 	/***********************************************************************************************************************************
@@ -1234,14 +1223,14 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 						fragmentTransition.add(activity.getFragmentContainerId(), webLayerFragment);
 						fragmentTransition.commit();
 					}
-					else if(sDebug) Log.e(TAG, "showWebLayer: fragment container not found");
+					else if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - showWebLayer: fragment container not found");
 				}
 			} 
 			catch (JSONException exception) {
 				exception.printStackTrace();
 			}
 		}
-		else if(sDebug) Log.e(TAG, "showWebLayer: unable to show a Web layer from a fragment not attached to an activity!");
+		else if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - showWebLayer: unable to show a Web layer from a fragment not attached to an activity!");
 	}
 	
 	/**
@@ -1390,7 +1379,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 		if (mPullToRefreshWebView != null) {
 			mPullToRefreshWebView.setMode(Mode.PULL_FROM_START);
 		}
-		else if(sDebug) Log.e(TAG, "Unable to enable pull-to-refresh feature. mPullToRefreshWebView must be set.");
+		else if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - enablePullToRefresh: unable to enable pull-to-refresh feature. mPullToRefreshWebView must be set.");
 	}
 	
 	/**
@@ -1402,7 +1391,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			mPullToRefreshWebView.setMode(Mode.DISABLED);
 			mPullToRefreshActivate = false;
 		}
-		else if(sDebug && mPullToRefreshActivate) Log.e(TAG, "Unable to disable pull-to-refresh feature. mPullToRefreshWebView must be set.");
+		else if(BuildConfig.DEBUG && mPullToRefreshActivate) Log.e(Cobalt.TAG, TAG + " - disablePullToRefresh: Unable to disable pull-to-refresh feature. mPullToRefreshWebView must be set.");
 	}
 	
 	/**

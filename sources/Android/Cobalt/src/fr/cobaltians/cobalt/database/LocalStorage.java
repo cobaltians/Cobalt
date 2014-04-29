@@ -33,6 +33,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import fr.cobaltians.cobalt.BuildConfig;
+import fr.cobaltians.cobalt.Cobalt;
 
 /**
  * {@link SQLiteOpenHelper} that is used as replacement of the localStorage of the webviews.
@@ -41,8 +43,8 @@ import android.util.Log;
  */
 public class LocalStorage extends SQLiteOpenHelper {
 
-	protected final static boolean sDebug = false;
-	
+    private static final String TAG = LocalStorage.class.getSimpleName();
+
 	private static LocalStorage sInstance;
 	
 	/**
@@ -89,7 +91,7 @@ public class LocalStorage extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		if (sDebug) Log.w(getClass().getName(), "Upgrading database from version " + oldVersion + " to " + newVersion + ", All data will be lost.");
+		if (BuildConfig.DEBUG) Log.w(Cobalt.TAG, TAG + " - onUpgrade: upgrading database from version " + oldVersion + " to " + newVersion + ", All data will be lost.");
 		
 		db.execSQL("DROP TABLE IF EXISTS " + LOCALSTORAGE_TABLE_NAME);
 		onCreate(db);

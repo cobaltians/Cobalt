@@ -29,6 +29,8 @@
 
 package fr.cobaltians.cobalt.activities;
 
+import fr.cobaltians.cobalt.BuildConfig;
+import fr.cobaltians.cobalt.Cobalt;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -46,7 +48,7 @@ import fr.cobaltians.cobalt.R;
  */
 public abstract class HTMLActivity extends FragmentActivity {
 
-	protected final boolean mDebug = false;
+    protected static final String TAG = HTMLActivity.class.getSimpleName();
 
 	/**************************************************************************************************************************
 	 * LIFECYCLE
@@ -72,7 +74,7 @@ public abstract class HTMLActivity extends FragmentActivity {
 				fragmentTransition.commit();
 			} 
 			else {
-				if (mDebug) Log.e(getClass().getSimpleName(), "onCreate: fragment container not found");
+				if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - onCreate: fragment container not found");
 			}
 		}
 	}

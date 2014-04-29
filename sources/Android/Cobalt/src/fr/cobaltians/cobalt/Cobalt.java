@@ -34,7 +34,9 @@ public class Cobalt {
 	/********************************************
 	 * MEMBERS
 	 *******************************************/
-	
+
+	public static final String TAG = Cobalt.class.getSimpleName();
+
 	private static String sResourcePath = "www/";
 	
 	/********************************************************

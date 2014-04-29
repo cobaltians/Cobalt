@@ -29,6 +29,8 @@
 
 package fr.cobaltians.cobalt.fragments;
 
+import fr.cobaltians.cobalt.BuildConfig;
+import fr.cobaltians.cobalt.Cobalt;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,7 +45,9 @@ import fr.cobaltians.cobalt.customviews.IGestureListener;
  * @author Sebastien
  */
 public class HTMLFlipperFragment extends HTMLFragment implements IGestureListener {
-	
+
+    private final static String TAG = HTMLFlipperFragment.class.getSimpleName();
+
 	private final static String JSEventSwipeLeft = "swipeLeft";
 	private final static String JSEventSwipeRight = "swipeRight";
 	
@@ -132,11 +136,11 @@ public class HTMLFlipperFragment extends HTMLFragment implements IGestureListene
 					jsonObj.put(kJSType,JSTypeEvent);
 					if (direction == GESTURE_SWIPE_LEFT) {
 						jsonObj.put(kJSEvent, JSEventSwipeLeft);
-						if (sDebug) Log.i(getClass().getSimpleName(), "swipe: next");
+						if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - swipe: next");
 					}
 					else if (direction == GESTURE_SWIPE_RIGHT) {
 						jsonObj.put(kJSEvent, JSEventSwipeRight);
-						if (sDebug) Log.i(getClass().getSimpleName(), "swipe: previous");
+						if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - swipe: previous");
 					}
 					executeScriptInWebView(jsonObj);
 				}
