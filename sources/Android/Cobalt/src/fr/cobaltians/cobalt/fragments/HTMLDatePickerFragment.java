@@ -34,15 +34,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import android.os.Build;
 import fr.cobaltians.cobalt.R;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
@@ -98,16 +97,30 @@ public class HTMLDatePickerFragment extends DialogFragment implements DatePicker
 			
 			final DatePicker datePicker = (DatePicker) customView.findViewById(R.id.date_picker);
 
-			final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.FRANCE);
-			
-			Calendar minDate = Calendar.getInstance();
-			try {
-				minDate.setTime(formatter.parse("01.01.1900"));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-			
-			datePicker.setMinDate(minDate.getTimeInMillis());
+			/*
+			// Init the datePicker with mindate under 1900
+			//TODO test for under HoneyComb
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.FRANCE);
+
+                Calendar minDate = Calendar.getInstance();
+                try {
+                    minDate.setTime(formatter.parse("01.01.1800"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                datePicker.setMinDate(minDate.getTimeInMillis());
+            }
+			else {
+                datePicker.init(1800, 01, 01, new OnDateChangedListener() {
+                    @Override
+                    public void onDateChanged(DatePicker datePicker, int year, int month, int day) {
+                        Calendar newDate = Calendar.getInstance();
+                        newDate.set(year, month, day);
+                    }
+                });
+            }*/
 			
 			 // View settings
 	        int year = cal.get(Calendar.YEAR);
