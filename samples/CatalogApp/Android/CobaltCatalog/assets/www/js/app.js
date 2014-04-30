@@ -1,6 +1,6 @@
 var app={
     debug:true,
-    debugInBrowser:true,
+    //debugInBrowser:true,
     //debugInLogdiv:true,
 
 
