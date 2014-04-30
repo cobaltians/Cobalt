@@ -37,6 +37,21 @@ var app={
         }catch(e){
             cobalt.log(e);
         }
+    },
+
+    /* a small assert function used in localStorage */
+    assertEqual : function(testID,func,expectedResult){
+        try{
+            var r=func();
+            if (r===expectedResult){
+                cobalt.log('test #'+testID+" success! ", false)
+            }else{
+                cobalt.log('test #'+testID+" failed! ", false)
+                cobalt.log(cobalt.toString(r)+" != "+cobalt.toString(expectedResult))
+            }
+        }catch(e){
+            cobalt.log('test #'+testID+" failed! "+e, false)
+        }
     }
 
 }
