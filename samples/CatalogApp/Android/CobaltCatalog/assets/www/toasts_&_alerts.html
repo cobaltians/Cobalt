@@ -11,46 +11,40 @@
 
 		<p>Here are a few examples that show many toasts calls and many alerts</p>
 
-		<p><b>Toasts</b></p>
+		<h2>Toasts</h2>
 
-  		<a id="toastA">small toast<br/>
+  		<a id="toastA">small toast</a><br/>
   		<a id="toastB">basic toast</a><br/>
   		<a id="toastC">loooonnnnng toast</a><br/>
-  		<a id="toastD">D\ Afficher un toast avec un \n </a> Les retours à la ligne doivent marcher.<br/>
-  		<a id="toastE">E\ Afficher 20 toats d'un coup</a> Tous les toasts doivent être lisibles.<br/>
+  		<a id="toastD">A toast with multiple lines using \n</a><br/>
+  		<a id="toastE">20 toasts in a row ! boom !</a><br/>
 
-		<p>TEST 02 - Afficher une alerte avec un titre, un texte, un bouton OK</p>
- 		<a id="test2">Afficher</a><br/>
+        <h2>Alerts</h2>
 
-		<p>TEST 03 - Afficher une alerte avec un titre, un texte, deux boutons paramétrés qui activent une fonction javascript. <br>
-		A la fermeture, le bouton qui a été cliqué devrait apparaitre dans un toast déclenché par le web</p>
- 		<a id="test3">Afficher</a><br/>
+		<p>A basic alert setting title and text</p>
+ 		<a id="test2">Show Alert</a><br/>
 
-		<p>TEST 04 - La même chose avec une callback anonyme.</p>
- 		<a id="test4">Afficher</a><br/>
+		<p>Two custom buttons on this one.<br>
+		When alert is closed, web knows which button was clicked</p>
+ 		<a id="test3">Show Alert</a><br/>
+
+		<p>Same thing but with an anonymous callback.</p>
+ 		<a id="test4">Show Alert</a><br/>
 
 
-		<p>TEST 07 - Afficher une alerte avec un grand titre et un grand texte</p>
- 		<a id="test7">Afficher</a><br/>
+		<p>Large title and content on this one.</p>
+ 		<a id="test7">Show Alert</a><br/>
 
-		<p>TEST 08 - (android) Vérifier que cette alerte, contrairement aux autres, peut être fermée en cliquant à coté ou avec le bouton back.</p>
- 		<a id="test8">Afficher</a><br/>
+		<p>On Android, this one can be dismissed by touching the empty zone, around the alert.</p>
+ 		<a id="test8">Show Alert</a><br/>
 		<br/>
 
 
-		<div id="cobalt_logdiv"></div>
-		
-        <script type="text/javascript" src="js/zepto.min.js"></script>
+		<script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
 
-
-		<!-- for cobalt dev only
-		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
-		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
-		-->
-
-        <script>
+		<script>
             
             Zepto(function($){
 
@@ -66,71 +60,64 @@
                     cobalt.navigate('pop');
                 });
 	            
-	            $('#toastA').on('tap click',function(){
+	            app.touch('#toastA',function(){
 	            	cobalt.toast("Ok!")
 		            return false;
 	            });
-   	            $('#toastB').on('tap click',function(){
-	            	cobalt.toast("Salut, ô grand testeur!")
+
+   	            app.touch('#toastB',function(){
+	            	cobalt.toast("Hello Cobalt user !")
 		            return false;
 	            });
-   	            $('#toastC').on('tap click',function(){
-	            	cobalt.toast("On sait depuis longtemps que travailler avec du texte lisible et contenant du sens est source de distractions, et empêche de se concentrer sur la mise en page elle-même. L'avantage du Lorem Ipsum sur un texte générique comme 'Du texte. Du texte. Du texte.' est qu'il possède une distribution de lettres plus ou moins normale, et en tout cas comparable avec celle du français standard. De nombreuses suites logicielles de mise en page ou éditeurs de sites Web ont fait du Lorem Ipsum leur faux texte par défaut, et une recherche pour 'Lorem Ipsum' vous conduira vers de nombreux sites qui n'en sont encore qu'à leur phase de construction. Plusieurs versions sont apparues avec le temps, parfois par accident, souvent intentionnellement (histoire d'y rajouter de petits clins d'oeil, voire des phrases embarassantes).")
+   	            app.touch('#toastC',function(){
+	            	cobalt.toast("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).")
 		            return false;
 	            });
-   	            $('#toastD').on('tap click',function(){
-	            	cobalt.toast("On sait depuis\n longtemps que travailler avec du texte lisible \nest source\n de\n distractions")
+   	            app.touch('#toastD',function(){
+	            	cobalt.toast("It is a long\nestablished fact")
 		            return false;
 	            });
-   	            $('#toastE').on('tap click',function(){
+   	            app.touch('#toastE',function(){
 	            	for (var i=1; i<=20; i++){
-			            cobalt.toast("ok #"+ i)
+			            cobalt.toast("toast #"+ i)
 		            }
 		            return false;
 	            });
 
-	            /*
-
-	            cobalt.alert("Texte");
-				cobalt.alert("Title", "Texte", ["Ok"], { callback:function(params){console.log('popup dismissed :'+params.index) }});
-				cobalt.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", alertIdentifier:12 });
-
-				//native callbacks
-				cobalt.alert("Title", "Texte", ["Ok"], { callbackType:"native", alertIdentifier:12 });
-
-	             */
-
-	            $('#test2').on('tap click',function(){
-		            cobalt.alert("Titre", "Vous allez devoir refermer cette popup.")
+	            app.touch('#test2',function(){
+		            cobalt.alert("My Title", "The default button is 'ok'. Is it OK for you ?")
 	            	return false;
 	            });
-	            $('#test3').on('tap click',function(){
-		            var buttons=["Oui", "Non", "Je ne suis pas sûr"];
-		            cobalt.alert("Titre", "Vous allez devoir refermer cette popup.", buttons, { callback : function(params){
-			            cobalt.toast("alerte refermée. vous avez choisi : "+ buttons[params.index])
+
+                var buttons=["Yes", "No", "I'm not sure"];
+
+	            app.touch('#test3',function(){
+		            cobalt.alert("Close me !", "You gonna close this alert !", buttons, { callback : function(params){
+			            cobalt.toast("alert closed. you choice was : "+ buttons[params.index])
 		            }});
 		            return false;
 	            });
+
 	            window.myApp={
-		            buttons:["Oui", "Non", "Je ne suis pas sûr"],
 		            callMeBack:function(params){
 			            cobalt.log('myApp.callMeBack called with params='+params)
-			            cobalt.toast("alerte refermée. vous avez choisi "+ myApp.buttons[params.index])
+			            cobalt.toast("alert closed. you choice was : "+ buttons[params.index])
 		            }
 	            }
-	            $('#test4').on('tap click',function(){
-		            cobalt.alert("Titre", "Vous allez devoir refermer cette popup.", myApp.buttons, { callback : 'myApp.callMeBack', alertId:55});
+
+	            app.touch('#test4',function(){
+		            cobalt.alert("Close me !", "You gonna close this alert !", myApp.buttons, { callback : 'myApp.callMeBack', alertId:55});
 		            return false;
 	            });
 
 
-	            $('#test7').on('tap click',function(){
-		            cobalt.alert("Quel est la couleur du cheval blanc d'Henry 5?", "Henri V d'Angleterre, né le 9 août 1387 ou le 16 septembre 13871 à Monmouth au Pays de Galles et décédé le 31 août 1422 au château de Vincennes, en France ; duc de Cornouailles et de Lancastre, est roi d'Angleterre de 1413 à 1422.Vainqueur de la bataille d'Azincourt le 25 octobre 1415, il parvient à se faire reconnaître comme héritier du trône de France au traité de Troyes (1420), mais meurt prématurément avant son beau-père Charles VI de France, sans avoir pu ceindre la couronne de France.Fils du roi Henri IV, et de Marie de Bohun, Henri épouse Catherine de Valois et est le père d'Henri VI d'Angleterre, qui lui succèdera à l'âge de neuf mois.", ["Blanc", "Aucune", "Ca dépends"]);
+	            app.touch('#test7',function(){
+		            cobalt.alert("Do you Lorem ?", "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?", ["Indeed.", "Me !", "..."]);
 		            return false;
 	            });
 
-	            $('#test8').on('tap click',function(){
-		            cobalt.alert("Optionelle !", "Cette alerte est optionelle sur Android, on peut l'annuler en cliquant dans le vide ou via le bouton back", ["Oui", "Non"], { cancelable:true });
+	            app.touch('#test8',function(){
+		            cobalt.alert("Optional !", "On Android, this one can be dismissed by touching the empty zone, around the alert.", ["Yes", "No"], { cancelable:true });
 		            return false;
 	            });
 
