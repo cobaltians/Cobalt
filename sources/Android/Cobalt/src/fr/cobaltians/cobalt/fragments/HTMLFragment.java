@@ -29,6 +29,9 @@
 
 package fr.cobaltians.cobalt.fragments;
 
+
+
+
 import fr.cobaltians.cobalt.BuildConfig;
 import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.R;
@@ -56,6 +59,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -177,7 +181,12 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	protected final static String JSActionWebLayerDismiss = "dismiss";
 	protected final static String kJSWebLayerFadeDuration = "fadeDuration";
 	protected final static String JSEventWebLayerOnDismiss = "onWebLayerDismissed";
-	
+
+    // INTENT
+    protected static final String JSTypeIntent = "intent";
+    protected static final String JSActionOpenExternalUrl = "openExternalUrl";
+    protected static final String kJSUrl = "url";
+
 	// PULL TO REFRESH
 	private static String JSEventPullToRefresh = "pullToRefresh";
 	private static String JSCallbackPullToRefreshDidRefresh = "pullToRefreshDidRefresh";
@@ -581,7 +590,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	/**
 	 * This method is called when the JavaScript sends a message to the native side.
 	 * This method should be overridden in subclasses.
-	 * @param messageJS : the JSON-message sent by JavaScript.
+	 * @param message : the JSON-message sent by JavaScript.
 	 * @return true if the message was handled by the native, false otherwise
 	 * @details some basic operations are already implemented : navigation, logs, toasts, native alerts, web alerts
 	 * @details this method may be called from a secondary thread.
@@ -703,7 +712,20 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 						onUnhandledMessage(jsonObj);
 					}
 				}
-				
+
+                // INTENT
+                else if (type.equals(JSTypeIntent)) {
+                    String action = jsonObj.getString(kJSAction);
+
+                    // OPEN EXTERNAL URL
+                    if (action.equals(JSActionOpenExternalUrl)) {
+                        JSONObject data = jsonObj.getJSONObject(kJSData);
+                        String url = data.optString(kJSUrl, null);
+                        openExternalUrl(url);
+
+                        return true;
+                    }
+                }
 				// UNHANDLED TYPE
 				else {
 					onUnhandledMessage(jsonObj);
@@ -1265,7 +1287,18 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			e.printStackTrace();
 		}
     }
-    
+
+    /********************************************************
+     * External Url
+     ********************************************************/
+    private void openExternalUrl(String url) {
+        if (url != null) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intent);
+        }
+
+    }
+
     /******************************************************************************************************************************
 	 * PULL TO REFRESH
 	 *****************************************************************************************************************************/
