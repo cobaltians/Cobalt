@@ -52,7 +52,6 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -71,11 +70,6 @@ import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -92,100 +86,6 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 
     // TAG
     protected final static String TAG = HTMLFragment.class.getSimpleName();
-
-	// RESOURCES
-	private final static String ASSETS_PATH = "file:///android_asset/";
-		
-	// CONFIGURATION FILE
-	private final static String CONF_FILE = "cobalt.conf";
-	private final static String kAndroidController = "androidController";
-	public final static String kExtras = "extras";
-	private final static String kPage = "page";
-	protected final static String kActivity = "activity";
-	protected final static String kPullToRefresh = "pullToRefresh";
-	protected final static String kInfiniteScroll = "infiniteScroll";
-	protected final static String kSwipe = "swipe";
-	
-	/*********************************************************************************
-	 * JS MESSAGES
-	 ********************************************************************************/
-	
-	// GENERAL
-	protected final static String kJSAction = "action";
-	protected final static String kJSCallback = "callback";
-	protected final static String kJSData = "data";
-	protected final static String kJSPage = "page";
-	protected final static String kJSType = "type";
-	protected final static String kJSValue = "value";
-	
-	// CALLBACKS
-	protected final static String JSTypeCallBack = "callback";
-	
-	// COBALT IS READY
-	protected final static String JSTypeCobaltIsReady = "cobaltIsReady";
-	
-	// EVENTS
-	protected final static String JSTypeEvent = "event";
-	protected final static String kJSEvent = "event";
-
-	// BACK BUTTON
-	private final static String JSEventOnBackButtonPressed = "onBackButtonPressed";
-	private final static String JSCallbackOnBackButtonPressed = "onBackButtonPressed";
-		
-	// LOG
-	protected final static String JSTypeLog = "log";
-	
-	// NAVIGATION
-	protected final static String JSTypeNavigation = "navigation";
-	protected final static String JSActionNavigationPush = "push";
-	protected final static String JSActionNavigationPop ="pop";
-	protected final static String JSActionNavigationModal = "modal";
-	protected final static String JSActionNavigationDismiss = "dismiss";
-	protected final static String kJSNavigationController = "controller";
-	protected final static String JSNavigationControllerDefault = "default";
-	
-	// UI
-	protected final static String JSTypeUI = "ui";
-	protected final static String kJSUIControl = "control";
-		
-	// ALERT
-	protected final static String JSControlAlert = "alert";
-	protected final static String kJSAlertTitle = "title";
-	protected final static String kJSAlertMessage = "message";
-	protected final static String kJSAlertButtons = "buttons";
-	protected final static String kJSAlertCancelable = "cancelable";
-	protected final static String kJSAlertButtonIndex  = "index";
-	
-	// DATE PICKER
-	protected static final String JSControlPicker = "picker";
-	protected static final String JSPickerDate = "date";
-	protected static final String kJSDate = "date";
-	protected static final String kJSDay = "day";
-	protected static final String kJSMonth = "month";
-	protected static final String kJSYear = "year";
-	protected static final String kJSTexts = "texts";
-	protected static final String kJSTitle ="title";
-	protected static final String kJSDelete = "delete";
-	protected static final String kJSCancel = "cancel";
-	protected static final String kJSValidate = "validate"; 
-	// TOAST
-	protected final static String JSControlToast = "toast";
-
-	// WEB LAYER
-	protected final static String JSTypeWebLayer = "webLayer";
-	protected final static String JSActionWebLayerShow = "show";
-	protected final static String JSActionWebLayerDismiss = "dismiss";
-	protected final static String kJSWebLayerFadeDuration = "fadeDuration";
-	protected final static String JSEventWebLayerOnDismiss = "onWebLayerDismissed";
-	
-	// PULL TO REFRESH
-	private static String JSEventPullToRefresh = "pullToRefresh";
-	private static String JSCallbackPullToRefreshDidRefresh = "pullToRefreshDidRefresh";
-
-	// INFINITE SCROLL
-	private static String JSEventInfiniteScroll= "infiniteScroll";
-	private static String JSCallbackInfiniteScrollDidRefresh = "infiniteScrollDidRefresh";
-
 
 	/*********************************************************
 	 * MEMBERS
@@ -369,12 +269,12 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 		Bundle arguments = getArguments();
 		
 		if (arguments != null) {
-			mPage = arguments.getString(kPage);
+			mPage = arguments.getString(Cobalt.kPage);
 		}
 		mPage = (mPage != null) ? mPage : "index.html";
 		
 		if (mPreloadOnCreateView) {
-			loadFileFromAssets(Cobalt.getResourcePath(), mPage);
+			loadFileFromAssets(mPage);
 		}
 	}
 	
@@ -476,14 +376,13 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	}
 	
 	/**
-	 * Load the given file in the Web view 
-	 * @param path: path in assets folder where the file is located.
+	 * Load the given file in the Web view
 	 * @param file: file name to load.
 	 * @warning All application HTML files should be found in the same subfolder in ressource path
 	 */
-	public void loadFileFromAssets(String path, String file) {
+	private void loadFileFromAssets(String file) {
 		if(mWebView != null) {
-			mWebView.loadUrl(ASSETS_PATH + path + file);
+			mWebView.loadUrl(Cobalt.getInstance(sContext).getResourcePath() + file);
 			mWebViewContentHasBeenLoaded = true;
 		}
 	}
@@ -547,9 +446,9 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			&& callbackId.length() > 0) {
 			try {
 				JSONObject jsonObj = new JSONObject();
-				jsonObj.put(kJSType, JSTypeCallBack);
-				jsonObj.put(kJSCallback, callbackId);
-				jsonObj.put(kJSData, data);	
+				jsonObj.put(Cobalt.kJSType, Cobalt.JSTypeCallBack);
+				jsonObj.put(Cobalt.kJSCallback, callbackId);
+				jsonObj.put(Cobalt.kJSData, data);
 				executeScriptInWebView(jsonObj);
 			} 
 			catch (JSONException exception) {
@@ -563,10 +462,10 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			&& event.length() > 0) {
 			try {
 				JSONObject jsonObj = new JSONObject();
-				jsonObj.put(kJSType, JSTypeEvent);
-				jsonObj.put(kJSEvent, event);
-				jsonObj.put(kJSData, data);
-				jsonObj.put(kJSCallback, callbackID);
+				jsonObj.put(Cobalt.kJSType, Cobalt.JSTypeEvent);
+				jsonObj.put(Cobalt.kJSEvent, event);
+				jsonObj.put(Cobalt.kJSData, data);
+				jsonObj.put(Cobalt.kJSCallback, callbackID);
 				executeScriptInWebView(jsonObj);
 			}
 			catch (JSONException exception) {
@@ -581,7 +480,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	/**
 	 * This method is called when the JavaScript sends a message to the native side.
 	 * This method should be overridden in subclasses.
-	 * @param messageJS : the JSON-message sent by JavaScript.
+	 * @param message : the JSON-message sent by JavaScript.
 	 * @return true if the message was handled by the native, false otherwise
 	 * @details some basic operations are already implemented : navigation, logs, toasts, native alerts, web alerts
 	 * @details this method may be called from a secondary thread.
@@ -593,74 +492,74 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			final JSONObject jsonObj = new JSONObject(message);
 			
 			// TYPE
-			if (jsonObj.has(kJSType)) {
-				String type = jsonObj.getString(kJSType);
+			if (jsonObj.has(Cobalt.kJSType)) {
+				String type = jsonObj.getString(Cobalt.kJSType);
 				
 				//CALLBACK
-				if (type.equals(JSTypeCallBack)) {
-					String callbackID = jsonObj.getString(kJSCallback);
-					JSONObject data = jsonObj.optJSONObject(kJSData);
+				if (type.equals(Cobalt.JSTypeCallBack)) {
+					String callbackID = jsonObj.getString(Cobalt.kJSCallback);
+					JSONObject data = jsonObj.optJSONObject(Cobalt.kJSData);
 					
 					return handleCallback(callbackID, data);		
 				}
 				
 				// COBALT IS READY
-				else if (type.equals(JSTypeCobaltIsReady)) {
+				else if (type.equals(Cobalt.JSTypeCobaltIsReady)) {
 					onReady();
 					return true;
 				}
 				
 				// EVENT
-				if (type.equals(JSTypeEvent)) {
-					String event = jsonObj.getString(kJSEvent);
-					JSONObject data = jsonObj.optJSONObject(kJSData);
-					String callback = jsonObj.optString(kJSCallback, null);
+				if (type.equals(Cobalt.JSTypeEvent)) {
+					String event = jsonObj.getString(Cobalt.kJSEvent);
+					JSONObject data = jsonObj.optJSONObject(Cobalt.kJSData);
+					String callback = jsonObj.optString(Cobalt.kJSCallback, null);
 					
 					return handleEvent(event, data, callback);			
 				}
 				
 				// LOG
-				else if (type.equals(JSTypeLog)) {
-					String text = jsonObj.getString(kJSValue);
+				else if (type.equals(Cobalt.JSTypeLog)) {
+					String text = jsonObj.getString(Cobalt.kJSValue);
 					if (BuildConfig.DEBUG) Log.d(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: JS LOG \"" + text + "\"");
 					return true;
 				}
 				
 				// NAVIGATION
-				else if (type.equals(JSTypeNavigation)) {
-					String action = jsonObj.getString(kJSAction);
+				else if (type.equals(Cobalt.JSTypeNavigation)) {
+					String action = jsonObj.getString(Cobalt.kJSAction);
 					
 					// PUSH
-					if (action.equals(JSActionNavigationPush)) {
-						JSONObject data = jsonObj.getJSONObject(kJSData);
-						String page = data.getString(kJSPage);
-						String controller = data.optString(kJSNavigationController, null);
+					if (action.equals(Cobalt.JSActionNavigationPush)) {
+						JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
+						String page = data.getString(Cobalt.kJSPage);
+						String controller = data.optString(Cobalt.kJSController, null);
 						push(controller, page);
 						return true;
 					}
 					
 					// POP
-					else if (action.equals(JSActionNavigationPop)) {
+					else if (action.equals(Cobalt.JSActionNavigationPop)) {
 						pop();
 						return true;
 					}
 					
 					// MODAL
-					else if (action.equals(JSActionNavigationModal)) {
-						JSONObject data = jsonObj.getJSONObject(kJSData);
-						String page = data.getString(kJSPage);
-						String controller = data.optString(kJSNavigationController, null);
-						String callBackId = jsonObj.optString(kJSCallback, null);
+					else if (action.equals(Cobalt.JSActionNavigationModal)) {
+						JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
+						String page = data.getString(Cobalt.kJSPage);
+						String controller = data.optString(Cobalt.kJSController, null);
+						String callBackId = jsonObj.optString(Cobalt.kJSCallback, null);
 						presentModal(controller, page, callBackId);
 						return true;
 					}
 					
 					// DISMISS
-					else if (action.equals(JSActionNavigationDismiss)) {
+					else if (action.equals(Cobalt.JSActionNavigationDismiss)) {
 						// TODO: not present in iOS
-						JSONObject data = jsonObj.getJSONObject(kJSData);
-						String controller = data.getString(kJSNavigationController);
-						String page = data.getString(kJSPage);
+						JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
+						String controller = data.getString(Cobalt.kJSController);
+						String page = data.getString(Cobalt.kJSPage);
 						dismissModal(controller, page);
 						return true;
 					}
@@ -672,21 +571,21 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 				}
 				
 				// UI
-		    	else if (type.equals(JSTypeUI)) {
-			    	String control = jsonObj.getString(kJSUIControl);
-					JSONObject data = jsonObj.getJSONObject(kJSData);
-					String callback = jsonObj.optString(kJSCallback, null);
+		    	else if (type.equals(Cobalt.JSTypeUI)) {
+			    	String control = jsonObj.getString(Cobalt.kJSUIControl);
+					JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
+					String callback = jsonObj.optString(Cobalt.kJSCallback, null);
 
 					return handleUi(control, data, callback);
 		    	}
 				
 				// WEB LAYER
-				else if (type.equals(JSTypeWebLayer)) {
-					String action = jsonObj.getString(kJSAction);
+				else if (type.equals(Cobalt.JSTypeWebLayer)) {
+					String action = jsonObj.getString(Cobalt.kJSAction);
 					
 					// SHOW
-					if (action.equals(JSActionWebLayerShow)) {
-						final JSONObject data = jsonObj.getJSONObject(kJSData);
+					if (action.equals(Cobalt.JSActionWebLayerShow)) {
+						final JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
 						
 						mHandler.post(new Runnable() {
 							@Override
@@ -731,11 +630,11 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	
 	private boolean handleCallback(String callback, JSONObject data) {
 		try {
-			if(callback.equals(JSCallbackOnBackButtonPressed)) {
-				onBackPressed(data.getBoolean(kJSValue));
+			if(callback.equals(Cobalt.JSCallbackOnBackButtonPressed)) {
+				onBackPressed(data.getBoolean(Cobalt.kJSValue));
 				return true;
 			}
-			else if (callback.equals(JSCallbackPullToRefreshDidRefresh)) {
+			else if (callback.equals(Cobalt.JSCallbackPullToRefreshDidRefresh)) {
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
@@ -744,7 +643,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 				});
 				return true;
 			}
-			else if (callback.equals(JSCallbackInfiniteScrollDidRefresh)) {
+			else if (callback.equals(Cobalt.JSCallbackInfiniteScrollDidRefresh)) {
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
@@ -775,12 +674,12 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	private boolean handleUi(String control, JSONObject data, String callback) {
 		try {
 			// PICKER
-			if (control.equals(JSControlPicker)) {
-				String type = data.getString(kJSType);
+			if (control.equals(Cobalt.JSControlPicker)) {
+				String type = data.getString(Cobalt.kJSType);
 				
 				//DATE
-				if (type.equals(JSPickerDate)) {
-					JSONObject date = data.optJSONObject(kJSDate);
+				if (type.equals(Cobalt.JSPickerDate)) {
+					JSONObject date = data.optJSONObject(Cobalt.kJSDate);
 
 					Calendar calendar = Calendar.getInstance();
 					int year = calendar.get(Calendar.YEAR);
@@ -788,20 +687,19 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 					int day = calendar.get(Calendar.DAY_OF_MONTH);
 
 					if (date != null
-						&& date.has(kJSYear)
-						&& date.has(kJSMonth)
-						&& date.has(kJSDay)) {
-						year = date.getInt(kJSYear);
-						month = date.getInt(kJSMonth);
-						month--;
-						day = date.getInt(kJSDay);
+						&& date.has(Cobalt.kJSYear)
+						&& date.has(Cobalt.kJSMonth)
+						&& date.has(Cobalt.kJSDay)) {
+						year = date.getInt(Cobalt.kJSYear);
+						month = date.getInt(Cobalt.kJSMonth) - 1;
+						day = date.getInt(Cobalt.kJSDay);
 					}
 					
-					JSONObject texts = data.optJSONObject(kJSTexts);
-					String title = texts.optString(kJSTitle, null);
-					String delete = texts.optString(kJSDelete, null);
-					String cancel = texts.optString(kJSCancel, null);
-					String validate = texts.optString(kJSValidate, null);
+					JSONObject texts = data.optJSONObject(Cobalt.kJSTexts);
+					String title = texts.optString(Cobalt.kJSTitle, null);
+					String delete = texts.optString(Cobalt.kJSDelete, null);
+					String cancel = texts.optString(Cobalt.kJSCancel, null);
+					String validate = texts.optString(Cobalt.kJSValidate, null);
 					
 					showDatePickerDialog(year, month, day, title, delete, cancel, validate, callback);
 					
@@ -810,14 +708,14 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			}
 			
 			// ALERT
-			else if(control.equals(JSControlAlert)) {
+			else if(control.equals(Cobalt.JSControlAlert)) {
 				showAlertDialog(data, callback);
 				return true;
 			}
 			
 			// TOAST
-			else if(control.equals(JSControlToast)) {
-				String message = data.getString(kJSAlertMessage);
+			else if(control.equals(Cobalt.JSControlToast)) {
+				String message = data.getString(Cobalt.kJSMessage);
 				Toast.makeText(sContext, message, Toast.LENGTH_SHORT).show();
 				return true;
 			}
@@ -829,10 +727,10 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 		// UNHANDLED UI
 		try {
 			JSONObject jsonObj = new JSONObject();
-			jsonObj.put(kJSType, JSTypeUI);
-			jsonObj.put(kJSUIControl, control);
-			jsonObj.put(kJSData, data);
-			jsonObj.put(kJSCallback, callback);
+			jsonObj.put(Cobalt.kJSType, Cobalt.JSTypeUI);
+			jsonObj.put(Cobalt.kJSUIControl, control);
+			jsonObj.put(Cobalt.kJSData, data);
+			jsonObj.put(Cobalt.kJSCallback, callback);
 			onUnhandledMessage(jsonObj);
 		}
 		catch (JSONException exception) {
@@ -844,159 +742,11 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	
 	protected abstract void onUnhandledMessage(JSONObject message);
 	
-	/********************************************************************************************************************
-	 * CONFIGURATION FILE
-	 *******************************************************************************************************************/
-	
-	public static HTMLFragment getFragmentForController(Context applicationContext, Class<?> HTMLFragmentClass, String controller, String page) {
-		HTMLFragment fragment = null;
-		
-		if (sContext == null) {
-			sContext = applicationContext;
-		}
-		
-		try {
-			if (HTMLFragment.class.isAssignableFrom(HTMLFragmentClass)) {
-				fragment = (HTMLFragment) HTMLFragmentClass.newInstance();
-				
-				Bundle configuration = getConfigurationForController(controller);
-				
-				if (configuration != null) {
-					configuration.putString(kPage, page);
-					fragment.setArguments(configuration);
-				}
-			}
-			else {
-				if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getFragmentForController: " + HTMLFragmentClass.getSimpleName() + " does not inherit from HTMLFragment!");
-			}
-		} 
-		catch (java.lang.InstantiationException exception) {
-			exception.printStackTrace();
-		} 
-		catch (IllegalAccessException exception) {
-			exception.printStackTrace();
-		}
-		
-		return fragment;
-	}
-	
-	private Intent getIntentForController(String controller, String page) {
-		Intent intent = null;
-		
-		Bundle configuration = getConfigurationForController(controller);
-		
-		if (configuration != null) {
-			String activity = configuration.getString(kActivity);
-			
-			if (activity != null) {
-				// Creates intent
-				Class<?> pClass;
-				try {
-					pClass = Class.forName(activity);
-					// Instantiates intent only if class inherits from Activity
-					if (Activity.class.isAssignableFrom(pClass)) {
-						configuration.putString(kPage, page);
-						
-						intent = new Intent(sContext, pClass);
-						intent.putExtra(kExtras, configuration);
-					}
-					else {
-						if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getIntentForController: " + activity + " does not inherit from Activity!");
-					}
-				} 
-				catch (ClassNotFoundException exception) {
-					if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getIntentForController: " + activity + " class not found for id " + controller + "!");
-					exception.printStackTrace();
-				}
-			}
-		}
-		
-		return intent;
-	}
-	
-	protected static Bundle getConfigurationForController(String controller) {
-		Bundle bundle = null;
-		
-		JSONObject configuration = getConfiguration();
-		String activity = null;
-		boolean enablePullToRefresh = false;
-		boolean enableInfiniteScroll = false;
-		// TODO: add enableGesture
-		
-		// Gets configuration
-		try {
-			if (controller != null
-				&& configuration.has(controller)) {
-				activity = configuration.getJSONObject(controller).getString(kAndroidController);
-				enablePullToRefresh = configuration.getJSONObject(controller).optBoolean(kPullToRefresh);
-				enableInfiniteScroll = configuration.getJSONObject(controller).optBoolean(kInfiniteScroll);
-			}
-			else {
-				activity = configuration.getJSONObject(JSNavigationControllerDefault).getString(kAndroidController);
-				enablePullToRefresh = configuration.getJSONObject(JSNavigationControllerDefault).optBoolean(kPullToRefresh);
-				enableInfiniteScroll = configuration.getJSONObject(JSNavigationControllerDefault).optBoolean(kInfiniteScroll);
-			}
-		}
-		catch (JSONException exception) {
-			if (BuildConfig.DEBUG) Log.e(Cobalt.TAG,    TAG + " - getConfigurationForController: check cobalt.conf. Known issues: \n "
-												        + "\t - " + controller + " controller not found and no " + JSNavigationControllerDefault + " controller defined \n "
-												        + "\t - " + controller + " or " + JSNavigationControllerDefault + "controller found but no " + kAndroidController + "defined \n ");
-			exception.printStackTrace();
-			return bundle; // null
-		}
-		
-		bundle = new Bundle();
-		bundle.putString(kActivity, activity);
-		bundle.putBoolean(kPullToRefresh, enablePullToRefresh);
-		bundle.putBoolean(kInfiniteScroll, enableInfiniteScroll);
-		
-		return bundle;
-	}
-	
-	private static JSONObject getConfiguration() {
-		String configuration = readFileFromAssets(Cobalt.getResourcePath() + CONF_FILE);
-
-		try {
-			JSONObject jsonObj = new JSONObject(configuration);
-			return jsonObj;
-		} 
-		catch (JSONException exception) {
-			if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getConfiguration: check cobalt.conf. File is missing or not at " + ASSETS_PATH + Cobalt.getResourcePath() + CONF_FILE);
-			exception.printStackTrace();
-		}
-		
-		return new JSONObject();
-	}
-	
-	private static String readFileFromAssets(String file) {
-		try {
-			AssetManager assetManager = sContext.getAssets();
-			InputStream inputStream = assetManager.open(file);
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-			StringBuilder fileContent = new StringBuilder();
-			int character;
-			
-			while ((character = bufferedReader.read()) != -1) {
-				fileContent.append((char) character) ;  
-			}
-			
-			return fileContent.toString();
-		} 
-		catch (FileNotFoundException exception) {
-			if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - readFileFromAssets: " + file + "not found.");
-		} 
-		catch (IOException exception) {
-			exception.printStackTrace();
-		}
-		
-		return new String();
-	}
-	
 	/*****************************************************************************************************************
 	 * NAVIGATION
 	 ****************************************************************************************************************/
 	private void push(String controller, String page) {
-		Intent intent = getIntentForController(controller, page);
+		Intent intent = Cobalt.getInstance(sContext).getIntentForController(controller, page);
 		if(intent != null) {
 			getActivity().startActivity(intent);
 		}
@@ -1008,15 +758,15 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	}
 	
 	private void presentModal(String controller, String page, String callBackID) {
-		Intent intent = getIntentForController(controller, page);
+		Intent intent = Cobalt.getInstance(sContext).getIntentForController(controller, page);
 		
 		if (intent != null) {
 			getActivity().startActivity(intent);
 			// Sends callback to store current activity & HTML page for dismiss
 			try {
 				JSONObject data = new JSONObject();
-				data.put(kJSPage, mPage);
-				data.put(kJSNavigationController, getActivity() != null ? getActivity().getClass().getName() : null);		
+				data.put(Cobalt.kJSPage, mPage);
+				data.put(Cobalt.kJSController, getActivity() != null ? getActivity().getClass().getName() : null);
 				sendCallback(callBackID, data);
 			} 
 			catch (JSONException exception) {
@@ -1033,10 +783,10 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			// Instantiates intent only if class inherits from Activity
 			if (Activity.class.isAssignableFrom(pClass)) {
 				Bundle bundle = new Bundle();
-				bundle.putString(kPage, page);
+				bundle.putString(Cobalt.kPage, page);
 
 				Intent intent = new Intent(sContext, pClass);
-				intent.putExtra(kExtras, bundle);
+				intent.putExtra(Cobalt.kExtras, bundle);
 
 				NavUtils.navigateUpTo(getActivity(), intent);
 			}
@@ -1053,7 +803,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	 * This method should NOT be overridden in subclasses.
 	 */
 	public void askWebViewForBackPermission() {
-		sendEvent(JSEventOnBackButtonPressed, null, JSCallbackOnBackButtonPressed);
+		sendEvent(Cobalt.JSEventOnBackButtonPressed, null, Cobalt.JSCallbackOnBackButtonPressed);
 	}
 	
 	/**
@@ -1089,11 +839,11 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	private void showWebLayer(JSONObject data) {
 		if (getActivity() != null) {
 			try {
-				String page = data.getString(kJSPage);
-				double fadeDuration = data.optDouble(kJSWebLayerFadeDuration, 0.3);
+				String page = data.getString(Cobalt.kJSPage);
+				double fadeDuration = data.optDouble(Cobalt.kJSWebLayerFadeDuration, 0.3);
 
 				Bundle bundle = new Bundle();
-				bundle.putString(kPage, page);
+				bundle.putString(Cobalt.kPage, page);
 				
 				HTMLWebLayerFragment webLayerFragment = getWebLayerFragment();
 				webLayerFragment.setArguments(bundle);
@@ -1152,10 +902,10 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			public void run() {
 				try {
 					JSONObject jsonObj = new JSONObject();
-					jsonObj.put(kJSPage, page);
-					jsonObj.put(kJSData, data);
+					jsonObj.put(Cobalt.kJSPage, page);
+					jsonObj.put(Cobalt.kJSData, data);
 
-					sendEvent(JSEventWebLayerOnDismiss, jsonObj, null);
+					sendEvent(Cobalt.JSEventWebLayerOnDismiss, jsonObj, null);
 				} 
 				catch (JSONException exception) {
 					exception.printStackTrace();
@@ -1169,10 +919,10 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	 *****************************************************************************************************************/
 	private void showAlertDialog(JSONObject data, final String callback) {		
 		try {
-			String title = data.optString(kJSAlertTitle);
-			String message = data.optString(kJSAlertMessage);
-			boolean cancelable = data.optBoolean(kJSAlertCancelable, false);
-			JSONArray buttons = data.has(kJSAlertButtons) ? data.getJSONArray(kJSAlertButtons) : new JSONArray();
+			String title = data.optString(Cobalt.kJSAlertTitle);
+			String message = data.optString(Cobalt.kJSMessage);
+			boolean cancelable = data.optBoolean(Cobalt.kJSAlertCancelable, false);
+			JSONArray buttons = data.has(Cobalt.kJSAlertButtons) ? data.getJSONArray(Cobalt.kJSAlertButtons) : new JSONArray();
 
 			AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 			alert.setTitle(title);
@@ -1188,7 +938,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 						if (callback != null) {
 							try {
 								JSONObject data = new JSONObject();
-								data.put(kJSAlertButtonIndex, 0);
+								data.put(Cobalt.kJSAlertButtonIndex, 0);
 								sendCallback(callback, data);
 							} 
 							catch (JSONException exception) {
@@ -1207,7 +957,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 							if (callback != null) {
 								try {
 									JSONObject data = new JSONObject();
-									data.put(kJSAlertButtonIndex, -which-1);
+									data.put(Cobalt.kJSAlertButtonIndex, -which-1);
 									sendCallback(callback, data);
 								} 
 								catch (JSONException exception) {
@@ -1251,15 +1001,15 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
     	try {
     		JSONObject jsonDate = new JSONObject();
     		if (year != 0 || month != 0 || day != 0) {	
-    			jsonDate.put(kJSYear, year);
+    			jsonDate.put(Cobalt.kJSYear, year);
     			month++;
-    			jsonDate.put(kJSMonth, month);
-    			jsonDate.put(kJSDay, day);
+    			jsonDate.put(Cobalt.kJSMonth, month);
+    			jsonDate.put(Cobalt.kJSDay, day);
     		}
     		JSONObject jsonResponse = new JSONObject();
-    		jsonResponse.put(kJSType, JSTypeCallBack);
-			jsonResponse.put(kJSCallback, callbackID);
-			jsonResponse.put(kJSData, jsonDate);
+    		jsonResponse.put(Cobalt.kJSType, Cobalt.JSTypeCallBack);
+			jsonResponse.put(Cobalt.kJSCallback, callbackID);
+			jsonResponse.put(Cobalt.kJSData, jsonDate);
 			executeScriptInWebView(jsonResponse);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -1353,9 +1103,9 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			public void run() {
 				try {
 					JSONObject jsonObj = new JSONObject();
-					jsonObj.put(kJSType, JSTypeEvent);
-					jsonObj.put(kJSEvent, JSEventPullToRefresh);
-					jsonObj.put(kJSCallback, JSCallbackPullToRefreshDidRefresh);
+					jsonObj.put(Cobalt.kJSType, Cobalt.JSTypeEvent);
+					jsonObj.put(Cobalt.kJSEvent, Cobalt.JSEventPullToRefresh);
+					jsonObj.put(Cobalt.kJSCallback, Cobalt.JSCallbackPullToRefreshDidRefresh);
 					executeScriptInWebView(jsonObj);
 				} 
 				catch (JSONException exception) {
@@ -1425,9 +1175,9 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 				public void run() {
 					try {
 						JSONObject jsonObj = new JSONObject();
-						jsonObj.put(kJSType,JSTypeEvent);
-						jsonObj.put(kJSEvent, JSEventInfiniteScroll);
-						jsonObj.put(kJSCallback, JSCallbackInfiniteScrollDidRefresh);
+						jsonObj.put(Cobalt.kJSType, Cobalt.JSTypeEvent);
+						jsonObj.put(Cobalt.kJSEvent, Cobalt.JSEventInfiniteScroll);
+						jsonObj.put(Cobalt.kJSCallback, Cobalt.JSCallbackInfiniteScrollDidRefresh);
 						executeScriptInWebView(jsonObj);
 						mInfiniteScrollRefreshing = true;
 					} 
@@ -1469,7 +1219,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	private boolean pullToRefreshActivate() {
 		Bundle args = getArguments();
 		if (args != null)	{
-			return args.getBoolean(kPullToRefresh);
+			return args.getBoolean(Cobalt.kPullToRefresh);
 		}
 		else {
 			disablePullToRefresh();
@@ -1480,7 +1230,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	private boolean infiniteScrollEnabled() {
 		Bundle args = getArguments();
 		if (args != null) {
-			return args.getBoolean(kInfiniteScroll);
+			return args.getBoolean(Cobalt.kInfiniteScroll);
 		}
 		else {
 			mInfiniteScrollEnabled = false;

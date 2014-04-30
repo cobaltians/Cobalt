@@ -111,7 +111,7 @@ public class HTMLFlipperFragment extends HTMLFragment implements IGestureListene
 	
 	private void setFeaturesWantedActive() {
 		if(	getArguments() != null 
-			&& getArguments().getBoolean(kSwipe)) {
+			&& getArguments().getBoolean(Cobalt.kSwipe)) {
 			enableSwipe();
 		}
 		else {
@@ -133,13 +133,13 @@ public class HTMLFlipperFragment extends HTMLFragment implements IGestureListene
 			public void run() {
 				JSONObject jsonObj = new JSONObject();
 				try {
-					jsonObj.put(kJSType,JSTypeEvent);
+					jsonObj.put(Cobalt.kJSType, Cobalt.JSTypeEvent);
 					if (direction == GESTURE_SWIPE_LEFT) {
-						jsonObj.put(kJSEvent, JSEventSwipeLeft);
+						jsonObj.put(Cobalt.kJSEvent, JSEventSwipeLeft);
 						if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - swipe: next");
 					}
 					else if (direction == GESTURE_SWIPE_RIGHT) {
-						jsonObj.put(kJSEvent, JSEventSwipeRight);
+						jsonObj.put(Cobalt.kJSEvent, JSEventSwipeRight);
 						if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - swipe: previous");
 					}
 					executeScriptInWebView(jsonObj);
