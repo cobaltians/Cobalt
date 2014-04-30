@@ -33,25 +33,24 @@
             Zepto(function($){
 
 	            cobalt.init({
-		            debug:true,
-		            //sendingToNative:false,
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInLogdiv:app.debugInLogdiv
 	            });
 
                 cobalt.storage.enable();
 				cobalt.log("init dismissInformations : "+cobalt.storage.getItem("dismissInformations"), false);
 				cobalt.log("init testLocalStorageKey : "+cobalt.storage.getItem("testLocalStorageKey"), false);
 				
-				$('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
-                $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
+
 
                 $('a.dismiss').on('tap click',function(){
 		        	cobalt.navigate('dismiss');
 		            return false;
 	            });
-				$('a.pop').on('tap click',function(){
-		        	cobalt.navigate('pop');
-		            return false;
-	            });
+				app.touch('a.pop',function(){
+                    cobalt.navigate('pop');
+                });
 	            $('a.push').on('tap click',function(){
 	            	cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
 		            return false;

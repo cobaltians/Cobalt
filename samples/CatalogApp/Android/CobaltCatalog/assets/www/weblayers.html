@@ -59,8 +59,7 @@
 		            //sendingToNative:false,
 		        });
 
-                $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
-                $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
+
 
 		       $('#test1').on('tap click',function(){
 			        cobalt.webLayer("show","weblayer_content_1.html");
@@ -80,19 +79,11 @@
 	            });
 
 
-	            $('#monBouton3').on('tap click',function(){
-					if (cobalt.ios_adapter){
-						cobalt.ios_adapter.pipeline=[];
-						cobalt.ios_adapter.pipelineRunning=false;
-					}
-                    $('#cobalt_logdiv').html('');
-                    return false;
-				});
 
-	            $('a.pop').on('tap click',function(){
-		        	cobalt.navigate('pop');
-		            return false;
-	            });
+
+	            app.touch('a.pop',function(){
+                    cobalt.navigate('pop');
+                });
 
 	        })
 

@@ -15,7 +15,7 @@
   		<img src="img/ic_launcher.png" alt=""/>
   		
         <br/>
-        <p>TEST 02 - Ci dessous il devrait y avoir une zone rectangulaire moche, avec la même image en background image. Elle vient de la CSS.</p>
+        <p>TEST 02 - Ci dessous il devrait y avoir une zone rectangulaire moche, avec la mÔøΩme image en background image. Elle vient de la CSS.</p>
         <div class="awfull"></div>
         
         <p>TEST 03 - Dans la console native il devrait apparaitre "JSLOG : onReady!"</p>
@@ -38,8 +38,9 @@
             Zepto(function($){
 
 	            cobalt.init({
-		            debug:true,
-		            //sendingToNative:false,
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInLogdiv:app.debugInLogdiv,
 		            events:{
 			            "nameSetZoom":function(data, callback){
 			                cobalt.log('received setZoom at '+new Date().getTime())
@@ -48,8 +49,7 @@
 		            }
 	            });
 
-				$('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
-                $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
+
 
                 $('a.pop').on('tap click',function(){
 		        	cobalt.navigate('pop')

@@ -9,20 +9,16 @@
 
         <a href="javascript:;" class="pop">POP</a><br/>
 
-  		<p>Test de charge </p>
+  		<p>Ajax test page</p>
 
   		<div id="images">
 
 		</div>
 
-        <p>TEST 01 - Ajoutez des images via le bouton suivant. Cela utilise l'api google image pour insérer des images de test. Au bout de 8 fois (64 resultats), l'API ne répondra plus bien. A partir de ce moment là, ce test va doubler la taille de la webview à chaque fois en dupliquant la liste d'image. Le but et de voir combien de temps ça peut durer et si ça génère des crashs. Vous allez devoir aimer scroller...</p>
+        <p>This button below should add some content to the webview, using an ajax call to google apis</p>
 		<a id="test1">Ajouter du contenu</a><br/>
 
-  		<p>Ci dessous le log de la lib d'echange</p>
-  		<input id="monBouton3" type="button" value="nettoyage logs"/>
-  		<div id="cobalt_logdiv"></div>
-
-        <script type="text/javascript" src="js/zepto.min.js"></script>
+  		<script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
 
         <!-- for cobalt dev only
@@ -34,7 +30,7 @@
         <script>
 			var count=0;
 			addContent=function(){
-				cobalt.log('chargement...')
+				cobalt.log('loading...')
 				var url="https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=test&imgsz=medium&start="+count*8;
 				$.ajax({url:url, type:"GET", dataType:"json",
 					success : function(data){
@@ -49,7 +45,7 @@
 
 						}else{
 							cobalt.log('Google API error : '+data.responseDetails, false)
-							cobalt.log('duplicating webview images content ! ', false)
+							cobalt.log('no more images in googleAPIs. duplicating webview images content to keep growing ! ', false)
 							$('#images').append($('#images').html());
 						}
 
@@ -62,36 +58,21 @@
 
             Zepto(function($){
 
-	            cobalt.init({
-		            debug:true,
-		            //sendingToNative:false,
-		        });
+                cobalt.init({
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInLogdiv:app.debugInLogdiv
+                });
 
-                $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
-                $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
+                app.touch('#test1', function () {
+                    addContent();
+                });
 
-		       $('#test1').on('tap click',function(){
-					addContent();
-		            return false;
-	            });
-
-	            $('#monBouton3').on('tap click',function(){
-					if (cobalt.ios_adapter){
-						cobalt.ios_adapter.pipeline=[];
-						cobalt.ios_adapter.pipelineRunning=false;
-					}
-                    $('#cobalt_logdiv').html('');
-                    return false;
-				});
-
-	            $('a.pop').on('tap click',function(){
-		        	cobalt.navigate('pop');
-		            return false;
-	            });
+                app.touch('a.pop', function () {
+                    cobalt.navigate('pop');
+                });
 
 	        })
-
-
         </script>
 
     </body>

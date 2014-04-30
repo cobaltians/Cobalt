@@ -9,23 +9,21 @@
   		
   		<a href="javascript:;" class="pop">POP</a><br/>
   		
-  		<p>TEST 01 - Le bouton ci devrait logger les elements suivants dans la console native :</p>
+  		<p>Button below should log this in the native IDE console</p>
   		<div class="expected">
   			JSLOG : tap<br/>
-  			JSLOG : {"hello":"de lu"}<br/>
-  			JSLOG : http://www.haploid.frxyz#ééé@uuu&2=3
+  			JSLOG : {"hello":"world"}<br/>
+  			JSLOG : http://cobalt.com?xyz#ééé@uuu&2=3
   		</div>
-        <input id="monBouton1" type="button" value="Log Hello 1x"/>
+        <input id="monBouton1" type="button" value="Try it"/>
         
         
-        <p>TEST 02 - Le bouton ci devrait logger 20 fois "hello" puis afficher un toast "OK"</p>        
-        <input id="monBouton2" type="button" value="Log Hello 20x"/>
+        <p>Button below should send an event named "hello" to the native. Native side shows an alert that says "world"</p>
+        <input id="monBouton2" type="button" value="Try it"/>
 
-        <p>TEST 03 - Les boutons + - natifs en bas de page devraient changer la taille des textes de la page</p>
+        <p>Native + / - buttons at the bottom of the screen should increase/decrease web text size</p>
 
-		<p>Ci dessous le log de la lib d'echange</p>
-        <input id="monBouton3" type="button" value="nettoyage logs"/>
-		<div id="cobalt_logdiv"></div>
+
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
@@ -41,8 +39,10 @@
             Zepto(function($){
 
 	            cobalt.init({
-		            debug:true,
-		            //sendingToNative:false,
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInLogdiv:app.debugInLogdiv,
+
 		            events:{
 			            "nameSetZoom":function(data, callback){
 			                cobalt.log('received setZoom at '+new Date().getTime())
@@ -51,31 +51,20 @@
 		            }
 	            });
 
-				$('a, input').on('touchstart',function(){ 				$(this).addClass('tapped');   })
-                $('a, input').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
+
 
 				$('#monBouton1').on("tap click",function(){
                     cobalt.log("tap");
-					cobalt.log({"hello":"de lu"});
-                    cobalt.log("http://www.haploid.frxyz#ééé@uuu&2=3");
+					cobalt.log({"hello":"world"});
+                    cobalt.log("http://cobalt.com?xyz#ééé@uuu&2=3");
 					return false;
 				});
 				
 	            $('#monBouton2').on("tap click",function(){
-					for (var i=1; i<=20;i++){
-						cobalt.log("hello "+i);
-					}
-                    cobalt.toast("ok");
+					cobalt.sendEvent('hello');
 		            return false;
 				});
-				$('#monBouton3').on('tap click',function(){
-					if (cobalt.ios_adapter){
-						cobalt.ios_adapter.pipeline=[];
-						cobalt.ios_adapter.pipelineRunning=false;
-					}
-                    $('#cobalt_logdiv').html('');
-					return false;
-				});
+
 
                 $('a.pop').on('tap click',function(){
 		        	cobalt.navigate('pop')

@@ -31,9 +31,7 @@
         <p>TEST 07 - cliquez sur le bouton "callback async" natif en bas de page. Cela devrait afficher "Assync WORKED!!" dans une popup</p>
         
 
-		<p>Ci dessous le log de la lib d'echange</p>
-        <input id="monBouton3" type="button" value="nettoyage logs"/>
-		<div id="cobalt_logdiv"></div>
+
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
@@ -49,8 +47,9 @@
             Zepto(function($){
 
 	            cobalt.init({
-		            debug:true,
-		            //sendingToNative:false,
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInLogdiv:app.debugInLogdiv
 		            events:{
 			            "nameTestCallback": function(data, callback){
 				            cobalt.log('executing nameTestCallback',false)
@@ -75,17 +74,9 @@
 		            }
 	            });
 
-	            $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
-                $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
 
-				$('#monBouton3').on('tap click',function(){
-					if (cobalt.ios_adapter){
-						cobalt.ios_adapter.pipeline=[];
-						cobalt.ios_adapter.pipelineRunning=false;
-					}
-                    $('#cobalt_logdiv').html('');
-					return false;
-				});
+
+
 
 	            $('#monBouton4').on('tap click',function(){
 	            	cobalt.sendEvent("nameTestCallback", { value:$('#input').val() },function(data){
@@ -107,10 +98,9 @@
 		            return false;
 	            });
 	            
-				$('a.pop').on('tap click',function(){
-		        	cobalt.navigate('pop');
-		            return false;
-	            });
+				app.touch('a.pop',function(){
+                    cobalt.navigate('pop');
+                });
 
             })
             

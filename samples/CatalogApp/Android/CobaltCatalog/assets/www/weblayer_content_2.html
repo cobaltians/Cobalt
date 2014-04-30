@@ -38,8 +38,7 @@
                              $('#text').focus();
                   },200);
 
-                $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
-                $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
+
 
 		       $('#close').on('tap click',function(){
 		       		$('#text').blur();
@@ -51,10 +50,9 @@
 	            	return false;
 	            });
 	            
-	            $('a.pop').on('tap click',function(){
-		        	cobalt.navigate('pop');
-		            return false;
-	            });
+	            app.touch('a.pop',function(){
+                    cobalt.navigate('pop');
+                });
 
 	        })
 

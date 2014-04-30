@@ -51,8 +51,9 @@
 
             Zepto(function($){
 		        cobalt.init({
-		            debug:true,
-		            //sendingToNative:false,
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInLogdiv:app.debugInLogdiv,
                     events:{
                        "pullToRefresh" : function(data, calllback){
                                cobalt.log('native asked to refresh');
@@ -79,10 +80,9 @@
 		            return false;
 	            });
 
-	            $('a.pop').on('tap click',function(){
-		        	cobalt.navigate('pop');
-		            return false;
-	            });
+	            app.touch('a.pop',function(){
+                    cobalt.navigate('pop');
+                });
 
 	            $('#list').html('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>');
                   
