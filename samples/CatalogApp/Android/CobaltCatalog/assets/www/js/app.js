@@ -13,7 +13,7 @@ var app={
         var preventDefault = allowDefault ? false : true;
         var elem=$(selector)
         var touchup=function(){
-            $(this).removeClass('touched');
+           elem.removeClass('touched');
         };
         var touching=function(e){
             if (!$(this).hasClass('touched')){
