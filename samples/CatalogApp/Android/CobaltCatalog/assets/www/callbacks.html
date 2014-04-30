@@ -9,7 +9,9 @@
   		
   		<a href="javascript:;" class="pop">POP</a><br/>
   		
-  		<p>TEST 01 - Le bouton ci dessous devrait afficher le texte de l'input ci-dessous dans l'input natif en haut de page.<br/>
+  		<p>This page shows examples of events with callbacks. Events are sent form one side to the other and come back with a result.</p>
+
+        <p>TEST 01 - Le bouton ci dessous devrait afficher le texte de l'input ci-dessous dans l'input natif en haut de page.<br/>
   		En retour, le natif envoie un nouveau texte qui devrait apparaitre dans l'input ci dessous.</p>
   		<input id="input" type="text" value="Robert"/><br/>  		
   		<input id="monBouton4" type="button" value="change name with CALLBACK"/><br/>
@@ -35,12 +37,7 @@
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
-        <script type="text/javascript" src="js/functions.js"></script>
 
-		<!-- for cobalt dev only-->
-		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
-		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
-		-->
 
         <script>
             
@@ -49,7 +46,8 @@
 	            cobalt.init({
                     debug:app.debug,
                     debugInBrowser:app.debugInBrowser,
-                    debugInLogdiv:app.debugInLogdiv
+                    debugInLogdiv:app.debugInLogdiv,
+
 		            events:{
 			            "nameTestCallback": function(data, callback){
 				            cobalt.log('executing nameTestCallback',false)

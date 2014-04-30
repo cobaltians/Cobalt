@@ -27,6 +27,16 @@ var app={
         }
         elem.unbind('tap').on('tap',touching);
         elem.unbind('click').on('click',touching);
+    },
+
+    /* change font size on body. used in events demo page */
+    setZoom : function(zoomLevel){
+        try{
+            document.querySelectorAll('body')[0].style.fontSize=zoomLevel+"px"
+
+        }catch(e){
+            cobalt.log(e);
+        }
     }
 
 }
