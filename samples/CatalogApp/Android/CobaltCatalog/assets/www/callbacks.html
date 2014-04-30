@@ -9,35 +9,23 @@
   		
   		<a href="javascript:;" class="pop">POP</a><br/>
   		
-  		<p>This page shows examples of events with callbacks. Events are sent form one side to the other and come back with a result.</p>
+  		<p>This page shows examples of events with callbacks. <br/>
+           Events are sent form one side to the other and are coming back with a result.</p>
 
-        <p>TEST 01 - Le bouton ci dessous devrait afficher le texte de l'input ci-dessous dans l'input natif en haut de page.<br/>
-  		En retour, le natif envoie un nouveau texte qui devrait apparaitre dans l'input ci dessous.</p>
-  		<input id="input" type="text" value="Robert"/><br/>  		
-  		<input id="monBouton4" type="button" value="change name with CALLBACK"/><br/>
-  		
-  		<p>TEST 02 - Le bouton ci dessous devrait afficher le texte de l'input ci-dessous dans l'input natif en haut de page.<br/> 
-  		En retour, le natif envoie <b>(après un délai variable)</b> un nouveau texte qui devrait apparaitre dans l'input ci dessous.</p>
-		<input id="input2" type="text" value="Robert"/><br/>  		
-		<input id="monBouton5" type="button" value="change name with CALLBACK ASYNC"/>
-		<br/>
+        <p><b>From web to native and comming back :</b></p>
 
-		<p>TEST 03 - Refaire les tests 01 et 02 avec des caractères spéciaux, notemment @ &eacute; # € ou des quotes.</p>
-        
-   		<p>TEST 04 - Entrez un texte dans l'input tout en haut. validez. Ce texte devrait apparaitre a l'indentique dans les logs de la lib d'echange ainsi que dans les logs natifs.</p>
-
-   		<p>TEST 05 - Refaire le tests 04 avec des caractères spéciaux, notemment @ &eacute; # € ou des quotes..</p>
-        
-        <p>TEST 06 - cliquez sur le bouton "callback" natif en bas de page. Cela devrait afficher "testCallback : Le resultat est xxx"  dans une popup</p>
-        
-        <p>TEST 07 - cliquez sur le bouton "callback async" natif en bas de page. Cela devrait afficher "Assync WORKED!!" dans une popup</p>
-        
+        <p>Button bellow should send an event to the native side to ask how many does 1 + 3. Native should do the math and send result. Web shows the result below :</p>
+        <input id="button_1" type="button" value="do some maths"/><br/>
+        <div id="result_1" class="expected">Result is : <span></span></div>
 
 
+        <p><b>From native to web and comming back :</b></p>
+
+        <p>Button "do some maths" in the bottom bar should send an event to the web side to ask how many does 1 + 3. Web is good at maths too and should send the result. Native shows the result in an alert</p>
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
-
+          <script type="text/javascript" src="js/app.js"></script>
 
         <script>
             
@@ -49,54 +37,24 @@
                     debugInLogdiv:app.debugInLogdiv,
 
 		            events:{
-			            "nameTestCallback": function(data, callback){
-				            cobalt.log('executing nameTestCallback',false)
-				            cobalt.sendCallback(callback,{ value : "testCallback : Le resultat est "+ (parseInt(data.value[0]) + parseInt(data.value[1]))} )
-			            },
-			            "nameTestCallbackAsync": function(data, callback){
-				            cobalt.log('executing nameTestCallbackAsync',false)
-				            var callback=callback;
-							$.ajax({url:"http://www.google.fr", type:"GET",
-								success : function(){
-									cobalt.log('async call worked')
-									cobalt.sendCallback(callback,{ value : "Assync WORKED!!"})
-								},error: function(req,err){
-									cobalt.log('async call failed')
-									cobalt.sendCallback(callback,{ value : "Assync WORKED with HTTP error "+err})
-								}
-							});
-			            },
-			            "logThis":function(data){
-           					cobalt.log(data.value)
-						}
+			            "addValues": function(data, callback){
+				            cobalt.log('executing addValues with data.values = ',data.values)
+                            if (data.values && data.values.length){
+                                cobalt.sendCallback(callback,{ result : (parseInt(data.values[0]) + parseInt(data.values[1]))} )
+                            }else{
+                                app.log('error : no values received in data.values')
+                            }
+			            }
 		            }
 	            });
 
+                app.touch('#button_1',function(){
+                    cobalt.sendEvent("addValues", { values : [1, 3] },function(data){
+                        $('#result_1 span').html(data.result)
+                    });
+                });
 
-
-
-
-	            $('#monBouton4').on('tap click',function(){
-	            	cobalt.sendEvent("nameTestCallback", { value:$('#input').val() },function(data){
-		            	cobalt.log('changeValue called')
-						$('#input').val(data.value)
-		            });
-		            //Expect {"type":"typeCallback", callbackID:"0", params:"toto"} from OS
-		            return false;
-	            });
-				exampleObject={
-					changeValue:function(data){
-					    cobalt.log('changeValue called')
-					    $('#input2').val(data.value)
-					}
-				};
-	            $('#monBouton5').on('tap click',function(){
-		            cobalt.sendEvent("nameTestCallbackAsync", { value:$('#input2').val() }, "exampleObject.changeValue")
-		            //Expect {"type":"typeCallback", callback:"exampleObject.changeValue", data:{ value : "toto" }} from OS
-		            return false;
-	            });
-	            
-				app.touch('a.pop',function(){
+                app.touch('a.pop',function(){
                     cobalt.navigate('pop');
                 });
 
