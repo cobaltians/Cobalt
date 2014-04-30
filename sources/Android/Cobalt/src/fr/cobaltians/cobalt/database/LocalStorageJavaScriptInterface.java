@@ -44,7 +44,7 @@ public class LocalStorageJavaScriptInterface {
     private final Context mContext;
     private final LocalStorage mLocalStorage;
 
-    LocalStorageJavaScriptInterface(Context context) {
+    public LocalStorageJavaScriptInterface(Context context) {
         mContext = context;
         mLocalStorage = LocalStorage.getInstance(mContext);
     }
