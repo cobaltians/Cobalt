@@ -64,8 +64,8 @@ public abstract class HTMLActivity extends FragmentActivity {
 
 			Bundle bundle = getIntent().getExtras();
 			if (bundle != null 
-				&& bundle.containsKey(HTMLFragment.kExtras)) {
-				fragment.setArguments(bundle.getBundle(HTMLFragment.kExtras));
+				&& bundle.containsKey(Cobalt.kExtras)) {
+				fragment.setArguments(bundle.getBundle(Cobalt.kExtras));
 			}
 
 			if (findViewById(getFragmentContainerId()) != null) {

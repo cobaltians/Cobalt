@@ -78,10 +78,10 @@ public class HTMLWebLayerFragment extends HTMLFragment {
 	public boolean handleMessageSentByJavaScript(String message) {
 		try {
 			final JSONObject jsonObj = new JSONObject(message);
-			String type = jsonObj.optString(kJSType);
-			if (type.equals(JSTypeWebLayer)) {
-				String action = jsonObj.getString(kJSAction);
-				if (action.equals(JSActionWebLayerDismiss)) {
+			String type = jsonObj.optString(Cobalt.kJSType);
+			if (type.equals(Cobalt.JSTypeWebLayer)) {
+				String action = jsonObj.getString(Cobalt.kJSAction);
+				if (action.equals(Cobalt.JSActionWebLayerDismiss)) {
 					mHandler.post(new Runnable() {
 						@Override
 						public void run() {
@@ -130,8 +130,8 @@ public class HTMLWebLayerFragment extends HTMLFragment {
 			fTransition = getActivity().getSupportFragmentManager().beginTransaction();
 			
 			if(jsonObject != null) {
-				mData = jsonObject.optJSONObject(kJSData);	
-				double fadeDuration = jsonObject.optDouble(kJSWebLayerFadeDuration, 0);
+				mData = jsonObject.optJSONObject(Cobalt.kJSData);
+				double fadeDuration = jsonObject.optDouble(Cobalt.kJSWebLayerFadeDuration, 0);
 				
 				if(fadeDuration > 0) {
 					fTransition.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, 

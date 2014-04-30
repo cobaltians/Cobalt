@@ -1,10 +1,9 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
-import java.util.ArrayList;
+import fr.cobaltians.cobaltcatalog.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import fr.cobaltians.cobalt.Cobalt;
+import fr.cobaltians.cobalt.fragments.HTMLFragment;
 
 import android.util.Log;
 import android.view.View;
@@ -13,9 +12,12 @@ import android.webkit.JavascriptInterface;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
-import fr.cobaltians.cobalt.fragments.HTMLFragment;
-import fr.cobaltians.cobaltcatalog.R;
+
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainFragment extends HTMLFragment {
 
@@ -50,7 +52,7 @@ public class MainFragment extends HTMLFragment {
 					ArrayList<Integer> l = new ArrayList<Integer>();
 					l.add(51);
 					l.add(42);
-					j.put(kJSValue,new JSONArray(l));
+					j.put(Cobalt.kJSValue, new JSONArray(l));
 					sendEvent(JSNameTestCallback, j, JSNameTestCallback);
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -66,7 +68,7 @@ public class MainFragment extends HTMLFragment {
 					ArrayList<String> l = new ArrayList<String>();
 					l.add("Bonjour");
 					l.add("Guillaume");
-					j.put(kJSValue,new JSONArray(l));
+					j.put(Cobalt.kJSValue, new JSONArray(l));
 					sendEvent(JSNameTestCallbackAsync, j, JSNameTestCallbackAsync);
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -80,7 +82,7 @@ public class MainFragment extends HTMLFragment {
 			public void onClick(View arg0) {
 				JSONObject j = new JSONObject();
 				try {
-					j.put(kJSValue, nativeEditText.getText().toString());
+					j.put(Cobalt.kJSValue, nativeEditText.getText().toString());
 					sendEvent("logThis", j, null);
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -99,23 +101,23 @@ public class MainFragment extends HTMLFragment {
 			jsonObj = new JSONObject(messageJS);
 			if(jsonObj != null)
 			{
-				String type = jsonObj.optString(kJSType);
+				String type = jsonObj.optString(Cobalt.kJSType);
 
 				//TYPE = EVENT
-				if(type != null && type.length() >0 && type.equals(JSTypeEvent))
+				if(type != null && type.length() >0 && type.equals(Cobalt.JSTypeEvent))
 				{
-					String name = jsonObj.optString(kJSEvent);
+					String name = jsonObj.optString(Cobalt.kJSEvent);
 					if(name != null && name.length() >0 && name.equals(JSNameTestCallback))
 					{
-						JSONObject data = jsonObj.getJSONObject(kJSData);
-						final String value = data.getString(kJSValue);
+						JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
+						final String value = data.getString(Cobalt.kJSValue);
 						if(value != null)
 							getActivity().runOnUiThread(new Runnable() {
 								public void run() {
 									nativeEditText.setText(value);
 								}
 							});
-						String callbackId = jsonObj.optString(kJSCallback);
+						String callbackId = jsonObj.optString(Cobalt.kJSCallback);
 
 						if(callbackId != null && callbackId.length() >0)
 						{
@@ -125,8 +127,8 @@ public class MainFragment extends HTMLFragment {
 					}
 					else if(name != null && name.length() >0 && name.equals(JSNameTestCallbackAsync))
 					{
-						JSONObject data = jsonObj.getJSONObject(kJSData);
-						final String value = data.getString(kJSValue);
+						JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
+						final String value = data.getString(Cobalt.kJSValue);
 						if(value != null)
 							getActivity().runOnUiThread(new Runnable() {
 								public void run() {
@@ -134,7 +136,7 @@ public class MainFragment extends HTMLFragment {
 								}
 							});
 
-						String callbackId = jsonObj.optString(kJSCallback);
+						String callbackId = jsonObj.optString(Cobalt.kJSCallback);
 						if(callbackId != null && callbackId.length() >0)
 						{
 							changeNameForWebCallBackAsync(callbackId,value);
@@ -144,19 +146,19 @@ public class MainFragment extends HTMLFragment {
 					}
 				}
 				//CALLBACKS
-				else if(type != null && type.length () >0 && type.equals(JSTypeCallBack))
+				else if(type != null && type.length () >0 && type.equals(Cobalt.JSTypeCallBack))
 				{
-					String callbackID = jsonObj.optString(kJSCallback);
+					String callbackID = jsonObj.optString(Cobalt.kJSCallback);
 					if(callbackID != null && callbackID.length() >0 && callbackID.equals(JSNameTestCallback))
 					{
-						String value = jsonObj.optString(kJSData);
+						String value = jsonObj.optString(Cobalt.kJSData);
 						if(value != null)
 							Toast.makeText(sContext, "Callback with value "+value, Toast.LENGTH_SHORT).show();
 						return true;
 					}
 					else if(callbackID != null && callbackID.length() >0 && callbackID.equals(JSNameTestCallbackAsync))
 					{
-						String value = jsonObj.optString(kJSData);
+						String value = jsonObj.optString(Cobalt.kJSData);
 						if(value != null)
 							Toast.makeText(sContext, "Callback ASYNC with value "+value, Toast.LENGTH_SHORT).show();
 						return true;
@@ -174,7 +176,7 @@ public class MainFragment extends HTMLFragment {
 		String nValue = "Je m'appelle "+value;
 		JSONObject data = new JSONObject();
 		try {
-			data.put(kJSValue, nValue);
+			data.put(Cobalt.kJSValue, nValue);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
