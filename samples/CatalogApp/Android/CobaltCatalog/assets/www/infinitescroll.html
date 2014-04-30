@@ -9,29 +9,24 @@
 
   		<a href="javascript:;" class="pop">POP</a><br/>
 
-		<p>Pull to refresh</p>
+		<p>Infinite Scroll</p>
+
+		<p>TEST 01 - Verifier qu'arrivé en bas de page, la liste s'agrandit automatiquement</p>
 
 
+		<p>TEST 02 - Charger cette même vue mais avec un infinite scroll desactivé</p>
 
-		<p>TEST 01 - Faites un pull to refresh, de nouveau elements doivent s'ajouter après un délai à la liste existante</p>
+        <a class="push" href="javascript:;" data-href="infinitescroll.html" data-classid="infiniteScrollNonActive">infinite scroll non activé</a>
 
-		<p>TEST 02 - Quand l'utilisateur commence à tirer, un texte lui indique qu'il faut tirer + pour recharger les données</p>
+		<p>TEST 03 - Charger cette vue qui contient le pull to refresh ET l'infinite scroll</p>
 
-		<p>TEST 03 - Quand l'utilisateur relache et que les données chargent, l'utilisateur est prévenu du chargement en cours (texte+ loader qui tourne)</p>
-
-		<p>TEST 04 - Charger cette même vue mais dans un controlleur sans pullToRefresh : verifier que ça ne pull-to-refresh pas.</p>
-
-		<a class="push" href="javascript:;" data-href="tests_08_pulltorefresh.html" data-classid="pullToRefreshNonActive">pull to refresh non activé</a>
-
-		<p>TEST 05 - Charger cette même vue mais avec un pullToRefresh customisé</p>
-
-        <a class="push" href="javascript:;" data-href="tests_08_pulltorefresh.html" data-classid="pullToRefreshCustom">pull to refresh customisé</a>
+        <a class="push" href="javascript:;" data-href="pulltorefresh_&_infinitescroll.html" data-classid="PTR_and_IfiniteScroll">PullToRefresh and InfiniteScroll</a>
 
 
 		<div id="list">
 
 		</div>
-
+		<p id="loading"  style="padding:10px; text-align:center; display:none;">Chargement...</p>
 
 		<br/>
 
@@ -51,16 +46,16 @@
 
             Zepto(function($){
 		        cobalt.init({
-		            debug:true,
+		            //debug:true,
 		            //sendingToNative:false,
                     events:{
-                       "pullToRefresh" : function(data, calllback){
-                               cobalt.log('native asked to refresh');
-	                           $('#list').hide();
+                       "infiniteScroll" : function(data, callback){
+                               cobalt.log('native asked to load more content');
+	                           $('#loading').show();
 	                           setTimeout(function(){
-                                  
-		                            $('#list').append('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>').show();
-		                           cobalt.sendCallback(calllback);
+                                   $('#loading').hide();
+		                           $('#list').append('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>');
+		                           cobalt.sendCallback(callback);
 	                           },1000, true);
                         }
                                   

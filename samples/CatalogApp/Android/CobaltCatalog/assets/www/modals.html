@@ -13,10 +13,11 @@
 		
   		<p>TEST 01 - Ouvrez ces liens dans une modale si vous êtes cap!</p> 
 		<ul>
-  		<li><a class="modal" href="javascript:;" data-href="tests_04_modalContentView1.html">Contenu modale page1</a>
-  		<li><a class="modal" href="javascript:;" data-href="tests_04_modalContentView2.html">Contenu modale page2</a>
+  		<li><a class="modal" href="javascript:;" data-href="modal_content_1.html">Contenu modale page1</a>
+  		<li><a class="modal" href="javascript:;" data-href="modal_content_2.html">Contenu modale page2</a>
   		</ul>
 		
+		<div id="cobalt_logdiv"></div>
 		
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
@@ -36,7 +37,11 @@
 		            //sendingToNative:false,
 	            });
 
-	            $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
+                cobalt.storage.enable();
+				cobalt.log("init dismissInformations : "+cobalt.storage.getItem("dismissInformations"), false);
+				cobalt.log("init testLocalStorageKey : "+cobalt.storage.getItem("testLocalStorageKey"), false);
+				
+				$('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
                 $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
 
                 $('a.pop').on('tap click',function(){
@@ -48,6 +53,8 @@
 					cobalt.navigate('modal',$(this).attr('data-href'));
 		            return false;
 	            });
+	            
+	            
 
             })
             
