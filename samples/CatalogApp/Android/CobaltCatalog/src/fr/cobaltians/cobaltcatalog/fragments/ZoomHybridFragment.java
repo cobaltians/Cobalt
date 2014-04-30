@@ -1,5 +1,7 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
+import android.app.AlertDialog;
+import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,6 +16,12 @@ import fr.cobaltians.cobalt.fragments.HTMLFragment;
 import fr.cobaltians.cobaltcatalog.R;
 
 public class ZoomHybridFragment extends HTMLFragment {
+
+    // ZOOM
+    protected final static String kJSName = "name";
+    protected final static String JSNameSetZoom = "setZoom";
+
+    protected final static String JSNameHello = "hello";
 
 	private Button zoomInButton,zoomOutButton;
 	private int zoomLevel;
@@ -82,17 +90,13 @@ public class ZoomHybridFragment extends HTMLFragment {
 
 	private void setZoomLevelInWebView(int nZoomLevel)
 	{
-		/*
-		JSONObject obj = new JSONObject();
+		JSONObject data = new JSONObject();
 		try {
-			obj.put(kJSType, JSTypeEvent);
-			obj.put(kJSName, JSNameSetZoom);
-			obj.put(kJSValue, nZoomLevel);
-			executeScriptInWebView(obj);
+			data.put(kJSValue, nZoomLevel);
+			sendEvent(JSNameSetZoom, data, null);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		*/
 	}
 
 	//  unhandled JS messages
@@ -100,7 +104,16 @@ public class ZoomHybridFragment extends HTMLFragment {
 	protected void onUnhandledMessage(JSONObject message) { }
 	@Override
 	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
-		return false;
+		if(name.equals(JSNameHello)) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+            alert.setMessage("hello world");
+            AlertDialog mAlert = alert.create();
+            mAlert.setCanceledOnTouchOutside(true);
+            mAlert.show();
+
+            return true;
+        }
+        return false;
 	}
 	@Override
 	protected boolean onUnhandledCallback(String name, JSONObject data) {
