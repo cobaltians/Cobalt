@@ -9,48 +9,35 @@
   		
   		<a href="javascript:;" class="pop">POP</a><br/>
 
-		<p>test du Local Storage page 1</p>
+		<p>This page use the LocalStorage, as fixed and enhanced with Cobalt</p>
 
-		<p>TEST 01 - Cliquez sur tous les boutons suivants : </p>
-
-  		<a id="test">Activer localStorage</a><br/>
-  		<a id="store">Enregistrer une valeur</a><br/>
-  		<a id="store2">Enregistrer une autre valeur</a><br/>
-  		<a id="retrieve">Recupérer cette valeur</a><br/>
-  		<a id="clean">Supprimer toute valeur</a><br/>
+		<a id="store">Store value "stored"</a><br/>
+  		<a id="store2">Store value "saved"</a><br/>
+  		<a id="retrieve">Retrieve value</a><br/>
+  		<a id="clean">Clean all values</a><br/>
 
 
-		<p>TEST 02 - Enregistrer à nouveau une valeur et passez à la page suivante</p>
+		<p>Below, a link to another page. You can test going from one to the other to check storage persistence.</p>
 
-		<a class="push" href="javascript:;" data-href="localstorage_page2.html">07. tests localStorage page 2</a>
-
-
-		<p>TEST 03 - Enregistrez une valeur, killez l'appli puis revenez, vérifier qu'elle y est toujours</p>
+		<a class="push" href="javascript:;" data-href="localstorage_page2.html">Push 2nd page</a>
 
 
-		<p>TEST 04 - Lancer cette batterie des tests automatique. Devrait afficher plein de success et pas de failed dans la console. Si c'est pas le cas, remonter un bug. attention ce test clean le localStorage avant.</p>
+		<p>The button below is sending a bench of automatic tests.</p>
 
-		<a id="test4">Test 4</a><br/>
+		<a id="test4">Tests</a><br/>
 
-		<p>TEST 05 - Enregistrer 2000 valeurs en moins de 200ms</p>
+		<p>The button bellow <b>store</b> 2000 values in the localStorage and shows elapsed time.</p>
 
-		<a id="test5">Test 5</a><br/>
+		<a id="test5">Speed test 1</a><br/>
 
-		<p>TEST 06 - Récupérer 2000 valeurs en moins de 200ms</p>
+		<p>The button bellow <b>retrieve</b> 2000 values in the localStorage and shows elapsed time.</p>
 
-		<a id="test6">Test 6</a><br/>
+		<a id="test6">Speed test 2</a><br/>
 
 
-		<div id="cobalt_logdiv"></div>
-		
         <script type="text/javascript" src="js/zepto.min.js"></script>
-        <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
-
-
-		<!-- for cobalt dev only
-		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
-		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
-		-->
+        <script type="text/javascript" src="js/cobalt/cobalt.min.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
 
 
         <script>
@@ -58,117 +45,94 @@
             Zepto(function($){
 
 	            cobalt.init({
-					debug:true,
-		            //sendingToNative:false,
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInLogdiv:app.debugInLogdiv
 
 	            });
 
-                cobalt.log("init dismissInformations : "+cobalt.storage.getItem("dismissInformations"), false);
-				cobalt.log("init testLocalStorageKey : "+cobalt.storage.getItem("testLocalStorageKey"), false);
+                cobalt.log("init dismissInformations : "+cobalt.storage.getItem("dismissInformations"));
+				cobalt.log("init testLocalStorageKey : "+cobalt.storage.getItem("testLocalStorageKey"));
 
 
 
                 app.touch('a.pop',function(){
                     cobalt.navigate('pop');
                 });
-	            $('a.push').on('tap click',function(){
-	            	if ( ! $(this).hasClass('disabled') ){
-						cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
-	            	}
-		            return false;
+
+
+	            app.touch('a.push',function(){
+	            	cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
 	            });
-	            $('a.modal').on('tap click',function(){	            	
-					cobalt.navigate('modal',$(this).attr('href'));
-		            return false;
-	            });
-	            
-	            
-	            $('a#test').on('tap click',function(){
-	            	cobalt.log('Local storage enabled : '+ cobalt.storage.enable(), false)
-		            return false;
-	            });
-   	            $('a#store').on('tap click',function(){
+
+                app.touch('a#store',function(){
 		            var obj={ value: "stored"}
-		            cobalt.log("Changement de la valeur de l'objet en "+cobalt.toString(obj), false)
+		            cobalt.log("Changing value to", obj)
 					cobalt.storage.setItem('testLocalStorageKey',obj, "json")
-		            return false;
 	            });
-	            $('a#store2').on('tap click',function(){
-		            var obj={ value: "TOTO"}
-		            cobalt.log("Changement de la valeur de l'objet en "+cobalt.toString(obj), false)
+
+                app.touch('a#store2',function(){
+		            var obj={ value: "saved"}
+                    cobalt.log("Changing value to", obj)
 					cobalt.storage.setItem('testLocalStorageKey',obj, "json")
-		            return false;
 	            });
-   	            $('a#retrieve').on('tap click',function(){
+
+                app.touch('a#retrieve',function(){
 		            var keyvalue=cobalt.storage.getItem('testLocalStorageKey',"json")
 		            if (keyvalue){
 			            if (keyvalue.value){
-				            cobalt.log("La clé value de 'testLocalStorageKey' contient : "+ keyvalue.value, false)
+				            cobalt.log("value key of 'testLocalStorageKey' contains : "+ keyvalue.value)
 			            }
 			            else{
-				            cobalt.log("La clé value de 'testLocalStorageKey' n'existe pas.", false)
+				            cobalt.log("value key of 'testLocalStorageKey' is not set.")
 			            }
 		            }else{
-			            cobalt.log("La clé 'testLocalStorageKey' n'existe pas.", false)
+			            cobalt.log("key 'testLocalStorageKey' is not set")
 		            }
-
-		            return false;
 	            });
-	           $('a#clean').on('tap click',function(){
-					cobalt.log("Vidage du local storage.", false)
+
+                app.touch('a#clean',function(){
+					cobalt.log("Cleaning local storage.")
 					cobalt.storage.clear();
-		            return false;
 	            });
 
 
-	            assertEqual=function(testID,func,expectedResult){
-		            try{
-			            var r=func();
-			            if (r===expectedResult){
-				            cobalt.log('test #'+testID+" success! ", false)
-			            }else{
-				            cobalt.log('test #'+testID+" failed! ", false)
-				            cobalt.log(cobalt.toString(r)+" != "+cobalt.toString(expectedResult))
-			            }
-		            }catch(e){
-			            cobalt.log('test #'+testID+" failed! "+e, false)
-		            }
-	            }
 
-	            $('#test4').on('tap click',function(){
-					cobalt.log("--lancement des tests auto", false)
+
+                app.touch('#test4',function(){
+					cobalt.log("-- launching automatic tests")
 					cobalt.storage.clear();
 
 
-		            assertEqual('set/get', function(){
+		            app.assertEqual('set/get', function(){
 			            cobalt.storage.setItem("setget","toto");
 			            return cobalt.storage.getItem("setget");
 		            },"toto");
 
-		            assertEqual('null', function(){
+		            app.assertEqual('null', function(){
 			            cobalt.storage.setItem("null",null);
 			            return cobalt.storage.getItem("toto");
 		            },null);
 
-		            assertEqual('undef', function(){
+		            app.assertEqual('undef', function(){
 			            cobalt.storage.setItem("undef",undefined);
 			            return cobalt.storage.getItem("undef");
-		            },"undefined") //nice one ;)
+		            },"undefined") //nice one browsers... ;)
 
-		            assertEqual('set/set', function(){
+		            app.assertEqual('set/set', function(){
 			            cobalt.storage.setItem("setset","toto");
 			            cobalt.storage.setItem("setset","tata");
 			            return cobalt.storage.getItem("setset");
 		            },"tata");
 
-		            assertEqual('set/rem', function(){
+		            app.assertEqual('set/rem', function(){
 			            cobalt.storage.setItem("setrem","toto");
 			            cobalt.storage.removeItem("setrem");
 			            return cobalt.storage.getItem("setrem");
 		            }, null);
 
 
-		            assertEqual('jsonSetGet', function(){
+		            app.assertEqual('jsonSetGet', function(){
 			            var obj1={a:1, b:"xyz", c:true};
 			            cobalt.storage.setItem("jsonSetGet",obj1, "json");
 			            var obj2=cobalt.storage.getItem("jsonSetGet","json");
@@ -181,32 +145,29 @@
 			            return result;
 		            }, true);
 
-		            cobalt.log("--fin des tests auto", false)
-					return false;
+		            cobalt.log("--end of automatic tests")
 				});
 
 
-	            $('#test5').on('tap click',function(){
-		            cobalt.log('started...',false)
+                app.touch('#test5',function(){
+		            cobalt.toast('started...')
 		            var startTime=new Date().getTime();
 		            for (var i=1;i<=2000;i++){
 						cobalt.storage.setItem('item_'+i,"splendid value stored")
 		            }
 		            var endTime=new Date().getTime();
-		            cobalt.log('ended. done in '+(endTime-startTime)+"ms",false)
-					return false;
+		            cobalt.toast('ended. done in '+(endTime-startTime)+"ms")
 				});
 
-	            $('#test6').on('tap click',function(){
-		            cobalt.log('started...',false)
+                app.touch('#test6',function(){
+		            cobalt.toast('started...')
 		            var startTime=new Date().getTime();
 		            var values=[]
 		            for (var i=1;i<=2000;i++){
 						values.push(cobalt.storage.getItem('item_'+i));
 		            }
 		            var endTime=new Date().getTime();
-		            cobalt.log('ended. done in '+(endTime-startTime)+"ms",false)
-					return false;
+		            cobalt.toast('ended. done in '+(endTime-startTime)+"ms")
 				});
 
 
