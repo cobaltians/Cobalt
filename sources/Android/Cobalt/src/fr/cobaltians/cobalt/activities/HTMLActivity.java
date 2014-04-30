@@ -79,16 +79,6 @@ public abstract class HTMLActivity extends FragmentActivity {
 		}
 	}
 
-	/*********************************************************
-	 * MENU
-	 ********************************************************/
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Adds items to the action bar if it's present.
-		getMenuInflater().inflate(R.menu.activity_html, menu);
-		return true;
-	}
-
 	/*************************************
 	 * COBALT
 	 ************************************/
