@@ -65,7 +65,7 @@ a, input{
 a.disabled{
 	color: #fff;
 }
-a.tapped{
+a.touched{
 	background: #888;
 }
 
