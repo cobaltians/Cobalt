@@ -55,6 +55,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -86,7 +87,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 
     // TAG
     protected final static String TAG = HTMLFragment.class.getSimpleName();
-
+	
 	/*********************************************************
 	 * MEMBERS
 	 ********************************************************/
@@ -602,7 +603,20 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 						onUnhandledMessage(jsonObj);
 					}
 				}
-				
+
+                // INTENT
+                else if (type.equals(Cobalt.JSTypeIntent)) {
+                    String action = jsonObj.getString(Cobalt.kJSAction);
+
+                    // OPEN EXTERNAL URL
+                    if (action.equals(Cobalt.JSActionOpenExternalUrl)) {
+                        JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
+                        String url = data.optString(Cobalt.kJSUrl, null);
+                        openExternalUrl(url);
+
+                        return true;
+                    }
+                }
 				// UNHANDLED TYPE
 				else {
 					onUnhandledMessage(jsonObj);
@@ -1015,7 +1029,18 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			e.printStackTrace();
 		}
     }
-    
+
+    /********************************************************
+     * External Url
+     ********************************************************/
+    private void openExternalUrl(String url) {
+        if (url != null) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intent);
+        }
+
+    }
+
     /******************************************************************************************************************************
 	 * PULL TO REFRESH
 	 *****************************************************************************************************************************/

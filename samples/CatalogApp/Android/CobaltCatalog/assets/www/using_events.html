@@ -23,18 +23,11 @@
 
         <p>Native + / - buttons at the bottom of the screen should increase/decrease web text size</p>
 
-
-
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
-        <script type="text/javascript" src="js/functions.js"></script>
-		  <!-- for cobalt dev only
-		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
-		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
-		-->
+        <script type="text/javascript" src="js/app.js"></script>
 
-
-        <script>
+		<script>
             
             Zepto(function($){
 
@@ -44,31 +37,25 @@
                     debugInLogdiv:app.debugInLogdiv,
 
 		            events:{
-			            "nameSetZoom":function(data, callback){
+			            "setZoom":function(data, callback){
 			                cobalt.log('received setZoom at '+new Date().getTime())
-                            setZoom(data.value)
+                            app.setZoom(data.value)
 				        }
 		            }
 	            });
 
-
-
-				$('#monBouton1').on("tap click",function(){
+                app.touch('#monBouton1',function(){
                     cobalt.log("tap");
 					cobalt.log({"hello":"world"});
                     cobalt.log("http://cobalt.com?xyz#ééé@uuu&2=3");
-					return false;
 				});
 				
-	            $('#monBouton2').on("tap click",function(){
+	            app.touch('#monBouton2',function(){
 					cobalt.sendEvent('hello');
-		            return false;
 				});
 
-
-                $('a.pop').on('tap click',function(){
-		        	cobalt.navigate('pop')
-		            return false;
+                app.touch('a.pop',function(){
+		        	cobalt.navigate('pop');
 	            });
 
             })
