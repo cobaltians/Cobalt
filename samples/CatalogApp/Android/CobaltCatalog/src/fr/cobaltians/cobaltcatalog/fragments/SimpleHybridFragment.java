@@ -1,13 +1,16 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import fr.cobaltians.cobaltcatalog.R;
+
+import fr.cobaltians.cobalt.Cobalt;
+import fr.cobaltians.cobalt.fragments.HTMLFragment;
 
 import android.util.Log;
 import android.webkit.JavascriptInterface;
-import fr.cobaltians.cobalt.fragments.HTMLFragment;
-import fr.cobaltians.cobaltcatalog.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SimpleHybridFragment extends HTMLFragment {
 	
@@ -34,22 +37,22 @@ public class SimpleHybridFragment extends HTMLFragment {
 			jsonObj = new JSONObject(messageJS);
 			if(jsonObj != null)
 			{
-				String type = jsonObj.optString(kJSType);
+				String type = jsonObj.optString(Cobalt.kJSType);
 
 				//TYPE = EVENT
-				if(type != null && type.length() >0 && type.equals(JSTypeEvent))
+				if(type != null && type.length() >0 && type.equals(Cobalt.JSTypeEvent))
 				{
-					String name = jsonObj.optString(kJSEvent);
+					String name = jsonObj.optString(Cobalt.kJSEvent);
 					if(name != null && name.length() >0 && name.equals("getBigData"))
 					{
-						final int value = jsonObj.optInt(kJSValue);
+						final int value = jsonObj.optInt(Cobalt.kJSValue);
 
-						String callbackId = jsonObj.optString(kJSCallback);
+						String callbackId = jsonObj.optString(Cobalt.kJSCallback);
 						if(callbackId != null && callbackId.length() >0)
 						{
 							JSONArray a = generateBigData(value);
 							JSONObject data = new JSONObject();
-							data.put(kJSValue, a);
+							data.put(Cobalt.kJSValue, a);
 							sendCallback(callbackId, data);
 						}
 						return true;

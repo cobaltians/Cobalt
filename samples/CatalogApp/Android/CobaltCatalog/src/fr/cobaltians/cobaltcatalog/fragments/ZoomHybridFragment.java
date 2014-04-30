@@ -3,17 +3,23 @@ package fr.cobaltians.cobaltcatalog.fragments;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
-import fr.cobaltians.cobalt.fragments.HTMLFragment;
+
 import fr.cobaltians.cobaltcatalog.R;
+import fr.cobaltians.cobalt.Cobalt;
+import fr.cobaltians.cobalt.fragments.HTMLFragment;
 
 public class ZoomHybridFragment extends HTMLFragment {
+
+    // ZOOM
+    protected final static String JSNameSetZoom = "setZoom";
+    protected final static String JSNameHello = "hello";
 
 	private Button zoomInButton,zoomOutButton;
 	private int zoomLevel;
@@ -82,17 +88,13 @@ public class ZoomHybridFragment extends HTMLFragment {
 
 	private void setZoomLevelInWebView(int nZoomLevel)
 	{
-		/*
-		JSONObject obj = new JSONObject();
+		JSONObject data = new JSONObject();
 		try {
-			obj.put(kJSType, JSTypeEvent);
-			obj.put(kJSName, JSNameSetZoom);
-			obj.put(kJSValue, nZoomLevel);
-			executeScriptInWebView(obj);
+			data.put(Cobalt.kJSValue, nZoomLevel);
+			sendEvent(JSNameSetZoom, data, null);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		*/
 	}
 
 	//  unhandled JS messages
@@ -100,7 +102,16 @@ public class ZoomHybridFragment extends HTMLFragment {
 	protected void onUnhandledMessage(JSONObject message) { }
 	@Override
 	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
-		return false;
+		if(name.equals(JSNameHello)) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+            alert.setMessage("hello world");
+            AlertDialog mAlert = alert.create();
+            mAlert.setCanceledOnTouchOutside(true);
+            mAlert.show();
+
+            return true;
+        }
+        return false;
 	}
 	@Override
 	protected boolean onUnhandledCallback(String name, JSONObject data) {

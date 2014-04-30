@@ -1,10 +1,10 @@
 package com.example.hello.fragments;
 
-import org.json.JSONObject;
-
 import com.example.hello.R;
 
 import fr.cobaltians.cobalt.fragments.HTMLFragment;
+
+import org.json.JSONObject;
 
 public class MainFragment extends HTMLFragment {
 	
@@ -28,19 +28,16 @@ public class MainFragment extends HTMLFragment {
 	@Override
 	protected void onUnhandledMessage(JSONObject message) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	protected void onPullToRefreshRefreshed() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	protected void onInfiniteScrollRefreshed() {
 		// TODO Auto-generated method stub
-		
 	}
 }
 
