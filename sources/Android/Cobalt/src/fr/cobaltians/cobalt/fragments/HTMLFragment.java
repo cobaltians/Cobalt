@@ -29,18 +29,15 @@
 
 package fr.cobaltians.cobalt.fragments;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-
 import fr.cobaltians.cobalt.BuildConfig;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import fr.cobaltians.cobalt.Cobalt;
+import fr.cobaltians.cobalt.R;
+import fr.cobaltians.cobalt.activities.HTMLActivity;
+import fr.cobaltians.cobalt.customviews.IScrollListener;
+import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
+import fr.cobaltians.cobalt.customviews.PullToRefreshOverScrollWebview;
+import fr.cobaltians.cobalt.database.LocalStorageJavaScriptInterface;
+import fr.cobaltians.cobalt.webViewClients.ScaleWebViewClient;
 
 import com.handmark.pulltorefresh.library.LoadingLayoutProxy;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -52,13 +49,10 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -76,14 +70,18 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.Toast;
-import fr.cobaltians.cobalt.activities.HTMLActivity;
-import fr.cobaltians.cobalt.customviews.IScrollListener;
-import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
-import fr.cobaltians.cobalt.customviews.PullToRefreshOverScrollWebview;
-import fr.cobaltians.cobalt.database.LocalStorage;
-import fr.cobaltians.cobalt.webViewClients.ScaleWebViewClient;
-import fr.cobaltians.cobalt.Cobalt;
-import fr.cobaltians.cobalt.R;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * {@link Fragment} allowing interactions between native and Web
@@ -845,104 +843,6 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	}
 	
 	protected abstract void onUnhandledMessage(JSONObject message);
-
-	/*******************************************************************************************************
-	 * LOCAL STORAGE
-	 ******************************************************************************************************/
-	/**
-	 * Local storage substitution for Web views
-	 * @author Diane
-	 */
-	private class LocalStorageJavaScriptInterface {
-		
-		private Context mContext;
-		private LocalStorage mLocalStorage;
-		private SQLiteDatabase mDatabase;
-
-		LocalStorageJavaScriptInterface(Context context) {
-			mContext = context;
-			mLocalStorage = LocalStorage.getInstance(mContext);
-		}
-
-		/**
-		 * Gets item for the given key
-		 * @param key: key to look for
-		 * @return item corresponding to the given key
-		 */
-		@JavascriptInterface
-		public String getItem(String key) {
-			String value = null;
-			
-			if (key != null) {
-				mDatabase = mLocalStorage.getReadableDatabase();
-				Cursor cursor = mDatabase.query(LocalStorage.LOCALSTORAGE_TABLE_NAME,
-												null, 
-												LocalStorage.LOCALSTORAGE_ID + " = ?",  new String [] {key}, 
-												null, null, null);
-				if (cursor.moveToFirst()) {
-					value = cursor.getString(1);
-				}
-				cursor.close();
-				mDatabase.close();
-			}
-			
-			return value;
-		}
-
-		/**
-		 * Sets value for the given key.
-		 * @param key
-		 * @param value
-		 */
-		@JavascriptInterface
-		public void setItem(String key, String value) {
-			if (key != null 
-				&& value != null) {
-				mDatabase = mLocalStorage.getWritableDatabase();
-				
-				ContentValues values = new ContentValues();
-				values.put(LocalStorage.LOCALSTORAGE_ID, key);
-				values.put(LocalStorage.LOCALSTORAGE_VALUE, value);
-				
-				if (getItem(key) != null) {
-					mDatabase.update(	LocalStorage.LOCALSTORAGE_TABLE_NAME, 
-										values, 
-										LocalStorage.LOCALSTORAGE_ID + " = " + key, 
-										null);
-				}
-				else {
-					mDatabase.insert(	LocalStorage.LOCALSTORAGE_TABLE_NAME, null, 
-										values);
-				}
-				mDatabase.close();
-			}
-		}
-
-		/**
-		 * Removes item corresponding to the given key
-		 * @param key
-		 */
-		@JavascriptInterface
-		public void removeItem(String key) {
-			if(key != null) {
-				mDatabase = mLocalStorage.getWritableDatabase();
-				mDatabase.delete(	LocalStorage.LOCALSTORAGE_TABLE_NAME, 
-									LocalStorage.LOCALSTORAGE_ID + " = " + key, 
-									null);
-				mDatabase.close();
-			}
-		}
-
-		/**
-		 * Clears local storage.
-		 */
-		@JavascriptInterface
-		public void clear() {
-			mDatabase = mLocalStorage.getWritableDatabase();
-			mDatabase.delete(LocalStorage.LOCALSTORAGE_TABLE_NAME, null, null);
-			mDatabase.close();
-		}
-	}
 	
 	/********************************************************************************************************************
 	 * CONFIGURATION FILE

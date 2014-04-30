@@ -29,12 +29,13 @@
 
 package fr.cobaltians.cobalt.database;
 
+import fr.cobaltians.cobalt.BuildConfig;
+import fr.cobaltians.cobalt.Cobalt;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import fr.cobaltians.cobalt.BuildConfig;
-import fr.cobaltians.cobalt.Cobalt;
 
 /**
  * {@link SQLiteOpenHelper} that is used as replacement of the localStorage of the webviews.
