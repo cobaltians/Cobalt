@@ -24,9 +24,9 @@ public class PullToRefreshCustomFragment extends HTMLFragment {
 	public void onStart() {
 		super.onStart();
 		
-		setCustomTitlesAndImage("Relâchez pour actualiser", 
-				"Chargement...", 
-				"Relâchez pour actualiser", 
+		setCustomTitlesAndImage("Pull to refresh...",
+				"Loading...",
+				"Release to refresh...",
 				null, 
 				sContext.getResources().getDrawable(R.drawable.ic_launcher),
 				null);
