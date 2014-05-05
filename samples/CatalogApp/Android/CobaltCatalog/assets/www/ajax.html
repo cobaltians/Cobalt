@@ -16,20 +16,15 @@
 		</div>
 
         <p>This button below should add some content to the webview, using an ajax call to google apis</p>
-		<a id="test1">Ajouter du contenu</a><br/>
+		<a id="test1">Add some content</a><br/>
 
   		<script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
-
-        <!-- for cobalt dev only
-		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
-		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
-		-->
-
+        <script type="text/javascript" src="js/app.js"></script>
 
         <script>
 			var count=0;
-			addContent=function(){
+			function addContent(){
 				cobalt.log('loading...')
 				var url="https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=test&imgsz=medium&start="+count*8;
 				$.ajax({url:url, type:"GET", dataType:"json",
