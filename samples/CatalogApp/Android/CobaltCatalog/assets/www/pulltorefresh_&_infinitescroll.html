@@ -14,7 +14,7 @@
         <p>As you can see pullToRefresh header is handled by cobalt, but infiniteScroll footer is handled on the web side. We will enhance this one day.</p>
 
 		<div id="list">
-			<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>
+			<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>
 		</div>
    		<p id="loading"  style="padding:10px; text-align:center; display:none;">Chargement...</p>
 
@@ -39,7 +39,7 @@
 	                           $('#list').html('');
 	                           setTimeout(function(){
                                   
-		                            $('#list').html('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>');
+		                            $('#list').html('<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>');
 		                           cobalt.sendCallback(calllback);
 	                           },1000, true);
                         },
@@ -48,7 +48,7 @@
                                   $('#loading').show();
                                   setTimeout(function(){
                                      $('#loading').hide();
-                                     $('#list').append('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>');
+                                     $('#list').append('<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>');
                                      cobalt.sendCallback(calllback);
                                   },1000, true);
                           }

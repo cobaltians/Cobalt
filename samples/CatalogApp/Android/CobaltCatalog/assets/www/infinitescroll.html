@@ -49,7 +49,7 @@
 	                           $('#loading').show();
 	                           setTimeout(function(){
                                    $('#loading').hide();
-		                           $('#list').append('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>');
+		                           $('#list').append('<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>');
 		                           cobalt.sendCallback(callback);
 	                           },1000, true);
                         }
@@ -65,7 +65,7 @@
                     cobalt.navigate('pop');
                 });
 
-	            $('#list').html('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>');
+	            $('#list').html('<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>');
 
             })
 

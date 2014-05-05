@@ -84,14 +84,13 @@ input{
 	border-bottom: 2px solid #3E6B85;
 	}
 	.listItem .name{
-		width:80%;
-		color:#165C85;
+        float:left;
+        color:#165C85;
 		font-weight: bold;
-		float:left;
 		padding-left:20px;
 	}
 	.listItem .num{
-		text-align: right;
+		float: right;
 		padding-right: 20px;
 	}
 #images img{
