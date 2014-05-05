@@ -95,7 +95,7 @@ public abstract class HTMLActivity extends FragmentActivity {
 	protected abstract HTMLFragment getFragment();
 
 	protected int getLayoutToInflate() {
-		return R.layout.activity_html;
+		return R.layout.activity_cobalt;
 	}
 
 	public int getFragmentContainerId() {

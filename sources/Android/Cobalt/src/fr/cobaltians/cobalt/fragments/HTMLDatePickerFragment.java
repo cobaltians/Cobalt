@@ -29,13 +29,8 @@
 
 package fr.cobaltians.cobalt.fragments;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-
-import android.os.Build;
 import fr.cobaltians.cobalt.R;
+
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -45,7 +40,8 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.DatePicker.OnDateChangedListener;
+
+import java.util.Calendar;
 
 public class HTMLDatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
@@ -92,7 +88,7 @@ public class HTMLDatePickerFragment extends DialogFragment implements DatePicker
 			
 			LayoutInflater inflater = (LayoutInflater) getActivity().getLayoutInflater();
 			AlertDialog.Builder datePickerBuilder = new AlertDialog.Builder(getActivity());
-			View customView = inflater.inflate(R.layout.date_picker_layout, null);
+			View customView = inflater.inflate(R.layout.date_picker_cobalt, null);
 			datePickerBuilder.setView(customView);
 			
 			final DatePicker datePicker = (DatePicker) customView.findViewById(R.id.date_picker);

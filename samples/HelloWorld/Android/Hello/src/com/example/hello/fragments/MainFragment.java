@@ -1,17 +1,10 @@
 package com.example.hello.fragments;
 
-import com.example.hello.R;
-
 import fr.cobaltians.cobalt.fragments.HTMLFragment;
 
 import org.json.JSONObject;
 
 public class MainFragment extends HTMLFragment {
-	
-	@Override
-	protected int getLayoutToInflate() {
-		return R.layout.activity_main;
-	}
 
 	@Override
 	protected boolean onUnhandledCallback(String callback, JSONObject data) {

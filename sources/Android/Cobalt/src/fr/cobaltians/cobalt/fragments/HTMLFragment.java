@@ -212,10 +212,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	 * @return Layout id inflated by this fragment
 	 */
 	protected int getLayoutToInflate() {
-		if (mPullToRefreshActivate) {
-			return R.layout.html_ptr_fragment;
-		}
-		return R.layout.html_fragment;
+		return R.layout.fragment_cobalt;
 	}
 
 	/**

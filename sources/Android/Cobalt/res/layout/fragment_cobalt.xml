@@ -2,7 +2,7 @@
 
 <!-- 
  
- html_ptr_fragment
+ fragment_cobalt
  Cobalt
  
  The MIT License (MIT)
@@ -29,18 +29,8 @@
  
  -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
-
-    <!-- The PullToRefreshWebView replaces a standard WebView widget. -->
-
-    <FrameLayout
-        android:id="@+id/webViewPlaceholder"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" >
-    </FrameLayout>
-
-</LinearLayout>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/webViewPlaceholder"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent" />
