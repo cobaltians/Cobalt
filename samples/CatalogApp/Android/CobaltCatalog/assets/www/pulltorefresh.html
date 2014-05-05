@@ -9,24 +9,20 @@
 
   		<a href="javascript:;" class="pop">POP</a><br/>
 
-		<p>Pull to refresh</p>
+		<p>This Pull to refresh demo page contain a list that is refreshed when the user is pulling the page down</p>
 
+        <p>Try it out :)</p>
 
+        <p>Your view in cobalt.conf should have pullToRefresh set to true. Otherwise it won't work.<br/>
+            Below is a link to the same page but with pullToRefresh disabled. It should break when pulled.</p>
 
-		<p>TEST 01 - Faites un pull to refresh, de nouveau elements doivent s'ajouter après un délai à la liste existante</p>
+		<a class="push" href="javascript:;" data-href="pulltorefresh.html" data-classid="pullToRefreshNonActive">disabled pullToRefresh</a>
 
-		<p>TEST 02 - Quand l'utilisateur commence à tirer, un texte lui indique qu'il faut tirer + pour recharger les données</p>
+          <p>Your can customise your pullToRefresh header on the native side. Here is an example.</p>
 
-		<p>TEST 03 - Quand l'utilisateur relache et que les données chargent, l'utilisateur est prévenu du chargement en cours (texte+ loader qui tourne)</p>
+        <a class="push" href="javascript:;" data-href="pulltorefresh.html" data-classid="pullToRefreshCustom">custom pullToRefresh header</a>
 
-		<p>TEST 04 - Charger cette même vue mais dans un controlleur sans pullToRefresh : verifier que ça ne pull-to-refresh pas.</p>
-
-		<a class="push" href="javascript:;" data-href="pulltorefresh.html" data-classid="pullToRefreshNonActive">pull to refresh non activé</a>
-
-		<p>TEST 05 - Charger cette même vue mais avec un pullToRefresh customisé</p>
-
-        <a class="push" href="javascript:;" data-href="pulltorefresh.html" data-classid="pullToRefreshCustom">pull to refresh customisé</a>
-
+        <p></p>
 
 		<div id="list">
 
@@ -34,8 +30,6 @@
 
 
 		<br/>
-
-
 		<script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
         <script type="text/javascript" src="js/setTimeoutWorkaround.js"></script>
@@ -51,10 +45,15 @@
                     events:{
                        "pullToRefresh" : function(data, calllback){
                                cobalt.log('native asked to refresh');
-	                           $('#list').hide();
+	                           $('#list').html('')
+
+                               cobalt.log('Faking loading something');
+
 	                           setTimeout(function(){
-                                  
-		                            $('#list').append('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>').show();
+                                    cobalt.log('We have new data');
+		                            $('#list').html('<div class="listItem"><div class="name">John Refreshed</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Refreshed</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Refreshed</div><div class="num">#21454</div></div>');
+
+                                   cobalt.log('Releasing the pullToRefresh');
 		                           cobalt.sendCallback(calllback);
 	                           },1000, true);
                         }
@@ -63,15 +62,8 @@
 	            });
 
 
-	            $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
-	            $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
-
-	            $('a.push').on('tap',function(){
-	            	if ( ! $(this).hasClass('disabled') ){
-	            		cobalt.log('tap')
-	            		cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
-	            	}
-		            return false;
+	            app.touch('a.push',function(){
+	            	cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
 	            });
 
 	            app.touch('a.pop',function(){
@@ -79,9 +71,7 @@
                 });
 
 	            $('#list').html('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>');
-                  
-                  //setTimeout(function(){ alert('coucou')},1000);
-
+                
             })
 
         </script>

@@ -9,13 +9,9 @@
 
   		<a href="javascript:;" class="pop">POP</a><br/>
 
-		<p>Pull to refresh and infinite scroll</p>
+		<p>This is a full example of pullToRefresh and infiniteScroll working together.</p>
 
-
-
-		<p>TEST 01 - Vérifier le pull to refresh</p>
-
-   		<p>TEST 02 - Vérifier l'infiniteScroll</p>
+        <p>As you can see pullToRefresh header is handled by cobalt, but infiniteScroll footer is handled on the web side. We will enhance this one day.</p>
 
 		<div id="list">
 			<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>
@@ -40,10 +36,10 @@
                     events:{
                        "pullToRefresh" : function(data, calllback){
                                cobalt.log('native asked to refresh');
-	                           $('#list').hide();
+	                           $('#list').html('');
 	                           setTimeout(function(){
                                   
-		                            $('#list').append('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>').show();
+		                            $('#list').html('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>');
 		                           cobalt.sendCallback(calllback);
 	                           },1000, true);
                         },
@@ -61,26 +57,11 @@
 	            });
 
 
-	            $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
-	            $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
-
-	            $('a.push').on('tap',function(){
-	            	if ( ! $(this).hasClass('disabled') ){
-	            		cobalt.log('tap')
-	            		cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
-	            	}
-		            return false;
-	            });
-
 	            app.touch('a.pop',function(){
                     cobalt.navigate('pop');
                 });
 
-                  
-                  //setTimeout(function(){ alert('coucou')},1000);
-
             })
-
         </script>
 
     </body>
