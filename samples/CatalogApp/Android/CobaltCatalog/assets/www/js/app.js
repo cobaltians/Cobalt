@@ -39,19 +39,21 @@ var app={
         }
     },
 
-    /* a small assert function used in localStorage */
-    assertEqual : function(testID,func,expectedResult){
+    /* a small assert function used in localStorage and callbacks */
+    assertEqual : function(testID,func_or_result,expectedResult){
         try{
-            var r=func();
-            if (r===expectedResult){
-                cobalt.log('test #'+testID+" success! ", false)
+            var result= ( typeof func_or_result =="function") ? func_or_result() : func_or_result;
+            if (result === expectedResult){
+                cobalt.log('test #'+testID+" success! ");
+                return true;
             }else{
-                cobalt.log('test #'+testID+" failed! ", false)
-                cobalt.log(cobalt.toString(r)+" != "+cobalt.toString(expectedResult))
+                cobalt.log('test #'+testID+" failed! ");
+                cobalt.log(result, " != ", expectedResult);
             }
         }catch(e){
-            cobalt.log('test #'+testID+" failed! "+e, false)
+            cobalt.log('test #'+testID+" failed! ", e)
         }
+        return false;
     }
 
 }
