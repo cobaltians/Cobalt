@@ -1,6 +1,6 @@
 /**
  *
- * HTMLFragment
+ * Cobalt
  * Cobalt
  *
  * The MIT License (MIT)
@@ -179,7 +179,7 @@ public class Cobalt {
      *******************************************************/
 	
 	public String getResourcePath() {
-		return mResourcePath;
+		return ASSETS_PATH + mResourcePath;
 	}
 	
 	public void setResourcePath(String resourcePath) {
