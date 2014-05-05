@@ -10,9 +10,9 @@
         <div class="webLayer">
 	        <h1>This is a web layer !</h1>
 
-	        <p>TEST 02 - Fermer cette webLayer</p>
+	        <p>It's your work to make it pretty.</p>
 
-	        <a id="test1">Fermer</a><br/>
+	        <a id="test1">Close</a><br/>
 
 
         </div>
@@ -28,27 +28,16 @@
 	        Zepto(function($){
 
 	            cobalt.init({
-		            debug:true
-		            //sendingToNative:false,
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInLogdiv:app.debugInLogdiv
 		        });
-                cobalt.log("webLayer cobalt is ready!")
 
-
-
-		       $('#test1').on('tap click',function(){
+		       app.touch('#test1',function(){
 			       cobalt.webLayer("dismiss");
-		           return false;
 	            });
 
-
-
-	            app.touch('a.pop',function(){
-                    cobalt.navigate('pop');
-                });
-
 	        })
-
-
         </script>
 
     </body>

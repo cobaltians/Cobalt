@@ -9,26 +9,24 @@
 
         <a href="javascript:;" class="pop">POP</a><br/>
 
-  		<p>Test des alertes web </p>
+  		<p><b>WebLayers</b> allow you to add a webview over the current webview.<br/>
+             The webview is positionned on the same place that the current one and the background is transparent so that you can define your own "popin" style.</p>
 
-  		<p>TEST 01 - Ouvrir cette webLayer.</p>
+  		<p>Here is a simple one.</p>
 
-        <a id="test1">Ouvrir</a><br/>
+        <a id="test1">Simple one</a><br/>
 
-        <p>TEST 02 - Ouvrir cette même webLayer mais avec un effet de fadeIn plus long.</p>
+        <p>Same thing below but with a longer fadeIn effect</p>
 
-        <a id="test2">Ouvrir</a><br/>
+        <a id="test2">Longer fadeIn</a><br/>
 
-        <p>TEST 03 - Ouvrir cette même webLayer mais avec un effet de fadeIn à 0.</p>
+        <p>No fadeIn at all for this one :</p>
 
-        <a id="test3">Ouvrir</a><br/>
+        <a id="test3">no fadeIn</a><br/>
 
-         <p>TEST 04 - Ouvrir cette webLayer d'edition de commentaire, verifier que le champs texte est dans la partie haute de l'ecran, et que le clavier sort tout seul comme un grand.</p>
+        <p>This one is a bit more complex. It has an editable field and when you validate, the parent page is warned and can show what was written.</p>
 
-        <a id="test4">Ouvrir</a><br/>
-
-        <p>TEST 05 - Quand cette webLayer est fermé, un toast s'affiche avec le texte entré dans le webLAyer</p>
-
+        <a id="test4">Try it</a><br/>
 
   		<script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
@@ -39,39 +37,35 @@
 	        Zepto(function($){
 
 	            cobalt.init({
-		            debug:true,
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInLogdiv:app.debugInLogdiv,
+
 		            events:{
 			            "onWebLayerDismissed":function(data, callback){
-				            cobalt.toast('webLayer '+data.page+' closed')
-				            if (data.data){
-					            cobalt.toast('webLayer result is '+JSON.stringify(data.data))
-				            }
+                            if (data && data.page=="weblayer_content_2.html"){
+
+                                cobalt.toast('webLayer '+data.page+' closed')
+                                if (data.data){
+                                    cobalt.toast('webLayer result is '+JSON.stringify(data.data))
+                                }
+                            }
 			            }
 		            }
-		            //sendingToNative:false,
 		        });
 
-
-
-		       $('#test1').on('tap click',function(){
-			        cobalt.webLayer("show","weblayer_content_1.html");
-		            return false;
-	            });
-				$('#test2').on('tap click',function(){
-					cobalt.webLayer("show","weblayer_content_1.html",1.2);
-		            return false;
-	            });
-				$('#test3').on('tap click',function(){
-					cobalt.webLayer("show","weblayer_content_1.html",0);
-		            return false;
-	            });
-		        $('#test4').on('tap click',function(){
-			        cobalt.webLayer("show","weblayer_content_2.html");
-		            return false;
-	            });
-
-
-
+                app.touch('#test1',function(){
+                    cobalt.webLayer("show","weblayer_content_1.html");
+                });
+                app.touch('#test2',function(){
+                    cobalt.webLayer("show","weblayer_content_1.html",1.2);
+                });
+                app.touch('#test3',function(){
+                    cobalt.webLayer("show","weblayer_content_1.html",0);
+                });
+                app.touch('#test4',function(){
+                    cobalt.webLayer("show","weblayer_content_2.html");
+                });
 
 	            app.touch('a.pop',function(){
                     cobalt.navigate('pop');

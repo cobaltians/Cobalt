@@ -8,9 +8,9 @@
     <body>
 
         <div class="webLayer webLayer2">
-	        <h1>Lache tes com'</h1>
-	        <textarea id="text">salut</textarea>
-	        <a id="close">Fermer</a>
+	        <h1>Write something !</h1>
+	        <textarea id="text"></textarea>
+	        <a id="close">Close</a>
         </div>
 
 
@@ -24,25 +24,21 @@
 	        Zepto(function($){
 
 	            cobalt.init({
-		            debug:true
-		            //sendingToNative:false,
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInLogdiv:app.debugInLogdiv
 		        });
-                cobalt.log("webLayer cobalt is ready!")
 
-                  setTimeout(function(){
-                             $('#text').focus();
-                  },200);
+                //This won't work everywhere. we work on it. see https://github.com/cobaltians/cobalt/issues/9 for more.
+                setTimeout(function(){
+                    $('#text').focus();
+                },200);
 
 
 
-		       $('#close').on('tap click',function(){
+		       app.touch('#close',function(){
 		       		$('#text').blur();
-		       		setTimeout(function(){
-		       			//using setTimeout because otherwise, android kills the webview too fast
-		       			cobalt.webLayer("dismiss",{ value : $('#text').val() });
-		       		},500)
-			       
-	            	return false;
+		       		cobalt.webLayer("dismiss",{ value : $('#text').val() });
 	            });
 	            
 	            app.touch('a.pop',function(){
