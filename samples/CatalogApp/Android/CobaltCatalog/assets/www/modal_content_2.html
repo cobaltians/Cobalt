@@ -10,51 +10,43 @@
   		<a href="javascript:;" class="dismiss">DISMISS</a><br/>
   		<a href="javascript:;" class="pop">POP</a><br/>
   		
-		<p>Contenu modale 2</p>
+		<h2>Modal content 2</h2>
 		
-  		<p>TEST 05 - Appuyez sur dismiss. vous devriez revenir à l'index des modales.</p>
-  		
-  		<p>TEST 06 - Appuyez sur pop. <b>si vous venez de l'autre contenu de la modale</b> vous devriez y retourner.</p> 
-  		<p>TEST 07 - Appuyez sur pop. <b>sinon</b> vous devriez revenir à l'index des modales.</p> 
-  		
-  		<p>TEST 08 - Pushez l'autre contenu de modale et verifiez la logique du truc.</p>
-		<a class="push" href="javascript:;" data-href="modal_content_1.html">Contenu modale page1</a>
+  		<p>The dismiss button always get back to the state you had before openning the modal. whatever you pushed in it since then.</p>
+
+  		<p>If you came from Modal content 1, you should be able to pop.</p>
+
+        <p>Below you can push again modal content 1.</p>
+
+		<a class="push" href="javascript:;" data-href="modal_content_1.html">Modal content 1</a>
 		
 		<script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
 
 
 		<script>
             
             Zepto(function($){
 
-	            cobalt.init({
+                cobalt.init({
                     debug:app.debug,
                     debugInBrowser:app.debugInBrowser,
                     debugInLogdiv:app.debugInLogdiv
-	            });
-
-                cobalt.storage.enable();
-				cobalt.log("init dismissInformations : "+cobalt.storage.getItem("dismissInformations"), false);
-				cobalt.log("init testLocalStorageKey : "+cobalt.storage.getItem("testLocalStorageKey"), false);
+                });
 
 
-
-                $('a.dismiss').on('tap click',function(){
-		        	cobalt.navigate('dismiss');
-		            return false;
-	            });
-				app.touch('a.pop',function(){
+                app.touch('a.dismiss',function(){
+                    cobalt.navigate('dismiss');
+                });
+                app.touch('a.pop',function(){
                     cobalt.navigate('pop');
                 });
-	            $('a.push').on('tap click',function(){
-	            	cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
-		            return false;
-	            });
-	            
+                $('a.push').on('tap click',function(){
+                    cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
+                });
 
             })
-            
 
         </script>
         

@@ -10,23 +10,20 @@
   		<a href="javascript:;" class="dismiss">DISMISS</a><br/>
   		<a href="javascript:;" class="pop">POP</a><br/>
   		
-		<p>Contenu modale 1</p>
+		<h2>Modal content 1</h2>
 		
-  		<p>TEST 02 - Appuyez sur dismiss. vous devriez revenir à l'index des modales.</p>
-  		
-  		<p>TEST 03 - Pushez une nouvelle vue dans cette modale :</p>
-		<a class="push" href="javascript:;" data-href="modal_content_2.html">Contenu modale page2</a>
+  		<p>There is a dismiss button at the top. use it to close the modal.</p>
+
+        <p>The pop button should do nothing if you just openned the modal.</p>
+
+  		<p>You can push other pages in this modal.</p>
+
+		<a class="push" href="javascript:;" data-href="modal_content_2.html">Push modal content 2</a>
 		
-		<div id="cobalt_logdiv"></div>
-		
-        <script type="text/javascript" src="js/zepto.min.js"></script>
+		<script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
 
-
-		<!-- for cobalt dev only
-		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
-		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
-		-->
 
         <script>
             
@@ -38,22 +35,15 @@
                     debugInLogdiv:app.debugInLogdiv
 	            });
 
-                cobalt.storage.enable();
-				cobalt.log("init dismissInformations : "+cobalt.storage.getItem("dismissInformations"), false);
-				cobalt.log("init testLocalStorageKey : "+cobalt.storage.getItem("testLocalStorageKey"), false);
-				
 
-
-                $('a.dismiss').on('tap click',function(){
+                app.touch('a.dismiss',function(){
 		        	cobalt.navigate('dismiss');
-		            return false;
 	            });
 				app.touch('a.pop',function(){
                     cobalt.navigate('pop');
                 });
 	            $('a.push').on('tap click',function(){
 	            	cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
-		            return false;
 	            });
 	            
 
