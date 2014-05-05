@@ -34,6 +34,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.webkit.JavascriptInterface;
+import junit.framework.Assert;
 
 /**
  * Local storage substitution for Web views
@@ -41,10 +42,13 @@ import android.webkit.JavascriptInterface;
  */
 public class LocalStorageJavaScriptInterface {
 
+    private static final String TAG = LocalStorageJavaScriptInterface.class.getSimpleName();
+
     private final Context mContext;
     private final LocalStorage mLocalStorage;
 
     public LocalStorageJavaScriptInterface(Context context) {
+        Assert.assertNotNull(TAG + " - getInstance: context could not be null", context);
         mContext = context;
         mLocalStorage = LocalStorage.getInstance(mContext);
     }

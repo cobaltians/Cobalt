@@ -40,7 +40,7 @@ public class EventsFragment extends HTMLFragment {
 	
 	@Override
 	protected int getLayoutToInflate() {
-		return R.layout.zoom_hybrid_fragment;
+		return R.layout.events_fragment;
 	}
 
 

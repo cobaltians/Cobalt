@@ -36,6 +36,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import junit.framework.Assert;
 
 /**
  * {@link SQLiteOpenHelper} that is used as replacement of the localStorage of the webviews.
@@ -44,10 +45,9 @@ import android.util.Log;
  */
 public class LocalStorage extends SQLiteOpenHelper {
 
+    // TAG
     private static final String TAG = LocalStorage.class.getSimpleName();
 
-	private static LocalStorage sInstance;
-	
 	/**
 	 * Name of LocalStorage table
 	 */
@@ -68,22 +68,37 @@ public class LocalStorage extends SQLiteOpenHelper {
 													+ LOCALSTORAGE_VALUE + " TEXT NOT NULL" 
 												+ ");";
 
+    /*************************************
+     * MEMBERS
+     *************************************/
+
+    private static LocalStorage sInstance;
+
+    /*********************************************************
+     * CONSTRUCTORS
+     *********************************************************/
+
+    private LocalStorage(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
 	/**
 	 * Returns the instance of LocalStorage
 	 * @param context: context used to create the database
 	 * @return the instance of LocalStorage of the application.
 	 */
 	public static LocalStorage getInstance(Context context) {
-		if (sInstance == null) {
-			sInstance = new LocalStorage(context.getApplicationContext());
-		}
-		
-		return sInstance;
-	}
+        if (sInstance == null) {
+            Assert.assertNotNull(TAG + " - getInstance: context could not be null", context);
+            sInstance = new LocalStorage(context.getApplicationContext());
+        }
 
-	private LocalStorage(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
-	}
+        return sInstance;
+    }
+
+    /*****************************************************************
+     * LIFECYCLE
+     *****************************************************************/
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
