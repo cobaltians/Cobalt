@@ -1,6 +1,7 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
 import android.app.AlertDialog;
+import android.util.Log;
 import fr.cobaltians.cobaltcatalog.R;
 
 import fr.cobaltians.cobalt.fragments.HTMLFragment;
@@ -19,10 +20,11 @@ public class CallbacksFragment extends HTMLFragment {
 
 	protected static String JSAddValues = "addValues";
     protected static String JSValuesCallback = "valuesCallback";
+    protected static String JSEcho = "echo";
     protected static String kResult = "result";
     protected static String kValues = "values";
 
-	private Button btnDoSomeMath;
+	private Button btnDoSomeMath, btnTestAuto;
 
 	@Override
 	protected int getLayoutToInflate() {
@@ -33,6 +35,7 @@ public class CallbacksFragment extends HTMLFragment {
 	protected void setUpViews(View rootView) {
 		super.setUpViews(rootView);
         btnDoSomeMath = (Button) rootView.findViewById(R.id.btnDoSomeMaths);
+        btnTestAuto = (Button) rootView.findViewById(R.id.btnTestAuto);
 		}
 
 	@Override
@@ -52,6 +55,23 @@ public class CallbacksFragment extends HTMLFragment {
 				}
 			}
 		});
+
+        btnTestAuto.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                //TODO
+                /*JSONObject data = new JSONObject();
+                try {
+                    ArrayList<Integer> values = new ArrayList<Integer>();
+                    values.add(1);
+                    values.add(3);
+                    data.put(kValues, new JSONArray(values));
+                    sendEvent(JSAddValues, data, JSValuesCallback);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }*/
+            }
+        });
 	}
 
 	// unhandled JS messages
@@ -72,6 +92,11 @@ public class CallbacksFragment extends HTMLFragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            return true;
+        }
+        if (name.equals(JSEcho)) {
+            Log.d(TAG, "data received and send to web : "+data.toString());
+            sendCallback(callback, data);
             return true;
         }
 		return false;
