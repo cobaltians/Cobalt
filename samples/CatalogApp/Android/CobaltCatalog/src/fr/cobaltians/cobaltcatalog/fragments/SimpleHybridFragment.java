@@ -27,7 +27,8 @@ public class SimpleHybridFragment extends HTMLFragment {
 		webView = (OverScrollingWebView) rootView.findViewById(R.id.webView);
 	}
 	*/
-	
+
+    /*
 	@JavascriptInterface
 	public boolean handleMessageSentByJavaScript(String messageJS)
 	{	
@@ -66,7 +67,8 @@ public class SimpleHybridFragment extends HTMLFragment {
 		}
 		return super.handleMessageSentByJavaScript(messageJS);
 	}
-	
+	*/
+
 	private JSONArray generateBigData(int size)
 	{
 		JSONArray a = new JSONArray();
@@ -93,21 +95,27 @@ public class SimpleHybridFragment extends HTMLFragment {
 
 	//  unhandled JS messages
 	@Override
-	protected void onUnhandledMessage(JSONObject message) { }
+	protected void onUnhandledMessage(JSONObject message) {
+
+    }
+
 	@Override
 	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
 		return false;
 	}
+
 	@Override
 	protected boolean onUnhandledCallback(String name, JSONObject data) {
 		return false;
 	}
 
 	@Override
-	protected void onPullToRefreshRefreshed() {		
+	protected void onPullToRefreshRefreshed() {
+
 	}
 
 	@Override
-	protected void onInfiniteScrollRefreshed() {		
+	protected void onInfiniteScrollRefreshed() {
+
 	}
 }

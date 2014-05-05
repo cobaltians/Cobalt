@@ -1,6 +1,6 @@
 /**
  *
- * LocalStorage
+ * CobaltImageCache
  * Cobalt
  *
  * The MIT License (MIT)

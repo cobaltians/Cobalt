@@ -407,7 +407,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 						String url = "javascript:cobalt.execute(" + message + ");";
 						
 						if(mWebView != null) {
-							if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: {" + message + "}");
+							if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: " + message);
 							mWebView.loadUrl(url);		
 						}
 						else {
@@ -417,7 +417,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 				});
 			}
 			else {
-				if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: adding message to queue {" + jsonObj + "}");
+				if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: adding message to queue " + jsonObj);
 				mWaitingJavaScriptCallsQueue.add(jsonObj);
 			}
 		}
