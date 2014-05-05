@@ -53,12 +53,12 @@
                                 app.log('error : no values received in data.values')
                             }
 			            },
-			            /* TODO
 			            "echo" : function( data, callback ){
+                            //just send back data to the native side. for automatic tests
 			                if (callback){
-			                    cobalt.sendCallback(data)
+                                cobalt.sendCallback(callback, data)
 			                }
-			            }*/
+			            }
 		            }
 	            });
 
