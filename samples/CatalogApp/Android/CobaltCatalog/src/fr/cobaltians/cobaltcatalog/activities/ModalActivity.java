@@ -1,8 +1,9 @@
 package fr.cobaltians.cobaltcatalog.activities;
 
+import fr.cobaltians.cobaltcatalog.fragments.ModalFragment;
+
 import fr.cobaltians.cobalt.activities.HTMLActivity;
 import fr.cobaltians.cobalt.fragments.HTMLFragment;
-import fr.cobaltians.cobaltcatalog.fragments.ModalFragment;
 
 public class ModalActivity extends HTMLActivity {
 
