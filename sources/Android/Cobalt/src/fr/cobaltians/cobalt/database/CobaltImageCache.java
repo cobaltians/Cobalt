@@ -57,18 +57,18 @@ public class CobaltImageCache {
 	}
 	
 	public void setImage(String id, Bitmap image) {
-        Assert.assertNull(TAG + " - setImage: id could not be null", id);
-        Assert.assertNull(TAG + " - setImage: image could not be null", image);
+        Assert.assertNotNull(TAG + " - setImage: id could not be null", id);
+        Assert.assertNotNull(TAG + " - setImage: image could not be null", image);
 		mMapImages.put(id, image);
 	}
 	
 	public Bitmap getImage(String id) {
-        Assert.assertNull(TAG + " - getImage: id could not be null", id);
+        Assert.assertNotNull(TAG + " - getImage: id could not be null", id);
 		return mMapImages.get(id);
 	}
 	
 	public String toBase64(String id) {
-        Assert.assertNull(TAG + " - toBase64: id could not be null", id);
+        Assert.assertNotNull(TAG + " - toBase64: id could not be null", id);
 
 		String encodeImage = null;
 		Bitmap bitmap = mMapImages.get(id);

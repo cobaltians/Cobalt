@@ -48,7 +48,7 @@ public class LocalStorageJavaScriptInterface {
     private final LocalStorage mLocalStorage;
 
     public LocalStorageJavaScriptInterface(Context context) {
-        Assert.assertNull(TAG + " - getInstance: context could not be null", context);
+        Assert.assertNotNull(TAG + " - getInstance: context could not be null", context);
         mContext = context;
         mLocalStorage = LocalStorage.getInstance(mContext);
     }

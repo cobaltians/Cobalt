@@ -170,7 +170,7 @@ public class Cobalt {
 
     public static Cobalt getInstance(Context context) {
         if (sInstance == null) {
-            Assert.assertNull(TAG + " - getInstance: context could not be null", context);
+            Assert.assertNotNull(TAG + " - getInstance: context could not be null", context);
             sInstance = new Cobalt(context);
         }
 
