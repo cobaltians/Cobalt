@@ -1,6 +1,6 @@
 /**
  *
- * HTMLActivity
+ * CobaltActivity
  * Cobalt
  *
  * The MIT License (MIT)
@@ -46,9 +46,9 @@ import org.json.JSONObject;
  * {@link Activity} containing a {@link HTMLFragment}.
  * @author Diane
  */
-public abstract class HTMLActivity extends FragmentActivity {
+public abstract class CobaltActivity extends FragmentActivity {
 
-    protected static final String TAG = HTMLActivity.class.getSimpleName();
+    protected static final String TAG = CobaltActivity.class.getSimpleName();
 
     /***************************************************************************************************************
 	 * LIFECYCLE

@@ -31,14 +31,15 @@ package fr.cobaltians.cobalt.fragments;
 
 import fr.cobaltians.cobalt.BuildConfig;
 import fr.cobaltians.cobalt.Cobalt;
-import org.json.JSONException;
-import org.json.JSONObject;
+import fr.cobaltians.cobalt.activities.CobaltActivity
 
 import android.app.FragmentTransaction;
 import android.graphics.Color;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
-import fr.cobaltians.cobalt.activities.HTMLActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Special {@link HTMLFragment} presented over the current HTMLFragment as a Web layer.
@@ -152,8 +153,8 @@ public class HTMLWebLayerFragment extends HTMLFragment {
 	}
 
 	private void onDismiss() {
-		if (HTMLActivity.class.isAssignableFrom(getActivity().getClass())) {
-			HTMLActivity activity = (HTMLActivity) getActivity();
+		if (CobaltActivity.class.isAssignableFrom(getActivity().getClass())) {
+			CobaltActivity activity = (CobaltActivity) getActivity();
 			activity.onWebLayerDismiss(mPage, getDataForDismiss());
 		}
 	}

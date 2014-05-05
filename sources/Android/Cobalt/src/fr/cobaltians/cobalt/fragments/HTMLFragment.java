@@ -32,7 +32,7 @@ package fr.cobaltians.cobalt.fragments;
 import fr.cobaltians.cobalt.BuildConfig;
 import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.R;
-import fr.cobaltians.cobalt.activities.HTMLActivity;
+import fr.cobaltians.cobalt.activities.CobaltActivity;
 import fr.cobaltians.cobalt.customviews.IScrollListener;
 import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
 import fr.cobaltians.cobalt.customviews.PullToRefreshOverScrollWebview;
@@ -825,7 +825,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	 */
 	protected void onBackPressed(boolean allowedToBack) {
 		if (allowedToBack) {
-			HTMLActivity activity = (HTMLActivity) getActivity();
+			CobaltActivity activity = (CobaltActivity) getActivity();
 			if (activity != null) {
 				activity.back();
 			}
@@ -870,9 +870,9 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 					fragmentTransition.setTransition(FragmentTransaction.TRANSIT_NONE);
 				}
 
-				if (HTMLActivity.class.isAssignableFrom(getActivity().getClass())) {
+				if (CobaltActivity.class.isAssignableFrom(getActivity().getClass())) {
 					// Dismiss current Web layer if one is already shown
-					HTMLActivity activity = (HTMLActivity) getActivity();
+					CobaltActivity activity = (CobaltActivity) getActivity();
 					Fragment currentFragment = activity.getSupportFragmentManager().findFragmentById(activity.getFragmentContainerId());
 					if (HTMLWebLayerFragment.class.isAssignableFrom(currentFragment.getClass())) {
 						HTMLWebLayerFragment webLayerToDismiss = (HTMLWebLayerFragment) currentFragment;
