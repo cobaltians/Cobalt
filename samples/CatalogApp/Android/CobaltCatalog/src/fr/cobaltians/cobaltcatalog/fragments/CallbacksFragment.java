@@ -3,16 +3,11 @@ package fr.cobaltians.cobaltcatalog.fragments;
 import android.app.AlertDialog;
 import fr.cobaltians.cobaltcatalog.R;
 
-import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.fragments.HTMLFragment;
 
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.JavascriptInterface;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -31,7 +26,7 @@ public class CallbacksFragment extends HTMLFragment {
 
 	@Override
 	protected int getLayoutToInflate() {
-		return R.layout.main_fragment;
+		return R.layout.callbacks_fragment;
 	}
 
 	@Override
