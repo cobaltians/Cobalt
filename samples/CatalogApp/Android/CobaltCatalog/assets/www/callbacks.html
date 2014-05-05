@@ -52,7 +52,13 @@
                             }else{
                                 app.log('error : no values received in data.values')
                             }
-			            }
+			            },
+			            /* TODO
+			            "echo" : function( data, callback ){
+			                if (callback){
+			                    cobalt.sendCallback(data)
+			                }
+			            }*/
 		            }
 	            });
 
@@ -65,10 +71,12 @@
 
                 var testStrings=[
                     undefined, null, "",
+                    "hello",
                     "quotes : it's working \"great\"",
-                    '{ obj_representation : "test"}',
                     "url &eactue;é&12;\n3#23:%20'\\u0020hop",
-                    "emoji \ue415 \\ue415 u{1f604}"
+                    '{ obj_representation : "test"}',
+                    "emoji \ue415 \\ue415 u{1f604}",
+                    "https://famicitys.s3.amazonaws.com/photos/019/558/630/normal/881558d70ae5b7023209cb609250cb84cabd301b.jpg?AWSAccessKeyId=1RZJ66V99R267YCDQSG2&Expires=1401263985&Signature=xbE%2B49MCgE7/WTKqnvwQ3f4zYmg%3D"
                 ];
 
                 //send a test string and check it is still the same when comming back
@@ -76,35 +84,38 @@
                     cobalt.log('launching test #'+testIndex)
 
                     cobalt.sendEvent("echo",{ str : testStrings[testIndex] },function(data){
-                        var testResult = app.assertEqual('set/get', data.str ,testStrings[testIndex]);
+                        var testResult = app.assertEqual('test #'+testIndex, data.str ,testStrings[testIndex]);
                         if (callback){
                             callback(testResult)
                         }
                     });
-
                 }
+                function next(result){
+                    if (result==false){
+                        errorOccured=true;
+                    }
+                    testIndex++;
+                    if (testIndex!=testStrings.length){
+                        sendAndCheck(testIndex, next)
+                    }else{
+                        if (errorOccured){
+                            cobalt.toast("Some tests failed !s check logs.");
+                        }else{
+                            cobalt.toast("All tests passed ! no errors");
+                        }
+                    }
+                }
+
+                var testIndex=0;
+                var errorOccured=false;
 
                 app.touch('#button_2',function(){
                     cobalt.log('launching tests')
 
-                    var testIndex=0;
-                    var errorOccured=false;
+                    testIndex=0;
+                    errorOccured=false;
 
-                    sendAndCheck(testIndex,function(result){
-                        if (result==false){
-                            errorOccured=true;
-                        }
-                        testIndex++;
-                        if (testIndex==testStrings.length){
-                            sendAndCheck(testIndex)
-                        }else{
-                            if (errorOccured){
-                                cobalt.toast("All tests passed ! no errors");
-                            }else{
-                                cobalt.toast("Some tests failed !s check logs.");
-                            }
-                        }
-                    });
+                    sendAndCheck(testIndex,next);
 
                 });
 

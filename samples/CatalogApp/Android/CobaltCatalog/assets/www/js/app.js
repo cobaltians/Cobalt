@@ -43,6 +43,7 @@ var app={
     assertEqual : function(testID,func_or_result,expectedResult){
         try{
             var result= ( typeof func_or_result =="function") ? func_or_result() : func_or_result;
+            cobalt.log('testing', result, 'vs', expectedResult);
             if (result === expectedResult){
                 cobalt.log('test #'+testID+" success! ");
                 return true;
