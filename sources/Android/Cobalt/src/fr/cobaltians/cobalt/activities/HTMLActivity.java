@@ -31,16 +31,15 @@ package fr.cobaltians.cobalt.activities;
 
 import fr.cobaltians.cobalt.BuildConfig;
 import fr.cobaltians.cobalt.Cobalt;
-import org.json.JSONObject;
+import fr.cobaltians.cobalt.fragments.HTMLFragment;
+import fr.cobaltians.cobalt.R;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.Menu;
-import fr.cobaltians.cobalt.fragments.HTMLFragment;
-import fr.cobaltians.cobalt.fragments.HTMLWebLayerFragment;
-import fr.cobaltians.cobalt.R;
+
+import org.json.JSONObject;
 
 /**
  * {@link Activity} containing a {@link HTMLFragment}.
