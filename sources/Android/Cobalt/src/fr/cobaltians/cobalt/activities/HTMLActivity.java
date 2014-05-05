@@ -36,6 +36,7 @@ import fr.cobaltians.cobalt.R;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
@@ -49,9 +50,10 @@ public abstract class HTMLActivity extends FragmentActivity {
 
     protected static final String TAG = HTMLActivity.class.getSimpleName();
 
-	/**************************************************************************************************************************
+    /***************************************************************************************************************
 	 * LIFECYCLE
-	 *************************************************************************************************************************/
+	 ***************************************************************************************************************/
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,30 +63,29 @@ public abstract class HTMLActivity extends FragmentActivity {
 		if (savedInstanceState == null) {
 			HTMLFragment fragment = getFragment();
 
-			Bundle bundle = getIntent().getExtras();
-			if (bundle != null 
-				&& bundle.containsKey(Cobalt.kExtras)) {
-				fragment.setArguments(bundle.getBundle(Cobalt.kExtras));
-			}
+            if (fragment != null) {
+                Bundle bundle = getIntent().getExtras();
+                if (bundle != null
+                    && bundle.containsKey(Cobalt.kExtras)) {
+                    fragment.setArguments(bundle.getBundle(Cobalt.kExtras));
+                }
 
-			if (findViewById(getFragmentContainerId()) != null) {
-				android.support.v4.app.FragmentTransaction fragmentTransition;
-				fragmentTransition = getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), fragment);
-				fragmentTransition.commit();
-			} 
-			else {
-				if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - onCreate: fragment container not found");
-			}
+                if (findViewById(getFragmentContainerId()) != null) {
+                    getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), fragment).commit();
+                }
+                else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - onCreate: fragment container not found");
+            }
+            else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - onCreate: getFragment() returned null");
 		}
 	}
 
-	/*************************************
+	/*****************************************************************************************************************
 	 * COBALT
-	 ************************************/
+     *****************************************************************************************************************/
 
-	/*************************************
+	/*********************************************
 	 * Ui
-	 ************************************/
+	 *********************************************/
 
 	/**
 	 * Returns a new instance of the contained fragment. 
@@ -103,7 +104,7 @@ public abstract class HTMLActivity extends FragmentActivity {
 
 	/*****************************************************************************************************************
 	 * Back
-	 ****************************************************************************************************************/
+	 *****************************************************************************************************************/
 
 	/**
 	 * Called when back button is pressed. 
@@ -111,10 +112,17 @@ public abstract class HTMLActivity extends FragmentActivity {
 	 */
 	@Override
 	public void onBackPressed() {
-		HTMLFragment fragment = (HTMLFragment) getSupportFragmentManager().findFragmentById(getFragmentContainerId());
-		if (fragment != null) {
-			fragment.askWebViewForBackPermission();
-		}
+        Fragment fragment = getSupportFragmentManager().findFragmentById(getFragmentContainerId());
+        if (fragment != null
+            && HTMLFragment.class.isAssignableFrom(fragment.getClass())) {
+            ((HTMLFragment) fragment).askWebViewForBackPermission();
+        }
+        else {
+            super.onBackPressed();
+            if (BuildConfig.DEBUG) Log.i(Cobalt.TAG,    TAG + " - onBackPressed: no fragment container found \n"
+                                                        + " or fragment found is not an instance of HTMLFragment. \n"
+                                                        + "Call super.onBackPressed()");
+        }
 	}
 
 	/**
@@ -123,6 +131,7 @@ public abstract class HTMLActivity extends FragmentActivity {
 	 */
 	public void back() {
 		runOnUiThread(new Runnable() {
+
 			@Override
 			public void run() {
 				backWithSuper();
@@ -136,16 +145,17 @@ public abstract class HTMLActivity extends FragmentActivity {
 
 	/*****************************************************************************************************************
 	 * Web Layer dismiss
-	 ****************************************************************************************************************/
+	 *****************************************************************************************************************/
 
 	/**
 	 * Called when a {@link HTMLPopUpWebview} has been dismissed. 
 	 * This method may be overridden in subclasses.
 	 */
 	public void onWebLayerDismiss(String page, JSONObject data) {
-		HTMLFragment fragment = (HTMLFragment) getSupportFragmentManager().findFragmentById(getFragmentContainerId());
-		if (fragment != null) {
-			fragment.onWebLayerDismiss(page, data);
+        HTMLFragment fragment = (HTMLFragment) getSupportFragmentManager().findFragmentById(getFragmentContainerId());
+        if (fragment != null) {
+            fragment.onWebLayerDismiss(page, data);
 		}
+        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG,   TAG + " - onWebLayerDismiss: no fragment container found");
 	}
 }
