@@ -1,5 +1,6 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
+import android.app.AlertDialog;
 import fr.cobaltians.cobaltcatalog.R;
 
 import fr.cobaltians.cobalt.Cobalt;
@@ -21,11 +22,12 @@ import org.json.JSONObject;
 
 public class MainFragment extends HTMLFragment {
 
-	protected static String JSNameTestCallback = "nameTestCallback" ;
-	protected static String JSNameTestCallbackAsync = "nameTestCallbackAsync";
+	protected static String JSAddValues = "addValues";
+    protected static String JSValuesCallback = "valuesCallback";
+    protected static String kResult = "result";
+    protected static String kValues = "values";
 
-	private Button callBackButton,callbackAsyncButton,validButton;
-	private EditText nativeEditText;
+	private Button btnDoSomeMath;
 
 	@Override
 	protected int getLayoutToInflate() {
@@ -34,160 +36,27 @@ public class MainFragment extends HTMLFragment {
 
 	@Override
 	protected void setUpViews(View rootView) {
-		//webView = (OverScrollingWebView) rootView.findViewById(R.id.webView);
 		super.setUpViews(rootView);
-		callBackButton = (Button) rootView.findViewById(R.id.callBackButton);
-		callbackAsyncButton = (Button) rootView.findViewById(R.id.callBackAsyncButton);
-		validButton = (Button) rootView.findViewById(R.id.validButton);
-		nativeEditText = (EditText) rootView.findViewById(R.id.nativeEditText);
-	}
+        btnDoSomeMath = (Button) rootView.findViewById(R.id.btnDoSomeMaths);
+		}
 
 	@Override
 	protected void setUpListeners() {
-		callBackButton.setOnClickListener(new OnClickListener() {
+        btnDoSomeMath.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				JSONObject j = new JSONObject();
+				JSONObject data = new JSONObject();
 				try {
-					ArrayList<Integer> l = new ArrayList<Integer>();
-					l.add(51);
-					l.add(42);
-					j.put(Cobalt.kJSValue, new JSONArray(l));
-					sendEvent(JSNameTestCallback, j, JSNameTestCallback);
+					ArrayList<Integer> values = new ArrayList<Integer>();
+					values.add(1);
+					values.add(3);
+					data.put(kValues, new JSONArray(values));
+					sendEvent(JSAddValues, data, JSValuesCallback);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			}
 		});
-
-		callbackAsyncButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				JSONObject j = new JSONObject();
-				try {
-					ArrayList<String> l = new ArrayList<String>();
-					l.add("Bonjour");
-					l.add("Guillaume");
-					j.put(Cobalt.kJSValue, new JSONArray(l));
-					sendEvent(JSNameTestCallbackAsync, j, JSNameTestCallbackAsync);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-
-		validButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				JSONObject j = new JSONObject();
-				try {
-					j.put(Cobalt.kJSValue, nativeEditText.getText().toString());
-					sendEvent("logThis", j, null);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-
-	@JavascriptInterface
-	public boolean handleMessageSentByJavaScript(String messageJS)
-	{	
-		JSONObject jsonObj;
-		try 
-		{
-			jsonObj = new JSONObject(messageJS);
-			if(jsonObj != null)
-			{
-				String type = jsonObj.optString(Cobalt.kJSType);
-
-				//TYPE = EVENT
-				if(type != null && type.length() >0 && type.equals(Cobalt.JSTypeEvent))
-				{
-					String name = jsonObj.optString(Cobalt.kJSEvent);
-					if(name != null && name.length() >0 && name.equals(JSNameTestCallback))
-					{
-						JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
-						final String value = data.getString(Cobalt.kJSValue);
-						if(value != null)
-							getActivity().runOnUiThread(new Runnable() {
-								public void run() {
-									nativeEditText.setText(value);
-								}
-							});
-						String callbackId = jsonObj.optString(Cobalt.kJSCallback);
-
-						if(callbackId != null && callbackId.length() >0)
-						{
-							changeNameForWebCallBack(callbackId,value);
-						}
-						return true;
-					}
-					else if(name != null && name.length() >0 && name.equals(JSNameTestCallbackAsync))
-					{
-						JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
-						final String value = data.getString(Cobalt.kJSValue);
-						if(value != null)
-							getActivity().runOnUiThread(new Runnable() {
-								public void run() {
-									nativeEditText.setText(value);
-								}
-							});
-
-						String callbackId = jsonObj.optString(Cobalt.kJSCallback);
-						if(callbackId != null && callbackId.length() >0)
-						{
-							changeNameForWebCallBackAsync(callbackId,value);
-						}
-						return true;
-
-					}
-				}
-				//CALLBACKS
-				else if(type != null && type.length () >0 && type.equals(Cobalt.JSTypeCallBack))
-				{
-					String callbackID = jsonObj.optString(Cobalt.kJSCallback);
-					if(callbackID != null && callbackID.length() >0 && callbackID.equals(JSNameTestCallback))
-					{
-						String value = jsonObj.optString(Cobalt.kJSData);
-						if(value != null)
-							Toast.makeText(sContext, "Callback with value "+value, Toast.LENGTH_SHORT).show();
-						return true;
-					}
-					else if(callbackID != null && callbackID.length() >0 && callbackID.equals(JSNameTestCallbackAsync))
-					{
-						String value = jsonObj.optString(Cobalt.kJSData);
-						if(value != null)
-							Toast.makeText(sContext, "Callback ASYNC with value "+value, Toast.LENGTH_SHORT).show();
-						return true;
-					}
-				}
-			}
-		} catch (JSONException e1) {
-			Log.e(getClass().getName(),"JSON EXCEPTION FOR JSON : "+messageJS);
-			e1.printStackTrace();
-		}
-		return super.handleMessageSentByJavaScript(messageJS);
-	}
-
-	private void changeNameForWebCallBack(String callbackId, String value) {
-		String nValue = "Je m'appelle "+value;
-		JSONObject data = new JSONObject();
-		try {
-			data.put(Cobalt.kJSValue, nValue);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		sendCallback(callbackId, data);
-	}
-
-
-	private void changeNameForWebCallBackAsync(String callbackId, String value) {
-		String nValue = "Je m'appelle "+value;
-
-		new GoogleAsyncTask(this,callbackId,nValue).execute("http://google.fr");
 	}
 
 	// unhandled JS messages
@@ -197,10 +66,32 @@ public class MainFragment extends HTMLFragment {
 	}
 	@Override
 	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
+        if (name.equals(JSAddValues)) {
+            try {
+                JSONArray values = data.getJSONArray(kValues);
+                int val1 = values.getInt(0);
+                int val2 = values.getInt(1);
+                JSONObject result = new JSONObject();
+                result.put(kResult, val1+val2);
+                sendCallback(callback, result);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
 		return false;
 	}
 	@Override
 	protected boolean onUnhandledCallback(String name, JSONObject data) {
+        if (name.equals(JSValuesCallback)) {
+            int result = data.optInt(kResult, 0);
+            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+            alert.setMessage("result is : "+ result);
+            AlertDialog mAlert = alert.create();
+            mAlert.setCanceledOnTouchOutside(true);
+            mAlert.show();
+            return true;
+        }
 		return false;
 	}
 
