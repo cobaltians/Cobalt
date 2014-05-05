@@ -15,7 +15,7 @@ import fr.cobaltians.cobaltcatalog.R;
 import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.fragments.HTMLFragment;
 
-public class ZoomHybridFragment extends HTMLFragment {
+public class EventsFragment extends HTMLFragment {
 
     // ZOOM
     protected final static String JSNameSetZoom = "setZoom";
@@ -46,7 +46,6 @@ public class ZoomHybridFragment extends HTMLFragment {
 
 	@Override
 	protected void setUpViews(View rootView) {
-		//webView = (OverScrollingWebView) rootView.findViewById(R.id.webView);
 		super.setUpViews(rootView);
 		zoomInButton = (Button) rootView.findViewById(R.id.zoomInButton);
 		zoomOutButton = (Button) rootView.findViewById(R.id.zoomOutButton);

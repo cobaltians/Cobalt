@@ -23,12 +23,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.CallbacksActivity" />
         <activity android:name=".activities.ModalActivity" />
         <activity android:name=".activities.PullToRefreshActivity" />
         <activity android:name=".activities.PullToRefreshCustomActivity" />
-        <activity android:name=".activities.ToastAlertActivity" />
-        <activity android:name=".activities.ZoomHybridActivity" />
+        <activity android:name=".activities.EventsActivity" />
     </application>
 
 </manifest>

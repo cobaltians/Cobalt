@@ -20,7 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainFragment extends HTMLFragment {
+public class CallbacksFragment extends HTMLFragment {
 
 	protected static String JSAddValues = "addValues";
     protected static String JSValuesCallback = "valuesCallback";
