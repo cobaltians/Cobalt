@@ -200,7 +200,6 @@ public class Cobalt {
                 fragment = (HTMLFragment) HTMLFragmentClass.newInstance();
 
                 Bundle configuration = getConfigurationForController(controller);
-
                 if (configuration != null) {
                     configuration.putString(kPage, page);
                     fragment.setArguments(configuration);
@@ -209,9 +208,11 @@ public class Cobalt {
             else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getFragmentForController: " + HTMLFragmentClass.getSimpleName() + " does not inherit from HTMLFragment!");
         }
         catch (java.lang.InstantiationException exception) {
+            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getFragmentForController: InstantiationException");
             exception.printStackTrace();
         }
         catch (IllegalAccessException exception) {
+            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getFragmentForController: IllegalAccessException");
             exception.printStackTrace();
         }
 
@@ -305,25 +306,29 @@ public class Cobalt {
     }
 
     private String readFileFromAssets(String file) {
-        try {
-            AssetManager assetManager = mContext.getAssets();
-            InputStream inputStream = assetManager.open(file);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder fileContent = new StringBuilder();
-            int character;
+        if (mContext != null) {
+            try {
+                AssetManager assetManager = mContext.getAssets();
+                InputStream inputStream = assetManager.open(file);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                StringBuilder fileContent = new StringBuilder();
+                int character;
 
-            while ((character = bufferedReader.read()) != -1) {
-                fileContent.append((char) character) ;
+                while ((character = bufferedReader.read()) != -1) {
+                    fileContent.append((char) character);
+                }
+
+                return fileContent.toString();
             }
-
-            return fileContent.toString();
+            catch (FileNotFoundException exception) {
+                if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - readFileFromAssets: " + file + "not found.");
+            }
+            catch (IOException exception) {
+                if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - readFileFromAssets: IOException");
+                exception.printStackTrace();
+            }
         }
-        catch (FileNotFoundException exception) {
-            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - readFileFromAssets: " + file + "not found.");
-        }
-        catch (IOException exception) {
-            exception.printStackTrace();
-        }
+        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - readFileFromAssets: context is null");
 
         return new String();
     }
