@@ -40,6 +40,8 @@ import android.util.Log;
 
 import java.io.*;
 
+import junit.framework.Assert;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -163,11 +165,12 @@ public class Cobalt {
      *******************************************************/
 
     private Cobalt(Context context) {
-        mContext = context;
+        mContext = context.getApplicationContext();
     }
 
     public static Cobalt getInstance(Context context) {
         if (sInstance == null) {
+            Assert.assertNull(TAG + " - getInstance: context could not be null", context);
             sInstance = new Cobalt(context);
         }
 
@@ -183,9 +186,8 @@ public class Cobalt {
 	}
 	
 	public void setResourcePath(String resourcePath) {
-		if (resourcePath != null) {
-			mResourcePath = resourcePath;
-		}
+        if (resourcePath != null) mResourcePath = resourcePath;
+        else mResourcePath = new String();
 	}
 
     /********************************************************************************************************************
@@ -200,10 +202,8 @@ public class Cobalt {
                 fragment = (HTMLFragment) HTMLFragmentClass.newInstance();
 
                 Bundle configuration = getConfigurationForController(controller);
-                if (configuration != null) {
-                    configuration.putString(kPage, page);
-                    fragment.setArguments(configuration);
-                }
+                configuration.putString(kPage, page);
+                fragment.setArguments(configuration);
             }
             else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getFragmentForController: " + HTMLFragmentClass.getSimpleName() + " does not inherit from HTMLFragment!");
         }
@@ -224,27 +224,25 @@ public class Cobalt {
 
         Bundle configuration = getConfigurationForController(controller);
 
-        if (configuration != null) {
+        if (! configuration.isEmpty()) {
             String activity = configuration.getString(kActivity);
 
-            if (activity != null) {
-                // Creates intent
-                Class<?> pClass;
-                try {
-                    pClass = Class.forName(activity);
-                    // Instantiates intent only if class inherits from Activity
-                    if (Activity.class.isAssignableFrom(pClass)) {
-                        configuration.putString(kPage, page);
+            // Creates intent
+            Class<?> pClass;
+            try {
+                pClass = Class.forName(activity);
+                // Instantiates intent only if class inherits from Activity
+                if (Activity.class.isAssignableFrom(pClass)) {
+                    configuration.putString(kPage, page);
 
-                        intent = new Intent(mContext, pClass);
-                        intent.putExtra(kExtras, configuration);
-                    }
-                    else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getIntentForController: " + activity + " does not inherit from Activity!");
+                    intent = new Intent(mContext, pClass);
+                    intent.putExtra(kExtras, configuration);
                 }
-                catch (ClassNotFoundException exception) {
-                    if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getIntentForController: " + activity + " class not found for id " + controller + "!");
-                    exception.printStackTrace();
-                }
+                else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getIntentForController: " + activity + " does not inherit from Activity!");
+            }
+            catch (ClassNotFoundException exception) {
+                if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getIntentForController: " + activity + " class not found for id " + controller + "!");
+                exception.printStackTrace();
             }
         }
 
@@ -252,16 +250,17 @@ public class Cobalt {
     }
 
     private Bundle getConfigurationForController(String controller) {
-        Bundle bundle = null;
+        Bundle bundle = new Bundle();
 
         JSONObject configuration = getConfiguration();
-        String activity = null;
-        boolean enablePullToRefresh = false;
-        boolean enableInfiniteScroll = false;
-        // TODO: add enableGesture
 
         // Gets configuration
         try {
+            String activity;
+            boolean enablePullToRefresh;
+            boolean enableInfiniteScroll;
+            // TODO: add enableGesture
+
             if (controller != null
                 && configuration.has(controller)) {
                 activity = configuration.getJSONObject(controller).getString(kAndroidController);
@@ -273,19 +272,19 @@ public class Cobalt {
                 enablePullToRefresh = configuration.getJSONObject(kDefaultController).optBoolean(kPullToRefresh);
                 enableInfiniteScroll = configuration.getJSONObject(kDefaultController).optBoolean(kInfiniteScroll);
             }
+
+            bundle.putString(kActivity, activity);
+            bundle.putBoolean(kPullToRefresh, enablePullToRefresh);
+            bundle.putBoolean(kInfiniteScroll, enableInfiniteScroll);
+
+            return bundle;
         }
         catch (JSONException exception) {
             if (BuildConfig.DEBUG) Log.e(Cobalt.TAG,    TAG + " - getConfigurationForController: check cobalt.conf. Known issues: \n "
                                                         + "\t - " + controller + " controller not found and no " + kDefaultController + " controller defined \n "
                                                         + "\t - " + controller + " or " + kDefaultController + "controller found but no " + kAndroidController + "defined \n ");
             exception.printStackTrace();
-            return bundle; // null
         }
-
-        bundle = new Bundle();
-        bundle.putString(kActivity, activity);
-        bundle.putBoolean(kPullToRefresh, enablePullToRefresh);
-        bundle.putBoolean(kInfiniteScroll, enableInfiniteScroll);
 
         return bundle;
     }
@@ -306,29 +305,26 @@ public class Cobalt {
     }
 
     private String readFileFromAssets(String file) {
-        if (mContext != null) {
-            try {
-                AssetManager assetManager = mContext.getAssets();
-                InputStream inputStream = assetManager.open(file);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                StringBuilder fileContent = new StringBuilder();
-                int character;
+        try {
+            AssetManager assetManager = mContext.getAssets();
+            InputStream inputStream = assetManager.open(file);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder fileContent = new StringBuilder();
+            int character;
 
-                while ((character = bufferedReader.read()) != -1) {
-                    fileContent.append((char) character);
-                }
+            while ((character = bufferedReader.read()) != -1) {
+                fileContent.append((char) character);
+            }
 
-                return fileContent.toString();
-            }
-            catch (FileNotFoundException exception) {
-                if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - readFileFromAssets: " + file + "not found.");
-            }
-            catch (IOException exception) {
-                if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - readFileFromAssets: IOException");
-                exception.printStackTrace();
-            }
+            return fileContent.toString();
         }
-        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - readFileFromAssets: context is null");
+        catch (FileNotFoundException exception) {
+            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - readFileFromAssets: " + file + "not found.");
+        }
+        catch (IOException exception) {
+            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - readFileFromAssets: IOException");
+            exception.printStackTrace();
+        }
 
         return new String();
     }

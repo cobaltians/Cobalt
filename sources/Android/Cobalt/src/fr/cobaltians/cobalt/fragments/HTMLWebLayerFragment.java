@@ -31,7 +31,7 @@ package fr.cobaltians.cobalt.fragments;
 
 import fr.cobaltians.cobalt.BuildConfig;
 import fr.cobaltians.cobalt.Cobalt;
-import fr.cobaltians.cobalt.activities.CobaltActivity
+import fr.cobaltians.cobalt.activities.CobaltActivity;
 
 import android.app.FragmentTransaction;
 import android.graphics.Color;
