@@ -9,16 +9,16 @@
 
   		<a href="javascript:;" class="pop">POP</a><br/>
 
-		<p>Infinite Scroll</p>
+          <p>This infiniteScroll demo page contain a list that is growing when the user is hitting the bottom of the page</p>
 
-		<p>TEST 01 - Verifier qu'arrivé en bas de page, la liste s'agrandit automatiquement</p>
+          <p>Try it out :)</p>
 
+          <p>Your view in cobalt.conf should have infiniteScroll set to true. Otherwise it won't work.<br/>
+              Below is a link to the same page but with infiniteScroll disabled. It should do nothing when hitting the bottom.</p>
 
-		<p>TEST 02 - Charger cette même vue mais avec un infinite scroll desactivé</p>
+        <a class="push" href="javascript:;" data-href="infinitescroll.html" data-classid="infiniteScrollNonActive">infiniteScroll disabled</a>
 
-        <a class="push" href="javascript:;" data-href="infinitescroll.html" data-classid="infiniteScrollNonActive">infinite scroll non activé</a>
-
-		<p>TEST 03 - Charger cette vue qui contient le pull to refresh ET l'infinite scroll</p>
+		<p>this page blow use infiniteScroll AND pullToRefresh together. give it a try.</p>
 
         <a class="push" href="javascript:;" data-href="pulltorefresh_&_infinitescroll.html" data-classid="PTR_and_IfiniteScroll">PullToRefresh and InfiniteScroll</a>
 
@@ -31,23 +31,18 @@
 		<br/>
 
 
-		<div id="cobalt_logdiv"></div>
-
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
         <script type="text/javascript" src="js/setTimeoutWorkaround.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
 
-		<!-- for cobalt dev only
-		  <script type="text/javascript" src="js/cobalt-dev/cobalt.js"></script>
-		  <script type="text/javascript" src="js/cobalt-dev/adapter.js"></script>
-		-->
-
-        <script>
+		<script>
 
             Zepto(function($){
 		        cobalt.init({
-		            //debug:true,
-		            //sendingToNative:false,
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInLogdiv:app.debugInLogdiv,
                     events:{
                        "infiniteScroll" : function(data, callback){
                                cobalt.log('native asked to load more content');
@@ -62,16 +57,8 @@
                     }
 	            });
 
-
-	            $('a').on('touchstart',function(){ 				$(this).addClass('tapped');   })
-	            $('a').on('touchend touchcancel',function(){  	$(this).removeClass('tapped');});
-
-	            $('a.push').on('tap',function(){
-	            	if ( ! $(this).hasClass('disabled') ){
-	            		cobalt.log('tap')
-	            		cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
-	            	}
-		            return false;
+	            app.touch('a.push',function(){
+	            	cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
 	            });
 
 	            app.touch('a.pop',function(){
@@ -79,8 +66,6 @@
                 });
 
 	            $('#list').html('<div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div><div class="listItem"><div class="name">John Doe</div><div class="num">#21454</div></div>');
-                  
-                  //setTimeout(function(){ alert('coucou')},1000);
 
             })
 
