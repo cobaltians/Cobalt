@@ -45,8 +45,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
@@ -64,7 +62,6 @@ import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -275,8 +272,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
             }
 		}
 	}
-	
-	//@SuppressLint("SetJavaScriptEnabled")
+
 	protected void setWebViewSettings(Object javascriptInterface) {
         mWebView.setScrollListener(this);
         mWebView.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
@@ -357,37 +353,34 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 * @param jsonObj: JSONObject containing script.
 	 */
 	public void executeScriptInWebView(final JSONObject jsonObj) {
-		if (jsonObj != null) {
-			if(mCobaltIsReady) {
+        if (jsonObj != null) {
+			if (mCobaltIsReady) {
 				mHandler.post(new Runnable() {
+
 					@Override
 					public void run() {
 						// Line & paragraph separators are not JSON compliant but supported by JSONObject
-						String message = jsonObj.toString().replaceAll("[\u2028\u2029]", "");
-						String url = "javascript:cobalt.execute(" + message + ");";
-						
-						if(mWebView != null) {
-							if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: " + message);
-							mWebView.loadUrl(url);		
-						}
-						else {
-							if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - executeScriptInWebView: message cannot been sent to empty Web view");
-						}						
+						String script = jsonObj.toString().replaceAll("[\u2028\u2029]", "");
+                        String url = "javascript:cobalt.execute(" + script + ");";
+
+                        if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: " + script);
+                        mWebView.loadUrl(url);
 					}
 				});
 			}
 			else {
-				if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: adding message to queue " + jsonObj);
+				if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: adding message to queue: " + jsonObj);
 				mWaitingJavaScriptCallsQueue.add(jsonObj);
 			}
 		}
+        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - executeScriptInWebView: jsonObj is null!");
 	}
 
 	private void executeWaitingCalls() {
-		int mWaitingJavaScriptCallsQueueLength = mWaitingJavaScriptCallsQueue.size();
+		int waitingJavaScriptCallsQueueLength = mWaitingJavaScriptCallsQueue.size();
 		
-		for (int i = 0 ; i < mWaitingJavaScriptCallsQueueLength ; i++) {
-			if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeWaitingCalls: execute {" + mWaitingJavaScriptCallsQueue.get(i).toString() + "}");
+		for (int i = 0 ; i < waitingJavaScriptCallsQueueLength ; i++) {
+			if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeWaitingCalls: execute " + mWaitingJavaScriptCallsQueue.get(i).toString());
 			executeScriptInWebView(mWaitingJavaScriptCallsQueue.get(i));
 		}
 		
@@ -403,7 +396,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 * @param data: the object containing response fields
 	 */
 	public void sendCallback(final String callbackId, final JSONObject data) {
-		if(	callbackId != null 
+		if (callbackId != null
 			&& callbackId.length() > 0) {
 			try {
 				JSONObject jsonObj = new JSONObject();
@@ -413,9 +406,11 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 				executeScriptInWebView(jsonObj);
 			} 
 			catch (JSONException exception) {
+                if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendCallback: JSONException");
 				exception.printStackTrace();
 			}
 		}
+        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendCallback: callbackId is null or empty!");
 	}
 	
 	public void sendEvent(final String event, final JSONObject data, final String callbackID) {
@@ -430,9 +425,11 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 				executeScriptInWebView(jsonObj);
 			}
 			catch (JSONException exception) {
+                if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendEvent: JSONException");
 				exception.printStackTrace();
 			}
 		}
+        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendEvent: event is null or empty!");
 	}
 	
 	/****************************************************************************************
@@ -471,7 +468,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 				}
 				
 				// EVENT
-				if (type.equals(Cobalt.JSTypeEvent)) {
+				else if (type.equals(Cobalt.JSTypeEvent)) {
 					String event = jsonObj.getString(Cobalt.kJSEvent);
 					JSONObject data = jsonObj.optJSONObject(Cobalt.kJSData);
 					String callback = jsonObj.optString(Cobalt.kJSCallback, null);
@@ -549,6 +546,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 						final JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
 						
 						mHandler.post(new Runnable() {
+
 							@Override
 							public void run() {
 								showWebLayer(data);
@@ -558,7 +556,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 						return true;
 					}
 					
-					// UNHANDLED ACTION
+					// UNHANDLED WEB LAYER
 					else {
 						onUnhandledMessage(jsonObj);
 					}
@@ -569,26 +567,33 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
                     String action = jsonObj.getString(Cobalt.kJSAction);
 
                     // OPEN EXTERNAL URL
-                    if (action.equals(Cobalt.JSActionOpenExternalUrl)) {
+                    if (action.equals(Cobalt.JSActionIntentOpenExternalUrl)) {
                         JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
-                        String url = data.optString(Cobalt.kJSUrl, null);
+                        String url = data.getString(Cobalt.kJSUrl);
                         openExternalUrl(url);
 
                         return true;
                     }
+
+                    // UNHANDLED INTENT
+                    else {
+                        onUnhandledMessage(jsonObj);
+                    }
                 }
+
 				// UNHANDLED TYPE
 				else {
 					onUnhandledMessage(jsonObj);
 				}
 			}
-			
+
 			// UNHANDLED MESSAGE
 			else {
 				onUnhandledMessage(jsonObj);
 			}
 		} 
 		catch (JSONException exception) {
+            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: JSONException");
 			exception.printStackTrace();
 		}
 		
@@ -610,6 +615,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			}
 			else if (callback.equals(Cobalt.JSCallbackPullToRefreshDidRefresh)) {
 				mHandler.post(new Runnable() {
+
 					@Override
 					public void run() {
 						onPullToRefreshDidRefresh();
@@ -619,6 +625,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			}
 			else if (callback.equals(Cobalt.JSCallbackInfiniteScrollDidRefresh)) {
 				mHandler.post(new Runnable() {
+
 					@Override
 					public void run() {
 						onInfiniteScrollDidRefresh();
@@ -631,6 +638,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			}
 		} 
 		catch (JSONException exception) {
+            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleCallback: JSONException");
 			exception.printStackTrace();
 		}
 		
@@ -651,7 +659,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			if (control.equals(Cobalt.JSControlPicker)) {
 				String type = data.getString(Cobalt.kJSType);
 				
-				//DATE
+				// DATE
 				if (type.equals(Cobalt.JSPickerDate)) {
 					JSONObject date = data.optJSONObject(Cobalt.kJSDate);
 
@@ -682,19 +690,20 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			}
 			
 			// ALERT
-			else if(control.equals(Cobalt.JSControlAlert)) {
+			else if (control.equals(Cobalt.JSControlAlert)) {
 				showAlertDialog(data, callback);
 				return true;
 			}
 			
 			// TOAST
-			else if(control.equals(Cobalt.JSControlToast)) {
+			else if (control.equals(Cobalt.JSControlToast)) {
 				String message = data.getString(Cobalt.kJSMessage);
 				Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
 				return true;
 			}
 		} 
 		catch (JSONException exception) {
+            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleUi: JSONException");
 			exception.printStackTrace();
 		}
 		
@@ -708,6 +717,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			onUnhandledMessage(jsonObj);
 		}
 		catch (JSONException exception) {
+            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleUi: JSONException");
 			exception.printStackTrace();
 		}
 		

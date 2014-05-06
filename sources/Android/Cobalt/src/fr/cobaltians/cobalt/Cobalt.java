@@ -92,7 +92,7 @@ public class Cobalt {
 
     // INTENT
     public final static String JSTypeIntent = "intent";
-    public final static String JSActionOpenExternalUrl = "openExternalUrl";
+    public final static String JSActionIntentOpenExternalUrl = "openExternalUrl";
     public final static String kJSUrl = "url";
 
     // LOG
