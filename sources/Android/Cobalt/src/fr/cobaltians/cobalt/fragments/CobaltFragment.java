@@ -29,6 +29,7 @@
 
 package fr.cobaltians.cobalt.fragments;
 
+import android.view.*;
 import fr.cobaltians.cobalt.BuildConfig;
 import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.R;
@@ -60,10 +61,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -93,8 +90,6 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 
 	protected Context mContext;
 	
-	protected String mPage;
-	
 	protected OverScrollingWebView mWebView = null;
     // Web view may having pull-to-refresh and/or infinite scroll features.
     protected PullToRefreshOverScrollWebview mPullToRefreshWebView = null;
@@ -109,8 +104,6 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	private boolean mCobaltIsReady = false;
 
 	private boolean mIsInfiniteScrollRefreshing = false;
-	private boolean mIsInfiniteScrollEnabled = false;
-	private boolean mIsPullToRefreshEnabled = false;
 
     /**************************************************************************************************
 	 * LIFECYCLE
@@ -134,12 +127,20 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 
-		View view = inflater.inflate(getLayoutToInflate(), container, false);
+        try {
+            View view = inflater.inflate(getLayoutToInflate(), container, false);
 
-		setUpViews(view);
-		setUpListeners();
+            setUpViews(view);
+            setUpListeners();
 
-		return view;
+            return view;
+        }
+        catch (InflateException e) {
+            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - onCreateView: InflateException");
+            e.printStackTrace();
+        }
+
+		return null;
 	}	
 
 	/**
@@ -160,42 +161,30 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 
 		addWebView();
 		preloadContent();
-		
-		setFeaturesWantedActive();
-		
-		// Web view has been added, set up its listener
-		if (mPullToRefreshWebView != null) {		
-			mPullToRefreshWebView.setOnRefreshListener(new OnRefreshListener<OverScrollingWebView>() {
-				@Override
-				public void onRefresh(PullToRefreshBase<OverScrollingWebView> refreshView) {
-					refreshWebView();
-				}
-			});
-		}
-	}
-
-	/**
-	 * Saves the Web view state.
-	 */
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		
-		if(mWebView != null) {
-			mWebView.saveState(outState);
-		}
 	}
 	
 	@Override
 	public void onStop() {
 		super.onStop();
 		
-		// Fragment will rotate or be destroyed, so we don't preload content defined in fragment's arguments again 
+		// Fragment will rotate or be destroyed, so we don't preload content defined in fragment's arguments again
         mPreloadOnCreate = false;
 		
 		removeWebViewFromPlaceholder();
 	}
-	
+
+    /**
+     * Saves the Web view state.
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (mWebView != null) {
+            mWebView.saveState(outState);
+        }
+    }
+
 	/****************************************************************************************
 	 * Helpers
 	 ***************************************************************************************/
@@ -215,6 +204,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 */
 	protected void setUpViews(View rootView) {
         mWebViewContainer = ((ViewGroup) rootView.findViewById(getWebViewContainerId()));
+        if (BuildConfig.DEBUG && mWebViewContainer == null) Log.w(Cobalt.TAG, TAG + " - setUpViews: WebView container not found!");
 	}
 
     protected int getWebViewContainerId() {
@@ -232,42 +222,42 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 * This method SHOULD NOT be overridden in subclasses.
 	 */
 	protected void addWebView() {
-		if (mWebView == null) {
-			mWebView = new OverScrollingWebView(mContext);
-			setWebViewSettings(this);
-		}	
-		
-		mIsPullToRefreshEnabled = pullToRefreshActivate();
-		if (mIsPullToRefreshEnabled) {
-			if (mPullToRefreshWebView == null) {
-				mPullToRefreshWebView = new PullToRefreshOverScrollWebview(mContext);
-				mWebView = mPullToRefreshWebView.getRefreshableView();
-				setWebViewSettings(this);
-			}
+        if (mWebView == null) {
+            if (isPullToRefreshActive()) {
+                mPullToRefreshWebView = new PullToRefreshOverScrollWebview(mContext);
+                mPullToRefreshWebView.setMode(Mode.PULL_FROM_START);
+                mPullToRefreshWebView.setOnRefreshListener(new OnRefreshListener<OverScrollingWebView>() {
+
+                    @Override
+                    public void onRefresh(PullToRefreshBase<OverScrollingWebView> refreshView) {
+                        refreshWebView();
+                    }
+                });
+
+                mWebView = mPullToRefreshWebView.getRefreshableView();
+            }
+            else {
+                mWebView = new OverScrollingWebView(mContext);
+            }
+
+            setWebViewSettings(this);
 		}
-		
-		if(mWebViewContainer != null) {
-			if (mIsPullToRefreshEnabled) {
+
+        if (mWebViewContainer != null) {
+            if (isPullToRefreshActive()) {
                 mWebViewContainer.addView(mPullToRefreshWebView);
-			}
-			else mWebViewContainer.addView(mWebView);
-		}	
-		else  {
-			if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - addWebView: you must set up Web view placeholder in setUpViews!");
-		}		
+            }
+            else {
+                mWebViewContainer.addView(mWebView);
+            }
+        }
 	}
 	
 	private void preloadContent() {
-		// TODO: mPage setting. Do we keep this behavior?
-		Bundle arguments = getArguments();
-		
-		if (arguments != null) {
-			mPage = arguments.getString(Cobalt.kPage);
-		}
-		mPage = (mPage != null) ? mPage : "index.html";
+        String page = (getPage() != null) ? getPage() : "index.html";
 		
 		if (mPreloadOnCreate) {
-			loadFileFromAssets(mPage);
+			loadFileFromAssets(page);
 		}
 	}
 	
@@ -277,14 +267,13 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 */
 	protected void removeWebViewFromPlaceholder() {
 		if (mWebViewContainer != null) {
-			if (mPullToRefreshWebView != null) {
+			if (isPullToRefreshActive()) {
                 mWebViewContainer.removeView(mPullToRefreshWebView);
 			}
-			if (mWebView != null) {
+            else {
                 mWebViewContainer.removeView(mWebView);
-			}
+            }
 		}
-		else if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - removeWebViewFromPlaceholder: you must set up Web view placeholder in setUpViews!");
 	}
 	
 	//@SuppressLint("SetJavaScriptEnabled")
@@ -295,6 +284,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
         // Enables JS
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+
         // Enables and setups JS local storage
         webSettings.setDomStorageEnabled(true);
         webSettings.setDatabaseEnabled(true);
@@ -302,14 +292,13 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
         webSettings.setDatabasePath(mContext.getFilesDir().getParentFile().getPath() + "/databases/");
 
         // Enables cross-domain calls for Ajax
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            allowAjax();
-        }
+        allowAjax();
 
         // Fix some focus issues on old devices like HTC Wildfire
         // keyboard was not properly showed on input touch.
         mWebView.requestFocus(View.FOCUS_DOWN);
         mWebView.setOnTouchListener(new View.OnTouchListener() {
+
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction()) {
@@ -342,16 +331,12 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 
         mWebView.setWebViewClient(scaleWebViewClient);
 	}
-	
-	@TargetApi(android.os.Build.VERSION_CODES.JELLY_BEAN) // 16
+
 	private void allowAjax() {
-		try {
-			// TODO: see how to restrict only to local files
-			mWebView.getSettings().setAllowUniversalAccessFromFileURLs(true);
-		} 
-		catch(NullPointerException exception) {
-			exception.printStackTrace();
-		}
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            // TODO: see how to restrict only to local files
+            mWebView.getSettings().setAllowUniversalAccessFromFileURLs(true);
+        }
 	}
 	
 	/**
@@ -360,9 +345,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 * @warning All application HTML files should be found in the same subfolder in ressource path
 	 */
 	private void loadFileFromAssets(String file) {
-		if(mWebView != null) {
-			mWebView.loadUrl(Cobalt.getInstance(mContext).getResourcePath() + file);
-		}
+		mWebView.loadUrl(Cobalt.getInstance(mContext).getResourcePath() + file);
 	}
 	
 	/****************************************************************************************
@@ -756,7 +739,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			// Sends callback to store current activity & HTML page for dismiss
 			try {
 				JSONObject data = new JSONObject();
-				data.put(Cobalt.kJSPage, mPage);
+				data.put(Cobalt.kJSPage, getPage());
 				data.put(Cobalt.kJSController, getActivity() != null ? getActivity().getClass().getName() : null);
 				sendCallback(callBackID, data);
 			} 
@@ -1023,39 +1006,6 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 *****************************************************************************************************************************/
 	
 	/**
-	 * Enables pull-to-refresh feature
-	 * mPullRefreshWebView must be set
-	 */
-	
-	public void enablePullToRefresh() {
-		if (mPullToRefreshWebView != null) {
-			mPullToRefreshWebView.setMode(Mode.PULL_FROM_START);
-		}
-		else if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - enablePullToRefresh: unable to enable pull-to-refresh feature. mPullToRefreshWebView must be set.");
-	}
-	
-	/**
-	 * Disables pull-to-refresh feature
-	 * mPullRefreshWebView must be set 
-	 */
-	public void disablePullToRefresh() {
-		if(mPullToRefreshWebView != null) {
-			mPullToRefreshWebView.setMode(Mode.DISABLED);
-            mIsPullToRefreshEnabled = false;
-		}
-		else if(BuildConfig.DEBUG && mIsPullToRefreshEnabled) Log.e(Cobalt.TAG, TAG + " - disablePullToRefresh: Unable to disable pull-to-refresh feature. mPullToRefreshWebView must be set.");
-	}
-	
-	/**
-	 * Returns a boolean to know if pull-to-refresh feature is enabled
-	 * @return 	true if pull-to-refresh is enabled, 
-	 * 			false otherwise
-	 */
-	public boolean isPullToRefreshEnabled() {
-		return ! (mPullToRefreshWebView.getMode() == Mode.DISABLED);
-	}
-	
-	/**
 	 * Customizes pull-to-refresh loading view.
 	 * @param pullLabel: text shown when user pulling
 	 * @param refreshingLabel: text shown while refreshing
@@ -1145,32 +1095,9 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			infiniteScrollRefresh();
 		}
 	}
-	
-	/**
-	 * Enables infinite scroll feature
-	 */
-	public void enableInfiniteScroll() {
-		mIsInfiniteScrollEnabled = true;
-	}
-
-	/**
-	 * Disables infinite scroll feature
-	 */
-	public void disableInfiniteScroll() {
-        mIsInfiniteScrollEnabled = false;
-	}
-
-	/**
-	 * Returns a boolean to know if the infinite scroll feature is enabled
-	 * @return 	true if infinite scroll is enabled, 
-	 * 			false otherwise
-	 */
-	public boolean isInfiniteScrollEnabled() {
-		return mIsInfiniteScrollEnabled;
-	}
 
 	private void infiniteScrollRefresh() {
-		if (mIsInfiniteScrollEnabled
+		if (isInfiniteScrollActive()
 			&& ! mIsInfiniteScrollRefreshing) {
 			mHandler.post(new Runnable() {
 				@Override
@@ -1203,42 +1130,39 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	
 	
     /*****************************************************************
-	 * HELPERS
+	 * CONFIGURATION
 	 ****************************************************************/
 	
-	private void setFeaturesWantedActive() {
-		Boolean argsPTR = pullToRefreshActivate();	
-		if(argsPTR) {
-			enablePullToRefresh();
-		}
-		else {
-			disablePullToRefresh();
-		}
-		
-		mIsInfiniteScrollEnabled = infiniteScrollEnabled();
-	}
-	
-	private boolean pullToRefreshActivate() {
+	private boolean isPullToRefreshActive() {
 		Bundle args = getArguments();
-		if (args != null)	{
+		if (args != null) {
 			return args.getBoolean(Cobalt.kPullToRefresh);
 		}
 		else {
-			disablePullToRefresh();
 			return false;
 		}
 	}
 	
-	private boolean infiniteScrollEnabled() {
+	private boolean isInfiniteScrollActive() {
 		Bundle args = getArguments();
 		if (args != null) {
 			return args.getBoolean(Cobalt.kInfiniteScroll);
 		}
 		else {
-			mIsInfiniteScrollEnabled = false;
 			return false;
 		}
 	}
+
+    protected String getPage() {
+        Bundle args = getArguments();
+        if (args != null) {
+            return args.getString(Cobalt.kPage);
+        }
+        else {
+            return null;
+        }
+    }
+
 	/**
 	 * Fired by {@link ScaleWebViewClient} to inform Web view its scale changed (pull-to-refresh need to know that to show its header appropriately).
 	 */

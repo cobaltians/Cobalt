@@ -40,7 +40,7 @@ import junit.framework.Assert;
 
 /**
  * {@link SQLiteOpenHelper} that is used as replacement of the localStorage of the webviews.
- * @details this class should not be used. Everything about the localStorage through the application is already handled in HTMLFragment.
+ * @details this class should not be used. Everything about the localStorage through the application is already handled in CobaltFragment.
  * @author Diane
  */
 public class LocalStorage extends SQLiteOpenHelper {

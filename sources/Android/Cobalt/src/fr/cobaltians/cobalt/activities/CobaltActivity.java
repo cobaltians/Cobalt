@@ -120,7 +120,7 @@ public abstract class CobaltActivity extends FragmentActivity {
         else {
             super.onBackPressed();
             if (BuildConfig.DEBUG) Log.i(Cobalt.TAG,    TAG + " - onBackPressed: no fragment container found \n"
-                                                        + " or fragment found is not an instance of HTMLFragment. \n"
+                                                        + " or fragment found is not an instance of CobaltFragment. \n"
                                                         + "Call super.onBackPressed()");
         }
 	}

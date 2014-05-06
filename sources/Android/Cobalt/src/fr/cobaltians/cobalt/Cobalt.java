@@ -194,18 +194,17 @@ public class Cobalt {
      * CONFIGURATION FILE
      *******************************************************************************************************************/
 
-    public CobaltFragment getFragmentForController(Class<?> HTMLFragmentClass, String controller, String page) {
+    public CobaltFragment getFragmentForController(Class<?> CobaltFragmentClass, String controller, String page) {
         CobaltFragment fragment = null;
 
         try {
-            if (CobaltFragment.class.isAssignableFrom(HTMLFragmentClass)) {
-                fragment = (CobaltFragment) HTMLFragmentClass.newInstance();
-
+            if (CobaltFragment.class.isAssignableFrom(CobaltFragmentClass)) {
+                fragment = (CobaltFragment) CobaltFragmentClass.newInstance();
                 Bundle configuration = getConfigurationForController(controller);
                 configuration.putString(kPage, page);
                 fragment.setArguments(configuration);
             }
-            else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getFragmentForController: " + HTMLFragmentClass.getSimpleName() + " does not inherit from HTMLFragment!");
+            else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getFragmentForController: " + CobaltFragmentClass.getSimpleName() + " does not inherit from CobaltFragment!");
         }
         catch (java.lang.InstantiationException exception) {
             if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getFragmentForController: InstantiationException");

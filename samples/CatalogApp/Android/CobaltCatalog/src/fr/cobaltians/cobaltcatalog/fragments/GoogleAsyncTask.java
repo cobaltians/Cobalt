@@ -1,7 +1,12 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
+import fr.cobaltians.cobalt.fragments.CobaltFragment;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+import android.os.AsyncTask;
+import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -12,10 +17,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import fr.cobaltians.cobalt.fragments.CobaltFragment;
-import android.os.AsyncTask;
-import android.util.Log;
 
 class GoogleAsyncTask extends AsyncTask<String, String, String>{
 
