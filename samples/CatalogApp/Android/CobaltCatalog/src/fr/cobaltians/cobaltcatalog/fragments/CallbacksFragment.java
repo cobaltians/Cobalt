@@ -1,14 +1,14 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
-import android.app.AlertDialog;
-import android.util.Log;
 import fr.cobaltians.cobaltcatalog.R;
-
 import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
+import android.app.AlertDialog;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.util.Log;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -24,10 +24,13 @@ public class CallbacksFragment extends CobaltFragment {
     protected static String JSEchoCallback = "echoCallback";
     protected static String kResult = "result";
     protected static String kValues = "values";
+    protected static String kValue = "value";
+    protected static String kIndex = "index";
 
 	private Button btnDoSomeMath, btnTestAuto;
 
-    ArrayList<Object> mArrayTest;
+    private ArrayList<Object> mArrayTest;
+    private boolean testFailed = false;
 
 	@Override
 	protected int getLayoutToInflate() {
@@ -115,23 +118,30 @@ public class CallbacksFragment extends CobaltFragment {
             JSONObject echo = data.optJSONObject(kValues);
             if (echo != null) {
                 try {
-                    int index = echo.getInt("index");
-                    String test = echo.getString("value");
-                    if (test.equals(mArrayTest.get(index))) {
-                        Log.d(TAG, "test OK for the String : "+test);
+                    int index = echo.getInt(kIndex);
+                    String stringForTest = echo.getString(kValue);
+                    if (stringForTest.equals(mArrayTest.get(index))) {
+                        Log.d(TAG, "test OK for the String : "+stringForTest);
                     }
                     else {
+                        testFailed = true;
                         Log.d(TAG, "test failed !!!! send is : "+ mArrayTest.get(index));
-                        Log.d(TAG, "received : "+test);
+                        Log.d(TAG, "received : "+stringForTest);
                     }
                     if (index < mArrayTest.size()-1) {
-                        //index++;
                         launchTest(++index);
+                    }
+                    else if (index==mArrayTest.size()-1) {
+                        if (testFailed) {
+                            Toast.makeText(mContext, "Some tests failed ! Check logs.", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(mContext, "All tests passed ! No errors", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
             return true;
         }
@@ -151,10 +161,10 @@ public class CallbacksFragment extends CobaltFragment {
         JSONObject data = new JSONObject();
 
             try {
-                JSONObject test = new JSONObject();
-                test.put("index", index);
-                test.put("value", mArrayTest.get(index));
-                data.put(kValues, test);
+                JSONObject stringToTest = new JSONObject();
+                stringToTest.put(kIndex, index);
+                stringToTest.put(kValue, mArrayTest.get(index));
+                data.put(kValues, stringToTest);
 
                 sendEvent(JSEcho, data, JSEchoCallback);
             } catch (JSONException e) {
