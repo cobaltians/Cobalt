@@ -135,7 +135,7 @@ public class HTMLDatePickerFragment extends DialogFragment implements DatePicker
 	                public void onClick(DialogInterface dialog, int which) {
 	                	cal.clear();
 	                	if (mListener != null) {
-	            			mListener.sendDate(0, 0, 0, mCallbackId);
+	            			mListener.sendDate(-1, -1, -1, mCallbackId);
 	            		}
 	                }
 	            }
