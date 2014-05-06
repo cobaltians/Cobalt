@@ -29,7 +29,7 @@
 
 package fr.cobaltians.cobalt;
 
-import fr.cobaltians.cobalt.fragments.HTMLFragment;
+import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -194,12 +194,12 @@ public class Cobalt {
      * CONFIGURATION FILE
      *******************************************************************************************************************/
 
-    public HTMLFragment getFragmentForController(Class<?> HTMLFragmentClass, String controller, String page) {
-        HTMLFragment fragment = null;
+    public CobaltFragment getFragmentForController(Class<?> HTMLFragmentClass, String controller, String page) {
+        CobaltFragment fragment = null;
 
         try {
-            if (HTMLFragment.class.isAssignableFrom(HTMLFragmentClass)) {
-                fragment = (HTMLFragment) HTMLFragmentClass.newInstance();
+            if (CobaltFragment.class.isAssignableFrom(HTMLFragmentClass)) {
+                fragment = (CobaltFragment) HTMLFragmentClass.newInstance();
 
                 Bundle configuration = getConfigurationForController(controller);
                 configuration.putString(kPage, page);

@@ -2,10 +2,10 @@ package fr.cobaltians.cobaltcatalog.fragments;
 
 import org.json.JSONObject;
 
-import fr.cobaltians.cobalt.fragments.HTMLFragment;
+import fr.cobaltians.cobalt.fragments.CobaltFragment;
 import fr.cobaltians.cobaltcatalog.R;
 
-public class PullToRefreshCustomFragment extends HTMLFragment {
+public class PullToRefreshCustomFragment extends CobaltFragment {
 	
 	@Override
 	protected int getLayoutToInflate() {
@@ -28,7 +28,7 @@ public class PullToRefreshCustomFragment extends HTMLFragment {
 				"Loading...",
 				"Release to refresh...",
 				null, 
-				sContext.getResources().getDrawable(R.drawable.ic_launcher),
+				mContext.getResources().getDrawable(R.drawable.ic_launcher),
 				null);
 		
 		if (getArguments() == null) {

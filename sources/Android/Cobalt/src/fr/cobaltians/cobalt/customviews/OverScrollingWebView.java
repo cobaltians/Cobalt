@@ -33,14 +33,14 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.webkit.WebView;
-import fr.cobaltians.cobalt.fragments.HTMLFragment;
+import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
 public class OverScrollingWebView extends WebView {
 
 	/**
 	 * Fragment handling scroll events
 	 */
-	protected HTMLFragment mScrollListener;
+	protected CobaltFragment mScrollListener;
 
 	public OverScrollingWebView(Context context) {
 		super(context);
@@ -54,11 +54,11 @@ public class OverScrollingWebView extends WebView {
 		super(context, attributes, defaultStyle);
 	}
 	
-	public HTMLFragment getScrollListener() {
+	public CobaltFragment getScrollListener() {
 		return mScrollListener;
 	}
 
-	public void setScrollListener(HTMLFragment scrollListener) {
+	public void setScrollListener(CobaltFragment scrollListener) {
 		mScrollListener = scrollListener;
 	}
 

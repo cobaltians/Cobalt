@@ -34,14 +34,14 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
-import fr.cobaltians.cobalt.fragments.HTMLFragment;
+import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
 public class GestureWebView extends OverScrollingWebView implements OnGestureListener {
 	
 	/**
 	 * Fragment handling gesture events
 	 */
-	protected HTMLFragment mGestureListener;
+	protected CobaltFragment mGestureListener;
 	
 	/**
 	 * Handles gesture events
@@ -70,11 +70,11 @@ public class GestureWebView extends OverScrollingWebView implements OnGestureLis
 	 * GETTERS / SETTERS
 	 ***************************************************************************/
 	// Gesture listener
-	public HTMLFragment getGestureListener() {
+	public CobaltFragment getGestureListener() {
 		return mGestureListener;
 	}
 
-	public void setGestureListener(HTMLFragment gestureListener) {
+	public void setGestureListener(CobaltFragment gestureListener) {
 		mGestureListener = gestureListener;
 	}
 

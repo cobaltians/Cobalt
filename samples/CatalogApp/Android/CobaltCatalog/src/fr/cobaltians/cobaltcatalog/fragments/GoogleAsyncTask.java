@@ -13,17 +13,17 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import fr.cobaltians.cobalt.fragments.HTMLFragment;
+import fr.cobaltians.cobalt.fragments.CobaltFragment;
 import android.os.AsyncTask;
 import android.util.Log;
 
 class GoogleAsyncTask extends AsyncTask<String, String, String>{
 
-	private HTMLFragment f;
+	private CobaltFragment f;
 	private String callBackID;
 	private String value;
 	
-	public GoogleAsyncTask(HTMLFragment f,String callbackId,String value)
+	public GoogleAsyncTask(CobaltFragment f,String callbackId,String value)
 	{
 		super();
 		this.f = f;

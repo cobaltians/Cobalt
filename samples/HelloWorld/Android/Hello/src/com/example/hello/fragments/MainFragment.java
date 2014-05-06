@@ -1,10 +1,10 @@
 package com.example.hello.fragments;
 
-import fr.cobaltians.cobalt.fragments.HTMLFragment;
+import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
 import org.json.JSONObject;
 
-public class MainFragment extends HTMLFragment {
+public class MainFragment extends CobaltFragment {
 
 	@Override
 	protected boolean onUnhandledCallback(String callback, JSONObject data) {
