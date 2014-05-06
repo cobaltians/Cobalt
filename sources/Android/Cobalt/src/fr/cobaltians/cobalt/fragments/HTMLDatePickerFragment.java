@@ -55,7 +55,7 @@ public class HTMLDatePickerFragment extends DialogFragment implements DatePicker
 	public static final String ARG_VALIDATE = "VALIDATE";
 	
     final Calendar cal = Calendar.getInstance();
-    private HTMLFragment mListener;
+    private CobaltFragment mListener;
     private String mCallbackId, mDelete, mCancel, mValidate, mTitle;
     
     @Override
@@ -186,7 +186,7 @@ public class HTMLDatePickerFragment extends DialogFragment implements DatePicker
 		}		
     }
 
-    public void setListener(HTMLFragment listener) {
+    public void setListener(CobaltFragment listener) {
 		mListener = listener;
 	}
 

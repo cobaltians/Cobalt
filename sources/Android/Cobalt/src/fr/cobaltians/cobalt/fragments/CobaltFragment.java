@@ -1,6 +1,6 @@
 /**
  *
- * HTMLFragment
+ * CobaltFragment
  * Cobalt
  *
  * The MIT License (MIT)
@@ -52,7 +52,6 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -83,69 +82,63 @@ import org.json.JSONObject;
  * 
  * @author Diane Moebs
  */
-public abstract class HTMLFragment extends Fragment implements IScrollListener {
+public abstract class CobaltFragment extends Fragment implements IScrollListener {
 
     // TAG
-    protected final static String TAG = HTMLFragment.class.getSimpleName();
+    protected final static String TAG = CobaltFragment.class.getSimpleName();
 	
 	/*********************************************************
 	 * MEMBERS
 	 ********************************************************/
-	protected static Context sContext;
+
+	protected Context mContext;
 	
 	protected String mPage;
 	
-	protected OverScrollingWebView mWebView;
-	// TODO: use ViewGroup instead of FrameLayout to allow using different layouts 
-	protected FrameLayout mWebViewPlaceholder;
-	protected boolean mWebViewContentHasBeenLoaded;
-	
-	protected Handler mHandler;
+	protected OverScrollingWebView mWebView = null;
+    // Web view may having pull-to-refresh and/or infinite scroll features.
+    protected PullToRefreshOverScrollWebview mPullToRefreshWebView = null;
 
-	private ArrayList<JSONObject> mWaitingJavaScriptCallsQueue;
+	protected ViewGroup mWebViewContainer;
 	
-	private boolean mPreloadOnCreateView;
-	private boolean mWebViewLoaded;
-	private boolean mCobaltIsReady;
-	
-	// Web view may having pull-to-refresh and/or infinite scroll features.
-	protected PullToRefreshOverScrollWebview mPullToRefreshWebView;
+	protected Handler mHandler = new Handler();
 
-	private boolean mInfiniteScrollRefreshing = false;
-	private boolean mInfiniteScrollEnabled = false;
-	private boolean mPullToRefreshActivate = false;
+	private ArrayList<JSONObject> mWaitingJavaScriptCallsQueue = new ArrayList<JSONObject>();
 	
-	/**************************************************************************************************************************
+	private boolean mPreloadOnCreate = true;
+	private boolean mCobaltIsReady = false;
+
+	private boolean mIsInfiniteScrollRefreshing = false;
+	private boolean mIsInfiniteScrollEnabled = false;
+	private boolean mIsPullToRefreshEnabled = false;
+
+    /**************************************************************************************************
 	 * LIFECYCLE
-	 *************************************************************************************************************************/
-	
-	@Override
+	 **************************************************************************************************/
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        mContext = activity.getBaseContext();
+    }
+
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		setRetainInstance(true);
-		
-		if (sContext == null) {
-			sContext = (Context) getActivity().getApplicationContext();
-		}
-		
-		mHandler = new Handler();
-		
-		mWaitingJavaScriptCallsQueue = new ArrayList<JSONObject>();
-		
-		mPreloadOnCreateView = true;
-		mWebViewLoaded = false;
-		mWebViewContentHasBeenLoaded = false;
-		mCobaltIsReady = false;
-	}
+        super.onCreate(savedInstanceState);
+
+        setRetainInstance(true);
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		
+
 		View view = inflater.inflate(getLayoutToInflate(), container, false);
+
 		setUpViews(view);
 		setUpListeners();
+
 		return view;
 	}	
 
@@ -198,7 +191,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 		super.onStop();
 		
 		// Fragment will rotate or be destroyed, so we don't preload content defined in fragment's arguments again 
-		mPreloadOnCreateView = false;
+        mPreloadOnCreate = false;
 		
 		removeWebViewFromPlaceholder();
 	}
@@ -221,9 +214,12 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	 * @param rootView: parent view
 	 */
 	protected void setUpViews(View rootView) {
-		// TODO: and if webViewPlaceholder id is null?
-		mWebViewPlaceholder = ((FrameLayout) rootView.findViewById(R.id.webViewPlaceholder));
+        mWebViewContainer = ((ViewGroup) rootView.findViewById(getWebViewContainerId()));
 	}
+
+    protected int getWebViewContainerId() {
+        return R.id.web_view_container;
+    }
 
 	/**
 	 * Sets up listeners for components inflated from the given layout and the parent view.
@@ -236,26 +232,25 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	 * This method SHOULD NOT be overridden in subclasses.
 	 */
 	protected void addWebView() {
-				
-		if(mWebView == null) {
-			mWebView = new OverScrollingWebView(sContext);
+		if (mWebView == null) {
+			mWebView = new OverScrollingWebView(mContext);
 			setWebViewSettings(this);
 		}	
 		
-		mPullToRefreshActivate = pullToRefreshActivate();
-		if (mPullToRefreshActivate) {
+		mIsPullToRefreshEnabled = pullToRefreshActivate();
+		if (mIsPullToRefreshEnabled) {
 			if (mPullToRefreshWebView == null) {
-				mPullToRefreshWebView = new PullToRefreshOverScrollWebview(sContext);
+				mPullToRefreshWebView = new PullToRefreshOverScrollWebview(mContext);
 				mWebView = mPullToRefreshWebView.getRefreshableView();
 				setWebViewSettings(this);
 			}
 		}
 		
-		if(mWebViewPlaceholder != null) {
-			if (mPullToRefreshActivate) {
-				mWebViewPlaceholder.addView(mPullToRefreshWebView);
+		if(mWebViewContainer != null) {
+			if (mIsPullToRefreshEnabled) {
+                mWebViewContainer.addView(mPullToRefreshWebView);
 			}
-			else mWebViewPlaceholder.addView(mWebView);
+			else mWebViewContainer.addView(mWebView);
 		}	
 		else  {
 			if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - addWebView: you must set up Web view placeholder in setUpViews!");
@@ -271,7 +266,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 		}
 		mPage = (mPage != null) ? mPage : "index.html";
 		
-		if (mPreloadOnCreateView) {
+		if (mPreloadOnCreate) {
 			loadFileFromAssets(mPage);
 		}
 	}
@@ -281,85 +276,71 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	 * This method SHOULD NOT be overridden in subclasses.
 	 */
 	protected void removeWebViewFromPlaceholder() {
-		if (mWebViewPlaceholder != null) {
+		if (mWebViewContainer != null) {
 			if (mPullToRefreshWebView != null) {
-				mWebViewPlaceholder.removeView(mPullToRefreshWebView);
+                mWebViewContainer.removeView(mPullToRefreshWebView);
 			}
 			if (mWebView != null) {
-				mWebViewPlaceholder.removeView(mWebView);
+                mWebViewContainer.removeView(mWebView);
 			}
 		}
 		else if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - removeWebViewFromPlaceholder: you must set up Web view placeholder in setUpViews!");
 	}
 	
-	@SuppressLint("SetJavaScriptEnabled")
+	//@SuppressLint("SetJavaScriptEnabled")
 	protected void setWebViewSettings(Object javascriptInterface) {
-		if(mWebView != null) {		
-			mWebView.setScrollListener(this);
-			mWebView.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
-			
-			// Enables JS
-			WebSettings webSettings = mWebView.getSettings();
-			webSettings.setJavaScriptEnabled(true);
+        mWebView.setScrollListener(this);
+        mWebView.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
 
-			// Enables and setup JS local storage
-			webSettings.setDomStorageEnabled(true); 
-			webSettings.setDatabaseEnabled(true);
-			//@deprecated since API 19. But calling this method have simply no effect for API 19+
-			webSettings.setDatabasePath(sContext.getFilesDir().getParentFile().getPath()+"/databases/");
-			
-			// Enables cross-domain calls for Ajax
-			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-				allowAjax();
-			}
-			
-			// Fix some focus issues on old devices like HTC Wildfire
-			// keyboard was not properly showed on input touch.
-			mWebView.requestFocus(View.FOCUS_DOWN);
-			mWebView.setOnTouchListener(new View.OnTouchListener() {
-				@Override
-				public boolean onTouch(View view, MotionEvent event) {
-					switch (event.getAction()) {
-						case MotionEvent.ACTION_DOWN:
-						case MotionEvent.ACTION_UP:
-							if (! view.hasFocus()) {
-								view.requestFocus();
-							}
-							break;
-						default:
-							break;
-					}
-					
-					return false;
-				}
-			});
+        // Enables JS
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        // Enables and setups JS local storage
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setDatabaseEnabled(true);
+        //@deprecated since API 19. But calling this method have simply no effect for API 19+
+        webSettings.setDatabasePath(mContext.getFilesDir().getParentFile().getPath() + "/databases/");
 
-			// Add JavaScript interface so JavaScript can call native functions.
-			mWebView.addJavascriptInterface(javascriptInterface, "Android");
-			mWebView.addJavascriptInterface(new LocalStorageJavaScriptInterface(sContext), "LocalStorage");
+        // Enables cross-domain calls for Ajax
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            allowAjax();
+        }
 
-			ScaleWebViewClient scaleWebViewClient = new ScaleWebViewClient() {
-				@Override
-				public void onPageStarted(WebView view, String url, Bitmap favicon) {
-					super.onPageStarted(view, url, favicon);
-					
-					mWebViewLoaded = false;
-				}
+        // Fix some focus issues on old devices like HTC Wildfire
+        // keyboard was not properly showed on input touch.
+        mWebView.requestFocus(View.FOCUS_DOWN);
+        mWebView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_UP:
+                        if (! view.hasFocus()) {
+                            view.requestFocus();
+                        }
+                        break;
+                    default:
+                        break;
+                }
 
-				@Override
-				public void onPageFinished(WebView view, String url) {
-					mWebViewLoaded = true;
-					
-					executeWaitingCalls();
-				}
-			};
-			scaleWebViewClient.setScaleListener(this);
+                return false;
+            }
+        });
 
-			mWebView.setWebViewClient(scaleWebViewClient);
-		}
-		else {
-			if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - setWebViewSettings: Web view is null.");
-		}
+        // Add JavaScript interface so JavaScript can call native functions.
+        mWebView.addJavascriptInterface(javascriptInterface, "Android");
+        mWebView.addJavascriptInterface(new LocalStorageJavaScriptInterface(mContext), "LocalStorage");
+
+        ScaleWebViewClient scaleWebViewClient = new ScaleWebViewClient() {
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                executeWaitingCalls();
+            }
+        };
+        scaleWebViewClient.setScaleListener(this);
+
+        mWebView.setWebViewClient(scaleWebViewClient);
 	}
 	
 	@TargetApi(android.os.Build.VERSION_CODES.JELLY_BEAN) // 16
@@ -380,8 +361,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	 */
 	private void loadFileFromAssets(String file) {
 		if(mWebView != null) {
-			mWebView.loadUrl(Cobalt.getInstance(sContext).getResourcePath() + file);
-			mWebViewContentHasBeenLoaded = true;
+			mWebView.loadUrl(Cobalt.getInstance(mContext).getResourcePath() + file);
 		}
 	}
 	
@@ -727,7 +707,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			// TOAST
 			else if(control.equals(Cobalt.JSControlToast)) {
 				String message = data.getString(Cobalt.kJSMessage);
-				Toast.makeText(sContext, message, Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
 				return true;
 			}
 		} 
@@ -757,7 +737,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	 * NAVIGATION
 	 ****************************************************************************************************************/
 	private void push(String controller, String page) {
-		Intent intent = Cobalt.getInstance(sContext).getIntentForController(controller, page);
+		Intent intent = Cobalt.getInstance(mContext).getIntentForController(controller, page);
 		if(intent != null) {
 			getActivity().startActivity(intent);
 		}
@@ -769,7 +749,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	}
 	
 	private void presentModal(String controller, String page, String callBackID) {
-		Intent intent = Cobalt.getInstance(sContext).getIntentForController(controller, page);
+		Intent intent = Cobalt.getInstance(mContext).getIntentForController(controller, page);
 		
 		if (intent != null) {
 			getActivity().startActivity(intent);
@@ -796,7 +776,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 				Bundle bundle = new Bundle();
 				bundle.putString(Cobalt.kPage, page);
 
-				Intent intent = new Intent(sContext, pClass);
+				Intent intent = new Intent(mContext, pClass);
 				intent.putExtra(Cobalt.kExtras, bundle);
 
 				NavUtils.navigateUpTo(getActivity(), intent);
@@ -856,7 +836,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 				Bundle bundle = new Bundle();
 				bundle.putString(Cobalt.kPage, page);
 				
-				HTMLWebLayerFragment webLayerFragment = getWebLayerFragment();
+				CobaltWebLayerFragment webLayerFragment = getWebLayerFragment();
 				webLayerFragment.setArguments(bundle);
 
 				android.support.v4.app.FragmentTransaction fragmentTransition;
@@ -874,8 +854,8 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 					// Dismiss current Web layer if one is already shown
 					CobaltActivity activity = (CobaltActivity) getActivity();
 					Fragment currentFragment = activity.getSupportFragmentManager().findFragmentById(activity.getFragmentContainerId());
-					if (HTMLWebLayerFragment.class.isAssignableFrom(currentFragment.getClass())) {
-						HTMLWebLayerFragment webLayerToDismiss = (HTMLWebLayerFragment) currentFragment;
+					if (CobaltWebLayerFragment.class.isAssignableFrom(currentFragment.getClass())) {
+						CobaltWebLayerFragment webLayerToDismiss = (CobaltWebLayerFragment) currentFragment;
 						webLayerToDismiss.dismissWebLayer(null);
 					}
 
@@ -895,16 +875,16 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	}
 	
 	/**
-	 * Returns new instance of a {@link HTMLWebLayerFragment}
-	 * @return a new instance of a {@link HTMLWebLayerFragment}
-	 * This method may be overridden in subclasses if the {@link HTMLWebLayerFragment} must implement customized stuff.
+	 * Returns new instance of a {@link CobaltWebLayerFragment}
+	 * @return a new instance of a {@link CobaltWebLayerFragment}
+	 * This method may be overridden in subclasses if the {@link CobaltWebLayerFragment} must implement customized stuff.
 	 */
-	protected HTMLWebLayerFragment getWebLayerFragment() {
-		return new HTMLWebLayerFragment();
+	protected CobaltWebLayerFragment getWebLayerFragment() {
+		return new CobaltWebLayerFragment();
 	}
 	
 	/**
-	 * Called from the corresponding {@link HTMLWebLayerFragment} when dismissed.
+	 * Called from the corresponding {@link CobaltWebLayerFragment} when dismissed.
 	 * This method may be overridden in subclasses.
 	 */
 	public void onWebLayerDismiss(final String page, final JSONObject data) {
@@ -1061,9 +1041,9 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	public void disablePullToRefresh() {
 		if(mPullToRefreshWebView != null) {
 			mPullToRefreshWebView.setMode(Mode.DISABLED);
-			mPullToRefreshActivate = false;
+            mIsPullToRefreshEnabled = false;
 		}
-		else if(BuildConfig.DEBUG && mPullToRefreshActivate) Log.e(Cobalt.TAG, TAG + " - disablePullToRefresh: Unable to disable pull-to-refresh feature. mPullToRefreshWebView must be set.");
+		else if(BuildConfig.DEBUG && mIsPullToRefreshEnabled) Log.e(Cobalt.TAG, TAG + " - disablePullToRefresh: Unable to disable pull-to-refresh feature. mPullToRefreshWebView must be set.");
 	}
 	
 	/**
@@ -1154,7 +1134,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	
 	@Override
 	public void onOverScrolled(int scrollX, int scrollY,int oldscrollX, int oldscrollY) {
-		float density = sContext.getResources().getDisplayMetrics().density;
+		float density = mContext.getResources().getDisplayMetrics().density;
 		// Round density in case it is too precise (and big)
 		if (density > 1) {
 			density = (float) (Math.floor(density * 10) / 10.0);
@@ -1170,14 +1150,14 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	 * Enables infinite scroll feature
 	 */
 	public void enableInfiniteScroll() {
-		mInfiniteScrollEnabled = true;
+		mIsInfiniteScrollEnabled = true;
 	}
 
 	/**
 	 * Disables infinite scroll feature
 	 */
 	public void disableInfiniteScroll() {
-		mInfiniteScrollEnabled = false;
+        mIsInfiniteScrollEnabled = false;
 	}
 
 	/**
@@ -1186,12 +1166,12 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	 * 			false otherwise
 	 */
 	public boolean isInfiniteScrollEnabled() {
-		return mInfiniteScrollEnabled;
+		return mIsInfiniteScrollEnabled;
 	}
 
 	private void infiniteScrollRefresh() {
-		if (mInfiniteScrollEnabled 
-			&& ! mInfiniteScrollRefreshing) {
+		if (mIsInfiniteScrollEnabled
+			&& ! mIsInfiniteScrollRefreshing) {
 			mHandler.post(new Runnable() {
 				@Override
 				public void run() {
@@ -1201,7 +1181,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 						jsonObj.put(Cobalt.kJSEvent, Cobalt.JSEventInfiniteScroll);
 						jsonObj.put(Cobalt.kJSCallback, Cobalt.JSCallbackInfiniteScrollDidRefresh);
 						executeScriptInWebView(jsonObj);
-						mInfiniteScrollRefreshing = true;
+						mIsInfiniteScrollRefreshing = true;
 					} 
 					catch (JSONException exception) {
 						exception.printStackTrace();
@@ -1212,7 +1192,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 	}
 	
 	private void onInfiniteScrollDidRefresh() {
-		mInfiniteScrollRefreshing = false;
+		mIsInfiniteScrollRefreshing = false;
 		onInfiniteScrollRefreshed();
 	}
 
@@ -1235,7 +1215,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			disablePullToRefresh();
 		}
 		
-		mInfiniteScrollEnabled = infiniteScrollEnabled();
+		mIsInfiniteScrollEnabled = infiniteScrollEnabled();
 	}
 	
 	private boolean pullToRefreshActivate() {
@@ -1255,7 +1235,7 @@ public abstract class HTMLFragment extends Fragment implements IScrollListener {
 			return args.getBoolean(Cobalt.kInfiniteScroll);
 		}
 		else {
-			mInfiniteScrollEnabled = false;
+			mIsInfiniteScrollEnabled = false;
 			return false;
 		}
 	}

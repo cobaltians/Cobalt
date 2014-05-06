@@ -31,7 +31,7 @@ package fr.cobaltians.cobalt.activities;
 
 import fr.cobaltians.cobalt.BuildConfig;
 import fr.cobaltians.cobalt.Cobalt;
-import fr.cobaltians.cobalt.fragments.HTMLFragment;
+import fr.cobaltians.cobalt.fragments.CobaltFragment;
 import fr.cobaltians.cobalt.R;
 
 import android.app.Activity;
@@ -43,7 +43,7 @@ import android.util.Log;
 import org.json.JSONObject;
 
 /**
- * {@link Activity} containing a {@link HTMLFragment}.
+ * {@link Activity} containing a {@link CobaltFragment}.
  * @author Diane
  */
 public abstract class CobaltActivity extends FragmentActivity {
@@ -61,7 +61,7 @@ public abstract class CobaltActivity extends FragmentActivity {
 		setContentView(getLayoutToInflate());
 
 		if (savedInstanceState == null) {
-			HTMLFragment fragment = getFragment();
+            CobaltFragment fragment = getFragment();
 
             if (fragment != null) {
                 Bundle bundle = getIntent().getExtras();
@@ -92,7 +92,7 @@ public abstract class CobaltActivity extends FragmentActivity {
 	 * This method should be overridden in subclasses.
 	 * @return a new instance of the fragment contained.
 	 */
-	protected abstract HTMLFragment getFragment();
+	protected abstract CobaltFragment getFragment();
 
 	protected int getLayoutToInflate() {
 		return R.layout.activity_cobalt;
@@ -114,8 +114,8 @@ public abstract class CobaltActivity extends FragmentActivity {
 	public void onBackPressed() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(getFragmentContainerId());
         if (fragment != null
-            && HTMLFragment.class.isAssignableFrom(fragment.getClass())) {
-            ((HTMLFragment) fragment).askWebViewForBackPermission();
+            && CobaltFragment.class.isAssignableFrom(fragment.getClass())) {
+            ((CobaltFragment) fragment).askWebViewForBackPermission();
         }
         else {
             super.onBackPressed();
@@ -126,7 +126,7 @@ public abstract class CobaltActivity extends FragmentActivity {
 	}
 
 	/**
-	 * Called from the contained {@link HTMLFragment} when the Web view has authorized the back event. 
+	 * Called from the contained {@link CobaltFragment} when the Web view has authorized the back event.
 	 * This method should NOT be overridden in subclasses.
 	 */
 	public void back() {
@@ -152,7 +152,7 @@ public abstract class CobaltActivity extends FragmentActivity {
 	 * This method may be overridden in subclasses.
 	 */
 	public void onWebLayerDismiss(String page, JSONObject data) {
-        HTMLFragment fragment = (HTMLFragment) getSupportFragmentManager().findFragmentById(getFragmentContainerId());
+        CobaltFragment fragment = (CobaltFragment) getSupportFragmentManager().findFragmentById(getFragmentContainerId());
         if (fragment != null) {
             fragment.onWebLayerDismiss(page, data);
 		}

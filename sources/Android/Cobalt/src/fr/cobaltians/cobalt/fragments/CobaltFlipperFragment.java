@@ -1,6 +1,6 @@
 /**
  *
- * HTMLFlipperFragment
+ * CobaltFlipperFragment
  * Cobalt
  *
  * The MIT License (MIT)
@@ -39,14 +39,14 @@ import fr.cobaltians.cobalt.customviews.GestureWebView;
 import fr.cobaltians.cobalt.customviews.IGestureListener;
 
 /**
- * {@link HTMLFragment} having swipe feature if enabled.
- * @extends HTMLFragment
+ * {@link CobaltFragment} having swipe feature if enabled.
+ * @extends CobaltFragment
  * @implements IGestureListener
  * @author Sebastien
  */
-public class HTMLFlipperFragment extends HTMLFragment implements IGestureListener {
+public class CobaltFlipperFragment extends CobaltFragment implements IGestureListener {
 
-    private final static String TAG = HTMLFlipperFragment.class.getSimpleName();
+    private final static String TAG = CobaltFlipperFragment.class.getSimpleName();
 
 	private final static String JSEventSwipeLeft = "swipeLeft";
 	private final static String JSEventSwipeRight = "swipeRight";
@@ -74,7 +74,7 @@ public class HTMLFlipperFragment extends HTMLFragment implements IGestureListene
 	@Override
 	protected void addWebView() {
 		if(mWebView == null) {
-			mWebView = new GestureWebView(sContext);
+			mWebView = new GestureWebView(mContext);
 			setWebViewSettings(this);
 		}
 		

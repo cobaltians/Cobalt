@@ -13,9 +13,9 @@ import android.widget.Button;
 
 import fr.cobaltians.cobaltcatalog.R;
 import fr.cobaltians.cobalt.Cobalt;
-import fr.cobaltians.cobalt.fragments.HTMLFragment;
+import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
-public class EventsFragment extends HTMLFragment {
+public class EventsFragment extends CobaltFragment {
 
     // ZOOM
     protected final static String JSNameSetZoom = "setZoom";

@@ -159,7 +159,7 @@
  @property		webView
  @abstract		the webView displaying content
  */
-@property (strong, nonatomic) UIWebView * webView;
+@property (strong, nonatomic) IBOutlet UIWebView * webView;
 
 /*!
  @property		activityIndicator
