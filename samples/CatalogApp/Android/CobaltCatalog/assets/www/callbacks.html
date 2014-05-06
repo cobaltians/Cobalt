@@ -76,7 +76,7 @@
                     "url &eactue;é&12;\n3#23:%20'\\u0020hop",
                     '{ obj_representation : "test"}',
                     "emoji \ue415 \\ue415 u{1f604}",
-                    "https://famicitys.s3.amazonaws.com/photos/019/558/630/normal/881558d70ae5b7023209cb609250cb84cabd301b.jpg?AWSAccessKeyId=1RZJ66V99R267YCDQSG2&Expires=1401263985&Signature=xbE%2B49MCgE7/WTKqnvwQ3f4zYmg%3D"
+                    "https://cob.s3.amazonaws.com/abcd.jpg?AWSAccessKeyId=1&Expires=1401263985&Signature=xbE%2B49MCgE7/WTKqnvwQ3f4zYmg%3D"
                 ];
 
                 //send a test string and check it is still the same when comming back
@@ -84,7 +84,7 @@
                     cobalt.log('launching test #'+testIndex)
 
                     cobalt.sendEvent("echo",{ str : testStrings[testIndex] },function(data){
-                        var testResult = app.assertEqual('test #'+testIndex, data.str ,testStrings[testIndex]);
+                        var testResult = app.assertEqual('#'+testIndex, data.str ,testStrings[testIndex]);
                         if (callback){
                             callback(testResult)
                         }
