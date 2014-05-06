@@ -86,15 +86,14 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 ********************************************************/
 
 	protected Context mContext;
-	
+
+    protected ViewGroup mWebViewContainer;
+
 	protected OverScrollingWebView mWebView = null;
     // Web view may having pull-to-refresh and/or infinite scroll features.
     protected PullToRefreshOverScrollWebview mPullToRefreshWebView = null;
 
-	protected ViewGroup mWebViewContainer;
-	
 	protected Handler mHandler = new Handler();
-
 	private ArrayList<JSONObject> mWaitingJavaScriptCallsQueue = new ArrayList<JSONObject>();
 	
 	private boolean mPreloadOnCreate = true;
@@ -183,7 +182,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
     }
 
 	/****************************************************************************************
-	 * Helpers
+	 * LIFECYCLE HELPERS
 	 ***************************************************************************************/
 	
 	/**
@@ -249,31 +248,8 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
             }
         }
 	}
-	
-	private void preloadContent() {
-        String page = (getPage() != null) ? getPage() : "index.html";
-		
-		if (mPreloadOnCreate) {
-			loadFileFromAssets(page);
-		}
-	}
-	
-	/**
-	 * Called when fragment is about to rotate or be destroyed
-	 * This method SHOULD NOT be overridden in subclasses.
-	 */
-	protected void removeWebViewFromPlaceholder() {
-		if (mWebViewContainer != null) {
-			if (isPullToRefreshActive()) {
-                mWebViewContainer.removeView(mPullToRefreshWebView);
-			}
-            else {
-                mWebViewContainer.removeView(mWebView);
-            }
-		}
-	}
 
-	protected void setWebViewSettings(Object javascriptInterface) {
+    protected void setWebViewSettings(Object javascriptInterface) {
         mWebView.setScrollListener(this);
         mWebView.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
 
@@ -326,22 +302,45 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
         scaleWebViewClient.setScaleListener(this);
 
         mWebView.setWebViewClient(scaleWebViewClient);
-	}
+    }
 
-	private void allowAjax() {
+    private void allowAjax() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
             // TODO: see how to restrict only to local files
             mWebView.getSettings().setAllowUniversalAccessFromFileURLs(true);
         }
+    }
+
+	private void preloadContent() {
+        String page = (getPage() != null) ? getPage() : "index.html";
+		
+		if (mPreloadOnCreate) {
+			loadFileFromAssets(page);
+		}
 	}
-	
+
+    /**
+     * Load the given file in the Web view
+     * @param file: file name to load.
+     * @warning All application HTML files should be found in the same subfolder in ressource path
+     */
+    private void loadFileFromAssets(String file) {
+        mWebView.loadUrl(Cobalt.getInstance(mContext).getResourcePath() + file);
+    }
+
 	/**
-	 * Load the given file in the Web view
-	 * @param file: file name to load.
-	 * @warning All application HTML files should be found in the same subfolder in ressource path
+	 * Called when fragment is about to rotate or be destroyed
+	 * This method SHOULD NOT be overridden in subclasses.
 	 */
-	private void loadFileFromAssets(String file) {
-		mWebView.loadUrl(Cobalt.getInstance(mContext).getResourcePath() + file);
+	protected void removeWebViewFromPlaceholder() {
+		if (mWebViewContainer != null) {
+			if (isPullToRefreshActive()) {
+                mWebViewContainer.removeView(mPullToRefreshWebView);
+			}
+            else {
+                mWebViewContainer.removeView(mWebView);
+            }
+		}
 	}
 	
 	/****************************************************************************************
@@ -390,48 +389,49 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	/****************************************************************************************
 	 * MESSAGE SENDING
 	 ***************************************************************************************/
-	/**
-	 * Calls the Web callback with an object containing response fields
-	 * @param callbackId: the Web callback.
-	 * @param data: the object containing response fields
-	 */
-	public void sendCallback(final String callbackId, final JSONObject data) {
-		if (callbackId != null
-			&& callbackId.length() > 0) {
-			try {
-				JSONObject jsonObj = new JSONObject();
-				jsonObj.put(Cobalt.kJSType, Cobalt.JSTypeCallBack);
-				jsonObj.put(Cobalt.kJSCallback, callbackId);
-				jsonObj.put(Cobalt.kJSData, data);
-				executeScriptInWebView(jsonObj);
-			} 
-			catch (JSONException exception) {
+
+    /**
+     * Calls the Web callback with an object containing response fields
+     * @param callbackId: the Web callback.
+     * @param data: the object containing response fields
+     */
+    public void sendCallback(final String callbackId, final JSONObject data) {
+        if (callbackId != null
+                && callbackId.length() > 0) {
+            try {
+                JSONObject jsonObj = new JSONObject();
+                jsonObj.put(Cobalt.kJSType, Cobalt.JSTypeCallBack);
+                jsonObj.put(Cobalt.kJSCallback, callbackId);
+                jsonObj.put(Cobalt.kJSData, data);
+                executeScriptInWebView(jsonObj);
+            }
+            catch (JSONException exception) {
                 if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendCallback: JSONException");
-				exception.printStackTrace();
-			}
-		}
+                exception.printStackTrace();
+            }
+        }
         else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendCallback: callbackId is null or empty!");
-	}
-	
-	public void sendEvent(final String event, final JSONObject data, final String callbackID) {
-		if (event != null
-			&& event.length() > 0) {
-			try {
-				JSONObject jsonObj = new JSONObject();
-				jsonObj.put(Cobalt.kJSType, Cobalt.JSTypeEvent);
-				jsonObj.put(Cobalt.kJSEvent, event);
-				jsonObj.put(Cobalt.kJSData, data);
-				jsonObj.put(Cobalt.kJSCallback, callbackID);
-				executeScriptInWebView(jsonObj);
-			}
-			catch (JSONException exception) {
+    }
+
+    public void sendEvent(final String event, final JSONObject data, final String callbackID) {
+        if (event != null
+                && event.length() > 0) {
+            try {
+                JSONObject jsonObj = new JSONObject();
+                jsonObj.put(Cobalt.kJSType, Cobalt.JSTypeEvent);
+                jsonObj.put(Cobalt.kJSEvent, event);
+                jsonObj.put(Cobalt.kJSData, data);
+                jsonObj.put(Cobalt.kJSCallback, callbackID);
+                executeScriptInWebView(jsonObj);
+            }
+            catch (JSONException exception) {
                 if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendEvent: JSONException");
-				exception.printStackTrace();
-			}
-		}
+                exception.printStackTrace();
+            }
+        }
         else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendEvent: event is null or empty!");
-	}
-	
+    }
+
 	/****************************************************************************************
 	 * MESSAGE HANDLING
 	 ***************************************************************************************/
