@@ -2,7 +2,6 @@ package fr.cobaltians.cobaltcatalog.fragments;
 
 import android.app.AlertDialog;
 import android.util.Log;
-import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobaltcatalog.R;
 
 import fr.cobaltians.cobalt.fragments.CobaltFragment;
@@ -28,7 +27,7 @@ public class CallbacksFragment extends CobaltFragment {
 
 	private Button btnDoSomeMath, btnTestAuto;
 
-    ArrayList<Object> arrayTest ;
+    ArrayList<Object> mArrayTest;
 
 	@Override
 	protected int getLayoutToInflate() {
@@ -63,7 +62,14 @@ public class CallbacksFragment extends CobaltFragment {
         btnTestAuto.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                launchTest();
+                mArrayTest = new ArrayList<Object>();
+                mArrayTest.add(0, "quotes : it's working \"great\"");
+                mArrayTest.add(1, "url &eactue;é&12;\n3#23:%20'\\u0020hop");
+                mArrayTest.add(2, "'{ obj_representation : \"test\"}'");
+                mArrayTest.add(3, "emoji \ue415 \\\ue415 u{1f604}");
+                mArrayTest.add(4, "https://famicitys.s3.amazonaws.com/photos/019/558/630/normal/881558d70ae5b7023209cb609250cb84cabd301b.jpg?AWSAccessKeyId=1RZJ66V99R267YCDQSG2&Expires=1401263985&Signature=xbE%2B49MCgE7/WTKqnvwQ3f4zYmg%3D");
+
+                launchTest(0);
             }
         });
 	}
@@ -111,12 +117,16 @@ public class CallbacksFragment extends CobaltFragment {
                 try {
                     int index = echo.getInt("index");
                     String test = echo.getString("value");
-                    if (test.equals(arrayTest.get(index))) {
+                    if (test.equals(mArrayTest.get(index))) {
                         Log.d(TAG, "test OK for the String : "+test);
                     }
                     else {
-                        Log.d(TAG, "test failed !!!! send is : "+arrayTest.get(index));
+                        Log.d(TAG, "test failed !!!! send is : "+ mArrayTest.get(index));
                         Log.d(TAG, "received : "+test);
+                    }
+                    if (index < mArrayTest.size()-1) {
+                        //index++;
+                        launchTest(++index);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -137,27 +147,19 @@ public class CallbacksFragment extends CobaltFragment {
 	protected void onInfiniteScrollRefreshed() {		
 	}
 
-    private void launchTest(){
+    private void launchTest(int index){
         JSONObject data = new JSONObject();
-        arrayTest = new ArrayList<Object>();
-        arrayTest.add(0, "quotes : it's working \"great\"");
-        arrayTest.add(1, "url &eactue;é&12;\n3#23:%20'\\u0020hop");
-        arrayTest.add(2, "'{ obj_representation : \"test\"}'");
-        arrayTest.add(3, "emoji \ue415 \\ue415 u{1f604}");
-        arrayTest.add(4, "https://famicitys.s3.amazonaws.com/photos/019/558/630/normal/881558d70ae5b7023209cb609250cb84cabd301b.jpg?AWSAccessKeyId=1RZJ66V99R267YCDQSG2&Expires=1401263985&Signature=xbE%2B49MCgE7/WTKqnvwQ3f4zYmg%3D");
 
-        for (int i = 0; i < arrayTest.size(); i++) {
             try {
                 JSONObject test = new JSONObject();
-                test.put("index", i);
-                test.put("value", arrayTest.get(i));
+                test.put("index", index);
+                test.put("value", mArrayTest.get(index));
                 data.put(kValues, test);
 
                 sendEvent(JSEcho, data, JSEchoCallback);
-                Log.d(TAG, "send test to web with this object : "+test.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
+
     }
 }

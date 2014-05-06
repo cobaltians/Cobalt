@@ -1,5 +1,6 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
+import android.view.View;
 import fr.cobaltians.cobaltcatalog.R;
 
 import fr.cobaltians.cobalt.Cobalt;
@@ -20,13 +21,14 @@ public class SimpleHybridFragment extends CobaltFragment {
 		return R.layout.simple_hybrid_fragment;
 	}
 	
-	/*
+    /*
 	@Override
-	protected void setUpViews(View rootView) 
+	protected void setUpViews(View rootView)
 	{
-		webView = (OverScrollingWebView) rootView.findViewById(R.id.webView);
-	}
-	*/
+        super.setUpViews(rootView);
+		//webView = (OverScrollingWebView) rootView.findViewById(R.id.webView);
+	}*/
+
 
 	private JSONArray generateBigData(int size)
 	{

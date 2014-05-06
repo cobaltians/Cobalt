@@ -7,7 +7,7 @@
     android:weightSum="1">
 
     <FrameLayout
-            android:id="@+id/webViewPlaceholder"
+            android:id="@+id/web_view_container"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
