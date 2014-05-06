@@ -67,10 +67,11 @@ public class CallbacksFragment extends CobaltFragment {
             public void onClick(View arg0) {
                 mArrayTest = new ArrayList<Object>();
                 mArrayTest.add(0, "quotes : it's working \"great\"");
-                mArrayTest.add(1, "url &eactue;é&12;\n3#23:%20'\\u0020hop");
-                mArrayTest.add(2, "'{ obj_representation : \"test\"}'");
-                mArrayTest.add(3, "emoji \ue415 \\\ue415 u{1f604}");
-                mArrayTest.add(4, "https://famicitys.s3.amazonaws.com/photos/019/558/630/normal/881558d70ae5b7023209cb609250cb84cabd301b.jpg?AWSAccessKeyId=1RZJ66V99R267YCDQSG2&Expires=1401263985&Signature=xbE%2B49MCgE7/WTKqnvwQ3f4zYmg%3D");
+                mArrayTest.add(1, "le + c'est top.");
+                mArrayTest.add(2, "url &eactue;é&12;\n3#23:%20'\\u0020hop");
+                mArrayTest.add(3, "'{ obj_representation : \"test\"}'");
+                mArrayTest.add(4, "emoji \ue415 \\ue415 u{1f604}");
+                mArrayTest.add(5, "https://famicitys.s3.amazonaws.com/photos/019/558/630/normal/881558d70ae5b7023209cb609250cb84cabd301b.jpg?AWSAccessKeyId=1RZJ66V99R267YCDQSG2&Expires=1401263985&Signature=xbE%2B49MCgE7/WTKqnvwQ3f4zYmg%3D");
 
                 launchTest(0);
             }
@@ -125,8 +126,8 @@ public class CallbacksFragment extends CobaltFragment {
                     }
                     else {
                         testFailed = true;
-                        Log.d(TAG, "test failed !!!! send is : "+ mArrayTest.get(index));
-                        Log.d(TAG, "received : "+stringForTest);
+                        Log.e(TAG, "test failed !!!! send is : "+ mArrayTest.get(index));
+                        Log.e(TAG, "received : "+stringForTest);
                     }
                     if (index < mArrayTest.size()-1) {
                         launchTest(++index);
@@ -170,6 +171,5 @@ public class CallbacksFragment extends CobaltFragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
     }
 }

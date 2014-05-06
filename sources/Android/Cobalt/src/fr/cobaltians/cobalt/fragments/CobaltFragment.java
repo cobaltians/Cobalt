@@ -29,7 +29,7 @@
 
 package fr.cobaltians.cobalt.fragments;
 
-import android.view.*;
+
 import fr.cobaltians.cobalt.BuildConfig;
 import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.R;
@@ -56,17 +56,20 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
+import android.view.*;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -364,7 +367,16 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 					public void run() {
 						// Line & paragraph separators are not JSON compliant but supported by JSONObject
 						String message = jsonObj.toString().replaceAll("[\u2028\u2029]", "");
-						String url = "javascript:cobalt.execute(" + message + ");";
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            //Since KitKat, messages are automatically urldecoded when received from the web. encoding them to fix this.
+                            try {
+                                message = java.net.URLEncoder.encode(message, "UTF-8").replaceAll("\\+","%20");
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        String url = "javascript:cobalt.execute(" + message + ");";
 						
 						if(mWebView != null) {
 							if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: " + message);
@@ -1100,21 +1112,20 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 		if (isInfiniteScrollActive()
 			&& ! mIsInfiniteScrollRefreshing) {
 			mHandler.post(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						JSONObject jsonObj = new JSONObject();
-						jsonObj.put(Cobalt.kJSType, Cobalt.JSTypeEvent);
-						jsonObj.put(Cobalt.kJSEvent, Cobalt.JSEventInfiniteScroll);
-						jsonObj.put(Cobalt.kJSCallback, Cobalt.JSCallbackInfiniteScrollDidRefresh);
-						executeScriptInWebView(jsonObj);
-						mIsInfiniteScrollRefreshing = true;
-					} 
-					catch (JSONException exception) {
-						exception.printStackTrace();
-					}
-				}
-			});
+                @Override
+                public void run() {
+                    try {
+                        JSONObject jsonObj = new JSONObject();
+                        jsonObj.put(Cobalt.kJSType, Cobalt.JSTypeEvent);
+                        jsonObj.put(Cobalt.kJSEvent, Cobalt.JSEventInfiniteScroll);
+                        jsonObj.put(Cobalt.kJSCallback, Cobalt.JSCallbackInfiniteScrollDidRefresh);
+                        executeScriptInWebView(jsonObj);
+                        mIsInfiniteScrollRefreshing = true;
+                    } catch (JSONException exception) {
+                        exception.printStackTrace();
+                    }
+                }
+            });
 		}
 	}
 	
