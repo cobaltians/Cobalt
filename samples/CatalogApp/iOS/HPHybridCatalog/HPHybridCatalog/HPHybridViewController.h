@@ -10,9 +10,7 @@
 
 @interface HPHybridViewController : CobaltViewController<CobaltDelegate>
 
-@property (strong, nonatomic) IBOutlet UITextField * messageToSendToWebTextField;
 
-- (IBAction)testCallback:(id)sender;
-- (IBAction)testCallbackAsync:(id)sender;
+- (IBAction)DoSomeMaths:(id)sender;
 
 @end

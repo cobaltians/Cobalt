@@ -8,9 +8,10 @@
 
 #import "HPZoomHybridViewController.h"
 
-#define JSNameSetZoom           @"JSNameSetZoom"
+#define setZoom                 @"setZoom"
 #define kDefaultTextZoomLevel   @"textSizeZoomLevel"
 #define defaultTextZoomLevel    10
+#define hello                   @"hello"
 
 @implementation HPZoomHybridViewController
 
@@ -48,13 +49,21 @@
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (BOOL)onUnhandledMessage:(NSDictionary *)message
+- (BOOL)onUnhandledMessage:(NSString *)message
 {
     return NO;
 }
 
 - (BOOL)onUnhandledEvent:(NSString *)event withData:(NSDictionary *)data andCallback:(NSString *)callback
 {
+    NSLog(@"avant le if");
+    if ([event isEqualToString:hello]) {
+        NSLog(@"dans le if");
+        UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"hello" message:@"hello world" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertView performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+        return YES;
+    }
+    
     return NO;
 }
 
@@ -104,7 +113,7 @@
 
 - (void)setZoomLevelInWebView
 {
-    [self sendEvent:JSNameSetZoom withData:[NSDictionary dictionaryWithObjectsAndKeys:textSizeCurrentZoomLevel, kJSValue, nil] andCallback:nil];
+    [self sendEvent:setZoom withData:[NSDictionary dictionaryWithObjectsAndKeys:textSizeCurrentZoomLevel, kJSValue, nil] andCallback:nil];
 }
 
 

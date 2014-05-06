@@ -46,6 +46,8 @@
 #define kJSPage                             @"page"
 #define kJSType                             @"type"
 #define kJSValue                            @"value"
+#define kJSValues                           @"values"
+#define kJSResult                           @"result"
 
 // CALLBACK
 #define JSTypeCallBack                      @"callback"
