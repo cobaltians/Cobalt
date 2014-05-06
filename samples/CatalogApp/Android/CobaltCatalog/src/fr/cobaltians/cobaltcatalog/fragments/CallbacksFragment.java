@@ -1,12 +1,11 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
-import android.app.AlertDialog;
-import android.util.Log;
-import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobaltcatalog.R;
 
 import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
+import android.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;

@@ -2,61 +2,16 @@ package fr.cobaltians.cobaltcatalog.fragments;
 
 import fr.cobaltians.cobaltcatalog.R;
 
-import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
-import android.util.Log;
-import android.webkit.JavascriptInterface;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SimpleHybridFragment extends CobaltFragment {
 	
 	@Override
-	protected int getLayoutToInflate()
-	{
+	protected int getLayoutToInflate() {
 		return R.layout.simple_hybrid_fragment;
 	}
-	
-	/*
-	@Override
-	protected void setUpViews(View rootView) 
-	{
-		webView = (OverScrollingWebView) rootView.findViewById(R.id.webView);
-	}
-	*/
-
-	private JSONArray generateBigData(int size)
-	{
-		JSONArray a = new JSONArray();
-		for(int i = 0 ; i < size ; i++)
-		{
-			String name = (i%2 == 0) ? "Léo" : "Popi";
-			String imageName = "img/ic_launcher.png";
-			double age = (i <= 100) ? i : i/100.0;
-			
-			JSONObject j = new JSONObject();
-			try {
-				j.put("username", name);
-				j.put("userimage", imageName);
-				j.put("userage", age);
-				a.put(j);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-		return a;
-	}
-
-	//  unhandled JS messages
-	@Override
-	protected void onUnhandledMessage(JSONObject message) {
-
-    }
 
 	@Override
 	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
@@ -67,6 +22,11 @@ public class SimpleHybridFragment extends CobaltFragment {
 	protected boolean onUnhandledCallback(String name, JSONObject data) {
 		return false;
 	}
+
+    @Override
+    protected void onUnhandledMessage(JSONObject message) {
+
+    }
 
 	@Override
 	protected void onPullToRefreshRefreshed() {

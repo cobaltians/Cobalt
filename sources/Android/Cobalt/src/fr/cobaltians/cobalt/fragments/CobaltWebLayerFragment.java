@@ -155,7 +155,7 @@ public class CobaltWebLayerFragment extends CobaltFragment {
 	private void onDismiss() {
 		if (CobaltActivity.class.isAssignableFrom(getActivity().getClass())) {
 			CobaltActivity activity = (CobaltActivity) getActivity();
-			activity.onWebLayerDismiss(mPage, getDataForDismiss());
+			activity.onWebLayerDismiss(getPage(), getDataForDismiss());
 		}
 	}
 	

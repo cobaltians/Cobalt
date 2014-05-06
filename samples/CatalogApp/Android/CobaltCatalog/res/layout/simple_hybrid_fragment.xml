@@ -12,7 +12,7 @@
 	-->
 	
 	<FrameLayout
-		android:id="@+id/webViewPlaceholder"
+		android:id="@+id/web_view_container"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent" />
 	

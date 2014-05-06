@@ -1,7 +1,9 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import fr.cobaltians.cobaltcatalog.R;
+
+import fr.cobaltians.cobalt.Cobalt;
+import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -11,9 +13,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import fr.cobaltians.cobaltcatalog.R;
-import fr.cobaltians.cobalt.Cobalt;
-import fr.cobaltians.cobalt.fragments.CobaltFragment;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class EventsFragment extends CobaltFragment {
 

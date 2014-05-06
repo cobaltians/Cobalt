@@ -9,6 +9,6 @@ import fr.cobaltians.cobalt.fragments.CobaltFragment;
 public class MainActivity extends CobaltActivity {
 
 	protected CobaltFragment getFragment() {
-		return Cobalt.getInstance(getApplicationContext()).getFragmentForController(MainFragment.class, "default", "index.html");
+		return Cobalt.getInstance(this).getFragmentForController(MainFragment.class, "default", "index.html");
 	}
 }
