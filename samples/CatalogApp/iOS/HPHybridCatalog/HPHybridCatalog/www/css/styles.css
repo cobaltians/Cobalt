@@ -65,7 +65,7 @@ a, input{
 a.disabled{
 	color: #fff;
 }
-a.tapped{
+a.touched{
 	background: #888;
 }
 
@@ -84,30 +84,29 @@ input{
 	border-bottom: 2px solid #3E6B85;
 	}
 	.listItem .name{
-		width:80%;
-		color:#165C85;
+        float:left;
+        color:#165C85;
 		font-weight: bold;
-		float:left;
 		padding-left:20px;
 	}
 	.listItem .num{
-		text-align: right;
+		float: right;
 		padding-right: 20px;
 	}
 #images img{
 	border:1px solid #ddd;
 }
 
-html.webalert{
+html.webLayer{
 	height: 100%;
 	margin:0; padding:0;
 }
-html.webalert body{
+html.webLayer body{
 	height: 100%;
 	margin:0; padding:0;
 	background: rgba(0,0,0,0.7);
 }
-div.webalert{
+div.webLayer{
 	position: absolute;
 	top:50%;
 	left:50%;
@@ -117,23 +116,23 @@ div.webalert{
 	margin: -100px 0 0 -130px;
 
 }
-div.webalert h1{
+div.webLayer h1{
 	text-align: center;
 	background: #ccc;
 	border-bottom: 1px solid #333333;
 	padding: 5px; margin: 0;
 }
-div.webalert p,div.webalert a{
+div.webLayer p,div.webLayer a{
 	margin-left: 10px;
 }
 
 
-div.webalert2{
+div.webLayer2{
 	top:0;
 	margin-top: 20px;
 }
 
-div.webalert2 #text{
+div.webLayer2 #text{
 	width: 95%;
 	height: 48%;
 	padding: 0;

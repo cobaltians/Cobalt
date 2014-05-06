@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+    </head>
+    <body class="green">
+
+  		<a href="javascript:;" class="pop">POP</a><br/>
+
+          <p>This infiniteScroll demo page contain a list that is growing when the user is hitting the bottom of the page</p>
+
+          <p>Try it out :)</p>
+
+          <p>Your view in cobalt.conf should have infiniteScroll set to true. Otherwise it won't work.<br/>
+              Below is a link to the same page but with infiniteScroll disabled. It should do nothing when hitting the bottom.</p>
+
+        <a class="push" href="javascript:;" data-href="infinitescroll.html" data-classid="infiniteScrollNonActive">infiniteScroll disabled</a>
+
+		<p>this page blow use infiniteScroll AND pullToRefresh together. give it a try.</p>
+
+        <a class="push" href="javascript:;" data-href="pulltorefresh_&_infinitescroll.html" data-classid="PTR_and_IfiniteScroll">PullToRefresh and InfiniteScroll</a>
+
+
+		<div id="list">
+
+		</div>
+		<p id="loading"  style="padding:10px; text-align:center; display:none;">Chargement...</p>
+
+		<br/>
+
+
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
+        <script type="text/javascript" src="js/setTimeoutWorkaround.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+
+		<script>
+
+            Zepto(function($){
+		        cobalt.init({
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInLogdiv:app.debugInLogdiv,
+                    events:{
+                       "infiniteScroll" : function(data, callback){
+                               cobalt.log('native asked to load more content');
+	                           $('#loading').show();
+	                           setTimeout(function(){
+                                   $('#loading').hide();
+		                           $('#list').append('<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>');
+		                           cobalt.sendCallback(callback);
+	                           },1000, true);
+                        }
+                                  
+                    }
+	            });
+
+	            app.touch('a.push',function(){
+	            	cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
+	            });
+
+	            app.touch('a.pop',function(){
+                    cobalt.navigate('pop');
+                });
+
+	            $('#list').html('<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>');
+
+            })
+
+        </script>
+
+    </body>
+</html>

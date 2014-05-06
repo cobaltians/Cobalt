@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
+    </head>
+    <body class="green">
+  		
+  		<a href="javascript:;" class="pop">POP</a><br/>
+
+		<p>Here are a few examples that show many toasts calls and many alerts</p>
+
+		<h2>Toasts</h2>
+
+  		<a href="javascript:;" id="toastA">small toast</a><br/>
+  		<a href="javascript:;" id="toastB">basic toast</a><br/>
+  		<a href="javascript:;" id="toastC">loooonnnnng toast</a><br/>
+  		<a href="javascript:;" id="toastD">A toast with multiple lines using \n</a><br/>
+  		<a href="javascript:;" id="toastE">20 toasts in a row ! boom !</a><br/>
+
+        <h2>Alerts</h2>
+
+		<p>A basic alert setting title and text</p>
+ 		<a href="javascript:;" id="test2">Show Alert</a><br/>
+
+		<p>Two custom buttons on this one.<br>
+		When alert is closed, web knows which button was clicked</p>
+ 		<a href="javascript:;" id="test3">Show Alert</a><br/>
+
+		<p>Same thing but with an anonymous callback.</p>
+ 		<a href="javascript:;" id="test4">Show Alert</a><br/>
+
+
+		<p>Large title and content on this one.</p>
+ 		<a href="javascript:;" id="test7">Show Alert</a><br/>
+
+		<p>On Android, this one can be dismissed by touching the empty zone, around the alert.</p>
+ 		<a href="javascript:;" id="test8">Show Alert</a><br/>
+		<br/>
+
+
+		<script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+
+		<script>
+            
+            Zepto(function($){
+
+	            cobalt.init({
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInLogdiv:app.debugInLogdiv
+	            });
+
+
+
+                app.touch('a.pop',function(){
+                    cobalt.navigate('pop');
+                });
+	            
+	            app.touch('#toastA',function(){
+	            	cobalt.toast("Ok!")
+		            return false;
+	            });
+
+   	            app.touch('#toastB',function(){
+	            	cobalt.toast("Hello Cobalt user !")
+		            return false;
+	            });
+   	            app.touch('#toastC',function(){
+	            	cobalt.toast("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).")
+		            return false;
+	            });
+   	            app.touch('#toastD',function(){
+	            	cobalt.toast("It is a long\nestablished fact")
+		            return false;
+	            });
+   	            app.touch('#toastE',function(){
+	            	for (var i=1; i<=20; i++){
+			            cobalt.toast("toast #"+ i)
+		            }
+		            return false;
+	            });
+
+	            app.touch('#test2',function(){
+		            cobalt.alert("My Title", "The default button is 'ok'. Is it OK for you ?")
+	            	return false;
+	            });
+
+                var buttons=["Yes", "No", "I'm not sure"];
+
+	            app.touch('#test3',function(){
+		            cobalt.alert("Close me !", "You gonna close this alert !", buttons, { callback : function(params){
+			            cobalt.toast("alert closed. you choice was : "+ buttons[params.index])
+		            }});
+		            return false;
+	            });
+
+	            window.myApp={
+		            callMeBack:function(params){
+			            cobalt.log('myApp.callMeBack called with params='+params)
+			            cobalt.toast("alert closed. you choice was : "+ buttons[params.index])
+		            }
+	            }
+
+	            app.touch('#test4',function(){
+		            cobalt.alert("Close me !", "You gonna close this alert !", myApp.buttons, { callback : 'myApp.callMeBack', alertId:55});
+		            return false;
+	            });
+
+
+	            app.touch('#test7',function(){
+		            cobalt.alert("Do you Lorem ?", "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?", ["Indeed.", "Me !", "..."]);
+		            return false;
+	            });
+
+	            app.touch('#test8',function(){
+		            cobalt.alert("Optional !", "On Android, this one can be dismissed by touching the empty zone, around the alert.", ["Yes", "No"], { cancelable:true });
+		            return false;
+	            });
+
+
+            })
+            
+
+        </script>
+        
+    </body>
+</html>
