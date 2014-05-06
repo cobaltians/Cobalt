@@ -29,9 +29,13 @@
 
 package fr.cobaltians.cobalt.database;
 
+import fr.cobaltians.cobalt.BuildConfig;
+
+import fr.cobaltians.cobalt.Cobalt;
+
 import android.graphics.Bitmap;
 import android.util.Base64;
-import junit.framework.Assert;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Hashtable;
@@ -57,30 +61,41 @@ public class CobaltImageCache {
 	}
 	
 	public void setImage(String id, Bitmap image) {
-        Assert.assertNotNull(TAG + " - setImage: id could not be null", id);
-        Assert.assertNotNull(TAG + " - setImage: image could not be null", image);
-		mMapImages.put(id, image);
+        if (id != null
+            && image != null) {
+            mMapImages.put(id, image);
+        }
+        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - setImage: id and image could not be null!");
 	}
 	
 	public Bitmap getImage(String id) {
-        Assert.assertNotNull(TAG + " - getImage: id could not be null", id);
-		return mMapImages.get(id);
+        if (id != null) {
+            return mMapImages.get(id);
+        }
+        else {
+            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getImage: id could not be null!");
+            return null;
+        }
 	}
 	
 	public String toBase64(String id) {
-        Assert.assertNotNull(TAG + " - toBase64: id could not be null", id);
+        String encodeImage = null;
 
-		String encodeImage = null;
-		Bitmap bitmap = mMapImages.get(id);
+        if (id != null) {
+            Bitmap bitmap = mMapImages.get(id);
 
-        if (bitmap != null) {
-            // compressing the image
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            // encode image
-            encodeImage = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT | Base64.NO_WRAP);
+            if (bitmap != null) {
+                // compressing the image
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                // encode image
+                encodeImage = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT | Base64.NO_WRAP);
+            }
         }
-		
-		return encodeImage;
+        else {
+            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - toBase64: id could not be null!");
+        }
+
+        return encodeImage;
 	}
 }
