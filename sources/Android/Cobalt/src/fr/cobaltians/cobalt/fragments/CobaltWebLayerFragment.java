@@ -1,6 +1,6 @@
 /**
  *
- * HTMLWebLayerFragment
+ * CobaltWebLayerFragment
  * Cobalt
  *
  * The MIT License (MIT)
@@ -42,13 +42,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Special {@link HTMLFragment} presented over the current HTMLFragment as a Web layer.
+ * Special {@link CobaltFragment} presented over the current CobaltFragment as a Web layer.
  * @author Diane
- * @details This class should not be instantiated directly. {@link HTMLFragment} manages it directly with Web layer messages.
+ * @details This class should not be instantiated directly. {@link CobaltFragment} manages it directly with Web layer messages.
  */
-public class HTMLWebLayerFragment extends HTMLFragment {	
+public class CobaltWebLayerFragment extends CobaltFragment {
 
-    protected static final String TAG = HTMLWebLayerFragment.class.getSimpleName();
+    protected static final String TAG = CobaltWebLayerFragment.class.getSimpleName();
 
 	private JSONObject mData = null;
 	
