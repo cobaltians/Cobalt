@@ -66,7 +66,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -367,13 +366,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                             // Since KitKat, messages are automatically urldecoded when received from the web. encoding them to fix this.
-                            try {
-                                script = java.net.URLEncoder.encode(script, "UTF-8").replaceAll("\\+","%20");
-                            }
-                            catch (UnsupportedEncodingException e) {
-                                if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - executeScriptInWebView: UnsupportedEncodingException");
-                                e.printStackTrace();
-                            }
+                            script = script.replaceAll("%","%25");
                         }
 
                         String url = "javascript:cobalt.execute(" + script + ");";
