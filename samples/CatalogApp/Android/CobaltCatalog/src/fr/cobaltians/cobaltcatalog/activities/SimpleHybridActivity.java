@@ -6,9 +6,18 @@ import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.activities.CobaltActivity;
 import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
+import android.os.Bundle;
+
 public class SimpleHybridActivity extends CobaltActivity {
-	
-	protected CobaltFragment getFragment() {
-		return Cobalt.getInstance(this).getFragmentForController(SimpleHybridFragment.class, "default", "common/index.html");
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Cobalt.getInstance(this).setResourcePath("www/common/");
+    }
+
+    protected CobaltFragment getFragment() {
+		return Cobalt.getInstance(this).getFragmentForController(SimpleHybridFragment.class, "default", "index.html");
 	}
 }
