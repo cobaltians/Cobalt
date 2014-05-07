@@ -19,8 +19,14 @@ var app={
                 $(this).addClass('touched');
                 clearTimeout(app.touchTimer);
                 app.touchTimer = setTimeout(touchup.bind(this),1000);
-                touchHandler.apply(this,e);
+
+                cobalt.divLog('should call touch handler')
+                touchHandler.bind(this)(e);
+                //touchHandler.apply(this,e);
+            }else{
+                cobalt.divLog('skipped, already has class')
             }
+
             if (preventDefault)
                 return false;
         }
