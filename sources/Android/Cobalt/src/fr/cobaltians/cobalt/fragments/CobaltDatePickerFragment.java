@@ -43,7 +43,7 @@ import android.widget.DatePicker;
 
 import java.util.Calendar;
 
-public class HTMLDatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+public class CobaltDatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
 	public static final String ARG_YEAR = "YEAR";
 	public static final String ARG_MONTH = "MONTH";

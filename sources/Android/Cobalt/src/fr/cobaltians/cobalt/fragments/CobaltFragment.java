@@ -979,16 +979,16 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 
     protected void showDatePickerDialog(int year, int month, int day, String title, String delete, String cancel, String validate, String callbackID) {
     	Bundle args = new Bundle();
-    	args.putInt(HTMLDatePickerFragment.ARG_YEAR, year);
-    	args.putInt(HTMLDatePickerFragment.ARG_MONTH, month);
-    	args.putInt(HTMLDatePickerFragment.ARG_DAY, day);
-    	args.putString(HTMLDatePickerFragment.ARG_TITLE, title);
-    	args.putString(HTMLDatePickerFragment.ARG_DELETE, delete);
-    	args.putString(HTMLDatePickerFragment.ARG_CANCEL, cancel);
-    	args.putString(HTMLDatePickerFragment.ARG_VALIDATE, validate);
-    	args.putString(HTMLDatePickerFragment.ARG_CALLBACK_ID, callbackID);
-    	
-    	HTMLDatePickerFragment fragment = new HTMLDatePickerFragment();
+    	args.putInt(CobaltDatePickerFragment.ARG_YEAR, year);
+    	args.putInt(CobaltDatePickerFragment.ARG_MONTH, month);
+    	args.putInt(CobaltDatePickerFragment.ARG_DAY, day);
+    	args.putString(CobaltDatePickerFragment.ARG_TITLE, title);
+    	args.putString(CobaltDatePickerFragment.ARG_DELETE, delete);
+    	args.putString(CobaltDatePickerFragment.ARG_CANCEL, cancel);
+    	args.putString(CobaltDatePickerFragment.ARG_VALIDATE, validate);
+    	args.putString(CobaltDatePickerFragment.ARG_CALLBACK_ID, callbackID);
+
+        CobaltDatePickerFragment fragment = new CobaltDatePickerFragment();
         fragment.setArguments(args);
         fragment.setListener(this);
 
