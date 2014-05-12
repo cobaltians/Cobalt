@@ -20,7 +20,7 @@
 {
 
     	// Do any additional setup after loading the view, typically from a nib.
-    self.isPullToRefreshActive=YES;
+    self.isPullToRefreshEnabled=YES;
     self.pageName=@"index.html";
     
     [super viewDidLoad];
