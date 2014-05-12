@@ -1,7 +1,7 @@
 var app={
     debug:true,
-    //debugInBrowser:true,
-    //debugInLogdiv:true,
+    debugInBrowser:true,
+    //debugInDiv:true,
 
     /* This code below, combined with the touch module of zepto helps in resolving issues
        with fastclick on android devices : some devices receive "tap" event before "click" and
@@ -19,14 +19,8 @@ var app={
                 $(this).addClass('touched');
                 clearTimeout(app.touchTimer);
                 app.touchTimer = setTimeout(touchup.bind(this),1000);
-
-                cobalt.divLog('should call touch handler')
-                touchHandler.bind(this)(e);
-                //touchHandler.apply(this,e);
-            }else{
-                cobalt.divLog('skipped, already has class')
+                touchHandler.apply(this,e);
             }
-
             if (preventDefault)
                 return false;
         }

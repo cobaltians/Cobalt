@@ -50,6 +50,9 @@ cobalt.tizen_adapter={
 				    cobalt.log('sending OK for a native back')
 			        cobalt.sendCallback(json.callback,{value : true});
 			    break;
+                default :
+                    cobalt.adapter.handleUnknown(json);
+                break;
 	        }
         }
     },
@@ -66,6 +69,7 @@ cobalt.tizen_adapter={
     },
 	//default behaviours
     handleCallback : cobalt.defaultBehaviors.handleCallback,
+	handleUnknown : cobalt.defaultBehaviors.handleUnknown,
     navigateToModal : cobalt.defaultBehaviors.navigateToModal,
 	dismissFromModal : cobalt.defaultBehaviors.dismissFromModal,
 	initStorage : cobalt.defaultBehaviors.initStorage

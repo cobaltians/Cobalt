@@ -38,11 +38,12 @@ cobalt.ios_adapter={
         var objToSend=cobalt.adapter.pipeline.shift();
 	    if (objToSend && !cobalt.debugInBrowser){
             cobalt.divLog('sending',objToSend)
-            document.location.href=encodeURIComponent("h@ploid#k&y"+JSON.stringify(objToSend));
+            document.location.href=encodeURIComponent("cob@l7#k&y"+JSON.stringify(objToSend));
         }
     },
 	//default behaviours
 	handleEvent : cobalt.defaultBehaviors.handleEvent,
+	handleUnknown : cobalt.defaultBehaviors.handleUnknown,
 	navigateToModal : cobalt.defaultBehaviors.navigateToModal,
 	dismissFromModal : cobalt.defaultBehaviors.dismissFromModal,
 	initStorage : cobalt.defaultBehaviors.initStorage

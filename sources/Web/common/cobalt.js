@@ -27,7 +27,7 @@ var cobalt={
     userEvents:{}, //objects of events defined by the user
 	debug:false,
 	debugInBrowser:false,
-	debugInLogdiv:false,
+	debugInDiv:false,
 
 	callbacks:{},//array of all callbacks by callbackID
 	lastCallbackId:0,
@@ -39,12 +39,12 @@ var cobalt={
     	if (options){
             this.debug = ( options.debug === true );
             this.debugInBrowser = ( options.debugInBrowser === true );
-            this.debugInLogdiv = ( options.debugInLogdiv === true );
+            this.debugInDiv = ( options.debugInDiv === true );
 
 		    if (options.events){
 		        this.userEvents=options.events
 	        }
-            if (cobalt.debugInLogdiv){
+            if (cobalt.debugInDiv){
 			    this.createLogDiv();
             }
 		}
@@ -85,7 +85,7 @@ var cobalt={
     //TODO change all dependencies
     divLog:function(){
         //TODO document this
-        if (cobalt.debugInLogdiv){
+        if (cobalt.debugInDiv){
 	        cobalt.createLogDiv();
             var logdiv=$('#cobalt_logdiv')
             if (logdiv.length){
@@ -264,8 +264,8 @@ var cobalt={
     /* internal, called from native */
     execute:function(json){
     	cobalt.divLog("received", json)
-        /*test if data.type exists, otherwise parse data or die silently */
-        if (json && ! json.type){
+        /*parse data if string, die silently if parsing error */
+		if (json && typeof json == "string"){
         	try{
                 json = JSON.parse(json);
             }catch(e){
@@ -281,33 +281,36 @@ var cobalt={
                     cobalt.adapter.handleCallback(json)
                     break;
 		        default:
-	        		cobalt.log('received unhandled data type : '+json.type)
+                    cobalt.adapter.handleUnknown(json)
 	        }
 	    }catch(e){
             cobalt.log('cobalt.execute failed : '+e)
         }
     },
 	//internal function to try calling callbackID if it's representing a string or a function.
-	tryToCallCallback:function(callback){
+	tryToCallCallback:function(json){
 		cobalt.divLog('trying to call web callback')
 		var callbackfunction=null;
-        if (cobalt.isNumber(callback.callback) && typeof cobalt.callbacks[callback.callback]==="function"){
+        if (cobalt.isNumber(json.callback) && typeof cobalt.callbacks[json.callback]==="function"){
 	        //if it's a number, a real JS callback should exist in cobalt.callbacks
-	        callbackfunction=cobalt.callbacks[callback.callback]
+	        callbackfunction=cobalt.callbacks[json.callback]
 
-		}else if (typeof callback.callback === "string"){
+		}else if (typeof json.callback === "string"){
 	        //if it's a string, check if function exists
-	        callbackfunction=eval(callback.callback)
+	        callbackfunction=eval(json.callback);
 		}
 		if (typeof callbackfunction === "function"){
 	        try{
-		        callbackfunction(callback.data)
+		        callbackfunction(json.data)
 	        }catch(e){
 		        cobalt.log('Failed calling callback : ' + e)
 	        }
+        }else{
+            cobalt.adapter.handleUnknown(json);
         }
 	},
 	//internal, call adapter.initStorage.
+    //TODO CLEAN THIS
 	initStorage:function(){
 		//only enable once if ok.
 		if (! cobalt.localStorageEnabled){
@@ -356,7 +359,9 @@ var cobalt={
 			cobalt.log("received event", json.event)
 		    if (cobalt.userEvents && typeof cobalt.userEvents[json.event] === "function"){
 				cobalt.userEvents[json.event](json.data,json.callback);
-		    }
+		    }else{
+                cobalt.adapter.handleUnknown(json)
+            }
 	    },
 		handleCallback:function(json){
 	        switch(json.callback){
@@ -364,6 +369,9 @@ var cobalt={
 				    cobalt.tryToCallCallback(json)
 			    break;
 	        }
+	    },
+        handleUnknown:function(json){
+			cobalt.log('received unhandled message ', json );
 	    },
 		navigateToModal:function(page, controller){
 			cobalt.send({ "type":"navigation", "action":"modal", data : { page :page, controller: controller }});

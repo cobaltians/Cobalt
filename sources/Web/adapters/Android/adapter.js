@@ -16,6 +16,9 @@ cobalt.android_adapter={
 				    cobalt.log('sending OK for a native back')
 			        cobalt.sendCallback(json.callback,{value : true});
 			    break;
+                default :
+                    cobalt.adapter.handleUnknown(json);
+                break;
 	        }
         }
     },
@@ -61,6 +64,7 @@ cobalt.android_adapter={
 		return cobalt.storage.enable();
 	},
 	//default behaviours
-    handleCallback : cobalt.defaultBehaviors.handleCallback
+    handleCallback : cobalt.defaultBehaviors.handleCallback,
+    handleUnknown : cobalt.defaultBehaviors.handleUnknown
 };
 cobalt.adapter=cobalt.android_adapter;
