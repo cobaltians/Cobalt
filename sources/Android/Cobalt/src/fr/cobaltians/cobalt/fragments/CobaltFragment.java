@@ -351,7 +351,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 * Sends script to be executed by JavaScript in Web view
 	 * @param jsonObj: JSONObject containing script.
 	 */
-	public void executeScriptInWebView(final JSONObject jsonObj) {
+	private void executeScriptInWebView(final JSONObject jsonObj) {
         if (jsonObj != null) {
 			if (mCobaltIsReady) {
 				mHandler.post(new Runnable() {
@@ -418,6 +418,12 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
         else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendCallback: callbackId is null or empty!");
     }
 
+    /**
+     * Calls the Web callback with an object containing response fields
+     * @param event: the name of the event.
+     * @param data: the object containing response fields
+     * @param callbackID: the Web callback.
+     */
     public void sendEvent(final String event, final JSONObject data, final String callbackID) {
         if (event != null
                 && event.length() > 0) {
@@ -435,6 +441,17 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
             }
         }
         else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendEvent: event is null or empty!");
+    }
+
+    /**
+     * Calls the Web callback with an object containing response fields
+     * @param message: the object containing response fields
+     */
+    public void sendMessage(final JSONObject message) {
+        if (message != null) {
+            executeScriptInWebView(message);
+        }
+        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendMessage: message is null !");
     }
 
 	/****************************************************************************************
