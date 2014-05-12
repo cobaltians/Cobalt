@@ -24,7 +24,7 @@
 		<p>A basic alert setting title and text</p>
  		<a href="javascript:;" id="test2">Show Alert</a><br/>
 
-		<p>Two custom buttons on this one.<br>
+		<p>Three custom buttons on this one.<br>
 		When alert is closed, web knows which button was clicked</p>
  		<a href="javascript:;" id="test3">Show Alert</a><br/>
 
@@ -106,7 +106,7 @@
 	            }
 
 	            app.touch('#test4',function(){
-		            cobalt.alert("Close me !", "You gonna close this alert !", myApp.buttons, { callback : 'myApp.callMeBack', alertId:55});
+		            cobalt.alert("Close me !", "You gonna close this alert !", buttons, { callback : 'myApp.callMeBack', alertId:55});
 		            return false;
 	            });
 
