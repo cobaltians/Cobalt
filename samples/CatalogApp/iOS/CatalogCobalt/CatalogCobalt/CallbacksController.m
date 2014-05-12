@@ -63,6 +63,12 @@ int i = 0;
         }
         return YES;
     }
+    if ([event isEqualToString:@"testEmoji"]) {
+        NSString * emojiString = [data objectForKey:@"str"];
+        NSDictionary *emojiDictionary = @{@"result" : emojiString};
+        [self sendCallback:callback withData : emojiDictionary];
+        return YES;
+    }
     return NO;
 }
 
