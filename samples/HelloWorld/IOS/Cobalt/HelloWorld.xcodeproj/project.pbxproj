@@ -29,6 +29,7 @@
 		8E0133091920F4CD0015682B /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E0132EE1920F47F0015682B /* Main_iPhone.storyboard */; };
 		8E01330D1920F81A0015682B /* HelloWorldTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E01330C1920F81A0015682B /* HelloWorldTests.m */; };
 		8E0133111920FF080015682B /* CobaltViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8E0133101920FF080015682B /* CobaltViewController.xib */; };
+		8E013313192108FE0015682B /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8E013312192108FE0015682B /* ViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,7 @@
 		8E0133031920F4890015682B /* HelloWorldTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "HelloWorldTests-Info.plist"; sourceTree = "<group>"; };
 		8E01330C1920F81A0015682B /* HelloWorldTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelloWorldTests.m; sourceTree = "<group>"; };
 		8E0133101920FF080015682B /* CobaltViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CobaltViewController.xib; sourceTree = "<group>"; };
+		8E013312192108FE0015682B /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,6 +178,7 @@
 				8E0132F41920F47F0015682B /* Images.xcassets */,
 				8E0132F61920F47F0015682B /* ViewController.h */,
 				8E0132F71920F47F0015682B /* ViewController.m */,
+				8E013312192108FE0015682B /* ViewController.xib */,
 				8E01330B1920F7C20015682B /* Supporting Files */,
 			);
 			path = HelloWorld;
@@ -279,6 +282,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8E0133081920F4CD0015682B /* Main_iPad.storyboard in Resources */,
+				8E013313192108FE0015682B /* ViewController.xib in Resources */,
 				8E0133091920F4CD0015682B /* Main_iPhone.storyboard in Resources */,
 				67A4436618649C9000F5C301 /* www in Resources */,
 				8E0133051920F4890015682B /* InfoPlist.strings in Resources */,
