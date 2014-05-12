@@ -26,7 +26,6 @@
         <h2>Some automatic testing</h2>
 
         <p>Button below and native button "Launch Tests" are launching some automatic testing, exchanging weird strings and object, to ensure everything works great.</p>
-
         <a href="javascript:;" id="button_2">Launch Tests</a><br/>
 
 
@@ -39,6 +38,7 @@
             
             Zepto(function($){
 
+                
 	            cobalt.init({
                     debug:app.debug,
                     debugInBrowser:app.debugInBrowser,
@@ -67,7 +67,7 @@
                         $('#result_1 span').html(data.result)
                     });
                 });
-
+                  
 
                 var testStrings=[
                     undefined, null, "",
@@ -76,7 +76,7 @@
                     "url &eactue;é&12;\n3#23:%20'\\u0020hop",
                     '{ obj_representation : "test"}',
                     "emoji \ue415 \\ue415 u{1f604}",
-                    "https://cob.s3.amazonaws.com/abcd.jpg?AWSAccessKeyId=1&Expires=1401263985&Signature=xbE%2B49MCgE7/WTKqnvwQ3f4zYmg%3D"
+                    "https://cob.s3.amazonaws.com/abcd.jpg?AWSAccessKeyId=1&Expires=1401263985&Signature=xbE%2B49MCgE7/WTKqnvwQ3f4zYmg%3D",
                 ];
 
                 //send a test string and check it is still the same when comming back
@@ -108,13 +108,14 @@
 
                 var testIndex=0;
                 var errorOccured=false;
-
+                
+                  
                 app.touch('#button_2',function(){
                     cobalt.log('launching tests')
-
+                    
                     testIndex=0;
                     errorOccured=false;
-
+                          
                     sendAndCheck(testIndex,next);
 
                 });

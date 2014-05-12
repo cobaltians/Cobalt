@@ -10,7 +10,7 @@
 
 #import "Cobalt.h"
 #import "CobaltViewController.h"
-#import "HPSimpleHybridViewController.h"
+#import "SimpleController.h"
 
 @implementation HPAppDelegate
 
@@ -21,7 +21,7 @@
     self.window.backgroundColor = [UIColor clearColor];
     
     [Cobalt setResourcePath:RESOURCE_PATH];
-    UIViewController * viewController = [CobaltViewController getViewControllerForController:@"HPSimpleHybridViewController" andPage:@"index.html"];
+    UIViewController * viewController = [CobaltViewController getViewControllerForController:@"SimpleController" andPage:@"index.html"];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
     self.window.rootViewController = navController;
     

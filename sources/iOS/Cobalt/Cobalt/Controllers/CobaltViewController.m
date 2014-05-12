@@ -860,7 +860,7 @@ NSString * webLayerPage;
         
         if (delegate) {
             alertView.tag = ++_alertViewCounter;
-            [alertCallbacks setObject:callback forKey:[NSString stringWithFormat:@"%d", alertView.tag]];
+            [alertCallbacks setObject:callback forKey:[NSString stringWithFormat:@"%ld", (long)alertView.tag]];
         }
         
         [alertView show];
