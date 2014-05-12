@@ -32,7 +32,7 @@
 #import "Cobalt.h"
 #import "iToast.h"
 
-#define haploidSpecialJSKey     @"h@ploid#k&y"
+#define haploidSpecialJSKey     @"cob@l7#k&y"
 
 // CONFIGURATION FILE
 #define confFileName            @"cobalt.conf"
