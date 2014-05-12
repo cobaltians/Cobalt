@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 #import "CobaltViewController.h"
 
-@interface ViewController : CobaltViewController
+@interface ViewController : CobaltViewController <CobaltDelegate>
 @end
