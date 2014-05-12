@@ -20,7 +20,6 @@
 		71B4B1D11885C8DF0027AC4F /* CobaltToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1C71885C8DF0027AC4F /* CobaltToast.m */; };
 		8E0132F81920F47F0015682B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E0132EB1920F47F0015682B /* AppDelegate.m */; };
 		8E0132FB1920F47F0015682B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8E0132F01920F47F0015682B /* InfoPlist.strings */; };
-		8E0132FC1920F47F0015682B /* HelloWorld-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8E0132F21920F47F0015682B /* HelloWorld-Info.plist */; };
 		8E0132FD1920F47F0015682B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E0132F41920F47F0015682B /* Images.xcassets */; };
 		8E0132FE1920F47F0015682B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E0132F51920F47F0015682B /* main.m */; };
 		8E0132FF1920F47F0015682B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E0132F71920F47F0015682B /* ViewController.m */; };
@@ -284,7 +283,6 @@
 				67A4436618649C9000F5C301 /* www in Resources */,
 				8E0133051920F4890015682B /* InfoPlist.strings in Resources */,
 				8E0132FB1920F47F0015682B /* InfoPlist.strings in Resources */,
-				8E0132FC1920F47F0015682B /* HelloWorld-Info.plist in Resources */,
 				8E0133111920FF080015682B /* CobaltViewController.xib in Resources */,
 				8E0133061920F4890015682B /* HelloWorldTests-Info.plist in Resources */,
 				8E0132FD1920F47F0015682B /* Images.xcassets in Resources */,
