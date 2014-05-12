@@ -23,4 +23,25 @@
     [self.navigationController setNavigationBarHidden:YES];
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark COBALT DELEGATE METHODS
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (BOOL)onUnhandledMessage:(NSDictionary *)message
+{
+    return NO;
+}
+
+- (BOOL)onUnhandledEvent:(NSString *)event withData:(NSDictionary *)data andCallback:(NSString *)callback
+{
+    return NO;
+}
+
+- (BOOL)onUnhandledCallback:(NSString *)callback withData:(NSDictionary *)data
+{
+    return NO;
+}
+
 @end
