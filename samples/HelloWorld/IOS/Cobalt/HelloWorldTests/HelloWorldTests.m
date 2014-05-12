@@ -8,11 +8,11 @@
 
 #import <XCTest/XCTest.h>
 
-@interface CobaltTests : XCTestCase
+@interface HelloWorldTests : XCTestCase
 
 @end
 
-@implementation CobaltTests
+@implementation HelloWorldTests
 
 - (void)setUp
 {

@@ -8,14 +8,27 @@
 
 #import "AppDelegate.h"
 
+#import "Cobalt.h"
+#import "CobaltViewController.h"
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
+    self.window.backgroundColor = [UIColor clearColor];
+    
+    [Cobalt setResourcePath:RESOURCE_PATH];
+    UIViewController * viewController = [CobaltViewController getViewControllerForController:@"ViewController" andPage:@"index.html"];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+    self.window.rootViewController = navController;
+    
+    [self.window makeKeyAndVisible];
+    
     return YES;
 }
+
 							
 - (void)applicationWillResignActive:(UIApplication *)application
 {
