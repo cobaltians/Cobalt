@@ -39,15 +39,13 @@ import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
 import fr.cobaltians.cobalt.customviews.PullToRefreshOverScrollWebview;
 import fr.cobaltians.cobalt.database.LocalStorageJavaScriptInterface;
 import fr.cobaltians.cobalt.webViewClients.ScaleWebViewClient;
-
 import com.handmark.pulltorefresh.library.LoadingLayoutProxy;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -58,6 +56,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.*;
@@ -65,11 +64,8 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
-
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -92,9 +88,9 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 
     protected ViewGroup mWebViewContainer;
 
-	protected OverScrollingWebView mWebView = null;
+	protected OverScrollingWebView mWebView;
     // Web view may having pull-to-refresh and/or infinite scroll features.
-    protected PullToRefreshOverScrollWebview mPullToRefreshWebView = null;
+    protected PullToRefreshOverScrollWebview mPullToRefreshWebView;
 
 	protected Handler mHandler = new Handler();
 	private ArrayList<JSONObject> mWaitingJavaScriptCallsQueue = new ArrayList<JSONObject>();
@@ -112,7 +108,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        mContext = activity.getBaseContext();
+        mContext = activity;
     }
 
     @Override
@@ -307,7 +303,8 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
         mWebView.setWebViewClient(scaleWebViewClient);
     }
 
-    private void allowAjax() {
+    @SuppressLint("NewApi")
+	private void allowAjax() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
             // TODO: see how to restrict only to local files
             mWebView.getSettings().setAllowUniversalAccessFromFileURLs(true);
@@ -362,20 +359,15 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 					@Override
 					public void run() {
 						// Line & paragraph separators are not JSON compliant but supported by JSONObject
-
 						String script = jsonObj.toString().replaceAll("[\u2028\u2029]", "");
+                        if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: " + script);
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                            //Since KitKat, messages are automatically urldecoded when received from the web. encoding them to fix this.
-                            try {
-                                script = java.net.URLEncoder.encode(script, "UTF-8").replaceAll("\\+","%20");
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                            }
+                            // Since KitKat, messages are automatically urldecoded when received from the web. encoding them to fix this.
+                            script = script.replaceAll("%","%25");
                         }
-                        String url = "javascript:cobalt.execute(" + script + ");";
 
-                        if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: " + script);
+                        String url = "javascript:cobalt.execute(" + script + ");";
                         mWebView.loadUrl(url);
 					}
 				});
@@ -742,12 +734,13 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	/*****************************************************************************************************************
 	 * NAVIGATION
 	 ****************************************************************************************************************/
+
 	private void push(String controller, String page) {
 		Intent intent = Cobalt.getInstance(mContext).getIntentForController(controller, page);
-		if(intent != null) {
+		if (intent != null) {
 			getActivity().startActivity(intent);
 		}
-		else if (BuildConfig.DEBUG) Log.w(Cobalt.TAG,  TAG + " - push: Unable to push " + controller + " controller");
+		else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG,  TAG + " - push: Unable to push " + controller + " controller");
 	}
 	
 	private void pop() {
@@ -763,10 +756,11 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			try {
 				JSONObject data = new JSONObject();
 				data.put(Cobalt.kJSPage, getPage());
-				data.put(Cobalt.kJSController, getActivity() != null ? getActivity().getClass().getName() : null);
+				data.put(Cobalt.kJSController, getActivity().getClass().getName());
 				sendCallback(callBackID, data);
 			} 
 			catch (JSONException exception) {
+                if (BuildConfig.DEBUG) Log.e(Cobalt.TAG,  TAG + " - presentModal: JSONException");
 				exception.printStackTrace();
 			}
 		}
@@ -811,11 +805,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 */
 	protected void onBackPressed(boolean allowedToBack) {
 		if (allowedToBack) {
-			CobaltActivity activity = (CobaltActivity) getActivity();
-			if (activity != null) {
-				activity.back();
-			}
-			else if(BuildConfig.DEBUG) Log.e(Cobalt.TAG,  TAG + " - onBackPressed: activity is null, cannot call back");
+            ((CobaltActivity) getActivity()).back();
 		}
 		else {
 			onBackDenied();
@@ -834,50 +824,51 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 * WEB LAYER
 	 **********************************************************************************************************************************/
 	private void showWebLayer(JSONObject data) {
-		if (getActivity() != null) {
-			try {
-				String page = data.getString(Cobalt.kJSPage);
-				double fadeDuration = data.optDouble(Cobalt.kJSWebLayerFadeDuration, 0.3);
+        try {
+            String page = data.getString(Cobalt.kJSPage);
+            double fadeDuration = data.optDouble(Cobalt.kJSWebLayerFadeDuration, 0.3);
 
-				Bundle bundle = new Bundle();
-				bundle.putString(Cobalt.kPage, page);
-				
-				CobaltWebLayerFragment webLayerFragment = getWebLayerFragment();
-				webLayerFragment.setArguments(bundle);
+            Bundle bundle = new Bundle();
+            bundle.putString(Cobalt.kPage, page);
 
-				android.support.v4.app.FragmentTransaction fragmentTransition;
-				fragmentTransition = getActivity().getSupportFragmentManager().beginTransaction();
+            CobaltWebLayerFragment webLayerFragment = getWebLayerFragment();
 
-				if (fadeDuration > 0) {
-					fragmentTransition.setCustomAnimations(	android.R.anim.fade_in, android.R.anim.fade_out, 
-															android.R.anim.fade_in, android.R.anim.fade_out);
-				}
-				else {
-					fragmentTransition.setTransition(FragmentTransaction.TRANSIT_NONE);
-				}
+            if (webLayerFragment != null) {
+                webLayerFragment.setArguments(bundle);
 
-				if (CobaltActivity.class.isAssignableFrom(getActivity().getClass())) {
-					// Dismiss current Web layer if one is already shown
-					CobaltActivity activity = (CobaltActivity) getActivity();
-					Fragment currentFragment = activity.getSupportFragmentManager().findFragmentById(activity.getFragmentContainerId());
-					if (CobaltWebLayerFragment.class.isAssignableFrom(currentFragment.getClass())) {
-						CobaltWebLayerFragment webLayerToDismiss = (CobaltWebLayerFragment) currentFragment;
-						webLayerToDismiss.dismissWebLayer(null);
-					}
+                FragmentTransaction fragmentTransition = getActivity().getSupportFragmentManager().beginTransaction();
 
-					// Shows Web layer
-					if (activity.findViewById(activity.getFragmentContainerId()) != null) {
-						fragmentTransition.add(activity.getFragmentContainerId(), webLayerFragment);
-						fragmentTransition.commit();
-					}
-					else if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - showWebLayer: fragment container not found");
-				}
-			} 
-			catch (JSONException exception) {
-				exception.printStackTrace();
-			}
-		}
-		else if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - showWebLayer: unable to show a Web layer from a fragment not attached to an activity!");
+                if (fadeDuration > 0) {
+                    fragmentTransition.setCustomAnimations( android.R.anim.fade_in, android.R.anim.fade_out,
+                                                            android.R.anim.fade_in, android.R.anim.fade_out);
+                }
+                else {
+                    fragmentTransition.setTransition(FragmentTransaction.TRANSIT_NONE);
+                }
+
+                if (CobaltActivity.class.isAssignableFrom(getActivity().getClass())) {
+                    // Dismiss current Web layer if one is already shown
+                    CobaltActivity activity = (CobaltActivity) getActivity();
+                    Fragment currentFragment = activity.getSupportFragmentManager().findFragmentById(activity.getFragmentContainerId());
+                    if (currentFragment != null
+                        && CobaltWebLayerFragment.class.isAssignableFrom(currentFragment.getClass())) {
+                        ((CobaltWebLayerFragment) currentFragment).dismissWebLayer(null);
+                    }
+
+                    // Shows Web layer
+                    if (activity.findViewById(activity.getFragmentContainerId()) != null) {
+                        fragmentTransition.add(activity.getFragmentContainerId(), webLayerFragment);
+                        fragmentTransition.commit();
+                    }
+                    else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - showWebLayer: fragment container not found");
+                }
+            }
+            else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - showWebLayer: getWebLayerFragment returned null!");
+        }
+        catch (JSONException exception) {
+            if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - showWebLayer: JSONException");
+            exception.printStackTrace();
+        }
 	}
 	
 	/**
@@ -895,6 +886,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 */
 	public void onWebLayerDismiss(final String page, final JSONObject data) {
 		mHandler.post(new Runnable() {
+
 			@Override
 			public void run() {
 				try {
@@ -905,6 +897,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 					sendEvent(Cobalt.JSEventWebLayerOnDismiss, jsonObj, null);
 				} 
 				catch (JSONException exception) {
+                    if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - onWebLayerDismiss: JSONException");
 					exception.printStackTrace();
 				}
 			}
@@ -914,6 +907,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	/******************************************************************************************************************
 	 * ALERT DIALOG
 	 *****************************************************************************************************************/
+
 	private void showAlertDialog(JSONObject data, final String callback) {		
 		try {
 			String title = data.optString(Cobalt.kJSAlertTitle);
@@ -921,15 +915,15 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			boolean cancelable = data.optBoolean(Cobalt.kJSAlertCancelable, false);
 			JSONArray buttons = data.has(Cobalt.kJSAlertButtons) ? data.getJSONArray(Cobalt.kJSAlertButtons) : new JSONArray();
 
-			AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-			alert.setTitle(title);
-			alert.setMessage(message);
+            AlertDialog alertDialog = new AlertDialog.Builder(mContext)
+                                                        .setTitle(title)
+                                                        .setMessage(message)
+                                                        .create();
+            alertDialog.setCancelable(cancelable);
 
-			AlertDialog mAlert = alert.create();
-			mAlert.setCancelable(cancelable);
-			
 			if (buttons.length() == 0) {
-				mAlert.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {	
+                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						if (callback != null) {
@@ -939,6 +933,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 								sendCallback(callback, data);
 							} 
 							catch (JSONException exception) {
+                                if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + ".AlertDialog - onClick: JSONException");
 								exception.printStackTrace();
 							}								
 						}
@@ -946,18 +941,20 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 				});
 			}
 			else {
-				int realSize = Math.min(buttons.length(), 3);
-				for (int i = 1 ; i <= realSize ; i++) {
-					mAlert.setButton(-i, buttons.getString(i-1), new DialogInterface.OnClickListener() {	
+				int buttonsLength = Math.min(buttons.length(), 3);
+				for (int i = 1 ; i <= buttonsLength ; i++) {
+                    alertDialog.setButton(-i, buttons.getString(i-1), new DialogInterface.OnClickListener() {
+
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							if (callback != null) {
 								try {
 									JSONObject data = new JSONObject();
-									data.put(Cobalt.kJSAlertButtonIndex, -which-1);
+									data.put(Cobalt.kJSAlertButtonIndex, -which - 1);
 									sendCallback(callback, data);
 								} 
 								catch (JSONException exception) {
+                                    if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + ".AlertDialog - onClick: JSONException");
 									exception.printStackTrace();
 								}
 							}
@@ -965,10 +962,11 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 					});
 				}
 			}
-			
-			mAlert.show();
+
+            alertDialog.show();
 		} 
 		catch (JSONException exception) {
+            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - showAlertDialog: JSONException");
 			exception.printStackTrace();
 		}
 	}
@@ -976,52 +974,53 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	/*************************************************************************************
      * DATE PICKER
      ************************************************************************************/
+
     protected void showDatePickerDialog(int year, int month, int day, String title, String delete, String cancel, String validate, String callbackID) {
     	Bundle args = new Bundle();
-    	args.putInt(HTMLDatePickerFragment.ARG_YEAR, year);
-    	args.putInt(HTMLDatePickerFragment.ARG_MONTH, month);
-    	args.putInt(HTMLDatePickerFragment.ARG_DAY, day);
-    	args.putString(HTMLDatePickerFragment.ARG_TITLE, title);
-    	args.putString(HTMLDatePickerFragment.ARG_DELETE, delete);
-    	args.putString(HTMLDatePickerFragment.ARG_CANCEL, cancel);
-    	args.putString(HTMLDatePickerFragment.ARG_VALIDATE, validate);
-    	args.putString(HTMLDatePickerFragment.ARG_CALLBACK_ID, callbackID);
-    	
-    	HTMLDatePickerFragment newFragment = new HTMLDatePickerFragment();
-        newFragment.setArguments(args);
-        newFragment.setListener(this);
-        
-        newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+    	args.putInt(CobaltDatePickerFragment.ARG_YEAR, year);
+    	args.putInt(CobaltDatePickerFragment.ARG_MONTH, month);
+    	args.putInt(CobaltDatePickerFragment.ARG_DAY, day);
+    	args.putString(CobaltDatePickerFragment.ARG_TITLE, title);
+    	args.putString(CobaltDatePickerFragment.ARG_DELETE, delete);
+    	args.putString(CobaltDatePickerFragment.ARG_CANCEL, cancel);
+    	args.putString(CobaltDatePickerFragment.ARG_VALIDATE, validate);
+    	args.putString(CobaltDatePickerFragment.ARG_CALLBACK_ID, callbackID);
+
+        CobaltDatePickerFragment fragment = new CobaltDatePickerFragment();
+        fragment.setArguments(args);
+        fragment.setListener(this);
+
+        fragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
     
     protected void sendDate(int year, int month, int day, String callbackID) {
     	try {
-    		JSONObject jsonDate = new JSONObject();
-    		if (year != 0 || month != 0 || day != 0) {	
-    			jsonDate.put(Cobalt.kJSYear, year);
-    			month++;
-    			jsonDate.put(Cobalt.kJSMonth, month);
-    			jsonDate.put(Cobalt.kJSDay, day);
+            if (year != -1
+                && month != -1
+                && day != -1) {
+                JSONObject date = new JSONObject();
+                date.put(Cobalt.kJSYear, year);
+                date.put(Cobalt.kJSMonth, ++month);
+                date.put(Cobalt.kJSDay, day);
+
+                sendCallback(callbackID, date);
     		}
-    		JSONObject jsonResponse = new JSONObject();
-    		jsonResponse.put(Cobalt.kJSType, Cobalt.JSTypeCallBack);
-			jsonResponse.put(Cobalt.kJSCallback, callbackID);
-			jsonResponse.put(Cobalt.kJSData, jsonDate);
-			executeScriptInWebView(jsonResponse);
-		} catch (JSONException e) {
+            else {
+                sendCallback(callbackID, null);
+            }
+		}
+        catch (JSONException e) {
+            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendDate: JSONException");
 			e.printStackTrace();
 		}
     }
 
     /********************************************************
-     * External Url
+     * OPEN EXTERNAL URL
      ********************************************************/
-    private void openExternalUrl(String url) {
-        if (url != null) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(intent);
-        }
 
+    private void openExternalUrl(String url) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 
     /******************************************************************************************************************************
@@ -1030,6 +1029,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	
 	/**
 	 * Customizes pull-to-refresh loading view.
+     * Must be called only after super.onStart().
 	 * @param pullLabel: text shown when user pulling
 	 * @param refreshingLabel: text shown while refreshing
 	 * @param releaseLabel: text shown when refreshed
@@ -1038,27 +1038,29 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 * @details loadingDrawable animation or labels text color customization must be done in the layout.
 	 * @example ptr:ptrAnimationStyle="flip|rotate"
 	 */
-	protected void setCustomTitlesAndImage(	String pullLabel, String refreshingLabel, String releaseLabel, String lastUpdatedLabel, 
-											Drawable loadingDrawable, Typeface typeface) {
-		LoadingLayoutProxy loadingLayoutProxy = ((LoadingLayoutProxy) mPullToRefreshWebView.getLoadingLayoutProxy());
-		if (lastUpdatedLabel != null) {
-			loadingLayoutProxy.setLastUpdatedLabel(lastUpdatedLabel);
-		}
-		if (pullLabel != null) {
-			loadingLayoutProxy.setPullLabel(pullLabel);
-		}
-		if (refreshingLabel != null) {
-			loadingLayoutProxy.setRefreshingLabel(refreshingLabel);
-		}
-		if (releaseLabel != null) {
-			loadingLayoutProxy.setReleaseLabel(releaseLabel);
-		}
-		if (loadingDrawable != null) {
-			loadingLayoutProxy.setLoadingDrawable(loadingDrawable);
-		}
-		if (typeface != null) {
-			loadingLayoutProxy.setTextTypeface(typeface);
-		}
+	protected void setCustomTitlesAndImage(String pullLabel, String refreshingLabel, String releaseLabel, String lastUpdatedLabel, Drawable loadingDrawable, Typeface typeface) {
+        if (mPullToRefreshWebView != null) {
+            LoadingLayoutProxy loadingLayoutProxy = ((LoadingLayoutProxy) mPullToRefreshWebView.getLoadingLayoutProxy());
+            if (lastUpdatedLabel != null) {
+                loadingLayoutProxy.setLastUpdatedLabel(lastUpdatedLabel);
+            }
+            if (pullLabel != null) {
+                loadingLayoutProxy.setPullLabel(pullLabel);
+            }
+            if (refreshingLabel != null) {
+                loadingLayoutProxy.setRefreshingLabel(refreshingLabel);
+            }
+            if (releaseLabel != null) {
+                loadingLayoutProxy.setReleaseLabel(releaseLabel);
+            }
+            if (loadingDrawable != null) {
+                loadingLayoutProxy.setLoadingDrawable(loadingDrawable);
+            }
+            if (typeface != null) {
+                loadingLayoutProxy.setTextTypeface(typeface);
+            }
+        }
+        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - setCustomTitlesAndImage: Pull-to-refresh must be active and method called after super.onStart()!");
 	}
 	
 	/**
@@ -1066,26 +1068,21 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 * @param text: text of last updated label
 	 */
 	protected void setLastUpdatedLabel(String text) {
-		LoadingLayoutProxy loadingLayoutProxy = (LoadingLayoutProxy) mPullToRefreshWebView.getLoadingLayoutProxy();
-		if (text != null) {
-			loadingLayoutProxy.setLastUpdatedLabel(text);
-		}
+        if (mPullToRefreshWebView != null) {
+            LoadingLayoutProxy loadingLayoutProxy = (LoadingLayoutProxy) mPullToRefreshWebView.getLoadingLayoutProxy();
+            if (text != null) {
+                loadingLayoutProxy.setLastUpdatedLabel(text);
+            }
+        }
+        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - setLastUpdatedLabel: Pull-to-refresh must be active!");
 	}
 	
 	private void refreshWebView() {
 		mHandler.post(new Runnable() {
+
 			@Override
 			public void run() {
-				try {
-					JSONObject jsonObj = new JSONObject();
-					jsonObj.put(Cobalt.kJSType, Cobalt.JSTypeEvent);
-					jsonObj.put(Cobalt.kJSEvent, Cobalt.JSEventPullToRefresh);
-					jsonObj.put(Cobalt.kJSCallback, Cobalt.JSCallbackPullToRefreshDidRefresh);
-					executeScriptInWebView(jsonObj);
-				} 
-				catch (JSONException exception) {
-					exception.printStackTrace();
-				}
+                sendEvent(Cobalt.JSEventPullToRefresh, null, Cobalt.JSCallbackPullToRefreshDidRefresh);
 			}
 		});
 	}
@@ -1106,7 +1103,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 ***********************************************************************************/
 	
 	@Override
-	public void onOverScrolled(int scrollX, int scrollY,int oldscrollX, int oldscrollY) {
+	public void onOverScrolled(int scrollX, int scrollY, int oldscrollX, int oldscrollY) {
 		float density = mContext.getResources().getDisplayMetrics().density;
 		// Round density in case it is too precise (and big)
 		if (density > 1) {
@@ -1123,20 +1120,13 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 		if (isInfiniteScrollActive()
 			&& ! mIsInfiniteScrollRefreshing) {
 			mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        JSONObject jsonObj = new JSONObject();
-                        jsonObj.put(Cobalt.kJSType, Cobalt.JSTypeEvent);
-                        jsonObj.put(Cobalt.kJSEvent, Cobalt.JSEventInfiniteScroll);
-                        jsonObj.put(Cobalt.kJSCallback, Cobalt.JSCallbackInfiniteScrollDidRefresh);
-                        executeScriptInWebView(jsonObj);
-                        mIsInfiniteScrollRefreshing = true;
-                    } catch (JSONException exception) {
-                        exception.printStackTrace();
-                    }
-                }
-            });
+
+				@Override
+				public void run() {
+                    sendEvent(Cobalt.JSEventInfiniteScroll, null, Cobalt.JSCallbackInfiniteScrollDidRefresh);
+                    mIsInfiniteScrollRefreshing = true;
+				}
+			});
 		}
 	}
 	
@@ -1150,10 +1140,9 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 */
 	protected abstract void onInfiniteScrollRefreshed();
 	
-	
-    /*****************************************************************
+    /******************************************************
 	 * CONFIGURATION
-	 ****************************************************************/
+	 ******************************************************/
 	
 	private boolean isPullToRefreshActive() {
 		Bundle args = getArguments();
@@ -1185,10 +1174,14 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
         }
     }
 
+    /**************************************************************
+     * SCALE LISTENER
+     **************************************************************/
+
 	/**
 	 * Fired by {@link ScaleWebViewClient} to inform Web view its scale changed (pull-to-refresh need to know that to show its header appropriately).
 	 */
 	public void notifyScaleChange(float oldScale, float newScale) {
-		mPullToRefreshWebView.setWebviewScale(newScale);
+        if (isPullToRefreshActive()) mPullToRefreshWebView.setWebviewScale(newScale);
 	}
 }

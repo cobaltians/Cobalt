@@ -453,54 +453,69 @@ var cobalt={
 		}
 	}
 
-};cobalt.ios_adapter={
+};cobalt.android_adapter={
 	//
-	//IOS ADAPTER
+	//ANDROID ADAPTER
 	//
-    pipeline:[], //array of sends waiting to go to native
-    pipelineRunning:false,//bool to knwow if new sends should go to pipe or go to native
-
 	init:function(){
-		cobalt.platform="iOs";
+		cobalt.platform="Android";
 	},
-	// handle callbacks sent by native side
-    handleCallback:function(json){
-        switch(json.callback){
-            case "callbackSimpleAcquitment":
-                cobalt.divLog("received message acquitment")
-                cobalt.adapter.unpipe();
-                if (cobalt.adapter.pipeline.length==0){
-                    cobalt.divLog('end of ios message stack')
-                    cobalt.adapter.pipelineRunning=false;
-                }
-                break;
-	        default:
-			    cobalt.tryToCallCallback(json)
-		    break;
+	// handle events sent by native side
+    handleEvent:function(json){
+		cobalt.log("received event", json.event)
+        if (cobalt.userEvents && typeof cobalt.userEvents[json.event] === "function"){
+			cobalt.userEvents[json.event](json.data,json.callback);
+	    }else{
+	        switch (json.event){
+		        case "onBackButtonPressed":
+				    cobalt.log('sending OK for a native back')
+			        cobalt.sendCallback(json.callback,{value : true});
+			    break;
+	        }
         }
     },
     //send native stuff
     send:function(obj){
-	    cobalt.divLog('adding to ios message stack', obj)
-        cobalt.adapter.pipeline.push(obj);
-        if (!cobalt.adapter.pipelineRunning){
-            cobalt.adapter.unpipe()
-        }
-    },
-    //unpipe elements when receiving a ACK from ios.
-    unpipe:function(){
-        cobalt.adapter.pipelineRunning=true;
-        var objToSend=cobalt.adapter.pipeline.shift();
-	    if (objToSend && !cobalt.debugInBrowser){
-            cobalt.divLog('sending',objToSend)
-            document.location.href=encodeURIComponent("h@ploid#k&y"+JSON.stringify(objToSend));
-        }
-    },
-	//default behaviours
-	handleEvent : cobalt.defaultBehaviors.handleEvent,
-	navigateToModal : cobalt.defaultBehaviors.navigateToModal,
-	dismissFromModal : cobalt.defaultBehaviors.dismissFromModal,
-	initStorage : cobalt.defaultBehaviors.initStorage
+        if (obj && !cobalt.debugInBrowser){
+        	cobalt.divLog('sending',obj)
+	        try{	        	
+		        Android.handleMessageSentByJavaScript(JSON.stringify(obj));
+	        }catch (e){
+		        cobalt.log('ERROR : cant connect to native')
+	        }
 
+        }
+    },
+	//modal stuffs. really basic on ios, more complex on android.
+	navigateToModal:function(page, controller){
+		cobalt.send({ "type":"navigation", "action":"modal", data : { page :page, controller: controller }}, 'cobalt.adapter.storeModalInformations');
+	},
+	dismissFromModal:function(){
+        var dismissInformations= cobalt.storage.getItem("dismissInformations","json");
+        if (dismissInformations && dismissInformations.page && dismissInformations.controller){
+            cobalt.send({ "type":"navigation", "action":"dismiss", data : { page : dismissInformations.page, controller:dismissInformations.controller }});
+            cobalt.storage.removeItem("dismissInformations");
+        }else{
+            cobalt.log("WANRING : dismissInformations are not available in storage")
+        }
+
+	},
+	storeModalInformations:function(params){
+		cobalt.divLog("storing informations for the dismiss :", params)
+		cobalt.storage.setItem("dismissInformations",params, "json")
+
+	},
+	//localStorage stuff
+	initStorage:function(){
+		//on android, try to bind window.localStorage to Android LocalStorage
+		try{
+			window.localStorage=LocalStorage;
+		}catch(e){
+			cobalt.log("LocalStorage WARNING : can't find android class LocalStorage. switching to raw localStorage")
+		}
+		return cobalt.storage.enable();
+	},
+	//default behaviours
+    handleCallback : cobalt.defaultBehaviors.handleCallback
 };
-cobalt.adapter=cobalt.ios_adapter;
+cobalt.adapter=cobalt.android_adapter;
