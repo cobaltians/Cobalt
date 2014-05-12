@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+    </head>
+    <body class="green">
+
+  		<a href="javascript:;" class="pop">POP</a><br/>
+
+		<p>This is a full example of pullToRefresh and infiniteScroll working together.</p>
+
+        <p>As you can see pullToRefresh header is handled by cobalt, but infiniteScroll footer is handled on the web side. We will enhance this one day.</p>
+
+		<div id="list">
+			<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>
+		</div>
+   		<p id="loading"  style="padding:10px; text-align:center; display:none;">Chargement...</p>
+
+		<br/>
+
+
+		<script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="../platform/cobalt.js"></script>
+        <script type="text/javascript" src="js/setTimeoutWorkaround.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+
+		<script>
+
+            Zepto(function($){
+		        cobalt.init({
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInLogdiv:app.debugInLogdiv,
+                    events:{
+                       "pullToRefresh" : function(data, calllback){
+                               cobalt.log('native asked to refresh');
+	                           $('#list').html('');
+	                           setTimeout(function(){
+                                  
+		                            $('#list').html('<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>');
+		                           cobalt.sendCallback(calllback);
+	                           },1000, true);
+                        },
+                          "infiniteScroll" : function(data, calllback){
+                                  cobalt.log('native asked to load more content');
+                                  $('#loading').show();
+                                  setTimeout(function(){
+                                     $('#loading').hide();
+                                     $('#list').append('<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>');
+                                     cobalt.sendCallback(calllback);
+                                  },1000, true);
+                          }
+                                  
+                    }
+	            });
+
+
+	            app.touch('a.pop',function(){
+                    cobalt.navigate('pop');
+                });
+
+            })
+        </script>
+
+    </body>
+</html>
