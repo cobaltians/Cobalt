@@ -142,7 +142,7 @@ public class CobaltFlipperFragment extends CobaltFragment implements IGestureLis
 						jsonObj.put(Cobalt.kJSEvent, JSEventSwipeRight);
 						if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - swipe: previous");
 					}
-					executeScriptInWebView(jsonObj);
+					sendMessage(jsonObj);
 				}
 				catch (JSONException exception) {
 					exception.printStackTrace();

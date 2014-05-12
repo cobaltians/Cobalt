@@ -1,13 +1,8 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
-import android.view.View;
 import fr.cobaltians.cobaltcatalog.R;
 
-import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.fragments.CobaltFragment;
-
-import android.util.Log;
-import android.webkit.JavascriptInterface;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,15 +15,6 @@ public class SimpleHybridFragment extends CobaltFragment {
 	{
 		return R.layout.simple_hybrid_fragment;
 	}
-	
-    /*
-	@Override
-	protected void setUpViews(View rootView)
-	{
-        super.setUpViews(rootView);
-		//webView = (OverScrollingWebView) rootView.findViewById(R.id.webView);
-	}*/
-
 
 	private JSONArray generateBigData(int size)
 	{
