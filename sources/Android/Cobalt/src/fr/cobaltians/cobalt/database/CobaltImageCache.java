@@ -29,8 +29,6 @@
 
 package fr.cobaltians.cobalt.database;
 
-import fr.cobaltians.cobalt.BuildConfig;
-
 import fr.cobaltians.cobalt.Cobalt;
 
 import android.graphics.Bitmap;
@@ -65,7 +63,7 @@ public class CobaltImageCache {
             && image != null) {
             mMapImages.put(id, image);
         }
-        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - setImage: id and image could not be null!");
+        else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - setImage: id and image could not be null!");
 	}
 	
 	public Bitmap getImage(String id) {
@@ -73,7 +71,7 @@ public class CobaltImageCache {
             return mMapImages.get(id);
         }
         else {
-            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getImage: id could not be null!");
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - getImage: id could not be null!");
             return null;
         }
 	}
@@ -93,7 +91,7 @@ public class CobaltImageCache {
             }
         }
         else {
-            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - toBase64: id could not be null!");
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - toBase64: id could not be null!");
         }
 
         return encodeImage;

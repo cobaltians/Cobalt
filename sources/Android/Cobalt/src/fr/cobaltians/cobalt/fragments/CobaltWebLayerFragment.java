@@ -29,7 +29,6 @@
 
 package fr.cobaltians.cobalt.fragments;
 
-import fr.cobaltians.cobalt.BuildConfig;
 import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.activities.CobaltActivity;
 
@@ -94,7 +93,7 @@ public class CobaltWebLayerFragment extends CobaltFragment {
 			}
 		} 
 		catch (JSONException exception) {
-			if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: cannot handle message for JSON \n" + message);
+			if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: cannot handle message for JSON \n" + message);
 			exception.printStackTrace();
 		}
 		
@@ -149,7 +148,7 @@ public class CobaltWebLayerFragment extends CobaltFragment {
 			fTransition.remove(this);
 			fTransition.commit();
 		}
-		else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - dismissWebLayer: Web layer is not attached to an activity.");
+		else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - dismissWebLayer: Web layer is not attached to an activity.");
 	}
 
 	private void onDismiss() {

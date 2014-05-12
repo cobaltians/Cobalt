@@ -29,7 +29,6 @@
 
 package fr.cobaltians.cobalt.activities;
 
-import fr.cobaltians.cobalt.BuildConfig;
 import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.fragments.CobaltFragment;
 import fr.cobaltians.cobalt.R;
@@ -73,9 +72,9 @@ public abstract class CobaltActivity extends FragmentActivity {
                 if (findViewById(getFragmentContainerId()) != null) {
                     getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), fragment).commit();
                 }
-                else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - onCreate: fragment container not found");
+                else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - onCreate: fragment container not found");
             }
-            else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - onCreate: getFragment() returned null");
+            else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - onCreate: getFragment() returned null");
 		}
 	}
 
@@ -119,9 +118,9 @@ public abstract class CobaltActivity extends FragmentActivity {
         }
         else {
             super.onBackPressed();
-            if (BuildConfig.DEBUG) Log.i(Cobalt.TAG,    TAG + " - onBackPressed: no fragment container found \n"
-                                                        + " or fragment found is not an instance of CobaltFragment. \n"
-                                                        + "Call super.onBackPressed()");
+            if (Cobalt.DEBUG) Log.i(Cobalt.TAG,     TAG + " - onBackPressed: no fragment container found \n"
+                                                    + " or fragment found is not an instance of CobaltFragment. \n"
+                                                    + "Call super.onBackPressed()");
         }
 	}
 
@@ -156,6 +155,6 @@ public abstract class CobaltActivity extends FragmentActivity {
         if (fragment != null) {
             fragment.onWebLayerDismiss(page, data);
 		}
-        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG,   TAG + " - onWebLayerDismiss: no fragment container found");
+        else if (Cobalt.DEBUG) Log.e(Cobalt.TAG,   TAG + " - onWebLayerDismiss: no fragment container found");
 	}
 }
