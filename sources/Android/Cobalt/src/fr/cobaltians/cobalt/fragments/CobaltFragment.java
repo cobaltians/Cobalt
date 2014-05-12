@@ -39,12 +39,11 @@ import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
 import fr.cobaltians.cobalt.customviews.PullToRefreshOverScrollWebview;
 import fr.cobaltians.cobalt.database.LocalStorageJavaScriptInterface;
 import fr.cobaltians.cobalt.webViewClients.ScaleWebViewClient;
-
 import com.handmark.pulltorefresh.library.LoadingLayoutProxy;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -65,10 +64,8 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -306,7 +303,8 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
         mWebView.setWebViewClient(scaleWebViewClient);
     }
 
-    private void allowAjax() {
+    @SuppressLint("NewApi")
+	private void allowAjax() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
             // TODO: see how to restrict only to local files
             mWebView.getSettings().setAllowUniversalAccessFromFileURLs(true);
