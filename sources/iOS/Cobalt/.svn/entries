@@ -1,37 +1,0 @@
-10
-
-dir
-30795
-https://guillaume@pluton.haploid.fr/svn/haploid/svn/Externals/HPNativeBridge/iOS/branches/0.2/HPNativeBridge
-https://guillaume@pluton.haploid.fr/svn/haploid
-
-
-
-2013-11-18T08:21:25.540263Z
-30197
-guillaume
-has-props
-
-
-svn:externals
-
-
-
-
-
-
-
-
-
-
-fc0c6543-89c8-464d-ab6c-d0866aaddc71
-
-Javascript
-dir
-
-HPNativeBridge.xcodeproj
-dir
-
-HPNativeBridge
-dir
-
