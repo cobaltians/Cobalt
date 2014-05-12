@@ -269,11 +269,11 @@ var cobalt={
         	try{
                 json = JSON.parse(json);
             }catch(e){
-                json = {};
+				cobalt.divLog("can't parse string to JSON");
             }
         }
         try{
-	        switch (json.type){
+	        switch (json && json.type){
 	        	case "event":
                     cobalt.adapter.handleEvent(json)
 	                break;

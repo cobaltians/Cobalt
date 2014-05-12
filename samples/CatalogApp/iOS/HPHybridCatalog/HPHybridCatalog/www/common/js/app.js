@@ -1,6 +1,6 @@
 var app={
     debug:true,
-    //debugInBrowser:true,
+    debugInBrowser:true,
     //debugInDiv:true,
 
     /* This code below, combined with the touch module of zepto helps in resolving issues
