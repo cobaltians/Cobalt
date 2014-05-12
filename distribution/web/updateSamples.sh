@@ -6,4 +6,4 @@ cp iOs/* ../../samples/HelloWorld/iOs/Cobalt/www/js/cobalt/
 
 ##updating Catalog
 cp Android/* ../../samples/CatalogApp/Android/CobaltCatalog/assets/www/platform
-cp iOS/* ../../samples/CatalogApp/iOS/HPHybridCatalog/HPHybridCatalog/www/platform
+cp iOS/* ../../samples/CatalogApp/iOS/CatalogCobalt/CatalogCobalt/www/platform
