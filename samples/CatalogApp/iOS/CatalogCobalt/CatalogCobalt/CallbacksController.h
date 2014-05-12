@@ -10,7 +10,7 @@
 
 @interface CallbacksController : CobaltViewController<CobaltDelegate>
 
-@property (nonatomic,retain) NSDictionary* dataAuto;
+@property (nonatomic,retain) NSArray* dataAuto;
 - (IBAction)DoSomeMaths:(id)sender;
 - (IBAction)AutoTest:(id)sender;
 @end
