@@ -790,6 +790,12 @@ NSString * webLayerPage;
         // If nib not defined in configuration file, use same as class!
         if(! nib) {
             nib = class;
+            
+            //if nib file does no exists, use default one i.e. CobaltViewController.xib
+            if([[NSBundle mainBundle] pathForResource:nib ofType:@"nib"] == nil)
+            {
+                nib = @"CobaltViewController";
+            }
         }
         
         if ([CobaltViewController isValidViewControllerWithClass:class andNib:nib]) {
