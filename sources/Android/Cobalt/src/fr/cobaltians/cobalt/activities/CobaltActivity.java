@@ -147,7 +147,7 @@ public abstract class CobaltActivity extends FragmentActivity {
 	 *****************************************************************************************************************/
 
 	/**
-	 * Called when a {@link HTMLPopUpWebview} has been dismissed. 
+	 * Called when a {@link CobaltWebLayerFragment} has been dismissed.
 	 * This method may be overridden in subclasses.
 	 */
 	public void onWebLayerDismiss(String page, JSONObject data) {

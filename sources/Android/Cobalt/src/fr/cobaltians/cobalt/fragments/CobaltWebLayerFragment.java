@@ -32,8 +32,8 @@ package fr.cobaltians.cobalt.fragments;
 import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.activities.CobaltActivity;
 
-import android.app.FragmentTransaction;
 import android.graphics.Color;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
@@ -49,18 +49,17 @@ public class CobaltWebLayerFragment extends CobaltFragment {
 
     protected static final String TAG = CobaltWebLayerFragment.class.getSimpleName();
 
-	private JSONObject mData = null;
+	private JSONObject mData;
 	
 	/******************************************************
 	 * LIFECYCLE
 	 *****************************************************/
+
 	@Override
 	public void onStart() {
 		super.onStart();
 		
-		if(mWebView != null) {
-			mWebView.setBackgroundColor(Color.TRANSPARENT);
-		}
+		if (mWebView != null) mWebView.setBackgroundColor(Color.TRANSPARENT);
 	}
 
 	@Override
@@ -77,15 +76,15 @@ public class CobaltWebLayerFragment extends CobaltFragment {
 	@JavascriptInterface
 	public boolean handleMessageSentByJavaScript(String message) {
 		try {
-			final JSONObject jsonObj = new JSONObject(message);
-			String type = jsonObj.optString(Cobalt.kJSType);
+			final JSONObject jsonObject = new JSONObject(message);
+			String type = jsonObject.optString(Cobalt.kJSType);
 			if (type.equals(Cobalt.JSTypeWebLayer)) {
-				String action = jsonObj.getString(Cobalt.kJSAction);
+				String action = jsonObject.getString(Cobalt.kJSAction);
 				if (action.equals(Cobalt.JSActionWebLayerDismiss)) {
 					mHandler.post(new Runnable() {
 						@Override
 						public void run() {
-							dismissWebLayer(jsonObj);
+							dismissWebLayer(jsonObject);
 						}
 					});
 					return true;
@@ -93,7 +92,7 @@ public class CobaltWebLayerFragment extends CobaltFragment {
 			}
 		} 
 		catch (JSONException exception) {
-			if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: cannot handle message for JSON \n" + message);
+			if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: JSONException");
 			exception.printStackTrace();
 		}
 		
@@ -106,8 +105,7 @@ public class CobaltWebLayerFragment extends CobaltFragment {
 	}
 
 	@Override
-	protected boolean onUnhandledEvent(String name, JSONObject data,
-			String callback) {
+	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
 		return false;
 	}
 	
@@ -116,37 +114,39 @@ public class CobaltWebLayerFragment extends CobaltFragment {
 	
 	@Override
 	protected void onBackPressed(boolean allowedToBack) {
-		if(allowedToBack) {
+		if (allowedToBack) {
+            if (Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - onBackPressed: onBackPressed event allowed by Web view");
 			dismissWebLayer(null);
 		}
+        else if (Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - onBackPressed: onBackPressed event denied by Web view");
 	}
 	
 	/********************************************************************************************
 	 * DISMISS
 	 *******************************************************************************************/
+
 	protected void dismissWebLayer(JSONObject jsonObject) {
 		if (getActivity() != null) {
-			android.support.v4.app.FragmentTransaction fTransition;
-			fTransition = getActivity().getSupportFragmentManager().beginTransaction();
+			FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
 			
-			if(jsonObject != null) {
+			if (jsonObject != null) {
 				mData = jsonObject.optJSONObject(Cobalt.kJSData);
 				double fadeDuration = jsonObject.optDouble(Cobalt.kJSWebLayerFadeDuration, 0);
 				
-				if(fadeDuration > 0) {
-					fTransition.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, 
-													android.R.anim.fade_in, android.R.anim.fade_out);
+				if (fadeDuration > 0) {
+                    fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out,
+													        android.R.anim.fade_in, android.R.anim.fade_out);
 				}
 				else {
-					fTransition.setTransition(FragmentTransaction.TRANSIT_NONE);
+                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_NONE);
 				}
 			}
 			else {
-				fTransition.setTransition(FragmentTransaction.TRANSIT_NONE);
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_NONE);
 			}
-			
-			fTransition.remove(this);
-			fTransition.commit();
+
+            fragmentTransaction.remove(this);
+            fragmentTransaction.commit();
 		}
 		else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - dismissWebLayer: Web layer is not attached to an activity.");
 	}
@@ -154,23 +154,7 @@ public class CobaltWebLayerFragment extends CobaltFragment {
 	private void onDismiss() {
 		if (CobaltActivity.class.isAssignableFrom(getActivity().getClass())) {
 			CobaltActivity activity = (CobaltActivity) getActivity();
-			activity.onWebLayerDismiss(getPage(), getDataForDismiss());
+			activity.onWebLayerDismiss(getPage(), mData);
 		}
-	}
-	
-	public JSONObject getDataForDismiss() {
-		return mData;
-	}
-
-	@Override
-	protected void onPullToRefreshRefreshed() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void onInfiniteScrollRefreshed() {
-		// TODO Auto-generated method stub
-		
 	}
 }

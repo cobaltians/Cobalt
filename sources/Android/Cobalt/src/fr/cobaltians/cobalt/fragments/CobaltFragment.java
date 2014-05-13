@@ -330,7 +330,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 * Called when fragment is about to rotate or be destroyed
 	 * This method SHOULD NOT be overridden in subclasses.
 	 */
-	protected void removeWebViewFromPlaceholder() {
+	private void removeWebViewFromPlaceholder() {
 		if (mWebViewContainer != null) {
 			if (isPullToRefreshActive()) {
                 mWebViewContainer.removeView(mPullToRefreshWebView);
@@ -483,7 +483,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 				
 				// COBALT IS READY
 				else if (type.equals(Cobalt.JSTypeCobaltIsReady)) {
-					onReady();
+					onCobaltIsReady();
 					return true;
 				}
 				
@@ -620,17 +620,20 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 		return false;
 	}
 	
-	protected void onReady() {
+	private void onCobaltIsReady() {
 		if (Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - onReady");
 
 		mCobaltIsReady = true;
 		executeWaitingCalls();
+        onReady();
 	}
-	
+
+    protected void onReady() { }
+
 	private boolean handleCallback(String callback, JSONObject data) {
 		try {
 			if(callback.equals(Cobalt.JSCallbackOnBackButtonPressed)) {
-				onBackPressed(data.getBoolean(Cobalt.kJSValue));
+                onBackPressed(data.getBoolean(Cobalt.kJSValue));
 				return true;
 			}
 			else if (callback.equals(Cobalt.JSCallbackPullToRefreshDidRefresh)) {
@@ -759,7 +762,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	}
 	
 	private void pop() {
-		onBackPressed(true);
+        onBackPressed(true);
 	}
 	
 	private void presentModal(String controller, String page, String callBackID) {
@@ -814,25 +817,17 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	
 	/**
 	 * Called when the Web view allowed or not the onBackPressed event.
-	 * @param allowedToBack: 	if true, the onBackPressed method of activity will be called, 
-	 * 							onBackDenied() will be called otherwise
-	 * @details This method should not be overridden in subclasses
+	 * @param allowedToBack:    true if the WebView allowed the onBackPressed event
+     *                          false otherwise.
+	 * @details if allowedToBack is true, the onBackPressed method of the activity will be called.
+     * This method should not be overridden in subclasses.
 	 */
 	protected void onBackPressed(boolean allowedToBack) {
-		if (allowedToBack) {
+        if (allowedToBack) {
+            if (Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - onBackPressed: onBackPressed event allowed by Web view");
             ((CobaltActivity) getActivity()).back();
-		}
-		else {
-			onBackDenied();
-		}
-	}
-	
-	/**
-	 * Called when onBackPressed event is denied by the Web view.
-	 * @details This method may be overridden in subclasses.
-	 */
-	protected void onBackDenied() {
-		if(Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - onBackDenied: onBackPressed event denied by Web view");
+        }
+        else if (Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - onBackPressed: onBackPressed event denied by Web view");
 	}
 	
 	/***********************************************************************************************************************************
@@ -990,7 +985,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
      * DATE PICKER
      ************************************************************************************/
 
-    protected void showDatePickerDialog(int year, int month, int day, String title, String delete, String cancel, String validate, String callbackID) {
+    private void showDatePickerDialog(int year, int month, int day, String title, String delete, String cancel, String validate, String callbackID) {
     	Bundle args = new Bundle();
     	args.putInt(CobaltDatePickerFragment.ARG_YEAR, year);
     	args.putInt(CobaltDatePickerFragment.ARG_MONTH, month);
@@ -1082,7 +1077,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 * Customizes pull-to-refresh last updated label
 	 * @param text: text of last updated label
 	 */
-	protected void setLastUpdatedLabel(String text) {
+	private void setLastUpdatedLabel(String text) {
         if (mPullToRefreshWebView != null) {
             LoadingLayoutProxy loadingLayoutProxy = (LoadingLayoutProxy) mPullToRefreshWebView.getLoadingLayoutProxy();
             if (text != null) {
@@ -1110,8 +1105,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	/**
 	 * This method may be overridden in subclasses.
 	 */
-	protected abstract void onPullToRefreshRefreshed();
-
+	protected void onPullToRefreshRefreshed() { }
 	
 	/************************************************************************************
 	 * INFINITE SCROLL
@@ -1153,7 +1147,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	/**
 	 * This method may be overridden in subclasses.
 	 */
-	protected abstract void onInfiniteScrollRefreshed();
+	protected void onInfiniteScrollRefreshed() { }
 	
     /******************************************************
 	 * CONFIGURATION
