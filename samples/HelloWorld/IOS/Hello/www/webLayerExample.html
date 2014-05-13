@@ -102,17 +102,13 @@
 	        <a id="post" href="javascript:;" class="item">Envoyer le commentaire</a><br/>
         </div>
 
-        <script type="text/javascript" src="js/zepto.js"></script>
-        <script type="text/javascript" src="js/cobalt/cobalt.js"></script>
+        <script type="text/javascript" src="zepto.js"></script>
+        <script type="text/javascript" src="cobalt/cobalt.js"></script>
 		<script>
 	        Zepto(function($){            
-				console.log('lkjlkj')
-	            cobalt.init({
-	            	debug:true
-	            });
+	            cobalt.init();
 				
-				$('body').on('tap',function(){
-					console.log('lkjlk')
+				$('#post').on('tap',function(){
 					cobalt.webLayer('dismiss',{ newComment : "42" })
 				});            
 	        });

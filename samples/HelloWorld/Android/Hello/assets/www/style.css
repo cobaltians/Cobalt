@@ -9,7 +9,6 @@ and open the template in the editor.
 */
 body,html{
     height:100%;
-    border: 1px solid red;
 }
 * {
     margin: 0;
@@ -18,9 +17,8 @@ body,html{
 
 body{
     text-align: center;
-     
+    height: 100%; 
     background: rgb(80,80,80);
-    border: 1px solid blue;
 }
 
 ul{
@@ -39,6 +37,9 @@ ul{
         0 -3px 0 hsl(50, 0%, 30%) inset, 
         0 -4px 0 hsl(50, 0%, 35%) inset, 
         0 -5px 0 hsl(50, 0%, 40%) inset;
+    
+    
+    
 }
 ul li{
     display:inline-block;
@@ -52,12 +53,16 @@ ul li a{
     color:rgb(0, 71, 171);
     text-decoration: none;  
     padding: 5px 5px 5px 10px;
-    text-shadow: 0 1px 0 rgba(140,140,140,.4);   
+    text-shadow: 0 1px 0 rgba(140,140,140,.4);
+    
+    
+    
 }
 .CobaltButton{
     line-height: 1;
     text-decoration: none;
     margin: auto;
+    /* margin-top: 50%; */
     color:rgb(0, 130, 220);
     background: black;
     background: -webkit-linear-gradient(rgba(50,50,50,1), rgba(20,20,20,1));
@@ -105,15 +110,20 @@ ul li a{
 
 #CobaltContainer{
     text-align: center;
-    background: rgb(80,80,80);  
-    border: 1px solid green;
+    height: 100%; 
+    background: rgb(80,80,80);
+    
+   
 }
-p{
+
+
+ p{
     position: relative;
     top:50%;
+    margin-top: -25px;
     font-size: 50px;
     line-height: 1;
     color:rgb(0, 130, 220);   
-}*/
+}
 
 
