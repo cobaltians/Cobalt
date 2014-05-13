@@ -13,6 +13,7 @@ public class CobaltCatalogApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        Cobalt.DEBUG = true;
         Cobalt.getInstance(this).setResourcePath("www/common/");
     }
 }
