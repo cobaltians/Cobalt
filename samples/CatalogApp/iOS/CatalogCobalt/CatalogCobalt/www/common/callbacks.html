@@ -128,7 +128,9 @@
                 });
 
                 app.touch('#button_3',function(){
-                    cobalt.sendEvent("echo",{ str : $('#emojinput').val() })
+                    cobalt.sendEvent("testEmoji",{ str : $('#emojinput').val() },function(data){
+                        cobalt.log('received back ', data)
+                    })
                 });
 
 

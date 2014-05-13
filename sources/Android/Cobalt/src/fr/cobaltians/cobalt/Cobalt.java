@@ -50,6 +50,9 @@ public class Cobalt {
     // TAG
 	public static final String TAG = Cobalt.class.getSimpleName();
 
+    // DEBUG
+    public static boolean DEBUG = false;
+
     // RESOURCES
     private final static String ASSETS_PATH = "file:///android_asset/";
 
@@ -204,14 +207,14 @@ public class Cobalt {
                 configuration.putString(kPage, page);
                 fragment.setArguments(configuration);
             }
-            else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getFragmentForController: " + CobaltFragmentClass.getSimpleName() + " does not inherit from CobaltFragment!");
+            else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - getFragmentForController: " + CobaltFragmentClass.getSimpleName() + " does not inherit from CobaltFragment!");
         }
         catch (java.lang.InstantiationException exception) {
-            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getFragmentForController: InstantiationException");
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - getFragmentForController: InstantiationException");
             exception.printStackTrace();
         }
         catch (IllegalAccessException exception) {
-            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getFragmentForController: IllegalAccessException");
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - getFragmentForController: IllegalAccessException");
             exception.printStackTrace();
         }
 
@@ -237,10 +240,10 @@ public class Cobalt {
                     intent = new Intent(mContext, pClass);
                     intent.putExtra(kExtras, configuration);
                 }
-                else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getIntentForController: " + activity + " does not inherit from Activity!");
+                else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - getIntentForController: " + activity + " does not inherit from Activity!");
             }
             catch (ClassNotFoundException exception) {
-                if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getIntentForController: " + activity + " class not found for id " + controller + "!");
+                if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - getIntentForController: " + activity + " class not found for id " + controller + "!");
                 exception.printStackTrace();
             }
         }
@@ -279,9 +282,9 @@ public class Cobalt {
             return bundle;
         }
         catch (JSONException exception) {
-            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG,    TAG + " - getConfigurationForController: check cobalt.conf. Known issues: \n "
-                                                        + "\t - " + controller + " controller not found and no " + kDefaultController + " controller defined \n "
-                                                        + "\t - " + controller + " or " + kDefaultController + "controller found but no " + kAndroidController + "defined \n ");
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG,     TAG + " - getConfigurationForController: check cobalt.conf. Known issues: \n "
+                                                    + "\t - " + controller + " controller not found and no " + kDefaultController + " controller defined \n "
+                                                    + "\t - " + controller + " or " + kDefaultController + "controller found but no " + kAndroidController + "defined \n ");
             exception.printStackTrace();
         }
 
@@ -296,7 +299,7 @@ public class Cobalt {
             return jsonObj;
         }
         catch (JSONException exception) {
-            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - getConfiguration: check cobalt.conf. File is missing or not at " + ASSETS_PATH + mResourcePath + CONF_FILE);
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - getConfiguration: check cobalt.conf. File is missing or not at " + ASSETS_PATH + mResourcePath + CONF_FILE);
             exception.printStackTrace();
         }
 
@@ -318,10 +321,10 @@ public class Cobalt {
             return fileContent.toString();
         }
         catch (FileNotFoundException exception) {
-            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - readFileFromAssets: " + file + "not found.");
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - readFileFromAssets: " + file + "not found.");
         }
         catch (IOException exception) {
-            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - readFileFromAssets: IOException");
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - readFileFromAssets: IOException");
             exception.printStackTrace();
         }
 

@@ -90,3 +90,5 @@ build
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
 !*.xcworkspace/contents.xcworkspacedata
+
+samples/CatalogApp/iOS/CatalogCobalt/CatalogCobalt.xcodeproj/project.xcworkspace/xcuserdata/quentin.xcuserdatad/UserInterfaceState.xcuserstate

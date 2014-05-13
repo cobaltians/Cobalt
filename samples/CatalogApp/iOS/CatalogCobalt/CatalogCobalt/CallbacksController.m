@@ -13,7 +13,7 @@
 
 @implementation CallbacksController
 @synthesize dataAuto;
-int i = 1;
+int i = 0;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark LIFE CYCLE
@@ -28,13 +28,11 @@ int i = 1;
     [self setDelegate:self];
     [self.navigationController setNavigationBarHidden:YES];
     
-    dataAuto = [NSDictionary dictionaryWithObjectsAndKeys:
-                @"quotes : it's working \"great\"", @"1",
-                @"url &eactue;é&12;\n3#23:%20'\\u0020hop", @"2",
-                @"{ obj_representation : \"test\"}", @"3",
-                @"emoji \ue415 \\ue415 u{1f604}", @"4",
-                @"https://cob.s3.amazonaws.com/abcd.jpg?AWSAccessKeyId=1&Expires=1401263985&Signature=xbE%2B49MCgE7/WTKqnvwQ3f4zYmg%3D", @"5",
-                nil];
+    dataAuto = @[@"quotes : it's working \"great\"",
+               @"url &eactue;é&12;\n3#23:%20'\\u0020hop",
+               @"{ obj_representation : \"test\"}",
+               @"emoji \ue415 \\ue415 u{1f604}",
+               @"https://cob.s3.amazonaws.com/abcd.jpg?AWSAccessKeyId=1&Expires=1401263985&Signature=xbE%2B49MCgE7/WTKqnvwQ3f4zYmg%3D"] ;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,6 +63,12 @@ int i = 1;
         }
         return YES;
     }
+    if ([event isEqualToString:@"testEmoji"]) {
+        NSString * emojiString = [data objectForKey:@"str"];
+        NSDictionary *emojiDictionary = @{@"result" : emojiString};
+        [self sendCallback:callback withData : emojiDictionary];
+        return YES;
+    }
     return NO;
 }
 
@@ -72,35 +76,35 @@ int i = 1;
 {
     if ([callback isEqualToString:addValues]) {
         NSString * value = [NSString stringWithFormat:@"result is : %@",[data objectForKey:kJSResult]];
+        
         UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Result" message:value delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alertView performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+        [alertView show];
         
         return YES;
     }else if ([callback isEqualToString:echo]) {
         bool allEquals = true;
-        if (i<[dataAuto count]) {
-            NSLog(@"iOS Native : %@ vs %@",data ,[dataAuto objectForKey:[NSString stringWithFormat:@"%i",i]]);
-            if ([[dataAuto objectForKey:[NSString stringWithFormat:@"%i",i]]isEqualToString:[NSString stringWithFormat:@"%@",data]]) {
-                NSLog(@"iOS Native : Success");
-            }else{
-                allEquals = false;
-                NSLog(@"iOS Native : Error");
-            }
-            i++;
-            [self AutoTest:nil];
-        }else {
-            i=1;
+        NSLog(@"iOS Native : %@ vs %@",data ,[dataAuto objectAtIndex:i]);
+        if (![[dataAuto objectAtIndex:i] isEqualToString:[NSString stringWithFormat:@"%@",data]]) {
+            allEquals = false;
+            NSLog(@"iOS Native : Error");
+        }else{
+            NSLog(@"iOS Native : Success");
+        }
+        i++;
+        if (i>=[dataAuto count])
+        {
+            i=0;
             if (allEquals) {
                 UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Success" message:@"All test passed ! No error" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                //[alertView performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
                 [alertView show];
             }else if (!allEquals){
                 UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Some tests failed !s check logs." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alertView performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+                [alertView show];
             }
-
+        }else{
+            [self AutoTest:nil];
         }
-                return YES;
+        return YES;
     }
     
     return NO;
@@ -122,9 +126,9 @@ int i = 1;
 }
 - (IBAction)AutoTest:(id)sender {
     NSLog(@"passer");
-    NSLog(@"iOS Native : %@",[dataAuto objectForKey:[NSString stringWithFormat:@"%i",i]]);
-    if ([dataAuto objectForKey:[NSString stringWithFormat:@"%i",i]]!=nil) {
-        [self sendEvent:echo withData:[dataAuto objectForKey:[NSString stringWithFormat:@"%i",i]] andCallback:echo];
+    NSLog(@"iOS Native : %@",[dataAuto objectAtIndex:i]);
+    if ([dataAuto objectAtIndex:i]!=nil) {
+        [self sendEvent:echo withData:[dataAuto objectAtIndex:i] andCallback:echo];
     }
     
 }

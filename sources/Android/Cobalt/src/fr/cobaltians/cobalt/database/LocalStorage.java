@@ -29,7 +29,6 @@
 
 package fr.cobaltians.cobalt.database;
 
-import fr.cobaltians.cobalt.BuildConfig;
 import fr.cobaltians.cobalt.Cobalt;
 
 import android.content.Context;
@@ -107,7 +106,7 @@ public class LocalStorage extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		if (BuildConfig.DEBUG) Log.w(Cobalt.TAG, TAG + " - onUpgrade: upgrading database from version " + oldVersion + " to " + newVersion + ", All data will be lost.");
+		if (Cobalt.DEBUG) Log.w(Cobalt.TAG, TAG + " - onUpgrade: upgrading database from version " + oldVersion + " to " + newVersion + ", All data will be lost.");
 		
 		db.execSQL("DROP TABLE IF EXISTS " + LOCALSTORAGE_TABLE_NAME);
 		onCreate(db);

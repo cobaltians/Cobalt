@@ -29,8 +29,6 @@
 
 package fr.cobaltians.cobalt.fragments;
 
-
-import fr.cobaltians.cobalt.BuildConfig;
 import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.R;
 import fr.cobaltians.cobalt.activities.CobaltActivity;
@@ -131,7 +129,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
             return view;
         }
         catch (InflateException e) {
-            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - onCreateView: InflateException");
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - onCreateView: InflateException");
             e.printStackTrace();
         }
 
@@ -199,7 +197,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 */
 	protected void setUpViews(View rootView) {
         mWebViewContainer = ((ViewGroup) rootView.findViewById(getWebViewContainerId()));
-        if (BuildConfig.DEBUG && mWebViewContainer == null) Log.w(Cobalt.TAG, TAG + " - setUpViews: WebView container not found!");
+        if (Cobalt.DEBUG && mWebViewContainer == null) Log.w(Cobalt.TAG, TAG + " - setUpViews: WebView container not found!");
 	}
 
     protected int getWebViewContainerId() {
@@ -360,7 +358,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 					public void run() {
 						// Line & paragraph separators are not JSON compliant but supported by JSONObject
 						String script = jsonObj.toString().replaceAll("[\u2028\u2029]", "");
-                        if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: " + script);
+                        if (Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: " + script);
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                             // Since KitKat, messages are automatically urldecoded when received from the web. encoding them to fix this.
@@ -373,18 +371,18 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 				});
 			}
 			else {
-				if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: adding message to queue: " + jsonObj);
+				if (Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: adding message to queue: " + jsonObj);
 				mWaitingJavaScriptCallsQueue.add(jsonObj);
 			}
 		}
-        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - executeScriptInWebView: jsonObj is null!");
+        else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - executeScriptInWebView: jsonObj is null!");
 	}
 
 	private void executeWaitingCalls() {
 		int waitingJavaScriptCallsQueueLength = mWaitingJavaScriptCallsQueue.size();
 		
 		for (int i = 0 ; i < waitingJavaScriptCallsQueueLength ; i++) {
-			if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeWaitingCalls: execute " + mWaitingJavaScriptCallsQueue.get(i).toString());
+			if (Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeWaitingCalls: execute " + mWaitingJavaScriptCallsQueue.get(i).toString());
 			executeScriptInWebView(mWaitingJavaScriptCallsQueue.get(i));
 		}
 		
@@ -411,11 +409,11 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
                 executeScriptInWebView(jsonObj);
             }
             catch (JSONException exception) {
-                if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendCallback: JSONException");
+                if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendCallback: JSONException");
                 exception.printStackTrace();
             }
         }
-        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendCallback: callbackId is null or empty!");
+        else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendCallback: callbackId is null or empty!");
     }
 
     /**
@@ -436,11 +434,11 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
                 executeScriptInWebView(jsonObj);
             }
             catch (JSONException exception) {
-                if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendEvent: JSONException");
+                if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendEvent: JSONException");
                 exception.printStackTrace();
             }
         }
-        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendEvent: event is null or empty!");
+        else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendEvent: event is null or empty!");
     }
 
     /**
@@ -451,7 +449,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
         if (message != null) {
             executeScriptInWebView(message);
         }
-        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendMessage: message is null !");
+        else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendMessage: message is null !");
     }
 
 	/****************************************************************************************
@@ -501,7 +499,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 				// LOG
 				else if (type.equals(Cobalt.JSTypeLog)) {
 					String text = jsonObj.getString(Cobalt.kJSValue);
-					if (BuildConfig.DEBUG) Log.d(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: JS LOG \"" + text + "\"");
+					if (Cobalt.DEBUG) Log.d(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: JS LOG \"" + text + "\"");
 					return true;
 				}
 				
@@ -615,7 +613,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			}
 		} 
 		catch (JSONException exception) {
-            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: JSONException");
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: JSONException");
 			exception.printStackTrace();
 		}
 		
@@ -623,7 +621,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	}
 	
 	protected void onReady() {
-		if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - onReady");
+		if (Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - onReady");
 
 		mCobaltIsReady = true;
 		executeWaitingCalls();
@@ -660,7 +658,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			}
 		} 
 		catch (JSONException exception) {
-            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleCallback: JSONException");
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleCallback: JSONException");
 			exception.printStackTrace();
 		}
 		
@@ -725,7 +723,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			}
 		} 
 		catch (JSONException exception) {
-            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleUi: JSONException");
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleUi: JSONException");
 			exception.printStackTrace();
 		}
 		
@@ -739,7 +737,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			onUnhandledMessage(jsonObj);
 		}
 		catch (JSONException exception) {
-            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleUi: JSONException");
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleUi: JSONException");
 			exception.printStackTrace();
 		}
 		
@@ -757,7 +755,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 		if (intent != null) {
 			getActivity().startActivity(intent);
 		}
-		else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG,  TAG + " - push: Unable to push " + controller + " controller");
+		else if (Cobalt.DEBUG) Log.e(Cobalt.TAG,  TAG + " - push: Unable to push " + controller + " controller");
 	}
 	
 	private void pop() {
@@ -777,11 +775,11 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 				sendCallback(callBackID, data);
 			} 
 			catch (JSONException exception) {
-                if (BuildConfig.DEBUG) Log.e(Cobalt.TAG,  TAG + " - presentModal: JSONException");
+                if (Cobalt.DEBUG) Log.e(Cobalt.TAG,  TAG + " - presentModal: JSONException");
 				exception.printStackTrace();
 			}
 		}
-		else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG,  TAG + " - presentModal: Unable to present modal " + controller + " controller");
+		else if (Cobalt.DEBUG) Log.e(Cobalt.TAG,  TAG + " - presentModal: Unable to present modal " + controller + " controller");
 	}
 
 	private void dismissModal(String controller, String page) {
@@ -798,10 +796,10 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 
 				NavUtils.navigateUpTo(getActivity(), intent);
 			}
-			else if(BuildConfig.DEBUG) Log.e(Cobalt.TAG,  TAG + " - dismissModal: unable to dismiss modal since " + controller + " does not inherit from Activity");
+			else if(Cobalt.DEBUG) Log.e(Cobalt.TAG,  TAG + " - dismissModal: unable to dismiss modal since " + controller + " does not inherit from Activity");
 		} 
 		catch (ClassNotFoundException exception) {
-			if (BuildConfig.DEBUG) Log.e(Cobalt.TAG,  TAG + " - dismissModal: " + controller + "not found");
+			if (Cobalt.DEBUG) Log.e(Cobalt.TAG,  TAG + " - dismissModal: " + controller + "not found");
 			exception.printStackTrace();
 		}
 	}
@@ -834,7 +832,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 * @details This method may be overridden in subclasses.
 	 */
 	protected void onBackDenied() {
-		if(BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - onBackDenied: onBackPressed event denied by Web view");
+		if(Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - onBackDenied: onBackPressed event denied by Web view");
 	}
 	
 	/***********************************************************************************************************************************
@@ -877,13 +875,13 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
                         fragmentTransition.add(activity.getFragmentContainerId(), webLayerFragment);
                         fragmentTransition.commit();
                     }
-                    else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - showWebLayer: fragment container not found");
+                    else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - showWebLayer: fragment container not found");
                 }
             }
-            else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - showWebLayer: getWebLayerFragment returned null!");
+            else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - showWebLayer: getWebLayerFragment returned null!");
         }
         catch (JSONException exception) {
-            if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - showWebLayer: JSONException");
+            if(Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - showWebLayer: JSONException");
             exception.printStackTrace();
         }
 	}
@@ -914,7 +912,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 					sendEvent(Cobalt.JSEventWebLayerOnDismiss, jsonObj, null);
 				} 
 				catch (JSONException exception) {
-                    if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - onWebLayerDismiss: JSONException");
+                    if(Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - onWebLayerDismiss: JSONException");
 					exception.printStackTrace();
 				}
 			}
@@ -950,7 +948,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 								sendCallback(callback, data);
 							} 
 							catch (JSONException exception) {
-                                if(BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + ".AlertDialog - onClick: JSONException");
+                                if(Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + ".AlertDialog - onClick: JSONException");
 								exception.printStackTrace();
 							}								
 						}
@@ -971,7 +969,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 									sendCallback(callback, data);
 								} 
 								catch (JSONException exception) {
-                                    if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + ".AlertDialog - onClick: JSONException");
+                                    if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + ".AlertDialog - onClick: JSONException");
 									exception.printStackTrace();
 								}
 							}
@@ -983,7 +981,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
             alertDialog.show();
 		} 
 		catch (JSONException exception) {
-            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - showAlertDialog: JSONException");
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - showAlertDialog: JSONException");
 			exception.printStackTrace();
 		}
 	}
@@ -1027,7 +1025,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
             }
 		}
         catch (JSONException e) {
-            if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendDate: JSONException");
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - sendDate: JSONException");
 			e.printStackTrace();
 		}
     }
@@ -1077,7 +1075,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
                 loadingLayoutProxy.setTextTypeface(typeface);
             }
         }
-        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - setCustomTitlesAndImage: Pull-to-refresh must be active and method called after super.onStart()!");
+        else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - setCustomTitlesAndImage: Pull-to-refresh must be active and method called after super.onStart()!");
 	}
 	
 	/**
@@ -1091,7 +1089,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
                 loadingLayoutProxy.setLastUpdatedLabel(text);
             }
         }
-        else if (BuildConfig.DEBUG) Log.e(Cobalt.TAG, TAG + " - setLastUpdatedLabel: Pull-to-refresh must be active!");
+        else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - setLastUpdatedLabel: Pull-to-refresh must be active!");
 	}
 	
 	private void refreshWebView() {

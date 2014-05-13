@@ -29,7 +29,6 @@
 
 package fr.cobaltians.cobalt.fragments;
 
-import fr.cobaltians.cobalt.BuildConfig;
 import fr.cobaltians.cobalt.Cobalt;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -136,11 +135,11 @@ public class CobaltFlipperFragment extends CobaltFragment implements IGestureLis
 					jsonObj.put(Cobalt.kJSType, Cobalt.JSTypeEvent);
 					if (direction == GESTURE_SWIPE_LEFT) {
 						jsonObj.put(Cobalt.kJSEvent, JSEventSwipeLeft);
-						if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - swipe: next");
+						if (Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - swipe: next");
 					}
 					else if (direction == GESTURE_SWIPE_RIGHT) {
 						jsonObj.put(Cobalt.kJSEvent, JSEventSwipeRight);
-						if (BuildConfig.DEBUG) Log.i(Cobalt.TAG, TAG + " - swipe: previous");
+						if (Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - swipe: previous");
 					}
 					sendMessage(jsonObj);
 				}
