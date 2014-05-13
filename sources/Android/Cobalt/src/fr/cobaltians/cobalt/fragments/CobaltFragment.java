@@ -499,7 +499,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 				// LOG
 				else if (type.equals(Cobalt.JSTypeLog)) {
 					String text = jsonObj.getString(Cobalt.kJSValue);
-					if (Cobalt.DEBUG) Log.d(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: JS LOG \"" + text + "\"");
+					Log.d(Cobalt.TAG, "JS LOG: " + text);
 					return true;
 				}
 				
