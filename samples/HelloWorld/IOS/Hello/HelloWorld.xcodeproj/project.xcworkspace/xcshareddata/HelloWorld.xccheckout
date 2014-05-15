@@ -5,7 +5,7 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>B53AB3CB-C2DC-4A03-8456-A54B08A6052A</string>
+	<string>2CB8CDCA-9655-49F4-9860-370D1242210B</string>
 	<key>IDESourceControlProjectName</key>
 	<string>HelloWorld</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
@@ -14,7 +14,7 @@
 		<string>https://github.com/cobaltians/cobalt.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>samples/HelloWorld/IOS/Cobalt/HelloWorld.xcodeproj/project.xcworkspace</string>
+	<string>samples/HelloWorld/IOS/Hello/HelloWorld.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>C7655DA1-A036-4CB8-A1B4-A3E3FD1E0B1A</key>

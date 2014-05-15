@@ -16,3 +16,5 @@
 #endif
 
 #define RESOURCE_PATH [NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] resourcePath], @"/www/"]
+
+#define DEBUG_COBALT    1
