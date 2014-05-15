@@ -35,7 +35,6 @@ import fr.cobaltians.cobalt.activities.CobaltActivity;
 import android.graphics.Color;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.webkit.JavascriptInterface;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,7 +58,7 @@ public class CobaltWebLayerFragment extends CobaltFragment {
 	public void onStart() {
 		super.onStart();
 		
-		if (mWebView != null) mWebView.setBackgroundColor(Color.TRANSPARENT);
+		mWebView.setBackgroundColor(Color.TRANSPARENT);
 	}
 
 	@Override
@@ -72,32 +71,6 @@ public class CobaltWebLayerFragment extends CobaltFragment {
 	/*************************************************************************************************************************************
 	 * COBALT
 	 ************************************************************************************************************************************/
-	@Override
-	@JavascriptInterface
-	public boolean handleMessageSentByJavaScript(String message) {
-		try {
-			final JSONObject jsonObject = new JSONObject(message);
-			String type = jsonObject.optString(Cobalt.kJSType);
-			if (type.equals(Cobalt.JSTypeWebLayer)) {
-				String action = jsonObject.getString(Cobalt.kJSAction);
-				if (action.equals(Cobalt.JSActionWebLayerDismiss)) {
-					mHandler.post(new Runnable() {
-						@Override
-						public void run() {
-							dismissWebLayer(jsonObject);
-						}
-					});
-					return true;
-				}
-			}
-		} 
-		catch (JSONException exception) {
-			if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: JSONException");
-			exception.printStackTrace();
-		}
-		
-		return super.handleMessageSentByJavaScript(message);
-	}
 
 	@Override
 	protected boolean onUnhandledCallback(String name, JSONObject data) {
@@ -110,7 +83,29 @@ public class CobaltWebLayerFragment extends CobaltFragment {
 	}
 	
 	@Override
-	protected void onUnhandledMessage(JSONObject message) { }
+	protected void onUnhandledMessage(final JSONObject message) {
+        try {
+            String type = message.optString(Cobalt.kJSType);
+
+            if (type.equals(Cobalt.JSTypeWebLayer)) {
+                String action = message.getString(Cobalt.kJSAction);
+
+                if (action.equals(Cobalt.JSActionWebLayerDismiss)) {
+                    mHandler.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            dismissWebLayer(message);
+                        }
+                    });
+                }
+            }
+        }
+        catch (JSONException exception) {
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: JSONException");
+            exception.printStackTrace();
+        }
+    }
 	
 	@Override
 	protected void onBackPressed(boolean allowedToBack) {
@@ -153,8 +148,7 @@ public class CobaltWebLayerFragment extends CobaltFragment {
 
 	private void onDismiss() {
 		if (CobaltActivity.class.isAssignableFrom(getActivity().getClass())) {
-			CobaltActivity activity = (CobaltActivity) getActivity();
-			activity.onWebLayerDismiss(getPage(), mData);
+            ((CobaltActivity) getActivity()).onWebLayerDismiss(getPage(), mData);
 		}
 	}
 }
