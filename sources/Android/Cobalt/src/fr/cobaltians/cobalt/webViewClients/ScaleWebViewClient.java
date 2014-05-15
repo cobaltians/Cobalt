@@ -29,9 +29,10 @@
 
 package fr.cobaltians.cobalt.webViewClients;
 
+import fr.cobaltians.cobalt.fragments.CobaltFragment;
+
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
 public class ScaleWebViewClient extends WebViewClient {
 
@@ -39,10 +40,6 @@ public class ScaleWebViewClient extends WebViewClient {
 	 * Fragment handling scale events of the OverScrollingWebView
 	 */
 	protected CobaltFragment mScaleListener;
-	
-	public CobaltFragment getScaleListener() {
-		return mScaleListener;
-	}
 
 	public void setScaleListener(CobaltFragment scaleListener) {
 		mScaleListener = scaleListener;
@@ -52,7 +49,7 @@ public class ScaleWebViewClient extends WebViewClient {
 	public void onScaleChanged(WebView webview, float oldScale, float newScale) {
 		super.onScaleChanged(webview, oldScale, newScale);
 		
-		if(mScaleListener != null) {
+		if (mScaleListener != null) {
 			mScaleListener.notifyScaleChange(oldScale, newScale);
 		}
 	}

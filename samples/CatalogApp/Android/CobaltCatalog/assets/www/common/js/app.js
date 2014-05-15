@@ -18,8 +18,9 @@ var app={
             if (!$(this).hasClass('touched')){
                 $(this).addClass('touched');
                 clearTimeout(app.touchTimer);
-                app.touchTimer = setTimeout(touchup.bind(this),1000);
-                touchHandler.apply(this,e);
+                app.touchTimer = setTimeout(touchup,1000);
+                touchHandler.apply([this, e ]);
+
             }
             if (preventDefault)
                 return false;
