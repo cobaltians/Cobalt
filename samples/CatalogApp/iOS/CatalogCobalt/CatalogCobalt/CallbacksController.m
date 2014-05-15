@@ -53,15 +53,11 @@ int i = 0;
         intValue += [[[data objectForKey:kJSValues] objectAtIndex:1] intValue];
         NSString * value =[NSString stringWithFormat:@"%li",(long)intValue];
         NSDictionary * result = [[NSDictionary alloc] initWithObjectsAndKeys:  value, @"result", nil];
-        if (callback && callback.length > 0) {
-            
-            [self sendCallback:callback withData:result];
-        }
+        [self sendCallback:callback withData:result];
+        
         return YES;
     }else if ([event isEqualToString:echo]) {
-        if (callback && callback.length > 0) {
             [self sendCallback:callback withData:data];
-        }
         return YES;
     }  
     if ([event isEqualToString:@"testEmoji"]) {
@@ -116,7 +112,6 @@ int i = 0;
 }
 
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark INTERACTIONS TO SEND TO JS
@@ -128,6 +123,7 @@ int i = 0;
     NSArray * value = [NSArray arrayWithObjects:[NSNumber numberWithInt:1],[NSNumber numberWithInt:3], nil];
     NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys: value, kJSValues, nil];
     [self sendEvent:addValues withData:data andCallback:addValues];
+    
 }
 - (IBAction)AutoTest:(id)sender {
     NSLog(@"passer");
