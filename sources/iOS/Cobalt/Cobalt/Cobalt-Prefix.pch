@@ -44,4 +44,4 @@
     #import <Foundation/Foundation.h>
 #endif
 
-#define DEBUG_COBALT    0
+#define DEBUG_COBALT    1
