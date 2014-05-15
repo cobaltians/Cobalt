@@ -175,8 +175,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "407"
             endingLineNumber = "407"
-            landmarkName = "-handleDictionarySentByJavaScript:"
-            landmarkType = "5">
+            landmarkName = "@implementation CobaltViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -250,11 +250,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CatalogCobalt/CallbacksController.m"
-            timestampString = "421600201.82062"
+            timestampString = "421835749.267175"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "126"
-            endingLineNumber = "126"
+            startingLineNumber = "136"
+            endingLineNumber = "136"
             landmarkName = "-AutoTest:"
             landmarkType = "5">
          </BreakpointContent>
@@ -266,11 +266,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CatalogCobalt/CallbacksController.m"
-            timestampString = "421600201.82062"
+            timestampString = "421835749.267175"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "123"
-            endingLineNumber = "123"
+            startingLineNumber = "133"
+            endingLineNumber = "133"
             landmarkName = "-AutoTest:"
             landmarkType = "5">
          </BreakpointContent>
@@ -282,12 +282,74 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CatalogCobalt/CallbacksController.m"
-            timestampString = "421600005.748508"
+            timestampString = "421835749.267175"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
+            startingLineNumber = "89"
+            endingLineNumber = "89"
             landmarkName = "-onUnhandledCallback:withData:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[CallbacksController onUnhandledCallback:withData:]"
+                  moduleName = "CatalogCobalt"
+                  urlString = "file:///Users/quentin/Documents/cobalt/samples/CatalogApp/iOS/CatalogCobalt/CatalogCobalt/CallbacksController.m"
+                  timestampString = "421836018.187341"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "89"
+                  endingLineNumber = "89"
+                  offsetFromSymbolStart = "369">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[CallbacksController onUnhandledCallback:withData:]"
+                  moduleName = "CatalogCobalt"
+                  urlString = "file:///Users/quentin/Documents/cobalt/samples/CatalogApp/iOS/CatalogCobalt/CatalogCobalt/CallbacksController.m"
+                  timestampString = "421836018.187627"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "89"
+                  endingLineNumber = "89"
+                  offsetFromSymbolStart = "419">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../../sources/iOS/Cobalt/Cobalt/Controllers/CobaltViewController.m"
+            timestampString = "421660657.283186"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
+            landmarkName = "@interface CobaltViewController()"
+            landmarkType = "2">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CatalogCobalt/CallbacksController.m"
+            timestampString = "421682079.082958"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
+            landmarkName = "-onUnhandledEvent:withData:andCallback:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

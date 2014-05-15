@@ -232,15 +232,15 @@
  */
 + (NSString *)stringWithContentsOfFile:(NSString *)path;
 
+
+
 /*!
- @method		-(void) executeScriptInWebView:(UIWebView *)mWebView withDictionary:(NSDictionary *)dict
- @abstract		this method sends a JSON to the webView to execute a script (allows interactions from the native to the webView)
- @param         mWebView : the webview where the script is due to be executed
- @param         dict : a NSDictionary that contains the necessary informations to execute the script
- @discussion    the webView MUST have a function "nativeBridge.execute(%@);" that receives the JSON (representing dict) as parameter
+ @method		- (void) sendMessage:(NSDictionary *) message;
+ @abstract		this method sends an message who was an Object format in an NSDictionary
+ @param         messageId : the messageId given by a former JS call. It's all events aren't send with sendCallback and sendEvent.
  @discussion    This method should NOT be overridden in subclasses.
  */
-- (void)executeScriptInWebView:(UIWebView *)mWebView withDictionary:(NSDictionary *)dict;
+- (void) sendMessage:(NSDictionary *) message;
 
 /*!
  @method		-(void) sendCallback:(NSString *)callbackId withData:(NSObject *)data

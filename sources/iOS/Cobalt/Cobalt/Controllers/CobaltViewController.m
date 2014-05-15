@@ -40,9 +40,19 @@
 #define kIosNibName             @"iosNibName"
 #define kPullToRefreshEnabled   @"pullToRefresh"
 #define kInfiniteScrollEnabled  @"infiniteScroll"
+@interface CobaltViewController ()
+/*!
+ @method		+(void) executeScriptInWebView:(UIWebView *)mWebView withDictionary:(NSDictionary *)dict
+ @abstract		this method sends a JSON to the webView to execute a script (allows interactions from the native to the webView)
+ @param         mWebView : the webview where the script is due to be executed
+ @param         dict : a NSDictionary that contains the necessary informations to execute the script
+ @discussion    the webView MUST have a function "nativeBridge.execute(%@);" that receives the JSON (representing dict) as parameter
+ @discussion    This method should NOT be overridden in subclasses.
+ */
+- (void)executeScriptInWebView:(UIWebView *)mWebView withDictionary:(NSDictionary *)dict;
+@end
 
 @implementation CobaltViewController
-
 @synthesize activityIndicator,
             isInfiniteScrollEnabled,
             isPullToRefreshEnabled,
@@ -57,6 +67,8 @@ NSMutableArray * toastsToShow;
 BOOL toastIsShown;
 
 NSString * webLayerPage;
+
+
 
 - (void)viewDidLoad
 {
@@ -1322,5 +1334,7 @@ NSString * webLayerPage;
     }
     return @"";
 }
+
+
 
 @end

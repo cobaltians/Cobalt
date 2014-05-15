@@ -51,9 +51,10 @@ int i = 0;
     if ([event isEqualToString:addValues]) {
         NSInteger intValue = [[[data objectForKey:kJSValues] objectAtIndex:0] intValue];
         intValue += [[[data objectForKey:kJSValues] objectAtIndex:1] intValue];
-        NSString * value =[NSString stringWithFormat:@"%i",intValue];
+        NSString * value =[NSString stringWithFormat:@"%li",(long)intValue];
         NSDictionary * result = [[NSDictionary alloc] initWithObjectsAndKeys:  value, @"result", nil];
         if (callback && callback.length > 0) {
+            
             [self sendCallback:callback withData:result];
         }
         return YES;
@@ -62,11 +63,15 @@ int i = 0;
             [self sendCallback:callback withData:data];
         }
         return YES;
-    }
+    }  
     if ([event isEqualToString:@"testEmoji"]) {
         NSString * emojiString = [data objectForKey:@"str"];
-        NSDictionary *emojiDictionary = @{@"result" : emojiString};
-        [self sendCallback:callback withData : emojiDictionary];
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:emojiString forKey:@"emoji"];
+        [defaults synchronize];
+        NSString * emojiStringSend = [defaults objectForKey:@"emoji"];
+        NSDictionary *emojiDictionary = @{@"result" : emojiStringSend};
+        [self sendCallback:callback withData:emojiDictionary];
         return YES;
     }
     return NO;
