@@ -1309,13 +1309,13 @@ NSString * webLayerPage;
 {
     switch (newState) {
         case RefreshStateNormal:
-            return NSLocalizedString(@"Tirez pour rafraîchir...", nil);
+            return NSLocalizedString(@"Pull to refresh...", nil);
             break;
         case RefreshStatePulling:
-            return NSLocalizedString(@"Relâchez pour actualiser...", nil);
+            return NSLocalizedString(@"Release to refresh...", nil);
             break;
         case RefreshStateLoading:
-            return NSLocalizedString(@"Chargement...", nil);
+            return NSLocalizedString(@"Loading...", nil);
             break;
         default:
             break;
