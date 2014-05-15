@@ -41,14 +41,24 @@ var cobalt={
             this.debugInBrowser = ( options.debugInBrowser === true );
             this.debugInDiv = ( options.debugInDiv === true );
 
+            if (cobalt.debugInDiv){
+                this.createLogDiv();
+            }
 		    if (options.events){
 		        this.userEvents=options.events
 	        }
-            if (cobalt.debugInDiv){
-			    this.createLogDiv();
+            cobalt.storage.enable();
+
+            $.extend(cobalt.datePicker, options.datePicker);
+            if (cobalt.datePicker.enabled){
+                cobalt.datePicker.init();
             }
-		}
-		cobalt.storage.enable();
+
+
+		}else{
+            cobalt.storage.enable();
+        }
+
 
 		if (cobalt.adapter.init){
 			cobalt.adapter.init();
@@ -309,21 +319,6 @@ var cobalt={
             cobalt.adapter.handleUnknown(json);
         }
 	},
-	//internal, call adapter.initStorage.
-    //TODO CLEAN THIS
-	initStorage:function(){
-		//only enable once if ok.
-		if (! cobalt.localStorageEnabled){
-			//init from adapter
-			cobalt.localStorageEnabled=cobalt.adapter.initStorage();
-			//if wrong state
-			if (! cobalt.localStorageEnabled){
-				cobalt.log("LocalStorage ERROR : localStorage not available !")
-			}
-		}
-		return cobalt.localStorageEnabled;
-	},
-
 	// usefull functions
 	isNumber : function(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
@@ -384,6 +379,91 @@ var cobalt={
 		}
 	},
 
+    datePicker:{
+        //USER OPTIONS
+        enabled : true,
+        texts:{
+            validate : "Ok",
+            cancel : "Cancel",
+            delete : "Clear"
+        },
+        //Default format function. used by some adapters to format input value if needed
+        //user can override this. default format is "yyyy-mm-dd".
+        format:function(value){
+            return value;
+        },
+        //internal
+        init:function(){
+            var inputs=$('input[type=date]')
+
+            inputs.each(function(){
+                var input=$(this);
+                var id=input.attr('id');
+                if (!id){
+                    id='CobaltGeneratedId_'+Math.random().toString(36).substring(7);
+                    input.attr('id',id);
+                }
+                cobalt.datePicker.updateFromValue.apply(input);
+            });
+
+            if (cobalt.adapter.datePicker && cobalt.adapter.datePicker.init){
+                cobalt.adapter.datePicker.init(inputs);
+            }
+        },
+        updateFromValue : function(){
+            var id=$(this).attr('id');
+            cobalt.log("updating storage value of date #",id)
+            if ($(this).val()){
+                $(this).addClass('not_empty')
+            }else{
+                $(this).removeClass('not_empty')
+            }
+            cobalt.log('current value is', $(this).val())
+            var values=$(this).val().split('-')
+            if (values.length==3){
+                var d={
+                    year: parseInt(values[0],10),
+                    month : parseInt(values[1],10),
+                    day : parseInt(values[2],10)
+                }
+                cobalt.log('setting storage date ', 'CobaltDatePickerValue_'+id, d);
+                cobalt.storage.setItem('CobaltDatePickerValue_'+id, d ,'json')
+
+            }else{
+                cobalt.log('removing date');
+                cobalt.storage.removeItem('CobaltDatePickerValue_'+id)
+            }
+            return false;
+        },
+        enhanceFieldValue:function(){
+            //cobalt.log('updating date format')
+            var date = cobalt.storage.getItem('CobaltDatePickerValue_'+$(this).attr('id'), 'json')
+            if (date){
+                cobalt.log('format date=',date)
+                $(this).val(cobalt.datePicker.format(date.year+'-'+cobalt.datePicker.zerofill(date.month,2)+'-'+cobalt.datePicker.zerofill(date.day,2)))
+            }
+        },
+        zerofill:function(number, padding){
+            return new String( new Array(padding + 1).join("0") + number ).slice(-padding)
+        },
+        val:function(input){
+            if (cobalt.adapter.datePicker && cobalt.adapter.datePicker.val){
+                cobalt.log('returning cobalt adapter datePicker value')
+                return cobalt.adapter.datePicker.val(input);
+            }else{
+                cobalt.log('returning default datePicker value')
+                var values=( $(input).val()||"" ).split('-');
+                if (values.length==3){
+                    return {
+                        year: parseInt(values[0], 10),
+                        month : parseInt(values[1], 10),
+                        day : parseInt(values[2], 10)
+                    }
+                }
+                return undefined;
+            }
+        }
+    },
 
 	storage : {
 		/*	localStorage helper
@@ -462,16 +542,16 @@ var cobalt={
 	}
 
 };cobalt.ios_adapter={
-	//
-	//IOS ADAPTER
-	//
+    //
+    //IOS ADAPTER
+    //
     pipeline:[], //array of sends waiting to go to native
     pipelineRunning:false,//bool to knwow if new sends should go to pipe or go to native
 
-	init:function(){
-		cobalt.platform="iOs";
-	},
-	// handle callbacks sent by native side
+    init:function(){
+        cobalt.platform="iOs";
+    },
+    // handle callbacks sent by native side
     handleCallback:function(json){
         switch(json.callback){
             case "callbackSimpleAcquitment":
@@ -482,14 +562,14 @@ var cobalt={
                     cobalt.adapter.pipelineRunning=false;
                 }
                 break;
-	        default:
-			    cobalt.tryToCallCallback(json)
-		    break;
+            default:
+                cobalt.tryToCallCallback(json)
+                break;
         }
     },
     //send native stuff
     send:function(obj){
-	    cobalt.divLog('adding to ios message stack', obj)
+        cobalt.divLog('adding to ios message stack', obj)
         cobalt.adapter.pipeline.push(obj);
         if (!cobalt.adapter.pipelineRunning){
             cobalt.adapter.unpipe()
@@ -499,17 +579,35 @@ var cobalt={
     unpipe:function(){
         cobalt.adapter.pipelineRunning=true;
         var objToSend=cobalt.adapter.pipeline.shift();
-	    if (objToSend && !cobalt.debugInBrowser){
+        if (objToSend && !cobalt.debugInBrowser){
             cobalt.divLog('sending',objToSend)
             document.location.href=encodeURIComponent("cob@l7#k&y"+JSON.stringify(objToSend));
         }
     },
-	//default behaviours
-	handleEvent : cobalt.defaultBehaviors.handleEvent,
-	handleUnknown : cobalt.defaultBehaviors.handleUnknown,
-	navigateToModal : cobalt.defaultBehaviors.navigateToModal,
-	dismissFromModal : cobalt.defaultBehaviors.dismissFromModal,
-	initStorage : cobalt.defaultBehaviors.initStorage
+    //datePicker stuff
+    datePicker:{
+        init:function(inputs){
+            inputs.each(function(){
+                var input=$(this);
+                var id=input.attr('id');
+
+                var placeholder=input.attr('placeholder');
+                if (placeholder){
+                    $('head').append('<style> #'+id+':before{ content:"'+placeholder+'"; width:100%; color:#AAA; } #'+id+':focus:before,#'+id+'.not_empty:before{ content:none }</style>');
+                }
+                input.on('change keyup',cobalt.datePicker.updateFromValue);
+            });
+        }
+    },
+
+
+
+    //default behaviours
+    handleEvent : cobalt.defaultBehaviors.handleEvent,
+    handleUnknown : cobalt.defaultBehaviors.handleUnknown,
+    navigateToModal : cobalt.defaultBehaviors.navigateToModal,
+    dismissFromModal : cobalt.defaultBehaviors.dismissFromModal,
+    initStorage : cobalt.defaultBehaviors.initStorage
 
 };
 cobalt.adapter=cobalt.ios_adapter;

@@ -63,6 +63,63 @@ cobalt.android_adapter={
 		}
 		return cobalt.storage.enable();
 	},
+    //datePicker stuff
+    datePicker:{
+        init:function(inputs){
+
+            inputs.each(function(){
+                var input=$(this);
+                var id=input.attr('id');
+
+                cobalt.log('datePicker setted with value='+input.val())
+                input.attr('type','text')
+                cobalt.datePicker.enhanceFieldValue.apply(input);
+
+                input.on('focus',function(){
+                    cobalt.log('show formPicker date for date #',id)
+                    input.blur();
+                    var previousDate = cobalt.storage.getItem('CobaltDatePickerValue_'+id,'json')
+                    if (!previousDate){
+                        var d=new Date();
+                        previousDate={
+                            year: d.getFullYear(),
+                            day : d.getDate(),
+                            month : d.getMonth()+1
+                        }
+                    }
+                    cobalt.send({ type : "ui", control : "picker", data : {
+                            type: "date", date : previousDate,
+                            texts: cobalt.datePicker.texts
+                        }}, function(newDate){
+                            if (newDate && newDate.year){
+                                input.val( newDate.year+'-'+newDate.month+'-'+newDate.day  );
+                                cobalt.log('setting storage date ', newDate);
+                                cobalt.storage.setItem('CobaltDatePickerValue_'+id,newDate,'json')
+                                cobalt.datePicker.enhanceFieldValue.apply(input);
+                            }else{
+                                cobalt.log('removing storage date');
+                                input.val("");
+                                cobalt.storage.removeItem('CobaltDatePickerValue_'+id)
+                            }
+                    });
+
+                    return false;
+                });
+
+            });
+        },
+        val:function(input){
+            var date = cobalt.storage.getItem('CobaltDatePickerValue_'+$(input).attr('id'), 'json')
+            if (date){
+                cobalt.log('returning storage date '+JSON.stringify(date));
+                return date;
+            }
+            return undefined;
+        }
+    },
+
+
+
 	//default behaviours
     handleCallback : cobalt.defaultBehaviors.handleCallback,
     handleUnknown : cobalt.defaultBehaviors.handleUnknown

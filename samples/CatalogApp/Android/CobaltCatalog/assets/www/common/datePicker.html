@@ -36,24 +36,18 @@
 	            cobalt.init({
                     debug:app.debug,
                     debugInBrowser:app.debugInBrowser,
-                    debugInDiv:app.debugInDiv,
+                    debugInDiv:app.debugInDiv
 
-                    datePicker:{
-                        format : function(value){
-                            //value is the raw classic value with format "yyyy-mm-dd".
-                            // change its format here and return it to change the way date is displayed on android
-                            return value;
-                        }
-                    }
                 });
 
-                /*
-                $('input.date').on('change',function(){
-                    cobalt.alert('Value changed',
-                            'value changed to '+ $(this).val()+'\n' +
-                            'cobalt.datePicker.value()' + cobalt.datePicker.val(this)
+
+                app.touch('.valueBtn',function(){
+                    var input=$(this).prev('input');
+                    cobalt.alert('Input value',
+                            'value is'+ $(input).val()+'\n' +
+                            'cobalt.datePicker.val is ' + JSON.stringify(cobalt.datePicker.val(input))
                     )
-                });*/
+                });
 
                 $('a.pop').on('tap click',function(){
 		        	cobalt.navigate('pop')
