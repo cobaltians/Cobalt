@@ -289,36 +289,6 @@
             endingLineNumber = "89"
             landmarkName = "-onUnhandledCallback:withData:"
             landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[CallbacksController onUnhandledCallback:withData:]"
-                  moduleName = "CatalogCobalt"
-                  urlString = "file:///Users/quentin/Documents/cobalt/samples/CatalogApp/iOS/CatalogCobalt/CatalogCobalt/CallbacksController.m"
-                  timestampString = "421836018.187341"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "89"
-                  endingLineNumber = "89"
-                  offsetFromSymbolStart = "369">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[CallbacksController onUnhandledCallback:withData:]"
-                  moduleName = "CatalogCobalt"
-                  urlString = "file:///Users/quentin/Documents/cobalt/samples/CatalogApp/iOS/CatalogCobalt/CatalogCobalt/CallbacksController.m"
-                  timestampString = "421836018.187627"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "89"
-                  endingLineNumber = "89"
-                  offsetFromSymbolStart = "419">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
