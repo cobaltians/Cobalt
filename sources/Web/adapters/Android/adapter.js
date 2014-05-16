@@ -111,8 +111,9 @@ cobalt.android_adapter={
         val:function(input){
             var date = cobalt.storage.getItem('CobaltDatePickerValue_'+$(input).attr('id'), 'json')
             if (date){
-                cobalt.log('returning storage date '+JSON.stringify(date));
-                return date;
+                var str_date=cobalt.datePicker.stringifyDate(date)
+                cobalt.log('returning storage date ', str_date);
+                return str_date;
             }
             return undefined;
         }

@@ -387,11 +387,11 @@ var cobalt={
             cancel : "Cancel",
             delete : "Clear"
         },
-        //Default format function. used by some adapters to format input value if needed
-        //user can override this. default format is "yyyy-mm-dd".
+        //default format is "yyyy-mm-dd".
         format:function(value){
             return value;
         },
+        placeholderStyles:"width:100%; color:#AAA;",
         //internal
         init:function(){
             var inputs=$('input[type=date]')
@@ -440,8 +440,14 @@ var cobalt={
             var date = cobalt.storage.getItem('CobaltDatePickerValue_'+$(this).attr('id'), 'json')
             if (date){
                 cobalt.log('format date=',date)
-                $(this).val(cobalt.datePicker.format(date.year+'-'+cobalt.datePicker.zerofill(date.month,2)+'-'+cobalt.datePicker.zerofill(date.day,2)))
+                $(this).val(cobalt.datePicker.format(cobalt.datePicker.stringifyDate(date)))
             }
+        },
+        stringifyDate:function(date){
+            if (date && date.year!==undefined){
+                return date.year+'-'+cobalt.datePicker.zerofill(date.month,2)+'-'+cobalt.datePicker.zerofill(date.day,2)
+            }
+            return ""
         },
         zerofill:function(number, padding){
             return new String( new Array(padding + 1).join("0") + number ).slice(-padding)
@@ -451,16 +457,8 @@ var cobalt={
                 cobalt.log('returning cobalt adapter datePicker value')
                 return cobalt.adapter.datePicker.val(input);
             }else{
-                cobalt.log('returning default datePicker value')
-                var values=( $(input).val()||"" ).split('-');
-                if (values.length==3){
-                    return {
-                        year: parseInt(values[0], 10),
-                        month : parseInt(values[1], 10),
-                        day : parseInt(values[2], 10)
-                    }
-                }
-                return undefined;
+                cobalt.log('returning cobalt default datePicker value')
+                return $(input).val() || undefined;
             }
         }
     },
@@ -654,8 +652,9 @@ var cobalt={
         val:function(input){
             var date = cobalt.storage.getItem('CobaltDatePickerValue_'+$(input).attr('id'), 'json')
             if (date){
-                cobalt.log('returning storage date '+JSON.stringify(date));
-                return date;
+                var str_date=cobalt.datePicker.stringifyDate(date)
+                cobalt.log('returning storage date ', str_date);
+                return str_date;
             }
             return undefined;
         }

@@ -36,7 +36,15 @@
 	            cobalt.init({
                     debug:app.debug,
                     debugInBrowser:app.debugInBrowser,
-                    debugInDiv:app.debugInDiv
+                    debugInDiv:app.debugInDiv,
+
+                    datePicker:{
+                        format:function(value){
+                            //from yyyy-mm-dd to dd/mm/yyyy
+                            var values=value.split('-');
+                            return (values.length==3) ? values.reverse().join('/') : value;
+                        }
+                    }
 
                 });
 
@@ -45,7 +53,7 @@
                     var input=$(this).prev('input');
                     cobalt.alert('Input value',
                             'value is'+ $(input).val()+'\n' +
-                            'cobalt.datePicker.val is ' + JSON.stringify(cobalt.datePicker.val(input))
+                            'cobalt.datePicker.val is ' + cobalt.datePicker.val(input)
                     )
                 });
 

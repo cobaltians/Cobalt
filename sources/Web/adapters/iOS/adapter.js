@@ -50,7 +50,7 @@ cobalt.ios_adapter={
 
                 var placeholder=input.attr('placeholder');
                 if (placeholder){
-                    $('head').append('<style> #'+id+':before{ content:"'+placeholder+'"; width:100%; color:#AAA; } #'+id+':focus:before,#'+id+'.not_empty:before{ content:none }</style>');
+                    $('head').append('<style> #'+id+':before{ content:"'+placeholder+'"; '+cobalt.datePicker.placeholderStyles+' } #'+id+':focus:before,#'+id+'.not_empty:before{ content:none }</style>');
                 }
                 input.on('change keyup',cobalt.datePicker.updateFromValue);
             });
