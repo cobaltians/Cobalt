@@ -1,6 +1,6 @@
 /**
  *
- * HTMLDatePickerFragment
+ * CobaltDatePickerFragment
  * Cobalt
  *
  * The MIT License (MIT)
