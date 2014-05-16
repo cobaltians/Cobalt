@@ -71,11 +71,17 @@ static iToastSettings *sharedSettings = nil;
 	UIImage *image = [theSettings.images valueForKey:[NSString stringWithFormat:@"%i", type]];
 	
 	UIFont *font = [UIFont systemFontOfSize:16];
-    CGRect textRect = [text boundingRectWithSize:CGSizeMake(280, 60)
-                                         options:NSStringDrawingUsesLineFragmentOrigin
-                                      attributes:@{NSFontAttributeName: font}
-                                         context:nil];
-    CGSize textSize = textRect.size;
+    CGSize textSize;
+    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
+        textSize = [text sizeWithFont:font constrainedToSize:CGSizeMake(280, 60)];
+    } else {
+        CGRect textRect = [text boundingRectWithSize:CGSizeMake(280, 60)
+                                             options:NSStringDrawingUsesLineFragmentOrigin
+                                          attributes:@{NSFontAttributeName: font}
+                                             context:nil];
+        textSize = textRect.size;
+    }
+    
 	
 	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0,0, textSize.width + kComponentPadding, textSize.height + kComponentPadding)];
 	label.backgroundColor = [UIColor clearColor];
