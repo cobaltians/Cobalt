@@ -358,7 +358,6 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 					public void run() {
 						// Line & paragraph separators are not JSON compliant but supported by JSONObject
 						String script = jsonObj.toString().replaceAll("[\u2028\u2029]", "");
-                        if (Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeScriptInWebView: " + script);
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                             // Since KitKat, messages are automatically urldecoded when received from the web. encoding them to fix this.
