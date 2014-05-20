@@ -33,7 +33,6 @@ import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.webkit.WebView;
 
 public class OverScrollingWebView extends WebView {
@@ -57,19 +56,6 @@ public class OverScrollingWebView extends WebView {
 
 	public void setScrollListener(CobaltFragment scrollListener) {
 		mScrollListener = scrollListener;
-	}
-
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			int scrollY = getScrollY();
-
-			// TODO: this is INSANE! Scrolls the WebView one pixel down then one pixel up to avoid the freeze feeling...
-			scrollTo(0, scrollY + 1);
-			scrollTo(0, scrollY);
-		}
-		
-		return super.onTouchEvent(event);
 	}
 
 	/**
