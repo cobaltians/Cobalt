@@ -385,7 +385,7 @@ var cobalt={
         texts:{
             validate : "Ok",
             cancel : "Cancel",
-            delete : "Clear"
+            clear : "Clear"
         },
         //default format is "yyyy-mm-dd".
         format:function(value){
