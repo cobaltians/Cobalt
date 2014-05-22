@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>3328B57B-DA89-461C-83F1-3E1797E346D9</string>
+	<key>IDESourceControlProjectName</key>
+	<string>CatalogCobalt</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>D6422A75-336B-4C08-B5B6-3EEAAB0892E8</key>
+		<string>https://github.com/cobaltians/cobalt.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>samples/CatalogApp/iOS/CatalogCobalt/CatalogCobalt.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>D6422A75-336B-4C08-B5B6-3EEAAB0892E8</key>
+		<string>../../../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/cobaltians/cobalt.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>D6422A75-336B-4C08-B5B6-3EEAAB0892E8</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D6422A75-336B-4C08-B5B6-3EEAAB0892E8</string>
+			<key>IDESourceControlWCCName</key>
+			<string>cobalt</string>
+		</dict>
+	</array>
+</dict>
+</plist>

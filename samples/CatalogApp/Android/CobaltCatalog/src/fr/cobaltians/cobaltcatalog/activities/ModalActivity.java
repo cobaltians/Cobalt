@@ -1,13 +1,14 @@
 package fr.cobaltians.cobaltcatalog.activities;
 
-import fr.cobaltians.cobalt.activities.HTMLActivity;
-import fr.cobaltians.cobalt.fragments.HTMLFragment;
 import fr.cobaltians.cobaltcatalog.fragments.ModalFragment;
 
-public class ModalActivity extends HTMLActivity {
+import fr.cobaltians.cobalt.activities.CobaltActivity;
+import fr.cobaltians.cobalt.fragments.CobaltFragment;
+
+public class ModalActivity extends CobaltActivity {
 
 	@Override
-	protected HTMLFragment getFragment() {
+	protected CobaltFragment getFragment() {
 		return new ModalFragment();
 	}
 

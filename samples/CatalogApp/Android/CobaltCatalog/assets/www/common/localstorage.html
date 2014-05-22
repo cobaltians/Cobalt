@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
+    </head>
+    <body class="green">
+  		
+  		<a href="javascript:;" class="pop">POP</a><br/>
+
+		<p>This page use the LocalStorage, as fixed and enhanced with Cobalt</p>
+
+		<a href="javascript:;" id="store">Store value "stored"</a><br/>
+  		<a href="javascript:;" id="store2">Store value "saved"</a><br/>
+  		<a href="javascript:;" id="retrieve">Retrieve value</a><br/>
+  		<a href="javascript:;" id="clean">Clean all values</a><br/>
+
+
+		<p>Below, a link to another page. You can test going from one to the other to check storage persistence.</p>
+
+		<a class="push" href="javascript:;" data-href="localstorage_page2.html">Push 2nd page</a>
+
+
+		<p>The button below is sending a bench of automatic tests.</p>
+
+		<a href="javascript:;" id="test4">Tests</a><br/>
+
+		<p>The button bellow <b>store</b> 2000 values in the localStorage and shows elapsed time.</p>
+
+		<a href="javascript:;" id="test5">Speed test 1</a><br/>
+
+		<p>The button bellow <b>retrieve</b> 2000 values in the localStorage and shows elapsed time.</p>
+
+		<a href="javascript:;" id="test6">Speed test 2</a><br/>
+
+
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="../platform/cobalt.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+
+
+        <script>
+            
+            Zepto(function($){
+
+	            cobalt.init({
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInDiv:app.debugInDiv
+
+	            });
+
+                cobalt.log("init dismissInformations : "+cobalt.storage.getItem("dismissInformations"));
+				cobalt.log("init testLocalStorageKey : "+cobalt.storage.getItem("testLocalStorageKey"));
+
+
+
+                app.touch('a.pop',function(){
+                    cobalt.navigate('pop');
+                });
+
+
+	            app.touch('a.push',function(){
+	            	cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
+	            });
+
+                app.touch('a#store',function(){
+		            var obj={ value: "stored"}
+		            cobalt.log("Changing value to", obj)
+					cobalt.storage.setItem('testLocalStorageKey',obj, "json")
+	            });
+
+                app.touch('a#store2',function(){
+		            var obj={ value: "saved"}
+                    cobalt.log("Changing value to", obj)
+					cobalt.storage.setItem('testLocalStorageKey',obj, "json")
+	            });
+
+                app.touch('a#retrieve',function(){
+		            var keyvalue=cobalt.storage.getItem('testLocalStorageKey',"json")
+		            if (keyvalue){
+			            if (keyvalue.value){
+				            cobalt.log("value key of 'testLocalStorageKey' contains : "+ keyvalue.value)
+			            }
+			            else{
+				            cobalt.log("value key of 'testLocalStorageKey' is not set.")
+			            }
+		            }else{
+			            cobalt.log("key 'testLocalStorageKey' is not set")
+		            }
+	            });
+
+                app.touch('a#clean',function(){
+					cobalt.log("Cleaning local storage.")
+					cobalt.storage.clear();
+	            });
+
+
+
+
+                app.touch('#test4',function(){
+					cobalt.log("-- launching automatic tests")
+					cobalt.storage.clear();
+
+
+		            app.assertEqual('set/get', function(){
+			            cobalt.storage.setItem("setget","toto");
+			            return cobalt.storage.getItem("setget");
+		            },"toto");
+
+		            app.assertEqual('null', function(){
+			            cobalt.storage.setItem("null",null);
+			            return cobalt.storage.getItem("toto");
+		            },null);
+
+		            app.assertEqual('undef', function(){
+			            cobalt.storage.setItem("undef",undefined);
+			            return cobalt.storage.getItem("undef");
+		            },"undefined") //nice one browsers... ;)
+
+		            app.assertEqual('set/set', function(){
+			            cobalt.storage.setItem("setset","toto");
+			            cobalt.storage.setItem("setset","tata");
+			            return cobalt.storage.getItem("setset");
+		            },"tata");
+
+		            app.assertEqual('set/rem', function(){
+			            cobalt.storage.setItem("setrem","toto");
+			            cobalt.storage.removeItem("setrem");
+			            return cobalt.storage.getItem("setrem");
+		            }, null);
+
+
+		            app.assertEqual('jsonSetGet', function(){
+			            var obj1={a:1, b:"xyz", c:true};
+			            cobalt.storage.setItem("jsonSetGet",obj1, "json");
+			            var obj2=cobalt.storage.getItem("jsonSetGet","json");
+			            var result=true;
+			            $.each(obj1,function(index,item){
+				            if (obj1[index]!=obj2[index]){
+					            result=false;
+				            }
+			            });
+			            return result;
+		            }, true);
+
+		            cobalt.log("--end of automatic tests")
+				});
+
+
+                app.touch('#test5',function(){
+		            cobalt.toast('started...')
+		            var startTime=new Date().getTime();
+		            for (var i=1;i<=2000;i++){
+						cobalt.storage.setItem('item_'+i,"splendid value stored")
+		            }
+		            var endTime=new Date().getTime();
+		            cobalt.toast('ended. done in '+(endTime-startTime)+"ms")
+				});
+
+                app.touch('#test6',function(){
+		            cobalt.toast('started...')
+		            var startTime=new Date().getTime();
+		            var values=[]
+		            for (var i=1;i<=2000;i++){
+						values.push(cobalt.storage.getItem('item_'+i));
+		            }
+		            var endTime=new Date().getTime();
+		            cobalt.toast('ended. done in '+(endTime-startTime)+"ms")
+				});
+
+
+
+            })
+            
+
+        </script>
+        
+    </body>
+</html>

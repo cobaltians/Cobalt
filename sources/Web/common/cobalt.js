@@ -27,7 +27,7 @@ var cobalt={
     userEvents:{}, //objects of events defined by the user
 	debug:false,
 	debugInBrowser:false,
-	debugInLogdiv:false,
+	debugInDiv:false,
 
 	callbacks:{},//array of all callbacks by callbackID
 	lastCallbackId:0,
@@ -39,16 +39,26 @@ var cobalt={
     	if (options){
             this.debug = ( options.debug === true );
             this.debugInBrowser = ( options.debugInBrowser === true );
-            this.debugInLogdiv = ( options.debugInLogdiv === true );
+            this.debugInDiv = ( options.debugInDiv === true );
 
+            if (cobalt.debugInDiv){
+                this.createLogDiv();
+            }
 		    if (options.events){
 		        this.userEvents=options.events
 	        }
-            if (cobalt.debugInLogdiv){
-			    this.createLogDiv();
+            cobalt.storage.enable();
+
+            $.extend(cobalt.datePicker, options.datePicker);
+            if (cobalt.datePicker.enabled){
+                cobalt.datePicker.init();
             }
-		}
-		cobalt.storage.enable();
+
+
+		}else{
+            cobalt.storage.enable();
+        }
+
 
 		if (cobalt.adapter.init){
 			cobalt.adapter.init();
@@ -85,7 +95,7 @@ var cobalt={
     //TODO change all dependencies
     divLog:function(){
         //TODO document this
-        if (cobalt.debugInLogdiv){
+        if (cobalt.debugInDiv){
 	        cobalt.createLogDiv();
             var logdiv=$('#cobalt_logdiv')
             if (logdiv.length){
@@ -264,16 +274,16 @@ var cobalt={
     /* internal, called from native */
     execute:function(json){
     	cobalt.divLog("received", json)
-        /*test if data.type exists, otherwise parse data or die silently */
-        if (json && ! json.type){
+        /*parse data if string, die silently if parsing error */
+		if (json && typeof json == "string"){
         	try{
                 json = JSON.parse(json);
             }catch(e){
-                json = {};
+				cobalt.divLog("can't parse string to JSON");
             }
         }
         try{
-	        switch (json.type){
+	        switch (json && json.type){
 	        	case "event":
                     cobalt.adapter.handleEvent(json)
 	                break;
@@ -281,46 +291,34 @@ var cobalt={
                     cobalt.adapter.handleCallback(json)
                     break;
 		        default:
-	        		cobalt.log('received unhandled data type : '+json.type)
+                    cobalt.adapter.handleUnknown(json)
 	        }
 	    }catch(e){
             cobalt.log('cobalt.execute failed : '+e)
         }
     },
 	//internal function to try calling callbackID if it's representing a string or a function.
-	tryToCallCallback:function(callback){
+	tryToCallCallback:function(json){
 		cobalt.divLog('trying to call web callback')
 		var callbackfunction=null;
-        if (cobalt.isNumber(callback.callback) && typeof cobalt.callbacks[callback.callback]==="function"){
+        if (cobalt.isNumber(json.callback) && typeof cobalt.callbacks[json.callback]==="function"){
 	        //if it's a number, a real JS callback should exist in cobalt.callbacks
-	        callbackfunction=cobalt.callbacks[callback.callback]
+	        callbackfunction=cobalt.callbacks[json.callback]
 
-		}else if (typeof callback.callback === "string"){
+		}else if (typeof json.callback === "string"){
 	        //if it's a string, check if function exists
-	        callbackfunction=eval(callback.callback)
+	        callbackfunction=eval(json.callback);
 		}
 		if (typeof callbackfunction === "function"){
 	        try{
-		        callbackfunction(callback.data)
+		        callbackfunction(json.data)
 	        }catch(e){
 		        cobalt.log('Failed calling callback : ' + e)
 	        }
+        }else{
+            cobalt.adapter.handleUnknown(json);
         }
 	},
-	//internal, call adapter.initStorage.
-	initStorage:function(){
-		//only enable once if ok.
-		if (! cobalt.localStorageEnabled){
-			//init from adapter
-			cobalt.localStorageEnabled=cobalt.adapter.initStorage();
-			//if wrong state
-			if (! cobalt.localStorageEnabled){
-				cobalt.log("LocalStorage ERROR : localStorage not available !")
-			}
-		}
-		return cobalt.localStorageEnabled;
-	},
-
 	// usefull functions
 	isNumber : function(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
@@ -356,7 +354,9 @@ var cobalt={
 			cobalt.log("received event", json.event)
 		    if (cobalt.userEvents && typeof cobalt.userEvents[json.event] === "function"){
 				cobalt.userEvents[json.event](json.data,json.callback);
-		    }
+		    }else{
+                cobalt.adapter.handleUnknown(json)
+            }
 	    },
 		handleCallback:function(json){
 	        switch(json.callback){
@@ -364,6 +364,9 @@ var cobalt={
 				    cobalt.tryToCallCallback(json)
 			    break;
 	        }
+	    },
+        handleUnknown:function(json){
+			cobalt.log('received unhandled message ', json );
 	    },
 		navigateToModal:function(page, controller){
 			cobalt.send({ "type":"navigation", "action":"modal", data : { page :page, controller: controller }});
@@ -376,6 +379,89 @@ var cobalt={
 		}
 	},
 
+    datePicker:{
+        //USER OPTIONS
+        enabled : true,
+        texts:{
+            validate : "Ok",
+            cancel : "Cancel",
+            clear : "Clear"
+        },
+        //default format is "yyyy-mm-dd".
+        format:function(value){
+            return value;
+        },
+        placeholderStyles:"width:100%; color:#AAA;",
+        //internal
+        init:function(){
+            var inputs=$('input[type=date]')
+
+            inputs.each(function(){
+                var input=$(this);
+                var id=input.attr('id');
+                if (!id){
+                    id='CobaltGeneratedId_'+Math.random().toString(36).substring(7);
+                    input.attr('id',id);
+                }
+                cobalt.datePicker.updateFromValue.apply(input);
+            });
+
+            if (cobalt.adapter.datePicker && cobalt.adapter.datePicker.init){
+                cobalt.adapter.datePicker.init(inputs);
+            }
+        },
+        updateFromValue : function(){
+            var id=$(this).attr('id');
+            cobalt.log("updating storage value of date #",id)
+            if ($(this).val()){
+                $(this).addClass('not_empty')
+            }else{
+                $(this).removeClass('not_empty')
+            }
+            cobalt.log('current value is', $(this).val())
+            var values=$(this).val().split('-')
+            if (values.length==3){
+                var d={
+                    year: parseInt(values[0],10),
+                    month : parseInt(values[1],10),
+                    day : parseInt(values[2],10)
+                }
+                cobalt.log('setting storage date ', 'CobaltDatePickerValue_'+id, d);
+                cobalt.storage.setItem('CobaltDatePickerValue_'+id, d ,'json')
+
+            }else{
+                cobalt.log('removing date');
+                cobalt.storage.removeItem('CobaltDatePickerValue_'+id)
+            }
+            return false;
+        },
+        enhanceFieldValue:function(){
+            //cobalt.log('updating date format')
+            var date = cobalt.storage.getItem('CobaltDatePickerValue_'+$(this).attr('id'), 'json')
+            if (date){
+                cobalt.log('format date=',date)
+                $(this).val(cobalt.datePicker.format(cobalt.datePicker.stringifyDate(date)))
+            }
+        },
+        stringifyDate:function(date){
+            if (date && date.year!==undefined){
+                return date.year+'-'+cobalt.datePicker.zerofill(date.month,2)+'-'+cobalt.datePicker.zerofill(date.day,2)
+            }
+            return ""
+        },
+        zerofill:function(number, padding){
+            return new String( new Array(padding + 1).join("0") + number ).slice(-padding)
+        },
+        val:function(input){
+            if (cobalt.adapter.datePicker && cobalt.adapter.datePicker.val){
+                cobalt.log('returning cobalt adapter datePicker value')
+                return cobalt.adapter.datePicker.val(input);
+            }else{
+                cobalt.log('returning cobalt default datePicker value')
+                return $(input).val() || undefined;
+            }
+        }
+    },
 
 	storage : {
 		/*	localStorage helper

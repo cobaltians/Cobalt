@@ -1,17 +1,10 @@
 package com.example.hello.fragments;
 
+import fr.cobaltians.cobalt.fragments.CobaltFragment;
+
 import org.json.JSONObject;
 
-import com.example.hello.R;
-
-import fr.cobaltians.cobalt.fragments.HTMLFragment;
-
-public class MainFragment extends HTMLFragment {
-	
-	@Override
-	protected int getLayoutToInflate() {
-		return R.layout.activity_main;
-	}
+public class MainFragment extends CobaltFragment {
 
 	@Override
 	protected boolean onUnhandledCallback(String callback, JSONObject data) {
@@ -28,19 +21,16 @@ public class MainFragment extends HTMLFragment {
 	@Override
 	protected void onUnhandledMessage(JSONObject message) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	protected void onPullToRefreshRefreshed() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	protected void onInfiniteScrollRefreshed() {
 		// TODO Auto-generated method stub
-		
 	}
 }
 

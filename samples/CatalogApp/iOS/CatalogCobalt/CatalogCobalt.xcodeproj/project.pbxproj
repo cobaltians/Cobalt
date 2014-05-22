@@ -1,0 +1,399 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		67D8625C1860B2DB00878F9A /* www in Resources */ = {isa = PBXBuildFile; fileRef = 67D8625B1860B2DB00878F9A /* www */; };
+		71B4B1E71886D9DD0027AC4F /* Cobalt.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1D61886D9DD0027AC4F /* Cobalt.m */; };
+		71B4B1E91886D9DD0027AC4F /* CobaltViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1DB1886D9DD0027AC4F /* CobaltViewController.m */; };
+		71B4B1EC1886D9DD0027AC4F /* iToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1E11886D9DD0027AC4F /* iToast.m */; };
+		71B4B1ED1886D9DD0027AC4F /* CobaltToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1E41886D9DD0027AC4F /* CobaltToast.m */; };
+		C45C1F29172EA2FB002BE836 /* chaton.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = C45C1F28172EA2FB002BE836 /* chaton.jpeg */; };
+		C49597581717090B006454BA /* CallbacksController.m in Sources */ = {isa = PBXBuildFile; fileRef = C49597561717090B006454BA /* CallbacksController.m */; };
+		C49597591717090B006454BA /* CallbacksController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C49597571717090B006454BA /* CallbacksController.xib */; };
+		C4A39B4A17281CC9004F7282 /* PullToRefreshController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4A39B4817281CC9004F7282 /* PullToRefreshController.m */; };
+		C4A39B4B17281CC9004F7282 /* PullToRefreshController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4A39B4917281CC9004F7282 /* PullToRefreshController.xib */; };
+		C4D664A2171E8D97009EDE58 /* EventsController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D664A0171E8D97009EDE58 /* EventsController.m */; };
+		C4D664A3171E8D97009EDE58 /* EventsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4D664A1171E8D97009EDE58 /* EventsController.xib */; };
+		C4D664AA171E91D5009EDE58 /* SimpleController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D664A8171E91D5009EDE58 /* SimpleController.m */; };
+		C4D664AB171E91D5009EDE58 /* SimpleController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4D664A9171E91D5009EDE58 /* SimpleController.xib */; };
+		F01A5A0C1716EF4C0000DD94 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F01A5A0B1716EF4C0000DD94 /* UIKit.framework */; };
+		F01A5A0E1716EF4C0000DD94 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F01A5A0D1716EF4C0000DD94 /* Foundation.framework */; };
+		F01A5A101716EF4C0000DD94 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F01A5A0F1716EF4C0000DD94 /* CoreGraphics.framework */; };
+		F01A5A161716EF4C0000DD94 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F01A5A141716EF4C0000DD94 /* InfoPlist.strings */; };
+		F01A5A181716EF4D0000DD94 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F01A5A171716EF4D0000DD94 /* main.m */; };
+		F01A5A1C1716EF4D0000DD94 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F01A5A1B1716EF4D0000DD94 /* AppDelegate.m */; };
+		F01A5A1E1716EF4D0000DD94 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = F01A5A1D1716EF4D0000DD94 /* Default.png */; };
+		F01A5A201716EF4D0000DD94 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F01A5A1F1716EF4D0000DD94 /* Default@2x.png */; };
+		F01A5A221716EF4D0000DD94 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F01A5A211716EF4D0000DD94 /* Default-568h@2x.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		67D8625B1860B2DB00878F9A /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = CatalogCobalt/www; sourceTree = "<group>"; };
+		71B4B1D41886D9DD0027AC4F /* Cobalt-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Cobalt-Prefix.pch"; sourceTree = "<group>"; };
+		71B4B1D51886D9DD0027AC4F /* Cobalt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cobalt.h; sourceTree = "<group>"; };
+		71B4B1D61886D9DD0027AC4F /* Cobalt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cobalt.m; sourceTree = "<group>"; };
+		71B4B1DA1886D9DD0027AC4F /* CobaltViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltViewController.h; sourceTree = "<group>"; };
+		71B4B1DB1886D9DD0027AC4F /* CobaltViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltViewController.m; sourceTree = "<group>"; };
+		71B4B1E01886D9DD0027AC4F /* iToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iToast.h; sourceTree = "<group>"; };
+		71B4B1E11886D9DD0027AC4F /* iToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iToast.m; sourceTree = "<group>"; };
+		71B4B1E31886D9DD0027AC4F /* CobaltToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltToast.h; sourceTree = "<group>"; };
+		71B4B1E41886D9DD0027AC4F /* CobaltToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltToast.m; sourceTree = "<group>"; };
+		C45C1F28172EA2FB002BE836 /* chaton.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = chaton.jpeg; sourceTree = "<group>"; };
+		C49597551717090B006454BA /* CallbacksController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CallbacksController.h; sourceTree = "<group>"; };
+		C49597561717090B006454BA /* CallbacksController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CallbacksController.m; sourceTree = "<group>"; };
+		C49597571717090B006454BA /* CallbacksController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CallbacksController.xib; sourceTree = "<group>"; };
+		C4A39B4717281CC9004F7282 /* PullToRefreshController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullToRefreshController.h; sourceTree = "<group>"; };
+		C4A39B4817281CC9004F7282 /* PullToRefreshController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullToRefreshController.m; sourceTree = "<group>"; };
+		C4A39B4917281CC9004F7282 /* PullToRefreshController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PullToRefreshController.xib; sourceTree = "<group>"; };
+		C4D6649F171E8D97009EDE58 /* EventsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventsController.h; sourceTree = "<group>"; };
+		C4D664A0171E8D97009EDE58 /* EventsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventsController.m; sourceTree = "<group>"; };
+		C4D664A1171E8D97009EDE58 /* EventsController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EventsController.xib; sourceTree = "<group>"; };
+		C4D664A7171E91D5009EDE58 /* SimpleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleController.h; sourceTree = "<group>"; };
+		C4D664A8171E91D5009EDE58 /* SimpleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleController.m; sourceTree = "<group>"; };
+		C4D664A9171E91D5009EDE58 /* SimpleController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SimpleController.xib; sourceTree = "<group>"; };
+		F01A5A081716EF4C0000DD94 /* CatalogCobalt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatalogCobalt.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F01A5A0B1716EF4C0000DD94 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		F01A5A0D1716EF4C0000DD94 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		F01A5A0F1716EF4C0000DD94 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		F01A5A131716EF4C0000DD94 /* CatalogCobalt-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CatalogCobalt-Info.plist"; sourceTree = "<group>"; };
+		F01A5A151716EF4C0000DD94 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F01A5A171716EF4D0000DD94 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F01A5A191716EF4D0000DD94 /* CatalogCobalt-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CatalogCobalt-Prefix.pch"; sourceTree = "<group>"; };
+		F01A5A1A1716EF4D0000DD94 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		F01A5A1B1716EF4D0000DD94 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		F01A5A1D1716EF4D0000DD94 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		F01A5A1F1716EF4D0000DD94 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		F01A5A211716EF4D0000DD94 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F01A5A051716EF4C0000DD94 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F01A5A0C1716EF4C0000DD94 /* UIKit.framework in Frameworks */,
+				F01A5A0E1716EF4C0000DD94 /* Foundation.framework in Frameworks */,
+				F01A5A101716EF4C0000DD94 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		71B4B1D31886D9DD0027AC4F /* Cobalt */ = {
+			isa = PBXGroup;
+			children = (
+				71B4B1D41886D9DD0027AC4F /* Cobalt-Prefix.pch */,
+				71B4B1D51886D9DD0027AC4F /* Cobalt.h */,
+				71B4B1D61886D9DD0027AC4F /* Cobalt.m */,
+				71B4B1D71886D9DD0027AC4F /* Controllers */,
+				71B4B1E01886D9DD0027AC4F /* iToast.h */,
+				71B4B1E11886D9DD0027AC4F /* iToast.m */,
+				71B4B1E21886D9DD0027AC4F /* Views */,
+			);
+			name = Cobalt;
+			path = ../../../../sources/iOS/Cobalt/Cobalt;
+			sourceTree = "<group>";
+		};
+		71B4B1D71886D9DD0027AC4F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				71B4B1DA1886D9DD0027AC4F /* CobaltViewController.h */,
+				71B4B1DB1886D9DD0027AC4F /* CobaltViewController.m */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		71B4B1E21886D9DD0027AC4F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				71B4B1E31886D9DD0027AC4F /* CobaltToast.h */,
+				71B4B1E41886D9DD0027AC4F /* CobaltToast.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C45C1F2A172EA300002BE836 /* img */ = {
+			isa = PBXGroup;
+			children = (
+				C45C1F28172EA2FB002BE836 /* chaton.jpeg */,
+			);
+			name = img;
+			sourceTree = "<group>";
+		};
+		F01A59FF1716EF4C0000DD94 = {
+			isa = PBXGroup;
+			children = (
+				67D8625B1860B2DB00878F9A /* www */,
+				C45C1F2A172EA300002BE836 /* img */,
+				F01A5A111716EF4C0000DD94 /* CatalogCobalt */,
+				F01A5A0A1716EF4C0000DD94 /* Frameworks */,
+				F01A5A091716EF4C0000DD94 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F01A5A091716EF4C0000DD94 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F01A5A081716EF4C0000DD94 /* CatalogCobalt.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F01A5A0A1716EF4C0000DD94 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				71B4B1D31886D9DD0027AC4F /* Cobalt */,
+				F01A5A0B1716EF4C0000DD94 /* UIKit.framework */,
+				F01A5A0D1716EF4C0000DD94 /* Foundation.framework */,
+				F01A5A0F1716EF4C0000DD94 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F01A5A111716EF4C0000DD94 /* CatalogCobalt */ = {
+			isa = PBXGroup;
+			children = (
+				C4D664A7171E91D5009EDE58 /* SimpleController.h */,
+				C4D664A8171E91D5009EDE58 /* SimpleController.m */,
+				C4D664A9171E91D5009EDE58 /* SimpleController.xib */,
+				C49597551717090B006454BA /* CallbacksController.h */,
+				C49597561717090B006454BA /* CallbacksController.m */,
+				C49597571717090B006454BA /* CallbacksController.xib */,
+				C4D6649F171E8D97009EDE58 /* EventsController.h */,
+				C4D664A0171E8D97009EDE58 /* EventsController.m */,
+				C4D664A1171E8D97009EDE58 /* EventsController.xib */,
+				C4A39B4717281CC9004F7282 /* PullToRefreshController.h */,
+				C4A39B4817281CC9004F7282 /* PullToRefreshController.m */,
+				C4A39B4917281CC9004F7282 /* PullToRefreshController.xib */,
+				F01A5A1A1716EF4D0000DD94 /* AppDelegate.h */,
+				F01A5A1B1716EF4D0000DD94 /* AppDelegate.m */,
+				F01A5A121716EF4C0000DD94 /* Supporting Files */,
+			);
+			name = CatalogCobalt;
+			path = CatalogCobalt;
+			sourceTree = "<group>";
+		};
+		F01A5A121716EF4C0000DD94 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F01A5A131716EF4C0000DD94 /* CatalogCobalt-Info.plist */,
+				F01A5A141716EF4C0000DD94 /* InfoPlist.strings */,
+				F01A5A171716EF4D0000DD94 /* main.m */,
+				F01A5A191716EF4D0000DD94 /* CatalogCobalt-Prefix.pch */,
+				F01A5A1D1716EF4D0000DD94 /* Default.png */,
+				F01A5A1F1716EF4D0000DD94 /* Default@2x.png */,
+				F01A5A211716EF4D0000DD94 /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F01A5A071716EF4C0000DD94 /* CatalogCobalt */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F01A5A251716EF4D0000DD94 /* Build configuration list for PBXNativeTarget "CatalogCobalt" */;
+			buildPhases = (
+				F01A5A041716EF4C0000DD94 /* Sources */,
+				F01A5A051716EF4C0000DD94 /* Frameworks */,
+				F01A5A061716EF4C0000DD94 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CatalogCobalt;
+			productName = CatalogCobalt;
+			productReference = F01A5A081716EF4C0000DD94 /* CatalogCobalt.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F01A5A001716EF4C0000DD94 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = HP;
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = Haploid;
+			};
+			buildConfigurationList = F01A5A031716EF4C0000DD94 /* Build configuration list for PBXProject "CatalogCobalt" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = F01A59FF1716EF4C0000DD94;
+			productRefGroup = F01A5A091716EF4C0000DD94 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F01A5A071716EF4C0000DD94 /* CatalogCobalt */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F01A5A061716EF4C0000DD94 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F01A5A161716EF4C0000DD94 /* InfoPlist.strings in Resources */,
+				F01A5A1E1716EF4D0000DD94 /* Default.png in Resources */,
+				F01A5A201716EF4D0000DD94 /* Default@2x.png in Resources */,
+				F01A5A221716EF4D0000DD94 /* Default-568h@2x.png in Resources */,
+				C49597591717090B006454BA /* CallbacksController.xib in Resources */,
+				C4D664A3171E8D97009EDE58 /* EventsController.xib in Resources */,
+				C4D664AB171E91D5009EDE58 /* SimpleController.xib in Resources */,
+				67D8625C1860B2DB00878F9A /* www in Resources */,
+				C4A39B4B17281CC9004F7282 /* PullToRefreshController.xib in Resources */,
+				C45C1F29172EA2FB002BE836 /* chaton.jpeg in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F01A5A041716EF4C0000DD94 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F01A5A181716EF4D0000DD94 /* main.m in Sources */,
+				F01A5A1C1716EF4D0000DD94 /* AppDelegate.m in Sources */,
+				71B4B1E71886D9DD0027AC4F /* Cobalt.m in Sources */,
+				71B4B1EC1886D9DD0027AC4F /* iToast.m in Sources */,
+				C49597581717090B006454BA /* CallbacksController.m in Sources */,
+				C4D664A2171E8D97009EDE58 /* EventsController.m in Sources */,
+				71B4B1E91886D9DD0027AC4F /* CobaltViewController.m in Sources */,
+				C4D664AA171E91D5009EDE58 /* SimpleController.m in Sources */,
+				71B4B1ED1886D9DD0027AC4F /* CobaltToast.m in Sources */,
+				C4A39B4A17281CC9004F7282 /* PullToRefreshController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		F01A5A141716EF4C0000DD94 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F01A5A151716EF4C0000DD94 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F01A5A231716EF4D0000DD94 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		F01A5A241716EF4D0000DD94 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F01A5A261716EF4D0000DD94 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CatalogCobalt/CatalogCobalt-Prefix.pch";
+				INFOPLIST_FILE = "CatalogCobalt/CatalogCobalt-Info.plist";
+				PRODUCT_NAME = CatalogCobalt;
+				USER_HEADER_SEARCH_PATHS = "../HPNativeBridge/HPNativeBridge/**";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		F01A5A271716EF4D0000DD94 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CatalogCobalt/CatalogCobalt-Prefix.pch";
+				INFOPLIST_FILE = "CatalogCobalt/CatalogCobalt-Info.plist";
+				PRODUCT_NAME = CatalogCobalt;
+				USER_HEADER_SEARCH_PATHS = "../HPNativeBridge/HPNativeBridge/**";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F01A5A031716EF4C0000DD94 /* Build configuration list for PBXProject "CatalogCobalt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F01A5A231716EF4D0000DD94 /* Debug */,
+				F01A5A241716EF4D0000DD94 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F01A5A251716EF4D0000DD94 /* Build configuration list for PBXNativeTarget "CatalogCobalt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F01A5A261716EF4D0000DD94 /* Debug */,
+				F01A5A271716EF4D0000DD94 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F01A5A001716EF4C0000DD94 /* Project object */;
+}

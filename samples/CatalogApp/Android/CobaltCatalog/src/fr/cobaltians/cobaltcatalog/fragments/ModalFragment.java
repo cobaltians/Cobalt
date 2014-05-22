@@ -2,9 +2,9 @@ package fr.cobaltians.cobaltcatalog.fragments;
 
 import org.json.JSONObject;
 
-import fr.cobaltians.cobalt.fragments.HTMLFragment;
+import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
-public class ModalFragment extends HTMLFragment {
+public class ModalFragment extends CobaltFragment {
 
 	// unhandled JS messages
 	@Override

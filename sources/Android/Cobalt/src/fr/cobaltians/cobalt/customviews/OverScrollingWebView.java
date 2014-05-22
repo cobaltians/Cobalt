@@ -29,18 +29,18 @@
 
 package fr.cobaltians.cobalt.customviews;
 
+import fr.cobaltians.cobalt.fragments.CobaltFragment;
+
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.webkit.WebView;
-import fr.cobaltians.cobalt.fragments.HTMLFragment;
 
 public class OverScrollingWebView extends WebView {
 
 	/**
 	 * Fragment handling scroll events
 	 */
-	protected HTMLFragment mScrollListener;
+	protected CobaltFragment mScrollListener;
 
 	public OverScrollingWebView(Context context) {
 		super(context);
@@ -53,26 +53,9 @@ public class OverScrollingWebView extends WebView {
 	public OverScrollingWebView(Context context, AttributeSet attributes, int defaultStyle) {
 		super(context, attributes, defaultStyle);
 	}
-	
-	public HTMLFragment getScrollListener() {
-		return mScrollListener;
-	}
 
-	public void setScrollListener(HTMLFragment scrollListener) {
+	public void setScrollListener(CobaltFragment scrollListener) {
 		mScrollListener = scrollListener;
-	}
-
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			int scrollY = getScrollY();
-
-			// TODO: this is INSANE! Scrolls the webview one pixel down then one pixel up to avoid the freeze feeling...
-			scrollTo(0, getScrollY() + 1);
-			scrollTo(0, scrollY);
-		}
-		
-		return super.onTouchEvent(event);
 	}
 
 	/**
@@ -82,7 +65,7 @@ public class OverScrollingWebView extends WebView {
 	protected void onScrollChanged(int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 		super.onScrollChanged(scrollX, scrollY, oldScrollX, oldScrollY);
 		
-		if(	mScrollListener != null 
+		if (mScrollListener != null
 			&& IScrollListener.class.isAssignableFrom(mScrollListener.getClass())) {
 			((IScrollListener) mScrollListener).onOverScrolled(scrollX, scrollY, oldScrollX, oldScrollY);
 		}

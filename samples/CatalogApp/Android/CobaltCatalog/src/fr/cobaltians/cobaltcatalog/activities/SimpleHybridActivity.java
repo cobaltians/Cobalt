@@ -1,22 +1,14 @@
 package fr.cobaltians.cobaltcatalog.activities;
 
-import android.view.Menu;
-import fr.cobaltians.cobalt.activities.HTMLActivity;
-import fr.cobaltians.cobalt.fragments.HTMLFragment;
-import fr.cobaltians.cobaltcatalog.R;
 import fr.cobaltians.cobaltcatalog.fragments.SimpleHybridFragment;
 
-public class SimpleHybridActivity extends HTMLActivity {
-	
-	protected HTMLFragment getFragment() {
-		return HTMLFragment.getFragmentForController(getApplicationContext(), SimpleHybridFragment.class, "default", "index.html");
-	}
+import fr.cobaltians.cobalt.Cobalt;
+import fr.cobaltians.cobalt.activities.CobaltActivity;
+import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
+public class SimpleHybridActivity extends CobaltActivity {
 
+    protected CobaltFragment getFragment() {
+		return Cobalt.getInstance(this).getFragmentForController(SimpleHybridFragment.class, "default", "index.html");
+	}
 }
