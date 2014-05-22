@@ -701,11 +701,12 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 					
 					JSONObject texts = data.optJSONObject(Cobalt.kJSTexts);
 					String title = texts.optString(Cobalt.kJSTitle, null);
-					String delete = texts.optString(Cobalt.kJSDelete, null);
-					String cancel = texts.optString(Cobalt.kJSCancel, null);
+					//String delete = texts.optString(Cobalt.kJSDelete, null);
+                    String clear = texts.optString(Cobalt.kJSClear, null);
+                    String cancel = texts.optString(Cobalt.kJSCancel, null);
 					String validate = texts.optString(Cobalt.kJSValidate, null);
 					
-					showDatePickerDialog(year, month, day, title, delete, cancel, validate, callback);
+					showDatePickerDialog(year, month, day, title, clear, cancel, validate, callback);
 					
 					return true;
 				}

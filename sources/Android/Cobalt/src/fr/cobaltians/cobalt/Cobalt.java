@@ -134,7 +134,8 @@ public class Cobalt {
     public static final String kJSTexts = "texts";
     public static final String kJSTitle ="title";
     public static final String kJSCancel = "cancel";
-    public static final String kJSDelete = "delete";
+    //public static final String kJSDelete = "delete";
+    public static final String kJSClear = "clear";
     public static final String kJSValidate = "validate";
 
     // TOAST
