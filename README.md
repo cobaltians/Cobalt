@@ -9,7 +9,7 @@ Cobalt is a web and native framework to create mobile applications that can mix 
 * see [roadmap](https://github.com/cobaltians/cobalt/wiki/roadmap) and platforms [feature list](https://github.com/cobaltians/cobalt/wiki/features)
 
 
-Follow [@_cobaltians](https://twitter.com/_cobaltians) for updates or contact us on the [Google Group](groups.google.com/forum/?pli=1#!forum/cobaltians) 
+Follow [@cobaltians](https://twitter.com/cobaltians) for updates or contact us on the [Google Group](groups.google.com/forum/?pli=1#!forum/cobaltians) 
 
 
 
