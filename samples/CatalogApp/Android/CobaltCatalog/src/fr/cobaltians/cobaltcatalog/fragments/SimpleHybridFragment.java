@@ -9,12 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SimpleHybridFragment extends CobaltFragment {
-	
-	@Override
-	protected int getLayoutToInflate()
-	{
-		return R.layout.simple_hybrid_fragment;
-	}
 
 	private JSONArray generateBigData(int size)
 	{

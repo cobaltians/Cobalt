@@ -34,21 +34,14 @@ import fr.cobaltians.cobalt.R;
 import fr.cobaltians.cobalt.activities.CobaltActivity;
 import fr.cobaltians.cobalt.customviews.IScrollListener;
 import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
-import fr.cobaltians.cobalt.customviews.PullToRefreshOverScrollWebview;
 import fr.cobaltians.cobalt.database.LocalStorageJavaScriptInterface;
-import fr.cobaltians.cobalt.webViewClients.ScaleWebViewClient;
-import com.handmark.pulltorefresh.library.LoadingLayoutProxy;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -56,14 +49,18 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.*;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,7 +70,7 @@ import org.json.JSONObject;
  * 
  * @author Diane Moebs
  */
-public abstract class CobaltFragment extends Fragment implements IScrollListener {
+public abstract class CobaltFragment extends Fragment implements IScrollListener, SwipeRefreshLayout.OnRefreshListener {
 
     // TAG
     protected final static String TAG = CobaltFragment.class.getSimpleName();
@@ -87,8 +84,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
     protected ViewGroup mWebViewContainer;
 
 	protected OverScrollingWebView mWebView;
-    // Web view may having pull-to-refresh and/or infinite scroll features.
-    protected PullToRefreshOverScrollWebview mPullToRefreshWebView;
+    protected SwipeRefreshLayout mSwipeRefreshLayout;
 
 	protected Handler mHandler = new Handler();
 	private ArrayList<JSONObject> mWaitingJavaScriptCallsQueue = new ArrayList<JSONObject>();
@@ -187,7 +183,8 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 * @return Layout id inflated by this fragment
 	 */
 	protected int getLayoutToInflate() {
-		return R.layout.fragment_cobalt;
+		if (isPullToRefreshActive()) return R.layout.fragment_refresh_cobalt;
+        else return R.layout.fragment_cobalt;
 	}
 
 	/**
@@ -197,11 +194,25 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 */
 	protected void setUpViews(View rootView) {
         mWebViewContainer = ((ViewGroup) rootView.findViewById(getWebViewContainerId()));
+        if (isPullToRefreshActive()) {
+            mSwipeRefreshLayout = ((SwipeRefreshLayout) rootView.findViewById(getSwipeRefreshContainerId()));
+            if (mSwipeRefreshLayout != null) {
+                mSwipeRefreshLayout.setColorScheme( android.R.color.holo_blue_bright,
+                                                    android.R.color.holo_blue_light,
+                                                    android.R.color.holo_blue_dark,
+                                                    android.R.color.holo_blue_light);
+            }
+            else if (Cobalt.DEBUG) Log.w(Cobalt.TAG, TAG + " - setUpViews: SwipeRefresh container not found!");
+        }
         if (Cobalt.DEBUG && mWebViewContainer == null) Log.w(Cobalt.TAG, TAG + " - setUpViews: WebView container not found!");
 	}
 
     protected int getWebViewContainerId() {
         return R.id.web_view_container;
+    }
+
+    protected int getSwipeRefreshContainerId() {
+        return R.id.swipe_refresh_container;
     }
 
 	/**
@@ -216,33 +227,18 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 */
 	protected void addWebView() {
         if (mWebView == null) {
-            if (isPullToRefreshActive()) {
-                mPullToRefreshWebView = new PullToRefreshOverScrollWebview(mContext);
-                mPullToRefreshWebView.setMode(Mode.PULL_FROM_START);
-                mPullToRefreshWebView.setOnRefreshListener(new OnRefreshListener<OverScrollingWebView>() {
-
-                    @Override
-                    public void onRefresh(PullToRefreshBase<OverScrollingWebView> refreshView) {
-                        refreshWebView();
-                    }
-                });
-
-                mWebView = mPullToRefreshWebView.getRefreshableView();
-            }
-            else {
-                mWebView = new OverScrollingWebView(mContext);
+            if (isPullToRefreshActive()
+                && mSwipeRefreshLayout != null) {
+                mSwipeRefreshLayout.setOnRefreshListener(this);
+                //refreshWebView();
             }
 
+            mWebView = new OverScrollingWebView(mContext);
             setWebViewSettings(this);
 		}
 
         if (mWebViewContainer != null) {
-            if (isPullToRefreshActive()) {
-                mWebViewContainer.addView(mPullToRefreshWebView);
-            }
-            else {
-                mWebViewContainer.addView(mWebView);
-            }
+            mWebViewContainer.addView(mWebView);
         }
 	}
 
@@ -289,16 +285,15 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
         mWebView.addJavascriptInterface(javascriptInterface, "Android");
         mWebView.addJavascriptInterface(new LocalStorageJavaScriptInterface(mContext), "LocalStorage");
 
-        ScaleWebViewClient scaleWebViewClient = new ScaleWebViewClient() {
+        WebViewClient webViewClient = new WebViewClient() {
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 executeWaitingCalls();
             }
         };
-        scaleWebViewClient.setScaleListener(this);
 
-        mWebView.setWebViewClient(scaleWebViewClient);
+        mWebView.setWebViewClient(webViewClient);
     }
 
     @SuppressLint("NewApi")
@@ -332,12 +327,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 */
 	private void removeWebViewFromPlaceholder() {
 		if (mWebViewContainer != null) {
-			if (isPullToRefreshActive()) {
-                mWebViewContainer.removeView(mPullToRefreshWebView);
-			}
-            else {
-                mWebViewContainer.removeView(mWebView);
-            }
+            mWebViewContainer.removeView(mWebView);
 		}
 	}
 	
@@ -379,7 +369,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 
 	private void executeWaitingCalls() {
 		int waitingJavaScriptCallsQueueLength = mWaitingJavaScriptCallsQueue.size();
-		
+
 		for (int i = 0 ; i < waitingJavaScriptCallsQueueLength ; i++) {
 			if (Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - executeWaitingCalls: execute " + mWaitingJavaScriptCallsQueue.get(i).toString());
 			executeScriptInWebView(mWaitingJavaScriptCallsQueue.get(i));
@@ -1038,56 +1028,24 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 *****************************************************************************************************************************/
 	
 	/**
-	 * Customizes pull-to-refresh loading view.
+	 * Set the four colours int the pull-to-refresh progress.
      * Must be called only after super.onStart().
-	 * @param pullLabel: text shown when user pulling
-	 * @param refreshingLabel: text shown while refreshing
-	 * @param releaseLabel: text shown when refreshed
-	 * @param lastUpdatedLabel: text shown for the last update
-	 * @param loadingDrawable: drawable shown when user pulling
-	 * @details loadingDrawable animation or labels text color customization must be done in the layout.
-	 * @example ptr:ptrAnimationStyle="flip|rotate"
+	 * @param colorResource1: text shown when user pulling
+	 * @param colorResource2: text shown while refreshing
+	 * @param colorResource3: text shown when refreshed
+	 * @param colorResource4: text shown for the last update
 	 */
-	protected void setCustomTitlesAndImage(String pullLabel, String refreshingLabel, String releaseLabel, String lastUpdatedLabel, Drawable loadingDrawable, Typeface typeface) {
-        if (mPullToRefreshWebView != null) {
-            LoadingLayoutProxy loadingLayoutProxy = ((LoadingLayoutProxy) mPullToRefreshWebView.getLoadingLayoutProxy());
-            if (lastUpdatedLabel != null) {
-                loadingLayoutProxy.setLastUpdatedLabel(lastUpdatedLabel);
-            }
-            if (pullLabel != null) {
-                loadingLayoutProxy.setPullLabel(pullLabel);
-            }
-            if (refreshingLabel != null) {
-                loadingLayoutProxy.setRefreshingLabel(refreshingLabel);
-            }
-            if (releaseLabel != null) {
-                loadingLayoutProxy.setReleaseLabel(releaseLabel);
-            }
-            if (loadingDrawable != null) {
-                loadingLayoutProxy.setLoadingDrawable(loadingDrawable);
-            }
-            if (typeface != null) {
-                loadingLayoutProxy.setTextTypeface(typeface);
-            }
-        }
-        else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - setCustomTitlesAndImage: Pull-to-refresh must be active and method called after super.onStart()!");
+	protected void setRefreshColorScheme(int colorResource1, int colorResource2, int colorResource3, int colorResource4) {
+        if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setColorScheme(colorResource1, colorResource2, colorResource3, colorResource4);
+        else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - setColorScheme: Pull-to-refresh must be active and method called after super.onStart()!");
 	}
-	
-	/**
-	 * Customizes pull-to-refresh last updated label
-	 * @param text: text of last updated label
-	 */
-	private void setLastUpdatedLabel(String text) {
-        if (mPullToRefreshWebView != null) {
-            LoadingLayoutProxy loadingLayoutProxy = (LoadingLayoutProxy) mPullToRefreshWebView.getLoadingLayoutProxy();
-            if (text != null) {
-                loadingLayoutProxy.setLastUpdatedLabel(text);
-            }
-        }
-        else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - setLastUpdatedLabel: Pull-to-refresh must be active!");
-	}
-	
-	private void refreshWebView() {
+
+    @Override
+    public void onRefresh() {
+        refreshWebView();
+    }
+
+    private void refreshWebView() {
 		mHandler.post(new Runnable() {
 
 			@Override
@@ -1098,7 +1056,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	}
 	
 	private void onPullToRefreshDidRefresh() {
-		mPullToRefreshWebView.onRefreshComplete();
+        mSwipeRefreshLayout.setRefreshing(false);
 		onPullToRefreshRefreshed();
 	}
 
@@ -1182,15 +1140,4 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
             return null;
         }
     }
-
-    /**************************************************************
-     * SCALE LISTENER
-     **************************************************************/
-
-	/**
-	 * Fired by {@link ScaleWebViewClient} to inform Web view its scale changed (pull-to-refresh need to know that to show its header appropriately).
-	 */
-	public void notifyScaleChange(float oldScale, float newScale) {
-        if (isPullToRefreshActive()) mPullToRefreshWebView.setWebviewScale(newScale);
-	}
 }
