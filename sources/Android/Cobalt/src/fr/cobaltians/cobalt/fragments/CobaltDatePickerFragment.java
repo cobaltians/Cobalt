@@ -112,7 +112,9 @@ public class CobaltDatePickerFragment extends DialogFragment implements DatePick
                 datePicker.setMinDate(minDate.getTimeInMillis());
             }
 			else {
-                datePicker.init(0000, 01, 01, new DatePicker.OnDateChangedListener() {
+                //TODO find a way to init datePicker under 1900 for android 2.3.7
+
+                datePicker.init(1900, 00, 01, new DatePicker.OnDateChangedListener() {
                     @Override
                     public void onDateChanged(DatePicker datePicker, int year, int month, int day) {
                         Calendar newDate = Calendar.getInstance();
