@@ -245,8 +245,7 @@ echo "
 
 #WRITTING main.xml
 
-echo "
-<?xml version=\"1.0\" encoding=\"utf-8\"?>
+echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>
 <LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"
     android:orientation=\"vertical\"
     android:layout_width=\"fill_parent\"
