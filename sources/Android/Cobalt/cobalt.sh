@@ -78,7 +78,7 @@ function cobaltproject {
 ### LET'S TEST IF ANDROID IS INSTALLED
 ANDROID_BOOL=$(command -v android)
 
-if [ -z $ANDROID_BOOL ] then
+if [ -z $ANDROID_BOOL ]; then
 
   echo "Please install Android as a command line";
   exit 1;
@@ -131,7 +131,6 @@ mkdir ${PROJECT_PATH}${PROJECT_NAME}/assets/www/css
 touch ${PROJECT_PATH}${PROJECT_NAME}/assets/www/cobalt.conf
 touch ${PROJECT_PATH}${PROJECT_NAME}/src/${PACKAGE_AS_A_PATH}/MainFragment.java
 touch ${PROJECT_PATH}${PROJECT_NAME}/assets/www/home.html
-touch ${PROJECT_PATH}${PROJECT_NAME}/res/layout/rain.xml
 ###COPYING FILES
 
 cp ${COBALT_PATH}/../../../distribution/web/Android/cobalt.js ${PROJECT_PATH}${PROJECT_NAME}/assets/www/js/
