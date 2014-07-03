@@ -11,7 +11,7 @@ function displayHelp {
   echo
   echo "***cobalt.sh usage***"
   echo
-  echo "     -a In order to create a new Cobalt project"
+  echo "     -a [PATH OF WORKSPACE] In order to create a new Cobalt project"
   echo "     -p In order to add plugins to a Cobalt project"
   echo
   echo "*********************"
@@ -73,9 +73,17 @@ function plugin {
 #ARGUMENT IS THE PROJECT PATH
 function cobaltproject {
   PROJECT_NAME=""
-  PROJECT_PATH=$1
+  PROJECT_PATH=${1}/
   PACKAGE_NAME=""
+### LET'S TEST IF ANDROID IS INSTALLED
+ANDROID_BOOL=$(command -v android)
 
+if [ -z $ANDROID_BOOL ] then
+
+  echo "Please install Android as a command line";
+  exit 1;
+
+fi
   echo
 
   while [ -z $PROJECT_NAME ]
@@ -259,24 +267,37 @@ echo "
 ###VARIABLE DEFINITION###
 #########################
 
-
+NO_ARG="";
 while getopts "a:p:h" opt; do
 
   case $opt in
     a)
+    NO_ARG="A"
     cobaltproject $OPTARG
+
   ;;
     p)
+    NO_ARG="P"
     plugin
   ;;
     h)
-    displayHelp
+    NO_ARG="H"
+    displayHelp;
   ;;
-    \?)
-    echo "Invalid option: -$OPTARG" >&2
+    ?)
+    displayHelp;
+    exit 2;
+    #echo "Invalid option: -$OPTARG" >&2
   ;;
 esac
 done
+
+if [ -z $NO_ARG ]; then
+
+  displayHelp;
+  exit 2;
+
+fi
 
 
 #android create project --name hello --target 1 --path hello --activity DefaultActivity --package com.default.hello
