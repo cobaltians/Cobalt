@@ -84,7 +84,6 @@ if [ -z $ANDROID_BOOL ]; then
   exit 1;
 
 fi
-  echo
 
   while [ -z $PROJECT_NAME ]
   do
