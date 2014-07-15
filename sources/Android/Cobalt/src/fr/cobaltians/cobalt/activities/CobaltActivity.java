@@ -38,6 +38,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import org.json.JSONObject;
 
@@ -48,6 +50,7 @@ import org.json.JSONObject;
 public abstract class CobaltActivity extends FragmentActivity {
 
     protected static final String TAG = CobaltActivity.class.getSimpleName();
+    private static final int INVALID_RESOURCE_ID = 0;
 
     /***************************************************************************************************************
 	 * LIFECYCLE
@@ -57,7 +60,9 @@ public abstract class CobaltActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(getLayoutToInflate());
+        int layoutToInflate = getLayoutToInflate();
+        if (layoutToInflate != INVALID_RESOURCE_ID) setContentView(layoutToInflate);
+        else setContentView(getDefaultLayout());
 
 		if (savedInstanceState == null) {
             CobaltFragment fragment = getFragment();
@@ -94,12 +99,21 @@ public abstract class CobaltActivity extends FragmentActivity {
 	protected abstract CobaltFragment getFragment();
 
 	protected int getLayoutToInflate() {
-		return R.layout.activity_cobalt;
+		return INVALID_RESOURCE_ID;
 	}
 
 	public int getFragmentContainerId() {
 		return R.id.fragment_container;
 	}
+
+    private ViewGroup getDefaultLayout() {
+        FrameLayout fragmentContainer = new FrameLayout(this);
+        fragmentContainer.setLayoutParams(new FrameLayout.LayoutParams( FrameLayout.LayoutParams.MATCH_PARENT,
+                                                                        FrameLayout.LayoutParams.MATCH_PARENT));
+        fragmentContainer.setId(getFragmentContainerId());
+
+        return fragmentContainer;
+    }
 
 	/*****************************************************************************************************************
 	 * Back
