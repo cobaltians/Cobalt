@@ -28,12 +28,6 @@
         <p>Button below and native button "Launch Tests" are launching some automatic testing, exchanging weird strings and object, to ensure everything works great.</p>
         <a href="javascript:;" id="button_2">Launch Tests</a><br/>
 
-        <h2>Input test</h2>
-
-        <p>Write an Emoji below</p>
-        <input type="text" value="" id="emojinput">
-        <a href="javascript:;" id="button_3">Launch Emoji</a><br/>
-
 
 
           <script type="text/javascript" src="js/zepto.min.js"></script>
@@ -127,11 +121,6 @@
 
                 });
 
-                app.touch('#button_3',function(){
-                    cobalt.sendEvent("testEmoji",{ str : $('#emojinput').val() },function(data){
-                        cobalt.log('received back ', data)
-                    })
-                });
 
 
                 app.touch('a.pop',function(){
