@@ -11,7 +11,7 @@ function displayHelp {
   echo
   echo "***cobalt.sh usage***"
   echo
-  echo "     -a In order to create a new Cobalt project"
+  echo "     -a [PATH OF WORKSPACE] In order to create a new Cobalt project"
   echo "     -p In order to add plugins to a Cobalt project"
   echo
   echo "*********************"
@@ -73,10 +73,17 @@ function plugin {
 #ARGUMENT IS THE PROJECT PATH
 function cobaltproject {
   PROJECT_NAME=""
-  PROJECT_PATH=$1
+  PROJECT_PATH=${1}/
   PACKAGE_NAME=""
+### LET'S TEST IF ANDROID IS INSTALLED
+ANDROID_BOOL=$(command -v android)
 
-  echo
+if [ -z $ANDROID_BOOL ]; then
+
+  echo "Please install Android as a command line";
+  exit 1;
+
+fi
 
   while [ -z $PROJECT_NAME ]
   do
@@ -123,7 +130,6 @@ mkdir ${PROJECT_PATH}${PROJECT_NAME}/assets/www/css
 touch ${PROJECT_PATH}${PROJECT_NAME}/assets/www/cobalt.conf
 touch ${PROJECT_PATH}${PROJECT_NAME}/src/${PACKAGE_AS_A_PATH}/MainFragment.java
 touch ${PROJECT_PATH}${PROJECT_NAME}/assets/www/home.html
-touch ${PROJECT_PATH}${PROJECT_NAME}/res/layout/rain.xml
 ###COPYING FILES
 
 cp ${COBALT_PATH}/../../../distribution/web/Android/cobalt.js ${PROJECT_PATH}${PROJECT_NAME}/assets/www/js/
@@ -238,8 +244,7 @@ echo "
 
 #WRITTING main.xml
 
-echo "
-<?xml version=\"1.0\" encoding=\"utf-8\"?>
+echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>
 <LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"
     android:orientation=\"vertical\"
     android:layout_width=\"fill_parent\"
@@ -259,24 +264,37 @@ echo "
 ###VARIABLE DEFINITION###
 #########################
 
-
+NO_ARG="";
 while getopts "a:p:h" opt; do
 
   case $opt in
     a)
+    NO_ARG="A"
     cobaltproject $OPTARG
+
   ;;
     p)
+    NO_ARG="P"
     plugin
   ;;
     h)
-    displayHelp
+    NO_ARG="H"
+    displayHelp;
   ;;
-    \?)
-    echo "Invalid option: -$OPTARG" >&2
+    ?)
+    displayHelp;
+    exit 2;
+    #echo "Invalid option: -$OPTARG" >&2
   ;;
 esac
 done
+
+if [ -z $NO_ARG ]; then
+
+  displayHelp;
+  exit 2;
+
+fi
 
 
 #android create project --name hello --target 1 --path hello --activity DefaultActivity --package com.default.hello
