@@ -40,6 +40,7 @@ var cobalt={
             this.debug = ( options.debug === true );
             this.debugInBrowser = ( options.debugInBrowser === true );
             this.debugInDiv = ( options.debugInDiv === true );
+            this.plugins.pluginsOptions = options.plugins || {}
 
             if (cobalt.debugInDiv){
                 this.createLogDiv();
@@ -63,6 +64,9 @@ var cobalt={
 		if (cobalt.adapter.init){
 			cobalt.adapter.init();
 		}
+
+        cobalt.plugins.init();
+
         //send cobalt is ready event to native
 		cobalt.send({'type':'cobaltIsReady'})
     },
@@ -284,6 +288,9 @@ var cobalt={
         }
         try{
 	        switch (json && json.type){
+	        	case "plugin":
+                    cobalt.plugins.handleEvent(json)
+                    break;
 	        	case "event":
                     cobalt.adapter.handleEvent(json)
 	                break;
@@ -537,7 +544,54 @@ var cobalt={
 				return this.storage.removeItem(uid)
 			}
 		}
-	}
+	},
+    plugins : {
+        /*
+        all plugins must
+        - have a "init" function.
+        - define a "name" proprety that will identify them.
+        they can
+        - have a "handleEvent" function that will receive all event {type:"plugin", name:thePluginName}
+        - add options to the init call to receive them when the plugin will be inited.
+         */
+        pluginsOptions:{},
+        enabledPlugins:{},
+
+        //add a plugin to the plugin list.
+        register:function(plugin){
+            if (plugin && typeof plugin.name === "string" && typeof plugin.init === "function"){
+                cobalt.plugins.enabledPlugins[plugin.name]=plugin;
+            }
+        },
+        init:function(){
+            for (var pluginName in cobalt.plugins.enabledPlugins) {
+                if (cobalt.plugins.enabledPlugins[pluginName]){
+                    //init each plugin with options set at the init step.
+                    var options = cobalt.plugins.pluginsOptions[pluginName];
+                    cobalt.plugins.enabledPlugins[pluginName].init(options);
+                }
+            }
+        },
+        handleEvent:function(event){
+            //try to call plugin "handleEvent" function (if any).
+            if ( typeof event.name === "string"){
+                if ( cobalt.plugins.enabledPlugins[event.name]
+                    && typeof cobalt.plugins.enabledPlugins[event.name].handleEvent === "function"){
+
+                    try{
+                        cobalt.plugins.enabledPlugins[event.name].handleEvent(event);
+                    }catch(e){
+                        cobalt.log('failed calling "'+event.name+'" plugin handleEvent function. ', e)
+                    }
+                }else{
+                    cobalt.log('plugin "'+event.name+'" not found or no handleEvent function in this plugin.')
+                }
+            }else{
+                cobalt.log('unknown plugin event', event)
+            }
+
+        }
+    }
 
 };cobalt.tizen_adapter={
 	//
