@@ -156,6 +156,9 @@ public class Cobalt {
     public final static String JSEventInfiniteScroll= "infiniteScroll";
     public final static String JSCallbackInfiniteScrollDidRefresh = "infiniteScrollDidRefresh";
 
+    //PLUGIN
+    public final static String JSTypePlugin = "plugin";
+
     /********************************************************
      * MEMBERS
      *******************************************************/

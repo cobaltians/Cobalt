@@ -35,6 +35,7 @@ import fr.cobaltians.cobalt.activities.CobaltActivity;
 import fr.cobaltians.cobalt.customviews.IScrollListener;
 import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
 import fr.cobaltians.cobalt.database.LocalStorageJavaScriptInterface;
+import fr.cobaltians.cobalt.plugin.CobaltPlugin;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -94,6 +95,8 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 
 	private boolean mIsInfiniteScrollRefreshing = false;
 
+    protected CobaltPlugin mPlugin;
+
     /**************************************************************************************************
 	 * LIFECYCLE
 	 **************************************************************************************************/
@@ -110,6 +113,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
+        mPlugin = CobaltPlugin.getInstance(mContext);
     }
 
 	@Override
@@ -590,6 +594,9 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
                     }
                 }
 
+                else if (type.equals(Cobalt.JSTypePlugin)) {
+                    mPlugin.onMessage(jsonObj);
+                }
 				// UNHANDLED TYPE
 				else {
 					onUnhandledMessage(jsonObj);
