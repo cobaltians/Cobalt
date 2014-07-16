@@ -50,7 +50,6 @@ import org.json.JSONObject;
 public abstract class CobaltActivity extends FragmentActivity {
 
     protected static final String TAG = CobaltActivity.class.getSimpleName();
-    private static final int INVALID_RESOURCE_ID = 0;
 
     /***************************************************************************************************************
 	 * LIFECYCLE
@@ -61,7 +60,7 @@ public abstract class CobaltActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 
         int layoutToInflate = getLayoutToInflate();
-        if (layoutToInflate != INVALID_RESOURCE_ID) setContentView(layoutToInflate);
+        if (layoutToInflate != Cobalt.INVALID_RESOURCE_ID) setContentView(layoutToInflate);
         else setContentView(getDefaultLayout());
 
 		if (savedInstanceState == null) {
@@ -99,7 +98,7 @@ public abstract class CobaltActivity extends FragmentActivity {
 	protected abstract CobaltFragment getFragment();
 
 	protected int getLayoutToInflate() {
-		return INVALID_RESOURCE_ID;
+		return Cobalt.INVALID_RESOURCE_ID;
 	}
 
 	public int getFragmentContainerId() {

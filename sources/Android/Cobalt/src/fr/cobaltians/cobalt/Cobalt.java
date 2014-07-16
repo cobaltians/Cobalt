@@ -54,7 +54,8 @@ public class Cobalt {
     public static boolean DEBUG = false;
 
     // RESOURCES
-    private final static String ASSETS_PATH = "file:///android_asset/";
+    public static final int INVALID_RESOURCE_ID = 0;
+    private static final String ASSETS_PATH = "file:///android_asset/";
 
     /********************************************************
      * CONFIGURATION FILE
