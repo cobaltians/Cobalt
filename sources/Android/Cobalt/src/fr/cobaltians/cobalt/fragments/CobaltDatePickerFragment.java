@@ -35,10 +35,10 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.Gravity;
 import android.widget.DatePicker;
 
 import java.util.Calendar;
@@ -85,13 +85,20 @@ public class CobaltDatePickerFragment extends DialogFragment implements DatePick
 		}
 		
 		else {
-			
-			LayoutInflater inflater = (LayoutInflater) getActivity().getLayoutInflater();
-			AlertDialog.Builder datePickerBuilder = new AlertDialog.Builder(getActivity());
-			View customView = inflater.inflate(R.layout.date_picker_cobalt, null);
-			datePickerBuilder.setView(customView);
-			
-			final DatePicker datePicker = (DatePicker) customView.findViewById(R.id.date_picker);
+            DatePicker.LayoutParams layoutParams = new DatePicker.LayoutParams( DatePicker.LayoutParams.WRAP_CONTENT,
+                                                                                DatePicker.LayoutParams.WRAP_CONTENT);
+            layoutParams.gravity = Gravity.CENTER;
+
+            final DatePicker datePicker = new DatePicker(getActivity());
+            datePicker.setId(R.id.date_picker);
+            datePicker.setLayoutParams(layoutParams);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                if (getResources().getBoolean(R.bool.isTablet)) datePicker.setCalendarViewShown(true);
+                else datePicker.setCalendarViewShown(false);
+            }
+
+            AlertDialog.Builder datePickerBuilder = new AlertDialog.Builder(getActivity());
+			datePickerBuilder.setView(datePicker);
 
 			/*
 			// Init the datePicker with mindate under 1900
