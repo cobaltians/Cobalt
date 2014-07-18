@@ -35,7 +35,7 @@ import fr.cobaltians.cobalt.activities.CobaltActivity;
 import fr.cobaltians.cobalt.customviews.IScrollListener;
 import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
 import fr.cobaltians.cobalt.database.LocalStorageJavaScriptInterface;
-import fr.cobaltians.cobalt.plugin.CobaltPlugin;
+import fr.cobaltians.cobalt.plugin.CobaltPluginManager;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -95,7 +95,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 
 	private boolean mIsInfiniteScrollRefreshing = false;
 
-    protected CobaltPlugin mPlugin;
+	private CobaltPluginManager mPluginManager;
 
     /**************************************************************************************************
 	 * LIFECYCLE
@@ -112,8 +112,8 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mPluginManager = new CobaltPluginManager(mContext);
         setRetainInstance(true);
-        mPlugin = CobaltPlugin.getInstance(mContext);
     }
 
 	@Override
@@ -489,6 +489,25 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 					return handleEvent(event, data, callback);			
 				}
 				
+				// INTENT
+                else if (type.equals(Cobalt.JSTypeIntent)) {
+                    String action = jsonObj.getString(Cobalt.kJSAction);
+
+                    // OPEN EXTERNAL URL
+                    if (action.equals(Cobalt.JSActionIntentOpenExternalUrl)) {
+                        JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
+                        String url = data.getString(Cobalt.kJSUrl);
+                        openExternalUrl(url);
+
+                        return true;
+                    }
+
+                    // UNHANDLED INTENT
+                    else {
+                        onUnhandledMessage(jsonObj);
+                    }
+                }
+				
 				// LOG
 				else if (type.equals(Cobalt.JSTypeLog)) {
 					String text = jsonObj.getString(Cobalt.kJSValue);
@@ -541,6 +560,11 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 					}
 				}
 				
+				// PLUGIN
+                else if (type.equals(Cobalt.JSTypePlugin)) {
+                    mPluginManager.onMessage(this, jsonObj);
+                }
+				
 				// UI
 		    	else if (type.equals(Cobalt.JSTypeUI)) {
 			    	String control = jsonObj.getString(Cobalt.kJSUIControl);
@@ -574,29 +598,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 						onUnhandledMessage(jsonObj);
 					}
 				}
-
-                // INTENT
-                else if (type.equals(Cobalt.JSTypeIntent)) {
-                    String action = jsonObj.getString(Cobalt.kJSAction);
-
-                    // OPEN EXTERNAL URL
-                    if (action.equals(Cobalt.JSActionIntentOpenExternalUrl)) {
-                        JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
-                        String url = data.getString(Cobalt.kJSUrl);
-                        openExternalUrl(url);
-
-                        return true;
-                    }
-
-                    // UNHANDLED INTENT
-                    else {
-                        onUnhandledMessage(jsonObj);
-                    }
-                }
-
-                else if (type.equals(Cobalt.JSTypePlugin)) {
-                    mPlugin.onMessage(jsonObj);
-                }
+				
 				// UNHANDLED TYPE
 				else {
 					onUnhandledMessage(jsonObj);

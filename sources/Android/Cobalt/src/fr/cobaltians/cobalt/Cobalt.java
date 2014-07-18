@@ -158,6 +158,7 @@ public class Cobalt {
 
     //PLUGIN
     public final static String JSTypePlugin = "plugin";
+    public final static String kJSPluginName = "name";
 
     /********************************************************
      * MEMBERS

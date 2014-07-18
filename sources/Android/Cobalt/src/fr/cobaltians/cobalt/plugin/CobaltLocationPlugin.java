@@ -1,6 +1,6 @@
 /**
  *
- * CobaltAbstractPlugin
+ * CobaltLocationPlugin
  * Cobalt
  *
  * The MIT License (MIT)
@@ -29,41 +29,36 @@
 
 package fr.cobaltians.cobalt.plugin;
 
+import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
 import android.app.Activity;
+import android.util.Log;
 
 import org.json.JSONObject;
 
 /**
- * Created by sebastienfamel on 15/07/2014.
+ * Created by sebastienfamel on 16/07/2014.
  */
-public abstract class CobaltAbstractPlugin {
-	
+public class CobaltLocationPlugin extends CobaltAbstractPlugin {
+
 	// TAG
-	protected static final String TAG = CobaltAbstractPlugin.class.getSimpleName();
+	protected static final String TAG = CobaltLocationPlugin.class.getSimpleName();
 
-    /********************************************
-     * MEMBERS
-     ********************************************/
-	
-	protected Activity mActivity;
-	protected CobaltFragment mFragment;
-	protected CobaltPluginManager mPluginManager;
-
-	/***********************************************************************************************************
+    /***********************************************************************************************************
      * CONSTRUCTORS
      ***********************************************************************************************************/
 
-    public CobaltAbstractPlugin(Activity activity, CobaltFragment fragment, CobaltPluginManager pluginManager) {
-    	mActivity = activity;
-    	mFragment = fragment;
-    	mPluginManager = pluginManager;
-    }
+	public CobaltLocationPlugin(Activity activity, CobaltFragment fragment, CobaltPluginManager pluginManager) {
+		super(activity, fragment, pluginManager);
+	}
 
-    /**************************************************
-     * ABSTRACT METHODS
-     **************************************************/
-    
-    public abstract void onMessage(JSONObject message);
+	/******************************************
+     * OVERRIDEN METHODS
+     ******************************************/
+	
+	@Override
+	public void onMessage(JSONObject message) {
+        if (Cobalt.DEBUG) Log.d(TAG, "onMessage: " + message.toString());
+	}
 }
