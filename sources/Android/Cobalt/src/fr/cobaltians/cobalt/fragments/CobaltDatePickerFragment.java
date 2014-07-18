@@ -31,14 +31,15 @@ package fr.cobaltians.cobalt.fragments;
 
 import fr.cobaltians.cobalt.R;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.widget.DatePicker;
 
 import java.util.Calendar;
@@ -54,11 +55,19 @@ public class CobaltDatePickerFragment extends DialogFragment implements DatePick
 	public static final String ARG_CANCEL = "CANCEL";
 	public static final String ARG_VALIDATE = "VALIDATE";
 	
+	protected Context mContext;
     final Calendar cal = Calendar.getInstance();
     private CobaltFragment mListener;
     private String mCallbackId, mDelete, mCancel, mValidate, mTitle;
     
     @Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		
+		mContext = activity;
+	}
+
+	@Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 		Bundle args = getArguments();
 		if (args != null) {
@@ -81,23 +90,13 @@ public class CobaltDatePickerFragment extends DialogFragment implements DatePick
 		}
 		
 		if (mDelete == null && mCancel == null && mValidate == null && mTitle == null) {
-	        return new DatePickerDialog(getActivity(), this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+	        return new DatePickerDialog(mContext, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 		}
 		
 		else {
-            DatePicker.LayoutParams layoutParams = new DatePicker.LayoutParams( DatePicker.LayoutParams.WRAP_CONTENT,
-                                                                                DatePicker.LayoutParams.WRAP_CONTENT);
-            layoutParams.gravity = Gravity.CENTER;
-
-            final DatePicker datePicker = new DatePicker(getActivity());
-            datePicker.setId(R.id.date_picker);
-            datePicker.setLayoutParams(layoutParams);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                if (getResources().getBoolean(R.bool.isTablet)) datePicker.setCalendarViewShown(true);
-                else datePicker.setCalendarViewShown(false);
-            }
-
-            AlertDialog.Builder datePickerBuilder = new AlertDialog.Builder(getActivity());
+			LayoutInflater inflater = (LayoutInflater) ((Activity) mContext).getLayoutInflater();
+			final DatePicker datePicker = (DatePicker) inflater.inflate(R.layout.date_picker_cobalt, null);
+			AlertDialog.Builder datePickerBuilder = new AlertDialog.Builder(mContext);
 			datePickerBuilder.setView(datePicker);
 
 			/*
@@ -163,7 +162,6 @@ public class CobaltDatePickerFragment extends DialogFragment implements DatePick
 	            new DialogInterface.OnClickListener() {
 	                @Override
 	                public void onClick(DialogInterface dialog, int which) {
-	                    Calendar choosen = Calendar.getInstance();
 	                    cal.set(
 	                        datePicker.getYear(), 
 	                        datePicker.getMonth(), 

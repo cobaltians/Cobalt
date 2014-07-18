@@ -43,7 +43,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -58,7 +57,6 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -123,11 +121,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 		super.onCreateView(inflater, container, savedInstanceState);
 
         try {
-            View view;
-            int layoutToInflate = getLayoutToInflate();
-            if (layoutToInflate != Cobalt.INVALID_RESOURCE_ID) view = inflater.inflate(layoutToInflate, container, false);
-            else if (isPullToRefreshActive()) view = getDefaultRefreshLayout();
-            else view = getDefaultLayout();
+            View view = inflater.inflate(getLayoutToInflate(), container, false);
 
             setUpViews(view);
             setUpListeners();
@@ -193,7 +187,8 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 * @return Layout id inflated by this fragment
 	 */
 	protected int getLayoutToInflate() {
-        return Cobalt.INVALID_RESOURCE_ID;
+		if (isPullToRefreshActive()) return R.layout.fragment_refresh_cobalt;
+        else return R.layout.fragment_cobalt;
 	}
 
 	/**
@@ -222,27 +217,6 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 
     protected int getSwipeRefreshContainerId() {
         return R.id.swipe_refresh_container;
-    }
-
-    private ViewGroup getDefaultLayout() {
-        FrameLayout webViewContainer = new FrameLayout(mContext);
-        webViewContainer.setLayoutParams(new FrameLayout.LayoutParams(  FrameLayout.LayoutParams.MATCH_PARENT,
-                                                                        FrameLayout.LayoutParams.MATCH_PARENT));
-        webViewContainer.setBackgroundColor(Color.TRANSPARENT);
-        webViewContainer.setId(getWebViewContainerId());
-
-        return webViewContainer;
-    }
-
-    private ViewGroup getDefaultRefreshLayout() {
-        SwipeRefreshLayout swipeRefreshContainer = new SwipeRefreshLayout(mContext);
-        swipeRefreshContainer.setLayoutParams(new SwipeRefreshLayout.LayoutParams(  SwipeRefreshLayout.LayoutParams.MATCH_PARENT,
-                                                                                    SwipeRefreshLayout.LayoutParams.MATCH_PARENT));
-        swipeRefreshContainer.setId(getSwipeRefreshContainerId());
-
-        swipeRefreshContainer.addView(getDefaultLayout());
-
-        return swipeRefreshContainer;
     }
 
 	/**
