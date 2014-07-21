@@ -11,7 +11,7 @@
   		
   		<h1>datePicker</h1>
   		
-  		<p>this page shows usage and configuration of a datePicker with cobalt.</p>
+  		<p>This page shows usage and configuration of a datePicker with cobalt.</p>
   		<p>On iOs, input type="date" works well, except for the placeholder text.<br/>
            On Android we recreated a full datePicker changing your input to type=text dynamically.</p>
         <br/>
@@ -54,7 +54,7 @@
                 app.touch('.valueBtn',function(){
                     var input=$(this).prev('input');
                     cobalt.alert('Input value',
-                            'value is'+ $(input).val()+'\n' +
+                            'value is '+ $(input).val()+'\n' +
                             'cobalt.datePicker.val is ' + cobalt.datePicker.val(input)
                     )
                 });

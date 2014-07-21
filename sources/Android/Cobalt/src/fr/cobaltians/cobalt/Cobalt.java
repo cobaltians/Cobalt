@@ -54,7 +54,7 @@ public class Cobalt {
     public static boolean DEBUG = false;
 
     // RESOURCES
-    private final static String ASSETS_PATH = "file:///android_asset/";
+    private static final String ASSETS_PATH = "file:///android_asset/";
 
     /********************************************************
      * CONFIGURATION FILE
@@ -155,6 +155,10 @@ public class Cobalt {
     // INFINITE SCROLL
     public final static String JSEventInfiniteScroll= "infiniteScroll";
     public final static String JSCallbackInfiniteScrollDidRefresh = "infiniteScrollDidRefresh";
+
+    //PLUGIN
+    public final static String JSTypePlugin = "plugin";
+    public final static String kJSPluginName = "name";
 
     /********************************************************
      * MEMBERS
