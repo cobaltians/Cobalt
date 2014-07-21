@@ -43,16 +43,24 @@ import org.json.JSONObject;
 public class CobaltLocationPlugin extends CobaltAbstractPlugin {
 
 	// TAG
-	protected static final String TAG = CobaltLocationPlugin.class.getSimpleName();
+	private static final String TAG = CobaltLocationPlugin.class.getSimpleName();
 
     /***********************************************************************************************************
      * CONSTRUCTORS
      ***********************************************************************************************************/
 
-	public CobaltLocationPlugin(Activity activity, CobaltFragment fragment, CobaltPluginManager pluginManager) {
+	private CobaltLocationPlugin(Activity activity, CobaltFragment fragment, CobaltPluginManager pluginManager) {
 		super(activity, fragment, pluginManager);
 	}
-
+	
+	public static CobaltAbstractPlugin getInstance(Activity activity, CobaltFragment fragment, CobaltPluginManager pluginManager) {
+    	if (sInstance == null) {
+    		sInstance = new CobaltLocationPlugin(activity, fragment, pluginManager);
+    	}
+    	
+    	return sInstance;
+    }
+	
 	/******************************************
      * OVERRIDEN METHODS
      ******************************************/

@@ -37,8 +37,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import org.json.JSONException;
@@ -51,6 +51,7 @@ public class CobaltPluginManager {
 
 	// TAG
 	private static final String TAG = CobaltPluginManager.class.getSimpleName();
+	private static final String GET_INSTANCE_METHOD_NAME = "getInstance";
 	
 	/********************************************************************************
      * MEMBERS
@@ -81,28 +82,25 @@ public class CobaltPluginManager {
 			Class<? extends CobaltAbstractPlugin> pluginClass = mPluginsMap.get(pluginName);
 			if (pluginClass != null) {
 				try {
-					Constructor<? extends CobaltAbstractPlugin> pluginConstructor = pluginClass.getDeclaredConstructor(Activity.class, CobaltFragment.class, CobaltPluginManager.class);
+					Method pluginGetInstanceMethod = pluginClass.getDeclaredMethod(GET_INSTANCE_METHOD_NAME, Activity.class, CobaltFragment.class, CobaltPluginManager.class);
 					try {
-						CobaltAbstractPlugin plugin = pluginConstructor.newInstance((Activity) mContext, fragment, this);
+						CobaltAbstractPlugin plugin = (CobaltAbstractPlugin) pluginGetInstanceMethod.invoke(null, (Activity) mContext, fragment, this);
 						plugin.onMessage(message);
 						return true;
-					} 
-					catch (InstantiationException exception) {
-						if (Cobalt.DEBUG) exception.printStackTrace();
-					} 
+					}
 					catch (IllegalAccessException exception) {
 						if (Cobalt.DEBUG) exception.printStackTrace();
-					} 
-					catch (IllegalArgumentException exception) {
-						if (Cobalt.DEBUG) exception.printStackTrace();
-					} 
-					catch (InvocationTargetException exception) {
-						if (Cobalt.DEBUG) exception.printStackTrace();
 					}
-				} 
+					catch (InvocationTargetException exception) {
+						if (Cobalt.DEBUG) {
+							Log.e(TAG, "onMessage: exception thrown by " + pluginClass.getSimpleName() + ".getInstance() method.");
+							exception.printStackTrace();
+						}
+					}
+				}
 				catch (NoSuchMethodException exception) {
 					if (Cobalt.DEBUG) {
-						Log.e(TAG, "onMessage: no constructor found matching public " + pluginClass.getSimpleName() + "(Activity, CobaltFragment, CobaltPluginManager)");
+						Log.e(TAG, "onMessage: no method found matching " + pluginClass.getSimpleName() + ".getInstance(Activity, CobaltFragment, CobaltPluginManager).");
 						exception.printStackTrace();
 					}
 				}

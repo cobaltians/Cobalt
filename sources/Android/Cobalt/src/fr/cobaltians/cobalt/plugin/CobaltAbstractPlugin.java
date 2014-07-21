@@ -47,6 +47,8 @@ public abstract class CobaltAbstractPlugin {
      * MEMBERS
      ********************************************/
 	
+	protected static CobaltAbstractPlugin sInstance;
+	
 	protected Activity mActivity;
 	protected CobaltFragment mFragment;
 	protected CobaltPluginManager mPluginManager;
@@ -55,12 +57,12 @@ public abstract class CobaltAbstractPlugin {
      * CONSTRUCTORS
      ***********************************************************************************************************/
 
-    public CobaltAbstractPlugin(Activity activity, CobaltFragment fragment, CobaltPluginManager pluginManager) {
+    protected CobaltAbstractPlugin(Activity activity, CobaltFragment fragment, CobaltPluginManager pluginManager) {
     	mActivity = activity;
     	mFragment = fragment;
     	mPluginManager = pluginManager;
     }
-
+    
     /**************************************************
      * ABSTRACT METHODS
      **************************************************/
