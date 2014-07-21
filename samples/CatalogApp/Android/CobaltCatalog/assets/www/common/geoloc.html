@@ -37,7 +37,7 @@
 	            });
 				
 				cobalt.getGeoloc(function(position){
-					document.getElementById('geolocField').innerHTML(JSON.stringify(position))
+					document.getElementById('geolocField').innerHTML = JSON.stringify(position);
 				})
 
 
