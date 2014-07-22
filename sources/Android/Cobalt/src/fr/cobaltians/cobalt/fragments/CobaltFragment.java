@@ -112,7 +112,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mPluginManager = new CobaltPluginManager(mContext);
+        mPluginManager = CobaltPluginManager.getInstance();
         setRetainInstance(true);
     }
 
@@ -562,7 +562,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 				
 				// PLUGIN
                 else if (type.equals(Cobalt.JSTypePlugin)) {
-                    mPluginManager.onMessage(this, jsonObj);
+                    mPluginManager.onMessage(mContext, this, jsonObj);
                 }
 				
 				// UI

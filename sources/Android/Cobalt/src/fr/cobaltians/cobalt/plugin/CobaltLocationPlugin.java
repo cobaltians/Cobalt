@@ -29,14 +29,14 @@
 
 package fr.cobaltians.cobalt.plugin;
 
-import android.content.Context;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
 import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
 import android.app.Activity;
+import android.content.Context;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -45,38 +45,44 @@ import org.json.JSONObject;
 /**
  * Created by sebastienfamel on 16/07/2014.
  */
-public class CobaltLocationPlugin extends CobaltAbstractPlugin{
+public final class CobaltLocationPlugin extends CobaltAbstractPlugin {
 
 	// TAG
 	private static final String TAG = CobaltLocationPlugin.class.getSimpleName();
 
-    private final static String LONGITUDE = "longitude";
-    private final static String LATITUDE = "latitude";
-
-    /***********************************************************************************************************
-     * CONSTRUCTORS
-     ***********************************************************************************************************/
-
-	private CobaltLocationPlugin(Activity activity, CobaltFragment fragment, CobaltPluginManager pluginManager) {
-		super(activity, fragment, pluginManager);
-	}
+	/***************************************************
+     * MEMBERS
+     ***************************************************/
 	
-	public static CobaltAbstractPlugin getInstance(Activity activity, CobaltFragment fragment, CobaltPluginManager pluginManager) {
+    private static final String LONGITUDE = "longitude";
+    private static final String LATITUDE = "latitude";
+    
+    /*************************************************************************************************************************
+     * CONSTRUCTORS
+     *************************************************************************************************************************/
+	
+	public static CobaltAbstractPlugin getInstance(CobaltPluginWebContainer webContainer, CobaltPluginManager pluginManager) {
     	if (sInstance == null) {
-    		sInstance = new CobaltLocationPlugin(activity, fragment, pluginManager);
+    		sInstance = new CobaltLocationPlugin();
     	}
+    	
+    	sInstance.addWebContainer(webContainer);
+    	sInstance.updatePluginManager(pluginManager);
     	
     	return sInstance;
     }
 
 
-	/******************************************
+	/***********************************************************************************************************
      * OVERRIDEN METHODS
-     ******************************************/
+     ***********************************************************************************************************/
 	
 	@Override
-	public void onMessage(JSONObject message) {
-        LocationManager locationManager = (LocationManager) mActivity.getSystemService(Context.LOCATION_SERVICE);
+	public void onMessage(CobaltPluginWebContainer webContainer, JSONObject message) {
+		Activity activity = webContainer.getActivity();
+		CobaltFragment fragment = webContainer.getFragment();
+		
+        LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String provider = locationManager.getBestProvider(criteria, false);
         Location location = locationManager.getLastKnownLocation(provider);
@@ -87,16 +93,17 @@ public class CobaltLocationPlugin extends CobaltAbstractPlugin{
                 JSONObject resultLocation = new JSONObject();
                 resultLocation.put(LATITUDE, location.getLatitude());
                 resultLocation.put(LONGITUDE, location.getLongitude());
-                mFragment.sendCallback(callback, resultLocation);
+                fragment.sendCallback(callback, resultLocation);
             }
             else if (location == null) {
-                mFragment.sendCallback(callback, null);
+            	fragment.sendCallback(callback, null);
                 if (Cobalt.DEBUG) Log.d(TAG, "location is NULL");
             }
             else if (Cobalt.DEBUG) Log.d(TAG, "onMessage: " + message.toString());
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } 
+        catch (JSONException exception) {
+        	if (Cobalt.DEBUG) exception.printStackTrace();
         }
 	}
 }
