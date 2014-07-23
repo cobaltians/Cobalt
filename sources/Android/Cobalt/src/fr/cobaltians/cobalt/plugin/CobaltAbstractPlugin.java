@@ -34,39 +34,52 @@ import java.util.Vector;
 import org.json.JSONObject;
 
 /**
- * Created by sebastienfamel on 15/07/2014.
+ * 
+ * @author SŽbastien Famel
  */
 public abstract class CobaltAbstractPlugin {
-	
-	// TAG
-	private static final String TAG = CobaltAbstractPlugin.class.getSimpleName();
 
     /*******************************************************************************************************
      * MEMBERS
      *******************************************************************************************************/
 	
+	/**
+	 * 
+	 */
 	protected static CobaltAbstractPlugin sInstance;
 	
-	protected CobaltPluginManager mPluginManager;
+	/**
+	 * {@link Vector} containing all {@link CobaltPluginWebContainer}s which sent at least one message to this {@link CobaltAbstractPlugin} inherited singleton.
+	 */
 	protected Vector<CobaltPluginWebContainer> mWebContainerVector = new Vector<CobaltPluginWebContainer>();
 
-	/****************************************************************************
-     * CONSTRUCTORS
-     ****************************************************************************/
+	/*******************************************************************************
+     * METHODS
+     *******************************************************************************/
     
-    protected final void addWebContainer(CobaltPluginWebContainer webContainer) {
+	/**
+	 * Add the specified {@link CobaltPluginWebContainer} at the end of {@link #mWebContainerVector} if absent.
+	 * @param webContainer the CobaltPluginWebContainer to add to {@link #mWebContainerVector}.
+	 * @return true if webContainer was absent from {@link #mWebContainerVector}, false otherwise.
+	 */
+	public final boolean addWebContainer(CobaltPluginWebContainer webContainer) {
     	if (! mWebContainerVector.contains(webContainer)) {
     		mWebContainerVector.addElement(webContainer);
+    		
+    		return true;
     	}
+    	
+    	return false;
     }
-    
-    protected final void updatePluginManager(CobaltPluginManager pluginManager) {
-    	mPluginManager = pluginManager;
-    }
-    
+
     /*****************************************************************************************
      * ABSTRACT METHODS
      *****************************************************************************************/
     
+    /**
+     * Called when a {@link CobaltPluginWebContainer} has sent a message to this {@link CobaltAbstractPlugin} inherited singleton.
+     * @param webContainer the {@link CobaltPluginWebContainer} which sent the message.
+     * @param message the message sent by the {@link CobaltPluginWebContainer}.
+     */
     public abstract void onMessage(CobaltPluginWebContainer webContainer, JSONObject message);
 }
