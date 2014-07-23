@@ -94,4 +94,4 @@ build
 # SVN
 .svn
 
-sources/Android/Cobalt/src/fr/cobaltians/cobalt/plugin/CobaltLocationPlugin.java
+sources/Android/Cobalt/src/fr/cobaltians/cobalt/plugin/CobaltDatePickerPlugin.java

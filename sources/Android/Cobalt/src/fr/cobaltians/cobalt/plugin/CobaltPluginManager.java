@@ -90,10 +90,10 @@ public final class CobaltPluginManager {
 			Class<? extends CobaltAbstractPlugin> pluginClass = mPluginsMap.get(pluginName);
 			if (pluginClass != null) {
 				try {
-					Method pluginGetInstanceMethod = pluginClass.getDeclaredMethod(GET_INSTANCE_METHOD_NAME, CobaltPluginWebContainer.class, CobaltPluginManager.class);
+					Method pluginGetInstanceMethod = pluginClass.getDeclaredMethod(GET_INSTANCE_METHOD_NAME, CobaltPluginWebContainer.class);
 					try {
 						CobaltPluginWebContainer webContainer = new CobaltPluginWebContainer((Activity) context, fragment);
-						CobaltAbstractPlugin plugin = (CobaltAbstractPlugin) pluginGetInstanceMethod.invoke(null, webContainer, this);
+						CobaltAbstractPlugin plugin = (CobaltAbstractPlugin) pluginGetInstanceMethod.invoke(null, webContainer);
 						plugin.onMessage(webContainer, message);
 						return true;
 					}

@@ -53,11 +53,11 @@ public final class CobaltLocationPlugin extends CobaltAbstractPlugin {
 	private static final String LONGITUDE = "longitude";
     private static final String LATITUDE = "latitude";
     
-    /*************************************************************************************************************************
+    /**************************************************************************************
      * CONSTRUCTORS
-     *************************************************************************************************************************/
+     **************************************************************************************/
 	
-	public static CobaltAbstractPlugin getInstance(CobaltPluginWebContainer webContainer, CobaltPluginManager pluginManager) {
+	public static CobaltAbstractPlugin getInstance(CobaltPluginWebContainer webContainer) {
     	if (sInstance == null) {
     		sInstance = new CobaltLocationPlugin();
     	}

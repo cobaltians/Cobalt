@@ -50,12 +50,12 @@ public abstract class CobaltAbstractPlugin {
      * METHODS
      ****************************************************************************/
     
-    protected final void addWebContainer(CobaltPluginWebContainer webContainer) {
+    public final void addWebContainer(CobaltPluginWebContainer webContainer) {
     	if (! mWebContainerVector.contains(webContainer)) {
     		mWebContainerVector.addElement(webContainer);
     	}
     }
-    
+
     /*****************************************************************************************
      * ABSTRACT METHODS
      *****************************************************************************************/
