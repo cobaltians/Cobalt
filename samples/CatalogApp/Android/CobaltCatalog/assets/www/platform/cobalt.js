@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 var cobalt={
     
     userEvents:{}, //objects of events defined by the user
@@ -50,7 +49,7 @@ var cobalt={
 	        }
             cobalt.storage.enable();
 
-            $.extend(cobalt.datePicker, options.datePicker);
+            cobalt.utils.extend(cobalt.datePicker, options.datePicker)
             if (cobalt.datePicker.enabled){
                 cobalt.datePicker.init();
             }
@@ -96,18 +95,16 @@ var cobalt={
             cobalt.divLog(logString)
         }
     },
-    //TODO change all dependencies
     divLog:function(){
-        //TODO document this
         if (cobalt.debugInDiv){
 	        cobalt.createLogDiv();
-            var logdiv=$('#cobalt_logdiv')
-            if (logdiv.length){
+            var logdiv=cobalt.utils.$('#cobalt_logdiv')
+            if (logdiv){
                 var logString="<br/>"+cobalt.argumentsToString(arguments);
                 try{
-                    logdiv.append(logString);
+                    cobalt.utils.append(logdiv, logString);
                 }catch(e){
-                    logdiv.append("<b>cobalt.log failed on something.</b>");
+                    cobalt.utils.append(logdiv, "<b>cobalt.log failed on something.</b>");
                 }
             }
         }
@@ -115,27 +112,16 @@ var cobalt={
     argumentsToString:function(){
         var stringItems=[];
         //ensure arguments[0] exists?
-        $.each(arguments[0],function(i,elem){
+        cobalt.utils.each(arguments[0],function(i,elem){
             stringItems.push(cobalt.toString(elem))
-        })
+        });
         return stringItems.join(' ');
     },
-    //TODO change all dependencies, enhance
-	/* internal, create log div if needed */
+    /* internal, create log div if needed */
 	createLogDiv:function(){
-		if ($('#cobalt_logdiv').length==0){
+		if ( ! cobalt.utils.$('#cobalt_logdiv')){
 			//create usefull log div:
-			$('body').append('<div id="cobalt_logdiv" style="width:100%; text-align: left; height: 100px; border:1px solid blue; overflow: scroll; background:#eee;"></div>')
-		}
-	},
-	//TODO change all dependencies, enhance
-	/* internal, toggle visibility of log div if log div was created by the lib */
-	toggleLogDiv:function(){
-        //TODO remove $() dependencie
-		if ($(this).css('width')!="250px"){
-			$(this).css({ width : '250px', height:'300px', overflow:"scroll"});
-		}else{
-			$(this).css({ width : '10px', height:'10px', overflow:"hidden"});
+            cobalt.utils.append(document.body, '<div id="cobalt_logdiv" style="width:100%; text-align: left; height: 100px; border:1px solid blue; overflow: scroll; background:#eee;"></div>')
 		}
 	},
 	//Sends an object to native side.
@@ -351,10 +337,14 @@ var cobalt={
 		return stuff;
 	},
 	HTMLEncode:function(value){
-        return $('<div/>').text(value || '').html()
+        var element = document.createElement('div')
+        cobalt.utils.text(element, value || '' )
+        return cobalt.utils.html(element);
     },
     HTMLDecode:function(value){
-        return $('<div/>').html(value || '').text();
+        var element = document.createElement('div')
+        cobalt.utils.html(element, value || '' )
+        return cobalt.utils.text(element);
     },
     defaultBehaviors:{
 		handleEvent:function(json){
@@ -385,6 +375,114 @@ var cobalt={
 			return cobalt.storage.enable()
 		}
 	},
+    utils:{
+        $:function(selector){
+            if (typeof selector === "string"){
+                if (selector[0] == "#"){
+                    return document.getElementById(selector.replace('#',''));
+                }
+                else{
+                    return document.querySelectorAll(selector)
+                }
+            }else{
+                return selector;
+            }
+        },
+        attr:function(node, attr, value){
+            node=cobalt.utils.$(node);
+            if (value){
+                if ( node && node.setAttribute ){
+                    node.setAttribute(attr, value)
+                }
+            }else{
+                return ( node && node.getAttribute ) ? node.getAttribute(attr) : undefined;
+            }
+        },
+        text:function(node, text){
+            node=cobalt.utils.$(node);
+            if (typeof node == "object"){
+                if (text){
+                    node.innerText = text;
+                }else{
+                    return node.innerText
+                }
+            }
+        },
+        html:function(node, html){
+            node=cobalt.utils.$(node);
+            if (typeof node == "object"){
+                if (html!=undefined){
+                    node.innerHTML=html;
+                }else{
+                    return node.innerHTML;
+                }
+            }
+        },
+        likeArray : function(obj) {
+            return typeof obj.length == 'number'
+        },
+        each:function(elements, callback){
+            var i, key;
+            if (cobalt.utils.likeArray(elements)) {
+                for (i = 0; i < elements.length; i++)
+                    if (callback.call(elements[i], i, elements[i]) === false) return
+            } else {
+                for (key in elements)
+                    if (callback.call(elements[key], key, elements[key]) === false) return
+            }
+            return;
+        },
+        extend:function(obj, source){
+            if (! obj) obj={};
+            if (source) {
+                for (var prop in source) {
+                    obj[prop] = source[prop];
+                }
+            }
+            return obj;
+        },
+        append:function(node, html){
+            node=cobalt.utils.$(node);
+            if (typeof node == "object"){
+                node.innerHTML = node.innerHTML + html;
+            }
+        },
+        css : function( node , obj ){
+            node=cobalt.utils.$(node);
+            if (typeof node === "object" && node.style){
+                if (typeof obj == "object"){
+                    for (var prop in obj) {
+                        node.style[prop] = (typeof obj[prop] == "string") ? obj[prop] : obj[prop]+"px";
+                    }
+                }else{
+                    var style = window.getComputedStyle(node);
+                    if (style){
+                        return style[obj] ? style[obj].replace('px','') : undefined;
+                    }
+                }
+            }
+        },
+        addClass:function(node, css_class){
+            node=cobalt.utils.$(node);
+            if (typeof node == "object" && css_class){
+                if (node.classList){
+                    node.classList.add(css_class);
+                }else{
+                   node.setAttribute("class",  node.getAttribute("class") +" "+ css_class );
+                }
+            }
+        },
+        removeClass:function(node, css_class){
+            node=cobalt.utils.$(node);
+            if (typeof node == "object" && css_class){
+                if (node.classList){
+                    node.classList.remove(css_class);
+                }else{
+                    node.setAttribute("class",  node.getAttribute("class").replace(css_class,'') );
+                }
+            }
+        }
+    },
 
     datePicker:{
         //USER OPTIONS
@@ -401,14 +499,14 @@ var cobalt={
         placeholderStyles:"width:100%; color:#AAA;",
         //internal
         init:function(){
-            var inputs=$('input[type=date]')
+            var inputs=cobalt.utils.$('input[type=date]')
 
-            inputs.each(function(){
-                var input=$(this);
-                var id=input.attr('id');
+            cobalt.utils.each(inputs, function(){
+                var input=this;
+                var id= cobalt.utils.attr(input, 'id');
                 if (!id){
                     id='CobaltGeneratedId_'+Math.random().toString(36).substring(7);
-                    input.attr('id',id);
+                    cobalt.utils.attr(input, 'id', id);
                 }
                 cobalt.datePicker.updateFromValue.apply(input);
             });
@@ -418,15 +516,15 @@ var cobalt={
             }
         },
         updateFromValue : function(){
-            var id=$(this).attr('id');
+            var id=cobalt.utils.attr(this, 'id');
             cobalt.log("updating storage value of date #",id)
-            if ($(this).val()){
-                $(this).addClass('not_empty')
+            if (this.value){
+                cobalt.utils.addClass(this, 'not_empty')
             }else{
-                $(this).removeClass('not_empty')
+                cobalt.utils.removeClass(this, 'not_empty')
             }
-            cobalt.log('current value is', $(this).val())
-            var values=$(this).val().split('-')
+            cobalt.log('current value is', this.value)
+            var values=this.value.split('-')
             if (values.length==3){
                 var d={
                     year: parseInt(values[0],10),
@@ -444,10 +542,10 @@ var cobalt={
         },
         enhanceFieldValue:function(){
             //cobalt.log('updating date format')
-            var date = cobalt.storage.getItem('CobaltDatePickerValue_'+$(this).attr('id'), 'json')
+            var date = cobalt.storage.getItem('CobaltDatePickerValue_'+cobalt.utils.attr(this, 'id'), 'json')
             if (date){
                 cobalt.log('format date=',date)
-                $(this).val(cobalt.datePicker.format(cobalt.datePicker.stringifyDate(date)))
+                this.value=cobalt.datePicker.format(cobalt.datePicker.stringifyDate(date))
             }
         },
         stringifyDate:function(date){
@@ -460,12 +558,15 @@ var cobalt={
             return new String( new Array(padding + 1).join("0") + number ).slice(-padding)
         },
         val:function(input){
+            if (input[0] && input[0].value!==undefined){
+                input=input[0];
+            }
             if (cobalt.adapter.datePicker && cobalt.adapter.datePicker.val){
                 cobalt.log('returning cobalt adapter datePicker value')
                 return cobalt.adapter.datePicker.val(input);
             }else{
                 cobalt.log('returning cobalt default datePicker value')
-                return $(input).val() || undefined;
+                return input.value || undefined;
             }
         }
     },
@@ -662,15 +763,15 @@ var cobalt={
     datePicker:{
         init:function(inputs){
 
-            inputs.each(function(){
-                var input=$(this);
-                var id=input.attr('id');
+            cobalt.utils.each(inputs,function(){
+                var input=this;
+                var id=cobalt.utils.attr(input, 'id');
 
-                cobalt.log('datePicker setted with value='+input.val())
-                input.attr('type','text')
+                cobalt.log('datePicker setted with value='+input.value)
+                cobalt.utils.attr(input, 'type','text');
                 cobalt.datePicker.enhanceFieldValue.apply(input);
 
-                input.on('focus',function(){
+                input.addEventListener('focus',function(){
                     cobalt.log('show formPicker date for date #',id)
                     input.blur();
                     var previousDate = cobalt.storage.getItem('CobaltDatePickerValue_'+id,'json')
@@ -687,24 +788,24 @@ var cobalt={
                             texts: cobalt.datePicker.texts
                         }}, function(newDate){
                             if (newDate && newDate.year){
-                                input.val( newDate.year+'-'+newDate.month+'-'+newDate.day  );
+                                input.value= newDate.year+'-'+newDate.month+'-'+newDate.day;
                                 cobalt.log('setting storage date ', newDate);
                                 cobalt.storage.setItem('CobaltDatePickerValue_'+id,newDate,'json')
                                 cobalt.datePicker.enhanceFieldValue.apply(input);
                             }else{
                                 cobalt.log('removing storage date');
-                                input.val("");
+                                input.value="";
                                 cobalt.storage.removeItem('CobaltDatePickerValue_'+id)
                             }
                     });
-
                     return false;
-                });
+
+                },false);
 
             });
         },
         val:function(input){
-            var date = cobalt.storage.getItem('CobaltDatePickerValue_'+$(input).attr('id'), 'json')
+            var date = cobalt.storage.getItem('CobaltDatePickerValue_'+cobalt.utils.attr(input, 'id'), 'json')
             if (date){
                 var str_date=cobalt.datePicker.stringifyDate(date)
                 cobalt.log('returning storage date ', str_date);
