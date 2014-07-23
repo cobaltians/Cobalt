@@ -1,6 +1,6 @@
 /**
  *
- * CobaltAbstractPlugin
+ * CobaltPluginWebContainer
  * Cobalt
  *
  * The MIT License (MIT)
@@ -29,44 +29,37 @@
 
 package fr.cobaltians.cobalt.plugin;
 
-import java.util.Vector;
+import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
-import org.json.JSONObject;
+import android.app.Activity;
 
-/**
- * Created by sebastienfamel on 15/07/2014.
- */
-public abstract class CobaltAbstractPlugin {
-	
-	// TAG
-	private static final String TAG = CobaltAbstractPlugin.class.getSimpleName();
+public final class CobaltPluginWebContainer {
 
-    /*******************************************************************************************************
+	/**************************************
      * MEMBERS
-     *******************************************************************************************************/
+     **************************************/
 	
-	protected static CobaltAbstractPlugin sInstance;
+	private final Activity mActivity;
+	private final CobaltFragment mFragment;
 	
-	protected CobaltPluginManager mPluginManager;
-	protected Vector<CobaltPluginWebContainer> mWebContainerVector = new Vector<CobaltPluginWebContainer>();
-
 	/****************************************************************************
      * CONSTRUCTORS
      ****************************************************************************/
-    
-    protected final void addWebContainer(CobaltPluginWebContainer webContainer) {
-    	if (! mWebContainerVector.contains(webContainer)) {
-    		mWebContainerVector.addElement(webContainer);
-    	}
-    }
-    
-    protected final void updatePluginManager(CobaltPluginManager pluginManager) {
-    	mPluginManager = pluginManager;
-    }
-    
-    /*****************************************************************************************
-     * ABSTRACT METHODS
-     *****************************************************************************************/
-    
-    public abstract void onMessage(CobaltPluginWebContainer webContainer, JSONObject message);
+	
+	public CobaltPluginWebContainer(Activity activity, CobaltFragment fragment) {
+		mActivity = activity;
+		mFragment = fragment;
+	}
+
+	/************************************
+     * GETTERS
+     ************************************/
+	
+	public Activity getActivity() {
+		return mActivity;
+	}
+
+	public CobaltFragment getFragment() {
+		return mFragment;
+	}
 }
