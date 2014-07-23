@@ -49,12 +49,8 @@ public final class CobaltLocationPlugin extends CobaltAbstractPlugin {
 
 	// TAG
 	private static final String TAG = CobaltLocationPlugin.class.getSimpleName();
-
-	/***************************************************
-     * MEMBERS
-     ***************************************************/
 	
-    private static final String LONGITUDE = "longitude";
+	private static final String LONGITUDE = "longitude";
     private static final String LATITUDE = "latitude";
     
     /*************************************************************************************************************************
@@ -67,7 +63,6 @@ public final class CobaltLocationPlugin extends CobaltAbstractPlugin {
     	}
     	
     	sInstance.addWebContainer(webContainer);
-    	sInstance.updatePluginManager(pluginManager);
     	
     	return sInstance;
     }

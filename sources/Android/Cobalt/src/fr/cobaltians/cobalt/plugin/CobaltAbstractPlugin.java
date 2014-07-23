@@ -37,9 +37,6 @@ import org.json.JSONObject;
  * Created by sebastienfamel on 15/07/2014.
  */
 public abstract class CobaltAbstractPlugin {
-	
-	// TAG
-	private static final String TAG = CobaltAbstractPlugin.class.getSimpleName();
 
     /*******************************************************************************************************
      * MEMBERS
@@ -47,21 +44,16 @@ public abstract class CobaltAbstractPlugin {
 	
 	protected static CobaltAbstractPlugin sInstance;
 	
-	protected CobaltPluginManager mPluginManager;
 	protected Vector<CobaltPluginWebContainer> mWebContainerVector = new Vector<CobaltPluginWebContainer>();
 
 	/****************************************************************************
-     * CONSTRUCTORS
+     * METHODS
      ****************************************************************************/
     
     protected final void addWebContainer(CobaltPluginWebContainer webContainer) {
     	if (! mWebContainerVector.contains(webContainer)) {
     		mWebContainerVector.addElement(webContainer);
     	}
-    }
-    
-    protected final void updatePluginManager(CobaltPluginManager pluginManager) {
-    	mPluginManager = pluginManager;
     }
     
     /*****************************************************************************************
