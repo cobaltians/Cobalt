@@ -110,6 +110,11 @@
 // HTML
 #define defaultHtmlPage                     @"index.html"
 
+//PLUGIN
+#define kJSTypePlugin                       @"plugin"
+#define kJSPluginName                       @"name"
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark PROTOCOL

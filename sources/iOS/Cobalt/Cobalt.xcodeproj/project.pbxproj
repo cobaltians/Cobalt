@@ -12,6 +12,9 @@
 		71B4B1B21885C7CE0027AC4F /* CobaltToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1A81885C7CE0027AC4F /* CobaltToast.m */; };
 		8EA5A52E18DB199600330396 /* ImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA5A52D18DB199600330396 /* ImageManager.m */; };
 		8EA5A53018DB1AEE00330396 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EA5A52F18DB1AEE00330396 /* AssetsLibrary.framework */; };
+		8EE6199C197FEAF500B5767C /* CobaltAbstractPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EE6199B197FEAF500B5767C /* CobaltAbstractPlugin.m */; };
+		8EE6199F197FF2A600B5767C /* CobaltPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EE6199E197FF2A600B5767C /* CobaltPluginManager.m */; };
+		8EE619A2197FFD3A00B5767C /* CobaltLocationPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EE619A1197FFD3A00B5767C /* CobaltLocationPlugin.m */; };
 		BE8A3EAB1886D43C00C3B479 /* iToast.m in Sources */ = {isa = PBXBuildFile; fileRef = BE8A3EAA1886D43C00C3B479 /* iToast.m */; };
 		F01A59ED1716EDB50000DD94 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F01A59EC1716EDB50000DD94 /* Foundation.framework */; };
 /* End PBXBuildFile section */
@@ -39,6 +42,12 @@
 		8EA5A52C18DB199600330396 /* ImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageManager.h; path = Model/ImageManager.h; sourceTree = "<group>"; };
 		8EA5A52D18DB199600330396 /* ImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImageManager.m; path = Model/ImageManager.m; sourceTree = "<group>"; };
 		8EA5A52F18DB1AEE00330396 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		8EE6199A197FEAF500B5767C /* CobaltAbstractPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltAbstractPlugin.h; sourceTree = "<group>"; };
+		8EE6199B197FEAF500B5767C /* CobaltAbstractPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltAbstractPlugin.m; sourceTree = "<group>"; };
+		8EE6199D197FF2A600B5767C /* CobaltPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltPluginManager.h; sourceTree = "<group>"; };
+		8EE6199E197FF2A600B5767C /* CobaltPluginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltPluginManager.m; sourceTree = "<group>"; };
+		8EE619A0197FFD3A00B5767C /* CobaltLocationPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltLocationPlugin.h; sourceTree = "<group>"; };
+		8EE619A1197FFD3A00B5767C /* CobaltLocationPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltLocationPlugin.m; sourceTree = "<group>"; };
 		BE2FD3371918D9970092B7DB /* CobaltViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CobaltViewController.xib; sourceTree = "<group>"; };
 		BE8A3EA91886D43C00C3B479 /* iToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iToast.h; path = Cobalt/iToast.h; sourceTree = SOURCE_ROOT; };
 		BE8A3EAA1886D43C00C3B479 /* iToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iToast.m; path = Cobalt/iToast.m; sourceTree = SOURCE_ROOT; };
@@ -63,6 +72,7 @@
 		71B4B1951885C7CE0027AC4F /* Cobalt */ = {
 			isa = PBXGroup;
 			children = (
+				8EE61999197FEAF500B5767C /* Plugin */,
 				71B4B1961885C7CE0027AC4F /* Cobalt-Prefix.pch */,
 				71B4B1971885C7CE0027AC4F /* Cobalt.h */,
 				71B4B1981885C7CE0027AC4F /* Cobalt.m */,
@@ -92,6 +102,19 @@
 			);
 			name = Toast;
 			path = Views;
+			sourceTree = "<group>";
+		};
+		8EE61999197FEAF500B5767C /* Plugin */ = {
+			isa = PBXGroup;
+			children = (
+				8EE6199D197FF2A600B5767C /* CobaltPluginManager.h */,
+				8EE6199E197FF2A600B5767C /* CobaltPluginManager.m */,
+				8EE6199A197FEAF500B5767C /* CobaltAbstractPlugin.h */,
+				8EE6199B197FEAF500B5767C /* CobaltAbstractPlugin.m */,
+				8EE619A0197FFD3A00B5767C /* CobaltLocationPlugin.h */,
+				8EE619A1197FFD3A00B5767C /* CobaltLocationPlugin.m */,
+			);
+			path = Plugin;
 			sourceTree = "<group>";
 		};
 		C4060B28171D84F6001B393E /* Toast */ = {
@@ -158,7 +181,7 @@
 		F01A59E11716EDB50000DD94 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Haploid;
 			};
 			buildConfigurationList = F01A59E41716EDB50000DD94 /* Build configuration list for PBXProject "Cobalt" */;
@@ -184,9 +207,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				BE8A3EAB1886D43C00C3B479 /* iToast.m in Sources */,
+				8EE6199F197FF2A600B5767C /* CobaltPluginManager.m in Sources */,
 				71B4B1AB1885C7CE0027AC4F /* Cobalt.m in Sources */,
 				8EA5A52E18DB199600330396 /* ImageManager.m in Sources */,
+				8EE6199C197FEAF500B5767C /* CobaltAbstractPlugin.m in Sources */,
 				71B4B1AE1885C7CE0027AC4F /* CobaltViewController.m in Sources */,
+				8EE619A2197FFD3A00B5767C /* CobaltLocationPlugin.m in Sources */,
 				71B4B1B21885C7CE0027AC4F /* CobaltToast.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -250,7 +276,6 @@
 		F01A59F81716EDB50000DD94 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				DSTROOT = /tmp/Cobalt.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Cobalt/Cobalt-Prefix.pch";
@@ -264,7 +289,6 @@
 		F01A59F91716EDB50000DD94 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				DSTROOT = /tmp/Cobalt.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Cobalt/Cobalt-Prefix.pch";

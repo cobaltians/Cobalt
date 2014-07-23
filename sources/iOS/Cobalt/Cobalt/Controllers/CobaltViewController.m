@@ -32,6 +32,8 @@
 #import "Cobalt.h"
 #import "iToast.h"
 
+#import "CobaltPluginManager.h"
+
 #define haploidSpecialJSKey     @"cob@l7#k&y"
 
 // CONFIGURATION FILE
@@ -152,6 +154,8 @@ NSString * webLayerPage;
     activityIndicator = nil;
     pageName = nil;
     webLayer = nil;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName: viewControllerDeallocatedNotification  object: self];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -678,6 +682,10 @@ NSString * webLayerPage;
                 }
             }
         }
+        // PLUGIN
+        else if ([type isEqualToString: kJSTypePlugin]) {
+            [[CobaltPluginManager sharedInstance] onMessageFromCobaltViewController: self andData: dict];
+        }
         else {
 #if DEBUG_COBALT
             NSLog(@"handleDictionarySentByJavaScript: unhandled message %@", [dict description]);
@@ -892,7 +900,7 @@ NSString * webLayerPage;
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSString * callback = [alertCallbacks objectForKey:[NSString stringWithFormat:@"%d", alertView.tag]];
+    NSString * callback = [alertCallbacks objectForKey:[NSString stringWithFormat:@"%ld", (long)alertView.tag]];
     
     if (callback
         && [callback isKindOfClass:[NSString class]]) {
