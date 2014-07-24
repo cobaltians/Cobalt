@@ -11,7 +11,7 @@
 
 @interface CobaltAbstractPlugin : NSObject
 
-@property (nonatomic, retain) NSMutableArray * webviewsArray;
+@property (nonatomic, retain) NSMutableArray * viewControllersArray;
 
 + (CobaltAbstractPlugin *)sharedInstanceWithCobaltViewController: (CobaltViewController *)viewController;
 - (void)onMessageFromWebview:(CobaltViewController *)viewController andData: (NSDictionary *)data;

@@ -33,7 +33,7 @@ static CobaltAbstractPlugin * instance = nil;
 			instance = [[self alloc] init];
 		}
         
-        [instance.webviewsArray addObject: viewController];
+        [instance.viewControllersArray addObject: [NSValue valueWithNonretainedObject: viewController]];
 	}
 	return instance;
 }
@@ -50,7 +50,7 @@ static CobaltAbstractPlugin * instance = nil;
 //
 - (id)init{
 	if (self = [super init]) {
-        _webviewsArray = [[NSMutableArray alloc] init];
+        _viewControllersArray = [[NSMutableArray alloc] init];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewControllerDeallocated:) name:viewControllerDeallocatedNotification object:nil];
     }
@@ -63,7 +63,7 @@ static CobaltAbstractPlugin * instance = nil;
 - (void)viewControllerDeallocated:(NSNotification *)notification {
     CobaltViewController * viewController = [notification object];
     
-    [instance.webviewsArray removeObject: viewController];
+    [instance.viewControllersArray removeObject: [NSValue valueWithNonretainedObject: viewController]];
 }
 
 - (void) dealloc {
