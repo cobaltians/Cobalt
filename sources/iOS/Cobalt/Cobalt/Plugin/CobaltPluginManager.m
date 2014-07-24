@@ -9,9 +9,6 @@
 #import "CobaltPluginManager.h"
 #import "CobaltAbstractPlugin.h"
 
-//to be script generated
-#import "CobaltLocationPlugin.h"
-
 @implementation CobaltPluginManager
 
 
@@ -52,10 +49,7 @@ static CobaltPluginManager * instance = nil;
 //
 - (id)init{
 	if (self = [super init]) {
-        _pluginsDictionary = [[NSMutableDictionary alloc] init];
-        
-        //to be script generated
-        [_pluginsDictionary setObject: [CobaltLocationPlugin class]  forKey: @"location"];
+        _pluginsDictionary = [[NSMutableDictionary alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"plugins" ofType:@"plist"]];
     }
 	return self;
 }
@@ -64,7 +58,7 @@ static CobaltPluginManager * instance = nil;
     NSString * pluginName = [data objectForKey: kJSPluginName];
     
     if([pluginName isKindOfClass: [NSString class]]) {
-        Class class = [_pluginsDictionary objectForKey: pluginName];
+        Class class = NSClassFromString([_pluginsDictionary objectForKey: pluginName]);
         if(class)
         {
             CobaltAbstractPlugin * plugin = [class sharedInstanceWithCobaltViewController: viewController];

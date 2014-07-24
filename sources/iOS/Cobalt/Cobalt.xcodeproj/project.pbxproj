@@ -42,6 +42,7 @@
 		8EA5A52C18DB199600330396 /* ImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageManager.h; path = Model/ImageManager.h; sourceTree = "<group>"; };
 		8EA5A52D18DB199600330396 /* ImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImageManager.m; path = Model/ImageManager.m; sourceTree = "<group>"; };
 		8EA5A52F18DB1AEE00330396 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		8EC5CADA1981030C001777FA /* plugins.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = plugins.plist; sourceTree = "<group>"; };
 		8EE6199A197FEAF500B5767C /* CobaltAbstractPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltAbstractPlugin.h; sourceTree = "<group>"; };
 		8EE6199B197FEAF500B5767C /* CobaltAbstractPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltAbstractPlugin.m; sourceTree = "<group>"; };
 		8EE6199D197FF2A600B5767C /* CobaltPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltPluginManager.h; sourceTree = "<group>"; };
@@ -113,6 +114,7 @@
 				8EE6199B197FEAF500B5767C /* CobaltAbstractPlugin.m */,
 				8EE619A0197FFD3A00B5767C /* CobaltLocationPlugin.h */,
 				8EE619A1197FFD3A00B5767C /* CobaltLocationPlugin.m */,
+				8EC5CADA1981030C001777FA /* plugins.plist */,
 			);
 			path = Plugin;
 			sourceTree = "<group>";
