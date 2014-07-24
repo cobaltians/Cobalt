@@ -133,5 +133,8 @@ int i = 0;
     }
     
 }
-
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
 @end

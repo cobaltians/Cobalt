@@ -126,5 +126,8 @@
         [standardUserDefaults synchronize];
     }
 }
-
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
 @end

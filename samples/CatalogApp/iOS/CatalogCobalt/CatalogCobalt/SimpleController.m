@@ -23,6 +23,7 @@
     // Do any additional setup after loading the view from its nib.
     [self setDelegate:self];
     [self.navigationController setNavigationBarHidden:YES];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -43,6 +44,11 @@
 - (BOOL)onUnhandledCallback:(NSString *)callback withData:(NSDictionary *)data
 {
     return NO;
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
 }
 
 @end
