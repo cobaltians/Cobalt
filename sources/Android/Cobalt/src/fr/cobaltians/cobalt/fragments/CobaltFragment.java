@@ -112,7 +112,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mPluginManager = CobaltPluginManager.getInstance();
+        mPluginManager = CobaltPluginManager.getInstance(mContext);
         setRetainInstance(true);
     }
 
@@ -178,10 +178,17 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
         }
     }
 
+    @Override
+	public void onDestroy() {
+		super.onDestroy();
+		
+		mPluginManager.onFragmentDestroyed(mContext, this);
+	}
+    
 	/****************************************************************************************
 	 * LIFECYCLE HELPERS
 	 ***************************************************************************************/
-	
+
 	/**
 	 * This method should be overridden in subclasses.
 	 * @return Layout id inflated by this fragment

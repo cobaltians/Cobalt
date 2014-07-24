@@ -30,6 +30,7 @@
 package fr.cobaltians.cobalt;
 
 import fr.cobaltians.cobalt.fragments.CobaltFragment;
+import fr.cobaltians.cobalt.plugin.CobaltAbstractPlugin;
 
 import android.app.Activity;
 import android.content.Context;
@@ -39,6 +40,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import junit.framework.Assert;
 
@@ -56,9 +59,9 @@ public class Cobalt {
     // RESOURCES
     private static final String ASSETS_PATH = "file:///android_asset/";
 
-    /********************************************************
+    /********************************************************************
      * CONFIGURATION FILE
-     *******************************************************/
+     ********************************************************************/
 
     private final static String CONF_FILE = "cobalt.conf";
     private final static String kDefaultController = "default";
@@ -70,9 +73,15 @@ public class Cobalt {
     public final static String kInfiniteScroll = "infiniteScroll";
     public final static String kSwipe = "swipe";
 
-    /********************************************************
+    /*********************************************************
+     * PLUGINS FILE
+     *********************************************************/
+
+    private final static String PLUGINS_FILE = "plugins.conf";
+    
+    /*******************************************************************************************
      * JS KEYWORDS
-     *******************************************************/
+     *******************************************************************************************/
 
     // GENERAL
     public final static String kJSAction = "action";
@@ -160,17 +169,17 @@ public class Cobalt {
     public final static String JSTypePlugin = "plugin";
     public final static String kJSPluginName = "name";
 
-    /********************************************************
+    /*************************************
      * MEMBERS
-     *******************************************************/
+     *************************************/
 
     private static Cobalt sInstance;
     private final Context mContext;
     private String mResourcePath = "www/";
 
-    /********************************************************
+    /****************************************************************************************
      * CONSTRUCTORS
-     *******************************************************/
+     ****************************************************************************************/
 
     private Cobalt(Context context) {
         mContext = context.getApplicationContext();
@@ -185,9 +194,9 @@ public class Cobalt {
         return sInstance;
     }
 
-    /********************************************************
+    /**********************************************************
      * GETTERS / SETTERS
-     *******************************************************/
+     **********************************************************/
 	
 	public String getResourcePath() {
 		return ASSETS_PATH + mResourcePath;
@@ -198,9 +207,9 @@ public class Cobalt {
         else mResourcePath = new String();
 	}
 
-    /********************************************************************************************************************
+    /**************************************************************************************************************
      * CONFIGURATION FILE
-     *******************************************************************************************************************/
+     **************************************************************************************************************/
 
     public CobaltFragment getFragmentForController(Class<?> CobaltFragmentClass, String controller, String page) {
         CobaltFragment fragment = null;
@@ -259,7 +268,7 @@ public class Cobalt {
     private Bundle getConfigurationForController(String controller) {
         Bundle bundle = new Bundle();
 
-        JSONObject configuration = getConfiguration();
+        JSONObject configuration = getCobaltConfiguration();
 
         // Gets configuration
         try {
@@ -296,7 +305,7 @@ public class Cobalt {
         return bundle;
     }
 
-    private JSONObject getConfiguration() {
+    private JSONObject getCobaltConfiguration() {
         String configuration = readFileFromAssets(mResourcePath + CONF_FILE);
 
         try {
@@ -311,6 +320,61 @@ public class Cobalt {
         return new JSONObject();
     }
 
+    /*********************************************************************
+     * PLUGINS FILE
+     *********************************************************************/
+
+    public HashMap<String, Class<? extends CobaltAbstractPlugin>> getPlugins() {
+        HashMap<String, Class<? extends CobaltAbstractPlugin>> plugins = new HashMap<String, Class<? extends CobaltAbstractPlugin>>();
+
+        JSONObject configuration = getPluginsConfiguration();
+        Iterator<String> pluginsIterator = configuration.keys();
+
+        while (pluginsIterator.hasNext()) {
+            String pluginName = pluginsIterator.next();
+
+            try {
+                String pluginClassName = configuration.getString(pluginName);
+
+                try {
+                    Class<?> pluginClass = Class.forName(pluginClassName);
+                    if (CobaltAbstractPlugin.class.isAssignableFrom(pluginClass)) {
+                        plugins.put(pluginName, (Class<? extends CobaltAbstractPlugin>) pluginClass);
+                    }
+                    else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - getPlugins: " + pluginClass + " does not inherit from CobaltAbstractActivity!\n" + pluginName + " plugin message will not be processed.");
+                }
+                catch (ClassNotFoundException exception) {
+                    if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - getPlugins: " + pluginClassName + " class not found!\n" + pluginName + " plugin message will not be processed.");
+                    exception.printStackTrace();
+                }
+            }
+            catch (JSONException exception) {
+                if (Cobalt.DEBUG) exception.printStackTrace();
+            }
+        }
+
+        return plugins;
+    }
+
+    private JSONObject getPluginsConfiguration() {
+    	String plugins = readFileFromAssets(mResourcePath + PLUGINS_FILE);
+
+        try {
+            JSONObject jsonObj = new JSONObject(plugins);
+            return jsonObj;
+        }
+        catch (JSONException exception) {
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - getConfiguration: check plugins.conf. File is missing or not at " + ASSETS_PATH + mResourcePath + PLUGINS_FILE);
+            exception.printStackTrace();
+        }
+
+        return new JSONObject();
+    }
+    
+    /**********************************************************************************************
+     * HELPER METHODS
+     **********************************************************************************************/
+    
     private String readFileFromAssets(String file) {
         try {
             AssetManager assetManager = mContext.getAssets();
