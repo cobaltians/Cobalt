@@ -16,7 +16,7 @@
 
   		<a href="javascript:;" id="retrieve">Retrieve</a><br/>
 
-		<p>Change the value and get back to the other page</p>
+		<p>Change the value and get back to the other page.</p>
 
 		<a href="javascript:;" id="store">Store 'changed'</a><br/>
 		<a href="javascript:;" id="clean">Clean all values</a><br/>
@@ -66,13 +66,13 @@
                     var keyvalue=cobalt.storage.getItem('testLocalStorageKey',"json")
                     if (keyvalue){
                         if (keyvalue.value){
-                            cobalt.log("value key of 'testLocalStorageKey' contains : "+ keyvalue.value)
+                            cobalt.log("value key of 'testLocalStorageKey' contains: "+ keyvalue.value)
                         }
                         else{
                             cobalt.log("value key of 'testLocalStorageKey' is not set.")
                         }
                     }else{
-                        cobalt.log("key 'testLocalStorageKey' is not set")
+                        cobalt.log("key 'testLocalStorageKey' is not set.")
                     }
                 });
 

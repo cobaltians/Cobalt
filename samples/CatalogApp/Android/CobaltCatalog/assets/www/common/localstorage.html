@@ -9,7 +9,7 @@
   		
   		<a href="javascript:;" class="pop">POP</a><br/>
 
-		<p>This page use the LocalStorage, as fixed and enhanced with Cobalt</p>
+		<p>This page uses the LocalStorage, as fixed and enhanced with Cobalt.</p>
 
 		<a href="javascript:;" id="store">Store value "stored"</a><br/>
   		<a href="javascript:;" id="store2">Store value "saved"</a><br/>
@@ -19,18 +19,18 @@
 
 		<p>Below, a link to another page. You can test going from one to the other to check storage persistence.</p>
 
-		<a class="push" href="javascript:;" data-href="localstorage_page2.html">Push 2nd page</a>
+		<a class="push" href="javascript:;" data-href="localstorage_page2.html">Push the 2nd page</a>
 
 
-		<p>The button below is sending a bench of automatic tests.</p>
+		<p>The button below sends a bench of automatic tests.</p>
 
 		<a href="javascript:;" id="test4">Tests</a><br/>
 
-		<p>The button bellow <b>store</b> 2000 values in the localStorage and shows elapsed time.</p>
+		<p>The button below <b>stores</b> 2000 values in the localStorage and shows elapsed time.</p>
 
 		<a href="javascript:;" id="test5">Speed test 1</a><br/>
 
-		<p>The button bellow <b>retrieve</b> 2000 values in the localStorage and shows elapsed time.</p>
+		<p>The button below <b>retrieves</b> 2000 values in the localStorage and shows elapsed time.</p>
 
 		<a href="javascript:;" id="test6">Speed test 2</a><br/>
 
@@ -81,13 +81,13 @@
 		            var keyvalue=cobalt.storage.getItem('testLocalStorageKey',"json")
 		            if (keyvalue){
 			            if (keyvalue.value){
-				            cobalt.log("value key of 'testLocalStorageKey' contains : "+ keyvalue.value)
+				            cobalt.log("value key of 'testLocalStorageKey' contains: "+ keyvalue.value)
 			            }
 			            else{
 				            cobalt.log("value key of 'testLocalStorageKey' is not set.")
 			            }
 		            }else{
-			            cobalt.log("key 'testLocalStorageKey' is not set")
+			            cobalt.log("key 'testLocalStorageKey' is not set.")
 		            }
 	            });
 

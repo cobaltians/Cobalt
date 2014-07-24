@@ -25,9 +25,9 @@
 
   		</ul>
   		
-  		<p>Click on each page to see the functionality</p>
+  		<p>Click on each functionality to see its demo page.</p>
 
-		<p>On devices with a back button, app should ask before quitting.</p>
+		<p>On the devices with a back button, the app should ask before quitting.</p>
 
   		<script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="../platform/cobalt.js"></script>
@@ -45,7 +45,7 @@
 
 		            events:{
 			            "onBackButtonPressed":function(data, callback){
-				            cobalt.alert('Quit ?',"Are you sure you want to quit the app ?", ["Yeah","No"],{ callback:function(params){
+				            cobalt.alert('Quit?',"Are you sure you want to quit the app?", ["Yeah","No"],{ callback:function(params){
 					            if (params.index===0){
                                     //allow quitting
 						            cobalt.sendCallback(callback,{value : true});
