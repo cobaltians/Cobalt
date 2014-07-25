@@ -34,14 +34,6 @@
 
 #import "CobaltPluginManager.h"
 
-#define haploidSpecialJSKey     @"cob@l7#k&y"
-
-// CONFIGURATION FILE
-#define confFileName            @"cobalt.conf"
-#define kIosController          @"iosController"
-#define kIosNibName             @"iosNibName"
-#define kPullToRefreshEnabled   @"pullToRefresh"
-#define kInfiniteScrollEnabled  @"infiniteScroll"
 @interface CobaltViewController ()
 /*!
  @method		+(void) executeScriptInWebView:(UIWebView *)mWebView withDictionary:(NSDictionary *)dict
@@ -231,7 +223,7 @@ NSString * webLayerPage;
 
 + (NSDictionary *)getConfigurationForController:(NSString *)controller
 {
-    NSDictionary * configuration = [CobaltViewController getConfiguration];
+    NSDictionary * configuration = [Cobalt getControllersConfiguration];
     if (configuration) {
         if (controller) {
             NSDictionary * controllerConfiguration = [configuration objectForKey:controller];
@@ -263,56 +255,6 @@ NSString * webLayerPage;
     }
     
     return nil;
-}
-
-+ (NSDictionary *)getConfiguration
-{
-    NSString * configuration = [CobaltViewController stringWithContentsOfFile:[NSString stringWithFormat:@"%@%@", [Cobalt resourcePath], confFileName]];
-    if (configuration) {
-        return [CobaltViewController JSONObjectWithString:configuration];
-    }
-    else {
-        return nil;
-    }
-}
-
-+ (NSString *)stringWithContentsOfFile:(NSString *)path
-{
-    if (path != nil) {
-        NSURL * url = [NSURL fileURLWithPath:path isDirectory:NO];
-        NSError * error;
-        NSString * content = [[NSString alloc] initWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
-
-    #if DEBUG_COBALT
-        if (! content) {
-            NSLog(@"stringWithContentsOfFile: Error while reading file at %@\n%@", url, [error localizedFailureReason]);
-        }
-    #endif
-        
-        return content;
-    }
-    else {
-#if DEBUG_COBALT
-        NSLog(@"stringWithContentsOfFile: path is nil");
-#endif
-        return nil;
-    }
-}
-
-+ (id)JSONObjectWithString:(NSString *)string
-{
-    NSError * error;
-    NSData * data = [string dataUsingEncoding:NSUTF8StringEncoding];
-    
-    id dictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-    
-#if DEBUG_COBALT
-    if (! dictionary) {
-        NSLog(@"JSONObjectWithString: Error while reading JSON %@\n%@", string, [error localizedFailureReason]);
-    }
-#endif
-    
-    return dictionary;
 }
 
 - (void)executeScriptInWebView:(UIWebView *)mWebView withDictionary:(NSDictionary *)dict
@@ -795,7 +737,7 @@ NSString * webLayerPage;
     NSDictionary * configuration = [CobaltViewController getConfigurationForController:controller];
     
     if (configuration) {
-        NSString * class = [configuration objectForKey:kIosController];
+        NSString * class = [configuration objectForKey: kIos];
         NSString * nib = [configuration objectForKey:kIosNibName];
         BOOL pullToRefreshEnabled = [[configuration objectForKey:kPullToRefreshEnabled] boolValue];
         BOOL infiniteScrollEnabled = [[configuration objectForKey:kInfiniteScrollEnabled] boolValue];
@@ -997,7 +939,7 @@ NSString * webLayerPage;
     NSRange range = [requestURL rangeOfString:haploidSpecialJSKey];
     if (range.location != NSNotFound) {
         NSString * json = [requestURL substringFromIndex:range.location + haploidSpecialJSKey.length];
-        NSDictionary * jsonObj = [CobaltViewController JSONObjectWithString:json];
+        NSDictionary * jsonObj = [Cobalt JSONObjectWithString:json];
         
         [fromJavaScriptOperationQueue addOperationWithBlock:^{
             dispatch_sync(dispatch_get_main_queue(), ^{

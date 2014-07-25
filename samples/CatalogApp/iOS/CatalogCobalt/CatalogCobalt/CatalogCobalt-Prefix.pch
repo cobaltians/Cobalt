@@ -13,6 +13,6 @@
     #import <Foundation/Foundation.h>
 #endif
 
-#define RESOURCE_PATH [NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] resourcePath], @"/www/common/"]
+#define RESOURCE_PATH [NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] resourcePath], @"/Web/"]
 
 #define DEBUG_COBALT      1

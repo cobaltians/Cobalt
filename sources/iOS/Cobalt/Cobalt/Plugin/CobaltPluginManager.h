@@ -11,7 +11,7 @@
 
 @interface CobaltPluginManager : NSObject
 
-@property (nonatomic, retain) NSMutableDictionary * pluginsDictionary;
+@property (nonatomic, retain) NSDictionary * pluginsDictionary;
 
 
 + (CobaltPluginManager *)sharedInstance;

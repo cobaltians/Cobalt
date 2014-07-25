@@ -54,4 +54,69 @@ static NSString * sResourcePath = nil;
     }
 }
 
++ (NSDictionary *)getControllersConfiguration
+{
+    //TODO not load this file each time
+    NSString * configuration = [Cobalt stringWithContentsOfFile:[NSString stringWithFormat:@"%@%@", [Cobalt resourcePath], confFileName]];
+    
+    if (configuration) {
+        return [[Cobalt JSONObjectWithString:configuration] objectForKey: kControllers];
+    }
+    else {
+        return nil;
+    }
+}
+
++ (NSDictionary *)getPluginsConfiguration
+{
+    //TODO not load this file each time
+    NSString * configuration = [Cobalt stringWithContentsOfFile:[NSString stringWithFormat:@"%@%@", [Cobalt resourcePath], confFileName]];
+    
+    if (configuration) {
+        return [[Cobalt JSONObjectWithString:configuration] objectForKey: kPlugins];
+    }
+    else {
+        return nil;
+    }
+}
+
++ (NSString *)stringWithContentsOfFile:(NSString *)path
+{
+    if (path != nil) {
+        NSURL * url = [NSURL fileURLWithPath:path isDirectory:NO];
+        NSError * error;
+        NSString * content = [[NSString alloc] initWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
+        
+#if DEBUG_COBALT
+        if (! content) {
+            NSLog(@"stringWithContentsOfFile: Error while reading file at %@\n%@", url, [error localizedFailureReason]);
+        }
+#endif
+        
+        return content;
+    }
+    else {
+#if DEBUG_COBALT
+        NSLog(@"stringWithContentsOfFile: path is nil");
+#endif
+        return nil;
+    }
+}
+
++ (id)JSONObjectWithString:(NSString *)string
+{
+    NSError * error;
+    NSData * data = [string dataUsingEncoding:NSUTF8StringEncoding];
+    
+    id dictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+    
+#if DEBUG_COBALT
+    if (! dictionary) {
+        NSLog(@"JSONObjectWithString: Error while reading JSON %@\n%@", string, [error localizedFailureReason]);
+    }
+#endif
+    
+    return dictionary;
+}
+
 @end

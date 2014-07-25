@@ -49,7 +49,8 @@ static CobaltPluginManager * instance = nil;
 //
 - (id)init{
 	if (self = [super init]) {
-        _pluginsDictionary = [[NSMutableDictionary alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"plugins" ofType:@"plist"]];
+        _pluginsDictionary = [Cobalt getPluginsConfiguration];
+        //_pluginsDictionary = [[NSMutableDictionary alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"plugins" ofType:@"plist"]];
     }
 	return self;
 }
@@ -58,7 +59,7 @@ static CobaltPluginManager * instance = nil;
     NSString * pluginName = [data objectForKey: kJSPluginName];
     
     if([pluginName isKindOfClass: [NSString class]]) {
-        Class class = NSClassFromString([_pluginsDictionary objectForKey: pluginName]);
+        Class class = NSClassFromString([[_pluginsDictionary objectForKey: pluginName] objectForKey: kIos]);
         if(class)
         {
             CobaltAbstractPlugin * plugin = [class sharedInstanceWithCobaltViewController: viewController];
