@@ -64,20 +64,16 @@ public class Cobalt {
      ********************************************************************/
 
     private final static String CONF_FILE = "cobalt.conf";
+    private final static String kControllers = "controllers";
+    private final static String kPlugins = "plugins";
+    private final static String kAndroid = "android";
     private final static String kDefaultController = "default";
-    private final static String kAndroidController = "androidController";
     public final static String kExtras = "extras";
     public final static String kPage = "page";
     private final static String kActivity = "activity";
     public final static String kPullToRefresh = "pullToRefresh";
     public final static String kInfiniteScroll = "infiniteScroll";
     public final static String kSwipe = "swipe";
-
-    /*********************************************************
-     * PLUGINS FILE
-     *********************************************************/
-
-    private final static String PLUGINS_FILE = "plugins.conf";
     
     /*******************************************************************************************
      * JS KEYWORDS
@@ -268,25 +264,27 @@ public class Cobalt {
     private Bundle getConfigurationForController(String controller) {
         Bundle bundle = new Bundle();
 
-        JSONObject configuration = getCobaltConfiguration();
+        JSONObject configuration = getConfiguration();
 
         // Gets configuration
         try {
+            JSONObject controllers = configuration.getJSONObject(kControllers);
+
             String activity;
             boolean enablePullToRefresh;
             boolean enableInfiniteScroll;
             // TODO: add enableGesture
 
             if (controller != null
-                && configuration.has(controller)) {
-                activity = configuration.getJSONObject(controller).getString(kAndroidController);
-                enablePullToRefresh = configuration.getJSONObject(controller).optBoolean(kPullToRefresh);
-                enableInfiniteScroll = configuration.getJSONObject(controller).optBoolean(kInfiniteScroll);
+                && controllers.has(controller)) {
+                activity = controllers.getJSONObject(controller).getString(kAndroid);
+                enablePullToRefresh = controllers.getJSONObject(controller).optBoolean(kPullToRefresh);
+                enableInfiniteScroll = controllers.getJSONObject(controller).optBoolean(kInfiniteScroll);
             }
             else {
-                activity = configuration.getJSONObject(kDefaultController).getString(kAndroidController);
-                enablePullToRefresh = configuration.getJSONObject(kDefaultController).optBoolean(kPullToRefresh);
-                enableInfiniteScroll = configuration.getJSONObject(kDefaultController).optBoolean(kInfiniteScroll);
+                activity = controllers.getJSONObject(kDefaultController).getString(kAndroid);
+                enablePullToRefresh = controllers.getJSONObject(kDefaultController).optBoolean(kPullToRefresh);
+                enableInfiniteScroll = controllers.getJSONObject(kDefaultController).optBoolean(kInfiniteScroll);
             }
 
             bundle.putString(kActivity, activity);
@@ -297,15 +295,70 @@ public class Cobalt {
         }
         catch (JSONException exception) {
             if (Cobalt.DEBUG) Log.e(Cobalt.TAG,     TAG + " - getConfigurationForController: check cobalt.conf. Known issues: \n "
+                                                    + "\t - controllers field not found or not a JSONObject \n "
                                                     + "\t - " + controller + " controller not found and no " + kDefaultController + " controller defined \n "
-                                                    + "\t - " + controller + " or " + kDefaultController + "controller found but no " + kAndroidController + "defined \n ");
+                                                    + "\t - " + controller + " or " + kDefaultController + "controller found but no " + kAndroid + "defined \n ");
             exception.printStackTrace();
         }
 
         return bundle;
     }
 
-    private JSONObject getCobaltConfiguration() {
+    /*********************************************************************
+     * PLUGINS FILE
+     *********************************************************************/
+
+    public HashMap<String, Class<? extends CobaltAbstractPlugin>> getPlugins() {
+        HashMap<String, Class<? extends CobaltAbstractPlugin>> pluginsMap = new HashMap<String, Class<? extends CobaltAbstractPlugin>>();
+
+        try {
+            JSONObject configuration = getConfiguration();
+            JSONObject plugins = configuration.getJSONObject(kPlugins);
+            Iterator<String> pluginsIterator = plugins.keys();
+
+            while (pluginsIterator.hasNext()) {
+                String pluginName = pluginsIterator.next();
+                try {
+                    JSONObject plugin = plugins.getJSONObject(pluginName);
+                    String pluginClassName = plugin.getString(kAndroid);
+
+                    try {
+                        Class<?> pluginClass = Class.forName(pluginClassName);
+                        if (CobaltAbstractPlugin.class.isAssignableFrom(pluginClass)) {
+                            pluginsMap.put(pluginName, (Class<? extends CobaltAbstractPlugin>) pluginClass);
+                        }
+                        else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - getPlugins: " + pluginClass + " does not inherit from CobaltAbstractActivity!\n" + pluginName + " plugin message will not be processed.");
+                    }
+                    catch (ClassNotFoundException exception) {
+                        if (Cobalt.DEBUG) {
+                            Log.e(Cobalt.TAG, TAG + " - getPlugins: " + pluginClassName + " class not found!\n" + pluginName + " plugin message will not be processed.");
+                            exception.printStackTrace();
+                        }
+                    }
+                }
+                catch (JSONException exception) {
+                    if (Cobalt.DEBUG) {
+                        Log.e(Cobalt.TAG, TAG + " - getPlugins: " + pluginName + " field is not a JSONObject or does not contain an android field or is not a String.\n" + pluginName + " plugin message will not be processed.");
+                        exception.printStackTrace();
+                    }
+                }
+            }
+        }
+        catch (JSONException exception) {
+            if (Cobalt.DEBUG) {
+                Log.w(Cobalt.TAG, TAG + " - getPlugins: plugins field of cobalt.conf not found or not a JSONObject.");
+                exception.printStackTrace();
+            }
+        }
+
+        return pluginsMap;
+    }
+    
+    /**********************************************************************************************
+     * HELPER METHODS
+     **********************************************************************************************/
+
+    private JSONObject getConfiguration() {
         String configuration = readFileFromAssets(mResourcePath + CONF_FILE);
 
         try {
@@ -320,61 +373,6 @@ public class Cobalt {
         return new JSONObject();
     }
 
-    /*********************************************************************
-     * PLUGINS FILE
-     *********************************************************************/
-
-    public HashMap<String, Class<? extends CobaltAbstractPlugin>> getPlugins() {
-        HashMap<String, Class<? extends CobaltAbstractPlugin>> plugins = new HashMap<String, Class<? extends CobaltAbstractPlugin>>();
-
-        JSONObject configuration = getPluginsConfiguration();
-        Iterator<String> pluginsIterator = configuration.keys();
-
-        while (pluginsIterator.hasNext()) {
-            String pluginName = pluginsIterator.next();
-
-            try {
-                String pluginClassName = configuration.getString(pluginName);
-
-                try {
-                    Class<?> pluginClass = Class.forName(pluginClassName);
-                    if (CobaltAbstractPlugin.class.isAssignableFrom(pluginClass)) {
-                        plugins.put(pluginName, (Class<? extends CobaltAbstractPlugin>) pluginClass);
-                    }
-                    else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - getPlugins: " + pluginClass + " does not inherit from CobaltAbstractActivity!\n" + pluginName + " plugin message will not be processed.");
-                }
-                catch (ClassNotFoundException exception) {
-                    if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - getPlugins: " + pluginClassName + " class not found!\n" + pluginName + " plugin message will not be processed.");
-                    exception.printStackTrace();
-                }
-            }
-            catch (JSONException exception) {
-                if (Cobalt.DEBUG) exception.printStackTrace();
-            }
-        }
-
-        return plugins;
-    }
-
-    private JSONObject getPluginsConfiguration() {
-    	String plugins = readFileFromAssets(mResourcePath + PLUGINS_FILE);
-
-        try {
-            JSONObject jsonObj = new JSONObject(plugins);
-            return jsonObj;
-        }
-        catch (JSONException exception) {
-            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - getConfiguration: check plugins.conf. File is missing or not at " + ASSETS_PATH + mResourcePath + PLUGINS_FILE);
-            exception.printStackTrace();
-        }
-
-        return new JSONObject();
-    }
-    
-    /**********************************************************************************************
-     * HELPER METHODS
-     **********************************************************************************************/
-    
     private String readFileFromAssets(String file) {
         try {
             AssetManager assetManager = mContext.getAssets();
