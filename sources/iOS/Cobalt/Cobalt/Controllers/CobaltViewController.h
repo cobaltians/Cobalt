@@ -123,7 +123,10 @@
 
 @protocol CobaltDelegate <NSObject>
 
+@optional
 - (void)onCobaltIsReady;
+
+@required
 - (BOOL)onUnhandledMessage:(NSDictionary *)message;
 - (BOOL)onUnhandledEvent:(NSString *)event withData:(NSDictionary *)data andCallback:(NSString *)callback;
 - (BOOL)onUnhandledCallback:(NSString *)callback withData:(NSDictionary *)data;
@@ -228,15 +231,6 @@
  @param         page: the page file
  */
 - (void)loadPage:(NSString *)page inWebView:(UIWebView *)mWebView;
-
-/*!
- @method		+ (NSString *)stringWithContentsOfFile:(NSString *)path
- @abstract		this method returns the content of the file at path path.
- @param         path: the path where to find this file
- @return        the content of the specified file or nil if an error occured
- */
-+ (NSString *)stringWithContentsOfFile:(NSString *)path;
-
 
 
 /*!

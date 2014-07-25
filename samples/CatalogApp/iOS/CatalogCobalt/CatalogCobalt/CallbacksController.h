@@ -8,7 +8,7 @@
 
 #import "CobaltViewController.h"
 
-@interface CallbacksController : CobaltViewController<CobaltDelegate>
+@interface CallbacksController : CobaltViewController <CobaltDelegate>
 
 @property (nonatomic,retain) NSArray* dataAuto;
 - (IBAction)DoSomeMaths:(id)sender;
