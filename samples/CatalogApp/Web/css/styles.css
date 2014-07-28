@@ -1,61 +1,88 @@
+/*
+//
+// Body
+//
+*/
 html {
     -webkit-text-size-adjust: 100%;
 	-ms-text-size-adjust:none;
 }
 body{
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-family: "Helvetica Neue Light", Helvetica, Arial, sans-serif;
 	font-size:12px; line-height:1.5;
+    margin: inherit;
+    padding-top: 110px;
 }
-body.red
-{
-	background:#FEE;
-}
-body.green
-{
-	background:#EFE;
-}
-body.blue
-{
-	background:#EEF;
+.article{
+    padding: 10px;
+    display: block;
 }
 
-body.dark{
-	background:#165C85;
-	color:#fff;
+/*
+//
+// Header
+//
+*/
+.header{
+    background-color: #2980B9; 
+    text-align: center;
+    color: white;
+    margin: 0 auto;
+    position: fixed;
+    display: block;
+    z-index: 2;
+    top: 0px;
+    
 }
-body.dark a{
-	color: #fff;
+.header img{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: auto;
 }
-body.dark a.disabled{
-	color: #333;
+.header a{
+    font-size: 14px;
+    float: left;
+    margin: 10px;
+    padding: 0px;
+    color: black;
+    background: white;
+    border-radius: 3px;
+    width: 50px;
+    height: 20px;
+    display: inline-block;
+    line-height:inherit
 }
+.dismiss{
+    float: right !important;
+}
+h1{
+    margin: 0px;
+    font-size: 18px;
+    padding: 5px;
+}    
 
-div.awfull
-{
-	width:100%;
-	height:110px;
-	background:url(../img/ic_launcher.png) repeat 0 0;
-}
-
-#nativeBridge_logdiv{
-	border:1px solid blue;
-	padding: 5px;
-}
-
+/*
+//
+// Index
+//
+*/
 
 ul, li{
 	margin:0; padding:0;
-	margin-left:5px;
+	margin:0px;
 	list-style:none;
+    width: 100%;
+    background: #3498DB;
+    border-top: 1px solid #2980B9;
+    font-size:15px;
 }
 a{
 	text-decoration:none;
-	color: #333;
-	font-weight:bold;
-	background: #ccc;
-	line-height:35px;
-	padding: 5px 10px;
-	border-radius:5px;
+	color: white;
+	line-height:40px;
+	padding: 10px 10px;
+    display:block
 }
 a, input{
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -66,13 +93,73 @@ a.disabled{
 	color: #fff;
 }
 a.touched{
-	background: #888;
+	background: #2980B9;
 }
 
 input{
 	width:80%;
 }
+li img{
+    margin-top: 5px;
+    float: right;
+    opacity: 0.6;
+}
 
+
+/*
+//
+// block
+//
+*/
+
+.block{
+    border: 2px solid #3498DB;
+    background-color: #ECF0F1;
+    display: block;
+    height: auto;
+    margin: 5px;
+}
+.block h2{
+    background-color: #3498DB;
+    color: white;
+    display: block;
+    height: auto;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0px !important;
+}
+.block p{
+
+    margin: 5px;
+}
+
+.block a{
+    background-color: #3498DB;
+    color: white;
+    display: block;
+    height: auto;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 5px;
+}
+.block a.touched{
+    background-color: #2980B9;
+    color: white;
+    display: block;
+    height: auto;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 5px;
+}
+
+/*
+//
+// Liste
+//
+*/
 
 .listItem{
 	clear: both;
@@ -97,6 +184,13 @@ input{
 	border:1px solid #ddd;
 }
 
+
+/*
+//
+// webLayers
+//
+*/
+
 html.webLayer{
 	height: 100%;
 	margin:0; padding:0;
@@ -118,8 +212,9 @@ div.webLayer{
 }
 div.webLayer h1{
 	text-align: center;
-	background: #ccc;
-	border-bottom: 1px solid #333333;
+    color: white;
+	background: #3498DB;
+	border-bottom: 1px solid #3498DB;
 	padding: 5px; margin: 0;
 }
 div.webLayer p,div.webLayer a{
@@ -137,4 +232,22 @@ div.webLayer2 #text{
 	height: 48%;
 	padding: 0;
 	margin: 5px;
+}
+
+/*
+//
+// 
+//
+*/
+
+div.awfull
+{
+	width:100%;
+	height:110px;
+	background:url(../img/ic_launcher.png) repeat 0 0;
+}
+
+#nativeBridge_logdiv{
+	border:1px solid blue;
+	padding: 5px;
 }

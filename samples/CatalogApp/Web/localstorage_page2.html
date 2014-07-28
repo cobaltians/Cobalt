@@ -7,25 +7,27 @@
     </head>
     <body class="green">
   		
-  		<a href="javascript:;" class="pop">POP</a><br/>
-
-
-        <p>2nd page of LocalStorage</p>
-
+  		<div class="header">
+            <img src="img/header.png" alt="">
+            <a href="javascript:;" class="pop">POP</a>
+            <h1>Local storage page 2</h1>
+        </div>
+<div class="block">
 		<p>Check if your value is still here.</p>
 
-  		<a href="javascript:;" id="retrieve">Retrieve</a><br/>
+  		<a href="javascript:;" id="retrieve">Retrieve</a>
+</div>
+        <div class="block">
+		<p>Change the value and get back to the other page</p>
 
-		<p>Change the value and get back to the other page.</p>
-
-		<a href="javascript:;" id="store">Store 'changed'</a><br/>
-		<a href="javascript:;" id="clean">Clean all values</a><br/>
-
-
+		<a href="javascript:;" id="store">Store 'changed'</a>
+		<a href="javascript:;" id="clean">Clean all values</a>
+</div>
+<div class="block">
 		<p>You can also re-push the previous page for further testing.</p>
 
-		<li><a class="push" href="javascript:;" data-href="localstorage.html">push first page</a></li>
-
+		<a class="push" href="javascript:;" data-href="localstorage.html">push first page</a>
+</div>
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="../platform/cobalt.js"></script>
@@ -66,13 +68,13 @@
                     var keyvalue=cobalt.storage.getItem('testLocalStorageKey',"json")
                     if (keyvalue){
                         if (keyvalue.value){
-                            cobalt.log("value key of 'testLocalStorageKey' contains: "+ keyvalue.value)
+                            cobalt.log("value key of 'testLocalStorageKey' contains : "+ keyvalue.value)
                         }
                         else{
                             cobalt.log("value key of 'testLocalStorageKey' is not set.")
                         }
                     }else{
-                        cobalt.log("key 'testLocalStorageKey' is not set.")
+                        cobalt.log("key 'testLocalStorageKey' is not set")
                     }
                 });
 

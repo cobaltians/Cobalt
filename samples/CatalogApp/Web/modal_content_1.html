@@ -6,20 +6,21 @@
 	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
     </head>
     <body class="red">
-  		
-  		<a href="javascript:;" class="dismiss">DISMISS</a><br/>
-  		<a href="javascript:;" class="pop">POP</a><br/>
-  		
-		<h2>Modal content 1</h2>
-		
+  		<div class="header">
+            <img src="img/header.png" alt="">
+            <a href="javascript:;" class="pop">POP</a>
+            <a href="javascript:;" class="dismiss">DISMISS</a><br/>
+            <h1>Modal content 1</h1>
+        </div>
+		<div class="block">
   		<p>There is a dismiss button at the top. Use it to close the modal.</p>
 
-        <p>The pop button should do nothing if you just opened the modal.</p>
+        <p>The pop button should do nothing if you just openned the modal.</p>
 
   		<p>You can push other pages in this modal.</p>
 
 		<a class="push" href="javascript:;" data-href="modal_content_2.html">Push modal content 2</a>
-		
+		</div>
 		<script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="../platform/cobalt.js"></script>
         <script type="text/javascript" src="js/app.js"></script>

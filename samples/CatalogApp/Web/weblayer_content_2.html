@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html class="webLayer">
     <head>
-			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
-	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="css/styles.css"/>
     </head>
     <body>
 
         <div class="webLayer webLayer2">
-	        <h1>Write something!</h1>
-	        <textarea id="text"></textarea>
-	        <a href="javascript:;" id="close">Close</a>
+            <h1>Write something !</h1>
+            <div class="block">
+            <textarea id="text"></textarea>
+            
+                <a href="javascript:;" id="close">Close</a>
+            </div>
         </div>
 
 
@@ -21,13 +24,13 @@
 
         <script>
 
-	        Zepto(function($){
+            Zepto(function($){
 
-	            cobalt.init({
+                cobalt.init({
                     debug:app.debug,
                     debugInBrowser:app.debugInBrowser,
                     debugInDiv:app.debugInDiv
-		        });
+                });
 
                 //This won't work everywhere. we work on it. see https://github.com/cobaltians/cobalt/issues/9 for more.
                 setTimeout(function(){
@@ -36,16 +39,16 @@
 
 
 
-		       app.touch('#close',function(){
-		       		$('#text').blur();
-		       		cobalt.webLayer("dismiss",{ value : $('#text').val() });
-	            });
-	            
-	            app.touch('a.pop',function(){
+                app.touch('#close',function(){
+                    $('#text').blur();
+                    cobalt.webLayer("dismiss",{ value : $('#text').val() });
+                });
+
+                app.touch('a.pop',function(){
                     cobalt.navigate('pop');
                 });
 
-	        })
+            })
 
 
         </script>
