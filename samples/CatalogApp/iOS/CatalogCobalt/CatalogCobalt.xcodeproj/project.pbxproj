@@ -21,8 +21,6 @@
 		C45C1F29172EA2FB002BE836 /* chaton.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = C45C1F28172EA2FB002BE836 /* chaton.jpeg */; };
 		C49597581717090B006454BA /* CallbacksController.m in Sources */ = {isa = PBXBuildFile; fileRef = C49597561717090B006454BA /* CallbacksController.m */; };
 		C49597591717090B006454BA /* CallbacksController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C49597571717090B006454BA /* CallbacksController.xib */; };
-		C4A39B4A17281CC9004F7282 /* PullToRefreshController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4A39B4817281CC9004F7282 /* PullToRefreshController.m */; };
-		C4A39B4B17281CC9004F7282 /* PullToRefreshController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4A39B4917281CC9004F7282 /* PullToRefreshController.xib */; };
 		C4D664A2171E8D97009EDE58 /* EventsController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D664A0171E8D97009EDE58 /* EventsController.m */; };
 		C4D664A3171E8D97009EDE58 /* EventsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4D664A1171E8D97009EDE58 /* EventsController.xib */; };
 		C4D664AA171E91D5009EDE58 /* SimpleController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D664A8171E91D5009EDE58 /* SimpleController.m */; };
@@ -59,9 +57,6 @@
 		C49597551717090B006454BA /* CallbacksController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CallbacksController.h; sourceTree = "<group>"; };
 		C49597561717090B006454BA /* CallbacksController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CallbacksController.m; sourceTree = "<group>"; };
 		C49597571717090B006454BA /* CallbacksController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CallbacksController.xib; sourceTree = "<group>"; };
-		C4A39B4717281CC9004F7282 /* PullToRefreshController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullToRefreshController.h; sourceTree = "<group>"; };
-		C4A39B4817281CC9004F7282 /* PullToRefreshController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullToRefreshController.m; sourceTree = "<group>"; };
-		C4A39B4917281CC9004F7282 /* PullToRefreshController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PullToRefreshController.xib; sourceTree = "<group>"; };
 		C4D6649F171E8D97009EDE58 /* EventsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventsController.h; sourceTree = "<group>"; };
 		C4D664A0171E8D97009EDE58 /* EventsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventsController.m; sourceTree = "<group>"; };
 		C4D664A1171E8D97009EDE58 /* EventsController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EventsController.xib; sourceTree = "<group>"; };
@@ -194,9 +189,6 @@
 				C4D6649F171E8D97009EDE58 /* EventsController.h */,
 				C4D664A0171E8D97009EDE58 /* EventsController.m */,
 				C4D664A1171E8D97009EDE58 /* EventsController.xib */,
-				C4A39B4717281CC9004F7282 /* PullToRefreshController.h */,
-				C4A39B4817281CC9004F7282 /* PullToRefreshController.m */,
-				C4A39B4917281CC9004F7282 /* PullToRefreshController.xib */,
 				F01A5A1A1716EF4D0000DD94 /* AppDelegate.h */,
 				F01A5A1B1716EF4D0000DD94 /* AppDelegate.m */,
 				8EC5CAD61980FB00001777FA /* Images.xcassets */,
@@ -275,7 +267,6 @@
 				C4D664A3171E8D97009EDE58 /* EventsController.xib in Resources */,
 				8EF28A2619829CF300097AF4 /* platform in Resources */,
 				C4D664AB171E91D5009EDE58 /* SimpleController.xib in Resources */,
-				C4A39B4B17281CC9004F7282 /* PullToRefreshController.xib in Resources */,
 				C45C1F29172EA2FB002BE836 /* chaton.jpeg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -299,7 +290,6 @@
 				71B4B1E91886D9DD0027AC4F /* CobaltViewController.m in Sources */,
 				C4D664AA171E91D5009EDE58 /* SimpleController.m in Sources */,
 				71B4B1ED1886D9DD0027AC4F /* CobaltToast.m in Sources */,
-				C4A39B4A17281CC9004F7282 /* PullToRefreshController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

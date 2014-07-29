@@ -52,7 +52,6 @@
             isPullToRefreshEnabled,
             pageName,
             webLayer,
-            pullToRefreshTableHeaderView,
             webView;
 
 NSMutableDictionary * alertCallbacks;
@@ -94,21 +93,13 @@ NSString * webLayerPage;
     
     // Add pull-to-refresh table header view
     if (isPullToRefreshEnabled) {
-        [self customPullToRefreshDefaultView];
+        UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
         
-        pullToRefreshTableHeaderView.state = RefreshStateNormal;
-        pullToRefreshTableHeaderView.loadingHeight = pullToRefreshTableHeaderView.frame.size.height;
-        pullToRefreshTableHeaderView.frame = CGRectMake(0.0, -self.webView.bounds.size.height,
-                                                        self.webView.bounds.size.width, self.webView.bounds.size.height);
+        refresh.attributedTitle = [[NSAttributedString alloc] initWithString:@"Tirer pour mettre à jour"];
         
-        if(pullToRefreshTableHeaderView) {
-            [webView.scrollView addSubview:pullToRefreshTableHeaderView];
-        }
-#if DEBUG_COBALT
-        else {
-            NSLog(@"WARNING: no pullToRefreshTableHeaderView set!");
-        }
-#endif
+        [refresh addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
+        
+        self.refreshControl = refresh;
     }
     
     [webView.scrollView setDelegate:self];
@@ -121,26 +112,10 @@ NSString * webLayerPage;
     [super viewWillAppear:animated];
 }
 
-- (void)viewDidUnload
-{
-    pullToRefreshTableHeaderView = nil;
-    
-    [webView.scrollView setDelegate:nil];
-    webView.delegate = nil;
-    [self setWebView:nil];
-    
-    [self setActivityIndicator:nil];
-    
-    toJavaScriptOperationQueue = nil;
-    
-    [super viewDidUnload];
-}
-
 - (void)dealloc
 {
     toJavaScriptOperationQueue = nil;
     fromJavaScriptOperationQueue = nil;
-    pullToRefreshTableHeaderView = nil;
     _delegate = nil;
     webView = nil;
     activityIndicator = nil;
@@ -148,28 +123,6 @@ NSString * webLayerPage;
     webLayer = nil;
     
     [[NSNotificationCenter defaultCenter] postNotificationName: viewControllerDeallocatedNotification  object: self];
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    if (pullToRefreshTableHeaderView
-        && pullToRefreshTableHeaderView.superview) {
-        [pullToRefreshTableHeaderView setHidden: YES];
-    }
-    
-    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-    if (pullToRefreshTableHeaderView
-        && pullToRefreshTableHeaderView.superview) {
-        [pullToRefreshTableHeaderView setHidden: NO];
-        pullToRefreshTableHeaderView.frame = CGRectMake(0.0, -self.webView.bounds.size.height,
-                                                        self.webView.bounds.size.width, self.webView.bounds.size.height);
-    }
-    
-    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -188,30 +141,6 @@ NSString * webLayerPage;
 - (void)customWebView
 {
     
-}
-
--(void) customPullToRefreshDefaultView
-{
-    if (! pullToRefreshTableHeaderView) {
-        CGRect frame = CGRectMake(0.0, 0.0,
-                                  webView.bounds.size.width, 60.0);
-        pullToRefreshTableHeaderView = [[PullToRefreshTableHeaderView alloc] initWithFrame:frame];
-        [pullToRefreshTableHeaderView setAutoresizingMask:UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin];
-        
-        pullToRefreshTableHeaderView.statusLabel = [[UILabel alloc] initWithFrame:frame];
-        [pullToRefreshTableHeaderView.statusLabel setTextAlignment:NSTextAlignmentCenter];
-        [pullToRefreshTableHeaderView.statusLabel setTextColor:[UIColor blackColor]];
-        [pullToRefreshTableHeaderView.statusLabel setBackgroundColor:[UIColor clearColor]];
-        [pullToRefreshTableHeaderView.statusLabel setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleLeftMargin];
-        [pullToRefreshTableHeaderView addSubview:pullToRefreshTableHeaderView.statusLabel];
-        
-        pullToRefreshTableHeaderView.progressView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        [pullToRefreshTableHeaderView.progressView setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin];
-        [pullToRefreshTableHeaderView.progressView setColor:[UIColor blackColor]];
-        [pullToRefreshTableHeaderView.progressView setFrame:CGRectMake(0, 0,
-                                                                       60, 60)];
-        [pullToRefreshTableHeaderView addSubview:pullToRefreshTableHeaderView.progressView];
-    }
 }
 
 - (void)loadPage:(NSString *)page inWebView:(UIWebView *)mWebView
@@ -376,7 +305,7 @@ NSString * webLayerPage;
             if (callback
                 && [callback isKindOfClass:[NSString class]]) {
                 if ([callback isEqualToString:JSCallbackPullToRefreshDidRefresh]) {
-                    [self onPullToRefreshDidRefresh];
+                    [self.refreshControl endRefreshing];
                 }
                 else if ([callback isEqualToString:JSCallbackInfiniteScrollDidRefresh]) {
                     [self onInfiniteScrollDidRefresh];
@@ -1028,49 +957,11 @@ NSString * webLayerPage;
 - (void)scrollViewDidScroll:(UIScrollView *)_scrollView
 {
     if (_scrollView.isDragging) {
-        if (isPullToRefreshEnabled
-            && pullToRefreshTableHeaderView
-            && pullToRefreshTableHeaderView.superview) {
-            
-                if (pullToRefreshTableHeaderView.state == RefreshStatePulling
-                    && _scrollView.contentOffset.y > -65.0
-                    && webView.scrollView.contentOffset.y < 0.0
-                    && ! _isRefreshing) {
-                    pullToRefreshTableHeaderView.state = RefreshStateNormal;
-                }
-                else if (pullToRefreshTableHeaderView.state == RefreshStateNormal
-                         && _scrollView.contentOffset.y < -65.0
-                         && ! _isRefreshing) {
-                    pullToRefreshTableHeaderView.state = RefreshStatePulling;
-                }
-        }
-        
         if (isInfiniteScrollEnabled) {
             if (webView.scrollView.contentOffset.y > (_scrollView.contentSize.height - _scrollView.frame.size.height)
                && !_isLoadingMore){
                 [self loadMoreItems];
             }
-        }
-    }
-}
-
-//*******************
-// DID END DRAGGING *
-//*******************
-/*!
- @method        - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
- @abstract      Tells the delegate when dragging ended in the scroll view.
- @param         scrollView  The scroll-view object that finished scrolling the content view.
- @param         decelerate  YES if the scrolling movement will continue, but decelerate, after a touch-up gesture during a dragging operation.
- */
-- (void)scrollViewDidEndDragging:(UIScrollView *)_scrollView willDecelerate:(BOOL)decelerate
-{
-    if (isPullToRefreshEnabled
-        && pullToRefreshTableHeaderView
-        && pullToRefreshTableHeaderView.superview) {
-        if (_scrollView.contentOffset.y <= -65.0
-            && ! _isRefreshing) {
-            [self refresh];
         }
     }
 }
@@ -1090,13 +981,8 @@ NSString * webLayerPage;
 - (void)refresh {
     if (isPullToRefreshEnabled) {
         _isRefreshing = YES;
-        pullToRefreshTableHeaderView.state = RefreshStateLoading;
         
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:0.2];
-        webView.scrollView.contentInset = UIEdgeInsetsMake(pullToRefreshTableHeaderView.loadingHeight, 0.0f,
-                                                           0.0f, 0.0f);
-        [UIView commitAnimations];
+        //TODO ?
         
         [self refreshWebView];
     }
@@ -1112,37 +998,6 @@ NSString * webLayerPage;
 - (void)refreshWebView
 {
     [self sendEvent:JSEventPullToRefresh withData:nil andCallback:JSCallbackPullToRefreshDidRefresh];
-}
-
-//**************
-// DID REFRESH *
-//**************
-/*!
- @method		- (void)onPullToRefreshDidRefresh
- @abstract		Tells the table view it has been refreshed.
- */
-- (void)onPullToRefreshDidRefresh {
-    _isRefreshing = NO;
-    
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.3];
-    [UIView setAnimationDelegate:self];
-    [UIView setAnimationDidStopSelector:@selector(onPullToRefreshDidStop)];
-    webView.scrollView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f,
-                                                       0.0f, 0.0f);
-	[UIView commitAnimations];
-}
-
-//***********
-// DID STOP *
-//***********
-/*!
- @method		- (void)onPullToRefreshDidStop
- @abstract		Tells the table view the refresh animation has stopped.
- */
-- (void)onPullToRefreshDidStop
-{
-    pullToRefreshTableHeaderView.state = RefreshStateNormal;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

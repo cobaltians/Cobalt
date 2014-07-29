@@ -31,8 +31,6 @@
 
 #import "CobaltToast.h"
 
-@class PullToRefreshTableHeaderView;
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark JAVASCRIPT KEYS
@@ -143,14 +141,11 @@
  @class			CobaltViewController
  @abstract		Base class for a webView controller that allows javascript/native dialogs
  */
-@interface CobaltViewController : UIViewController <UIAlertViewDelegate, UIScrollViewDelegate, UIWebViewDelegate, CobaltToastDelegate>
+@interface CobaltViewController : UITableViewController <UIAlertViewDelegate, UIScrollViewDelegate, UIWebViewDelegate, CobaltToastDelegate>
 {
     // Javascript queues
     NSOperationQueue * toJavaScriptOperationQueue;
     NSOperationQueue * fromJavaScriptOperationQueue;
-    
-    // UI components
-    PullToRefreshTableHeaderView * pullToRefreshTableHeaderView;
     
 @private
     
@@ -185,12 +180,6 @@
 @property (strong, nonatomic) NSString * pageName;
 
 @property (strong, nonatomic) UIWebView * webLayer;
-
-/*!
- @property		pullToRefreshTableHeaderView
- @abstract		The pull to refresh table header view.
- */
-@property (nonatomic, strong) PullToRefreshTableHeaderView * pullToRefreshTableHeaderView;
 
 /*!
  @property		isPullToRefreshEnabled
@@ -304,12 +293,6 @@
  @abstract		Sends event to refresh Web view content.
  */
 - (void)refreshWebView;
-
-/*!
- @method		- (void)onPullToRefreshDidRefresh
- @abstract		Tells the web view it has been refreshed.
- */
-- (void)onPullToRefreshDidRefresh;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
