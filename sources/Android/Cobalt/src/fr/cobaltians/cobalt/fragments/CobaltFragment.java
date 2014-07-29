@@ -1069,15 +1069,16 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 *****************************************************************************************************************************/
 	
 	/**
-	 * Set the four colours int the pull-to-refresh progress.
+	 * Set the four colors used in the progress animation from color resources.
+     * The first color will also be the color of the bar that grows in response to a user swipe gesture.
      * Must be called only after super.onStart().
-	 * @param colorResource1: text shown when user pulling
-	 * @param colorResource2: text shown while refreshing
-	 * @param colorResource3: text shown when refreshed
-	 * @param colorResource4: text shown for the last update
+	 * @param colorResource1 the first color resource
+	 * @param colorResource2 the second color resource
+	 * @param colorResource3 the third color resource
+	 * @param colorResource4 the last color resource
 	 */
 	protected void setRefreshColorScheme(int colorResource1, int colorResource2, int colorResource3, int colorResource4) {
-        if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setColorScheme(colorResource1, colorResource2, colorResource3, colorResource4);
+        if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setColorSchemeResources(colorResource1, colorResource2, colorResource3, colorResource4);
         else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - setColorScheme: Pull-to-refresh must be active and method called after super.onStart()!");
 	}
 
