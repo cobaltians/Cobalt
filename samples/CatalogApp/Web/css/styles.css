@@ -11,11 +11,9 @@ body{
 	font-family: "Helvetica Neue Light", Helvetica, Arial, sans-serif;
 	font-size:12px; line-height:1.5;
     margin: inherit;
-    padding-top: 110px;
 }
 .article{
     padding: 10px;
-    display: block;
 }
 
 /*
@@ -28,15 +26,9 @@ body{
     text-align: center;
     color: white;
     margin: 0 auto;
-    position: fixed;
     display: block;
     z-index: 2;
     top: 0px;
-    
-}
-.header img{
-    margin: 0;
-    padding: 0;
     width: 100%;
     height: auto;
 }
