@@ -306,6 +306,7 @@ NSString * webLayerPage;
                 && [callback isKindOfClass:[NSString class]]) {
                 if ([callback isEqualToString:JSCallbackPullToRefreshDidRefresh]) {
                     [self.refreshControl endRefreshing];
+                    _isRefreshing = NO;
                 }
                 else if ([callback isEqualToString:JSCallbackInfiniteScrollDidRefresh]) {
                     [self onInfiniteScrollDidRefresh];
@@ -1000,6 +1001,16 @@ NSString * webLayerPage;
     [self sendEvent:JSEventPullToRefresh withData:nil andCallback:JSCallbackPullToRefreshDidRefresh];
 }
 
+
+/*!
+ @method		- (void)customizeRefreshControlWithAttributedText:(NSAttributedString *)attributedText andTintColor: (UIColor *)tintColor
+ @abstract		customize native pull to refresh control
+ */
+- (void)customizeRefreshControlWithAttributedText:(NSAttributedString *)attributedText andTintColor: (UIColor *)tintColor {
+    self.refreshControl.attributedTitle = attributedText;
+    self.refreshControl.tintColor = tintColor;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark INFINITE SCROLL METHODS
@@ -1023,127 +1034,5 @@ NSString * webLayerPage;
 {
     _isLoadingMore = NO;
 }
-
-@end
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark IMPLEMENTATION
-#pragma mark -
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-@implementation PullToRefreshTableHeaderView
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark PROPERTIES
-#pragma mark -
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-@synthesize arrowImageView,
-            lastUpdatedLabel,
-            loadingHeight,
-            progressView,
-            state,
-            statusLabel;
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark METHODS
-#pragma mark -
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-- (void)dealloc
-{
-    progressView = nil;
-    arrowImageView = nil;;
-    lastUpdatedLabel = nil;
-    statusLabel = nil;
-}
-
-//*******************
-// SET LAST UPDATED *
-//*******************
-/*!
- @method		- (void)setLastUpdated:(NSString *)lastUpdated
- @abstract		Sets the last updated text.
- @param         lastUpdated The last updated text to set.
- */
-- (void)setLastUpdated:(NSString *)lastUpdated
-{
-    lastUpdatedLabel.text = lastUpdated;
-}
-
-//************
-// SET STATE *
-//************
-/*!
- @method		- (void)setState:(RefreshState)newState
- @abstract		Sets the refresh state.
- @param         newState    The refresh state to set.
- */
-- (void)setState:(RefreshState)newState
-{
-    switch (newState) {
-        case RefreshStateNormal:
-            if (state == RefreshStatePulling) {
-                [UIView beginAnimations:nil context:nil];
-                [UIView setAnimationDuration:0.2];
-                arrowImageView.transform = CGAffineTransformIdentity;
-                [UIView commitAnimations];
-            }
-            statusLabel.text = [self textForState:newState];
-            [progressView stopAnimating];
-            arrowImageView.hidden = NO;
-            arrowImageView.transform = CGAffineTransformIdentity;
-            break;
-        case RefreshStatePulling:
-            statusLabel.text = [self textForState:newState];
-            [UIView beginAnimations:nil context:nil];
-            [UIView setAnimationDuration:0.2];
-            arrowImageView.transform = CGAffineTransformMakeRotation(M_PI);
-            [UIView commitAnimations];
-            break;
-        case RefreshStateLoading:
-            statusLabel.text = [self textForState:newState];
-            [progressView startAnimating];
-            arrowImageView.hidden = YES;
-            break;
-        default:
-            break;
-    }
-    
-    state = newState;
-}
-
-//************
-// SET TEXT FOR STATE *
-//************
-/*!
- @method		- (NSString *)textForState:(RefreshState)newState
- @abstract		Sets the text for the status label depending on the newState given
- @param         newState The new state applied to the pullToRefreshTableHeaderView
- @return        a NSString containing the string to display for the given mode.
- @discussion    This method may be overriden in subclasses.
- */
-- (NSString *)textForState:(RefreshState)newState
-{
-    switch (newState) {
-        case RefreshStateNormal:
-            return NSLocalizedString(@"Pull to refresh...", nil);
-            break;
-        case RefreshStatePulling:
-            return NSLocalizedString(@"Release to refresh...", nil);
-            break;
-        case RefreshStateLoading:
-            return NSLocalizedString(@"Loading...", nil);
-            break;
-        default:
-            break;
-    }
-    return @"";
-}
-
-
 
 @end
