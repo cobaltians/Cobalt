@@ -13,7 +13,6 @@
 		67A4433018649B3400F5C301 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A4432F18649B3400F5C301 /* XCTest.framework */; };
 		67A4433118649B3400F5C301 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A4430D18649B3400F5C301 /* Foundation.framework */; };
 		67A4433218649B3400F5C301 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A4431118649B3400F5C301 /* UIKit.framework */; };
-		67A4436618649C9000F5C301 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 67A4436518649C9000F5C301 /* www */; };
 		71B4B1CA1885C8DF0027AC4F /* Cobalt.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1B71885C8DF0027AC4F /* Cobalt.m */; };
 		71B4B1CD1885C8DF0027AC4F /* CobaltViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1BE1885C8DF0027AC4F /* CobaltViewController.m */; };
 		71B4B1D01885C8DF0027AC4F /* iToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1C41885C8DF0027AC4F /* iToast.m */; };
@@ -29,6 +28,8 @@
 		8E0133091920F4CD0015682B /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E0132EE1920F47F0015682B /* Main_iPhone.storyboard */; };
 		8E01330D1920F81A0015682B /* HelloWorldTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E01330C1920F81A0015682B /* HelloWorldTests.m */; };
 		8E0133111920FF080015682B /* CobaltViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8E0133101920FF080015682B /* CobaltViewController.xib */; };
+		8EBA9A301988E4DB00223920 /* platform in Resources */ = {isa = PBXBuildFile; fileRef = 8EBA9A2F1988E4DB00223920 /* platform */; };
+		8EBA9A321988E4E600223920 /* Web in Resources */ = {isa = PBXBuildFile; fileRef = 8EBA9A311988E4E600223920 /* Web */; };
 		8EF28A301982AABA00097AF4 /* CobaltAbstractPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EF28A2B1982AABA00097AF4 /* CobaltAbstractPlugin.m */; };
 		8EF28A311982AABA00097AF4 /* CobaltLocationPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EF28A2D1982AABA00097AF4 /* CobaltLocationPlugin.m */; };
 		8EF28A321982AABA00097AF4 /* CobaltPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EF28A2F1982AABA00097AF4 /* CobaltPluginManager.m */; };
@@ -51,7 +52,6 @@
 		67A4431118649B3400F5C301 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		67A4432E18649B3400F5C301 /* HelloWorldTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HelloWorldTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		67A4432F18649B3400F5C301 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		67A4436518649C9000F5C301 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = "<group>"; };
 		71B4B1B51885C8DF0027AC4F /* Cobalt-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Cobalt-Prefix.pch"; sourceTree = "<group>"; };
 		71B4B1B61885C8DF0027AC4F /* Cobalt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cobalt.h; sourceTree = "<group>"; };
 		71B4B1B71885C8DF0027AC4F /* Cobalt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cobalt.m; sourceTree = "<group>"; };
@@ -76,6 +76,8 @@
 		8E0133031920F4890015682B /* HelloWorldTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "HelloWorldTests-Info.plist"; sourceTree = "<group>"; };
 		8E01330C1920F81A0015682B /* HelloWorldTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelloWorldTests.m; sourceTree = "<group>"; };
 		8E0133101920FF080015682B /* CobaltViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CobaltViewController.xib; sourceTree = "<group>"; };
+		8EBA9A2F1988E4DB00223920 /* platform */ = {isa = PBXFileReference; lastKnownFileType = folder; path = platform; sourceTree = "<group>"; };
+		8EBA9A311988E4E600223920 /* Web */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Web; path = ../../Web; sourceTree = "<group>"; };
 		8EF28A2A1982AABA00097AF4 /* CobaltAbstractPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltAbstractPlugin.h; sourceTree = "<group>"; };
 		8EF28A2B1982AABA00097AF4 /* CobaltAbstractPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltAbstractPlugin.m; sourceTree = "<group>"; };
 		8EF28A2C1982AABA00097AF4 /* CobaltLocationPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltLocationPlugin.h; sourceTree = "<group>"; };
@@ -111,7 +113,8 @@
 		67A4430118649B3400F5C301 = {
 			isa = PBXGroup;
 			children = (
-				67A4436518649C9000F5C301 /* www */,
+				8EBA9A311988E4E600223920 /* Web */,
+				8EBA9A2F1988E4DB00223920 /* platform */,
 				8E0132E91920F47F0015682B /* HelloWorld */,
 				8E0133001920F4890015682B /* HelloWorldTests */,
 				67A4430C18649B3400F5C301 /* Frameworks */,
@@ -301,12 +304,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EBA9A321988E4E600223920 /* Web in Resources */,
 				8E0133081920F4CD0015682B /* Main_iPad.storyboard in Resources */,
 				8E0133091920F4CD0015682B /* Main_iPhone.storyboard in Resources */,
-				67A4436618649C9000F5C301 /* www in Resources */,
 				8E0133051920F4890015682B /* InfoPlist.strings in Resources */,
 				8E0132FB1920F47F0015682B /* InfoPlist.strings in Resources */,
 				8E0133111920FF080015682B /* CobaltViewController.xib in Resources */,
+				8EBA9A301988E4DB00223920 /* platform in Resources */,
 				8E0133061920F4890015682B /* HelloWorldTests-Info.plist in Resources */,
 				8E0132FD1920F47F0015682B /* Images.xcassets in Resources */,
 			);
