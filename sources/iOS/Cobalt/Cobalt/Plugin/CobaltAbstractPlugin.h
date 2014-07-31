@@ -14,6 +14,6 @@
 @property (nonatomic, retain) NSMutableArray * viewControllersArray;
 
 + (CobaltAbstractPlugin *)sharedInstanceWithCobaltViewController: (CobaltViewController *)viewController;
-- (void)onMessageFromWebview:(CobaltViewController *)viewController andData: (NSDictionary *)data;
+- (void)onMessageFromCobaltController:(CobaltViewController *)viewController andData: (NSDictionary *)data;
 
 @end

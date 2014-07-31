@@ -63,7 +63,7 @@ static CobaltPluginManager * instance = nil;
         if(class)
         {
             CobaltAbstractPlugin * plugin = [class sharedInstanceWithCobaltViewController: viewController];
-            [plugin onMessageFromWebview: viewController andData: data];
+            [plugin onMessageFromCobaltController: viewController andData: data];
             return YES;
         }
     }

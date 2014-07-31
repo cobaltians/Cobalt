@@ -57,7 +57,7 @@ static CobaltAbstractPlugin * instance = nil;
 	return self;
 }
 
-- (void)onMessageFromWebview:(CobaltViewController *)viewController andData: (NSDictionary *)data {
+- (void)onMessageFromCobaltController:(CobaltViewController *)viewController andData: (NSDictionary *)data {
 }
 
 - (void)viewControllerDeallocated:(NSNotification *)notification {

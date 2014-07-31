@@ -22,7 +22,7 @@
 	return self;
 }
 
-- (void)onMessageFromWebview:(CobaltViewController *)viewController andData: (NSDictionary *)data {
+- (void)onMessageFromCobaltController:(CobaltViewController *)viewController andData: (NSDictionary *)data {
     _callback = [data objectForKey: kJSCallback];
     _viewController = viewController;
     
