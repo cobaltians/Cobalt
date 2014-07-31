@@ -32,6 +32,7 @@ package fr.cobaltians.cobalt.fragments;
 import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.R;
 import fr.cobaltians.cobalt.activities.CobaltActivity;
+import fr.cobaltians.cobalt.customviews.CobaltSwipeRefreshLayout;
 import fr.cobaltians.cobalt.customviews.IScrollListener;
 import fr.cobaltians.cobalt.customviews.OverScrollingWebView;
 import fr.cobaltians.cobalt.database.LocalStorageJavaScriptInterface;
@@ -86,7 +87,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
     protected ViewGroup mWebViewContainer;
 
 	protected OverScrollingWebView mWebView;
-    protected SwipeRefreshLayout mSwipeRefreshLayout;
+    protected CobaltSwipeRefreshLayout mSwipeRefreshLayout;
 
 	protected Handler mHandler = new Handler();
 	private ArrayList<JSONObject> mWaitingJavaScriptCallsQueue = new ArrayList<JSONObject>();
@@ -207,7 +208,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	protected void setUpViews(View rootView) {
         mWebViewContainer = ((ViewGroup) rootView.findViewById(getWebViewContainerId()));
         if (isPullToRefreshActive()) {
-            mSwipeRefreshLayout = ((SwipeRefreshLayout) rootView.findViewById(getSwipeRefreshContainerId()));
+            mSwipeRefreshLayout = ((CobaltSwipeRefreshLayout) rootView.findViewById(getSwipeRefreshContainerId()));
             if (mSwipeRefreshLayout != null) {
                 mSwipeRefreshLayout.setColorScheme( android.R.color.holo_blue_bright,
                                                     android.R.color.holo_blue_light,
@@ -239,14 +240,14 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 */
 	protected void addWebView() {
         if (mWebView == null) {
-            if (isPullToRefreshActive()
-                && mSwipeRefreshLayout != null) {
-                mSwipeRefreshLayout.setOnRefreshListener(this);
-                //refreshWebView();
-            }
-
             mWebView = new OverScrollingWebView(mContext);
             setWebViewSettings(this);
+
+            if (isPullToRefreshActive()
+                    && mSwipeRefreshLayout != null) {
+                mSwipeRefreshLayout.setOnRefreshListener(this);
+                mSwipeRefreshLayout.setWebView(mWebView);
+            }
 		}
 
         if (mWebViewContainer != null) {

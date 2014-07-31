@@ -11,32 +11,19 @@
             <a href="javascript:;" class="pop">POP</a>
             <h1>PTR & IS</h1>
         </div>
-        <p>This is a full example of pullToRefresh and infiniteScroll working together.</p>
+        <div class="block">
+            <p>This is a full example of pullToRefresh and infiniteScroll working together.</p>
 
-        <p>As you can see pullToRefresh header is handled by cobalt, but infiniteScroll footer is handled on the web side. We will enhance this one day.</p>
-        
-        <p>This is a full example of pullToRefresh and infiniteScroll working together.</p>
-        
-        <p>As you can see pullToRefresh header is handled by cobalt, but infiniteScroll footer is handled on the web side. We will enhance this one day.</p>
-        
-        <p>This is a full example of pullToRefresh and infiniteScroll working together.</p>
-        
-        <p>As you can see pullToRefresh header is handled by cobalt, but infiniteScroll footer is handled on the web side. We will enhance this one day.</p>
-        
-        <p>This is a full example of pullToRefresh and infiniteScroll working together.</p>
-        
-        <p>As you can see pullToRefresh header is handled by cobalt, but infiniteScroll footer is handled on the web side. We will enhance this one day.</p>
-        
-        <p>This is a full example of pullToRefresh and infiniteScroll working together.</p>
-        
-        <p>As you can see pullToRefresh header is handled by cobalt, but infiniteScroll footer is handled on the web side. We will enhance this one day.</p>
-
+            <p>As you can see pullToRefresh header is handled by cobalt, but infiniteScroll footer is handled on the web side. We will enhance this one day.</p>
+        </div>
         <div id="list">
-            <div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>
+            <div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>
+            <div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>
+            <div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>
+            <div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>
+            <div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>
         </div>
         <p id="loading"  style="padding:10px; text-align:center; display:none;">Loading...</p>
-
-
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="../platform/cobalt.js"></script>
@@ -56,7 +43,7 @@
                             $('#list').html('');
                             setTimeout(function(){
 
-                                $('#list').html('<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>');
+                                $('#list').html('<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>');
                                 cobalt.sendCallback(calllback);
                             },1000, true);
                         },
