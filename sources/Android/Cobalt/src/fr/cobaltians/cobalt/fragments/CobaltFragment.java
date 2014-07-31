@@ -48,6 +48,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -787,7 +788,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	private void push(String controller, String page) {
 		Intent intent = Cobalt.getInstance(mContext).getIntentForController(controller, page);
 		if (intent != null) {
-			getActivity().startActivity(intent);
+			mContext.startActivity(intent);
 		}
 		else if (Cobalt.DEBUG) Log.e(Cobalt.TAG,  TAG + " - push: Unable to push " + controller + " controller");
 	}
@@ -800,12 +801,12 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 		Intent intent = Cobalt.getInstance(mContext).getIntentForController(controller, page);
 		
 		if (intent != null) {
-			getActivity().startActivity(intent);
+			mContext.startActivity(intent);
 			// Sends callback to store current activity & HTML page for dismiss
 			try {
 				JSONObject data = new JSONObject();
 				data.put(Cobalt.kJSPage, getPage());
-				data.put(Cobalt.kJSController, getActivity().getClass().getName());
+				data.put(Cobalt.kJSController, mContext.getClass().getName());
 				sendCallback(callBackID, data);
 			} 
 			catch (JSONException exception) {
@@ -828,7 +829,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 				Intent intent = new Intent(mContext, pClass);
 				intent.putExtra(Cobalt.kExtras, bundle);
 
-				NavUtils.navigateUpTo(getActivity(), intent);
+				NavUtils.navigateUpTo((Activity) mContext, intent);
 			}
 			else if(Cobalt.DEBUG) Log.e(Cobalt.TAG,  TAG + " - dismissModal: unable to dismiss modal since " + controller + " does not inherit from Activity");
 		} 
@@ -856,7 +857,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	protected void onBackPressed(boolean allowedToBack) {
         if (allowedToBack) {
             if (Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - onBackPressed: onBackPressed event allowed by Web view");
-            ((CobaltActivity) getActivity()).back();
+            ((CobaltActivity) mContext).back();
         }
         else if (Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - onBackPressed: onBackPressed event denied by Web view");
 	}
@@ -877,7 +878,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
             if (webLayerFragment != null) {
                 webLayerFragment.setArguments(bundle);
 
-                FragmentTransaction fragmentTransition = getActivity().getSupportFragmentManager().beginTransaction();
+                FragmentTransaction fragmentTransition = ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction();
 
                 if (fadeDuration > 0) {
                     fragmentTransition.setCustomAnimations( android.R.anim.fade_in, android.R.anim.fade_out,
@@ -887,9 +888,9 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
                     fragmentTransition.setTransition(FragmentTransaction.TRANSIT_NONE);
                 }
 
-                if (CobaltActivity.class.isAssignableFrom(getActivity().getClass())) {
+                if (CobaltActivity.class.isAssignableFrom(mContext.getClass())) {
                     // Dismiss current Web layer if one is already shown
-                    CobaltActivity activity = (CobaltActivity) getActivity();
+                    CobaltActivity activity = (CobaltActivity) mContext;
                     Fragment currentFragment = activity.getSupportFragmentManager().findFragmentById(activity.getFragmentContainerId());
                     if (currentFragment != null
                         && CobaltWebLayerFragment.class.isAssignableFrom(currentFragment.getClass())) {
@@ -1031,7 +1032,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
         fragment.setArguments(args);
         fragment.setListener(this);
 
-        fragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+        fragment.show(((FragmentActivity) mContext).getSupportFragmentManager(), "datePicker");
     }
     
     protected void sendDate(int year, int month, int day, String callbackID) {
