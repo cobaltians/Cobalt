@@ -36,7 +36,7 @@ import fr.cobaltians.cobalt.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -45,7 +45,7 @@ import org.json.JSONObject;
  * {@link Activity} containing a {@link CobaltFragment}.
  * @author Diane
  */
-public abstract class CobaltActivity extends FragmentActivity {
+public abstract class CobaltActivity extends ActionBarActivity {
 
     protected static final String TAG = CobaltActivity.class.getSimpleName();
 
