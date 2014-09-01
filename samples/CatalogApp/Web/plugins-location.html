@@ -31,7 +31,13 @@
                     debugInDiv:app.debugInDiv,
                     plugins:{
                         location:{
-                            foo : "bar"
+                            foo : "bar",
+                            onError:function(text){
+                                if (! text){
+                                    text = "No location found (may be user settings)"
+                                }
+                                document.getElementById('locationField').innerHTML=text;
+                            }
                         }
                     }
                 });

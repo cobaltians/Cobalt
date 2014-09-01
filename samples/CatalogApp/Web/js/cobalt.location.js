@@ -1,11 +1,17 @@
 (function(cobalt){
     var plugin={
         name:"location",
+        onError:undefined,
+
         init:function(options){
             cobalt.log('initing location plugin with options', options)
 
             //create shortcuts
             cobalt.getLocation=this.getLocation;
+
+            if (options && typeof options.onError == "function"){
+                this.onError=options.onError;
+            }
 
         },
         getLocation:function(callback){
@@ -13,8 +19,15 @@
             cobalt.send({ type : "plugin", name:"location", action : "getLocation"}, callback)
 
         },
-        handleEvent:function(data){
-            cobalt.log('received native location plugin call', data)
+        handleEvent:function(json){
+            cobalt.log('received native location plugin call', json)
+            if (json && json.data && json.data.error){
+                if (this.onError){
+                    this.onError(json.data.text)
+                }else{
+                    cobalt.log('location plugin error', json.data.text)
+                }
+            }
         }
     };
     cobalt.plugins.register(plugin);
