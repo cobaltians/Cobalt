@@ -28,10 +28,10 @@
 		8E0133091920F4CD0015682B /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E0132EE1920F47F0015682B /* Main_iPhone.storyboard */; };
 		8E01330D1920F81A0015682B /* HelloWorldTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E01330C1920F81A0015682B /* HelloWorldTests.m */; };
 		8E0133111920FF080015682B /* CobaltViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8E0133101920FF080015682B /* CobaltViewController.xib */; };
-		8EBA9A301988E4DB00223920 /* platform in Resources */ = {isa = PBXBuildFile; fileRef = 8EBA9A2F1988E4DB00223920 /* platform */; };
-		8EBA9A321988E4E600223920 /* Web in Resources */ = {isa = PBXBuildFile; fileRef = 8EBA9A311988E4E600223920 /* Web */; };
 		8EF28A301982AABA00097AF4 /* CobaltAbstractPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EF28A2B1982AABA00097AF4 /* CobaltAbstractPlugin.m */; };
 		8EF28A321982AABA00097AF4 /* CobaltPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EF28A2F1982AABA00097AF4 /* CobaltPluginManager.m */; };
+		F0FB6E4419B4803900021401 /* platform in Resources */ = {isa = PBXBuildFile; fileRef = F0FB6E4319B4803900021401 /* platform */; };
+		F0FB6E4619B4804100021401 /* common in Resources */ = {isa = PBXBuildFile; fileRef = F0FB6E4519B4804100021401 /* common */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,12 +75,12 @@
 		8E0133031920F4890015682B /* HelloWorldTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "HelloWorldTests-Info.plist"; sourceTree = "<group>"; };
 		8E01330C1920F81A0015682B /* HelloWorldTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelloWorldTests.m; sourceTree = "<group>"; };
 		8E0133101920FF080015682B /* CobaltViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CobaltViewController.xib; sourceTree = "<group>"; };
-		8EBA9A2F1988E4DB00223920 /* platform */ = {isa = PBXFileReference; lastKnownFileType = folder; path = platform; sourceTree = "<group>"; };
-		8EBA9A311988E4E600223920 /* Web */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Web; path = ../../Web; sourceTree = "<group>"; };
 		8EF28A2A1982AABA00097AF4 /* CobaltAbstractPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltAbstractPlugin.h; sourceTree = "<group>"; };
 		8EF28A2B1982AABA00097AF4 /* CobaltAbstractPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltAbstractPlugin.m; sourceTree = "<group>"; };
 		8EF28A2E1982AABA00097AF4 /* CobaltPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltPluginManager.h; sourceTree = "<group>"; };
 		8EF28A2F1982AABA00097AF4 /* CobaltPluginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltPluginManager.m; sourceTree = "<group>"; };
+		F0FB6E4319B4803900021401 /* platform */ = {isa = PBXFileReference; lastKnownFileType = folder; name = platform; path = www/platform; sourceTree = "<group>"; };
+		F0FB6E4519B4804100021401 /* common */ = {isa = PBXFileReference; lastKnownFileType = folder; name = common; path = www/common; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,8 +110,8 @@
 		67A4430118649B3400F5C301 = {
 			isa = PBXGroup;
 			children = (
-				8EBA9A311988E4E600223920 /* Web */,
-				8EBA9A2F1988E4DB00223920 /* platform */,
+				F0FB6E4519B4804100021401 /* common */,
+				F0FB6E4319B4803900021401 /* platform */,
 				8E0132E91920F47F0015682B /* HelloWorld */,
 				8E0133001920F4890015682B /* HelloWorldTests */,
 				67A4430C18649B3400F5C301 /* Frameworks */,
@@ -299,14 +299,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8EBA9A321988E4E600223920 /* Web in Resources */,
 				8E0133081920F4CD0015682B /* Main_iPad.storyboard in Resources */,
 				8E0133091920F4CD0015682B /* Main_iPhone.storyboard in Resources */,
 				8E0133051920F4890015682B /* InfoPlist.strings in Resources */,
 				8E0132FB1920F47F0015682B /* InfoPlist.strings in Resources */,
 				8E0133111920FF080015682B /* CobaltViewController.xib in Resources */,
-				8EBA9A301988E4DB00223920 /* platform in Resources */,
+				F0FB6E4419B4803900021401 /* platform in Resources */,
 				8E0133061920F4890015682B /* HelloWorldTests-Info.plist in Resources */,
+				F0FB6E4619B4804100021401 /* common in Resources */,
 				8E0132FD1920F47F0015682B /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
