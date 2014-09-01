@@ -23,9 +23,9 @@
             cobalt.log('received native location plugin call', json)
             if (json && json.data && json.data.error){
                 if (this.onError){
-                    this.onError(json.data.text)
+                    this.onError(json.data.code, json.data.text)
                 }else{
-                    cobalt.log('location plugin error', json.data.text)
+                    cobalt.log('location plugin error', json.data.code, json.data.text)
                 }
             }
         }

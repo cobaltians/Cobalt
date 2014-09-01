@@ -32,7 +32,7 @@
                     plugins:{
                         location:{
                             foo : "bar",
-                            onError:function(text){
+                            onError:function(code, text){
                                 if (! text){
                                     text = "No location found (may be user settings)"
                                 }
