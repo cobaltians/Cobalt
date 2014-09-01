@@ -18,8 +18,6 @@
 		8EE619AE1980074100B5767C /* CobaltAbstractPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EE619A91980074100B5767C /* CobaltAbstractPlugin.m */; };
 		8EE619B01980074100B5767C /* CobaltPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EE619AD1980074100B5767C /* CobaltPluginManager.m */; };
 		8EE619B2198007EA00B5767C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EE619B1198007EA00B5767C /* CoreLocation.framework */; };
-		8EF28A2619829CF300097AF4 /* platform in Resources */ = {isa = PBXBuildFile; fileRef = 8EF28A2519829CF300097AF4 /* platform */; };
-		8EF28A2819829D0C00097AF4 /* Web in Resources */ = {isa = PBXBuildFile; fileRef = 8EF28A2719829D0C00097AF4 /* Web */; };
 		C45C1F29172EA2FB002BE836 /* chaton.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = C45C1F28172EA2FB002BE836 /* chaton.jpeg */; };
 		C49597581717090B006454BA /* CallbacksController.m in Sources */ = {isa = PBXBuildFile; fileRef = C49597561717090B006454BA /* CallbacksController.m */; };
 		C49597591717090B006454BA /* CallbacksController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C49597571717090B006454BA /* CallbacksController.xib */; };
@@ -33,6 +31,8 @@
 		F01A5A161716EF4C0000DD94 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F01A5A141716EF4C0000DD94 /* InfoPlist.strings */; };
 		F01A5A181716EF4D0000DD94 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F01A5A171716EF4D0000DD94 /* main.m */; };
 		F01A5A1C1716EF4D0000DD94 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F01A5A1B1716EF4D0000DD94 /* AppDelegate.m */; };
+		F0FB6E4019B45EED00021401 /* platform in Resources */ = {isa = PBXBuildFile; fileRef = F0FB6E3F19B45EED00021401 /* platform */; };
+		F0FB6E4219B45EF600021401 /* common in Resources */ = {isa = PBXBuildFile; fileRef = F0FB6E4119B45EF600021401 /* common */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,8 +56,6 @@
 		8EE619AC1980074100B5767C /* CobaltPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltPluginManager.h; sourceTree = "<group>"; };
 		8EE619AD1980074100B5767C /* CobaltPluginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltPluginManager.m; sourceTree = "<group>"; };
 		8EE619B1198007EA00B5767C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		8EF28A2519829CF300097AF4 /* platform */ = {isa = PBXFileReference; lastKnownFileType = folder; name = platform; path = CatalogCobalt/platform; sourceTree = "<group>"; };
-		8EF28A2719829D0C00097AF4 /* Web */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Web; path = ../../Web; sourceTree = "<group>"; };
 		C45C1F28172EA2FB002BE836 /* chaton.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = chaton.jpeg; sourceTree = "<group>"; };
 		C49597551717090B006454BA /* CallbacksController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CallbacksController.h; sourceTree = "<group>"; };
 		C49597561717090B006454BA /* CallbacksController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CallbacksController.m; sourceTree = "<group>"; };
@@ -78,6 +76,8 @@
 		F01A5A191716EF4D0000DD94 /* CatalogCobalt-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CatalogCobalt-Prefix.pch"; sourceTree = "<group>"; };
 		F01A5A1A1716EF4D0000DD94 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F01A5A1B1716EF4D0000DD94 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		F0FB6E3F19B45EED00021401 /* platform */ = {isa = PBXFileReference; lastKnownFileType = folder; name = platform; path = CatalogCobalt/www/platform; sourceTree = "<group>"; };
+		F0FB6E4119B45EF600021401 /* common */ = {isa = PBXFileReference; lastKnownFileType = folder; name = common; path = CatalogCobalt/www/common; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,8 +161,8 @@
 		F01A59FF1716EF4C0000DD94 = {
 			isa = PBXGroup;
 			children = (
-				8EF28A2719829D0C00097AF4 /* Web */,
-				8EF28A2519829CF300097AF4 /* platform */,
+				F0FB6E4119B45EF600021401 /* common */,
+				F0FB6E3F19B45EED00021401 /* platform */,
 				C45C1F2A172EA300002BE836 /* img */,
 				F01A5A111716EF4C0000DD94 /* CatalogCobalt */,
 				F01A5A0A1716EF4C0000DD94 /* Frameworks */,
@@ -279,11 +279,11 @@
 				8E1070C11987EE7800DED934 /* CobaltViewController.xib in Resources */,
 				F01A5A161716EF4C0000DD94 /* InfoPlist.strings in Resources */,
 				8EC5CAD71980FB00001777FA /* Images.xcassets in Resources */,
-				8EF28A2819829D0C00097AF4 /* Web in Resources */,
 				C49597591717090B006454BA /* CallbacksController.xib in Resources */,
 				C4D664A3171E8D97009EDE58 /* EventsController.xib in Resources */,
-				8EF28A2619829CF300097AF4 /* platform in Resources */,
+				F0FB6E4019B45EED00021401 /* platform in Resources */,
 				C4D664AB171E91D5009EDE58 /* SimpleController.xib in Resources */,
+				F0FB6E4219B45EF600021401 /* common in Resources */,
 				C45C1F29172EA2FB002BE836 /* chaton.jpeg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
