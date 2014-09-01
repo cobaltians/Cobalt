@@ -36,7 +36,7 @@
             <p>Large title and content on this one.</p>
             <a href="javascript:;" id="test7">Show Alert</a>
 
-            <p>On Android, this one can be dismissed by touching the empty zone, around the alert.</p>
+            <p>This one can be dismissed by touching the empty zone around the alert on platforms supporting this feature.</p>
             <a href="javascript:;" id="test8">Show Alert</a>
         </div>
 
@@ -113,7 +113,7 @@
                 });
 
                 app.touch('#test8',function(){
-                    cobalt.alert("Optional !", "On Android, this one can be dismissed by touching the empty zone, around the alert.", ["Yes", "No"], { cancelable:true });
+                    cobalt.alert("Optional !", "This one can be dismissed by touching the empty zone around the alert on platforms supporting this feature.", ["Yes", "No"], { cancelable:true });
                     return false;
                 });
 

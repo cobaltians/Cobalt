@@ -9,8 +9,6 @@
 
         <div class="block">
             <p>This page shows usage and configuration of a datePicker with cobalt.</p>
-            <p>On iOs, input type="date" works well, except for the placeholder text.<br/>
-                On Android we recreated a full datePicker changing your input to type=text dynamically.</p>
             <br/>
 
             <p>The input below should be empty. When setting a date, its value should change.<br/>The "Value=?" button gives you the current value of the input.</p>
@@ -21,7 +19,7 @@
 
             <input type="date" class="date" value="2016-04-14" placeholder="enter a date"/><a href="javascript:;" class="valueBtn">Value=?</a><br/>
 
-            <p>We changed date input format to be dd/mm/yyyy instead of yyyy-mm-dd on Android with a cobalt config.</p>
+            <p>On iOS, the date format depends on device language. On other plaforms, we have changed the date input format to be dd/mm/yyyy instead of yyyy-mm-dd by defining a format function for datePicker in cobalt.init.</p>
         </div>
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
