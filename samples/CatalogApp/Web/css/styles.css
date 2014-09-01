@@ -14,7 +14,7 @@ body{
 .article{
     padding: 10px;
 }
-ul, li{
+ul.index, ul.index li{
     margin:0; padding:0;
     list-style:none;
     width: 100%;
@@ -44,15 +44,16 @@ a.touched{
 input{
     width:80%;
 }
+
 li img{
     margin-top: 5px;
     float: right;
     opacity: 0.6;
 }
-li.green{
+
+ul.index li.green{
     background: #34db98;
 }
-
 
 /*
     Header
@@ -215,7 +216,7 @@ div.webLayer2 #text{
 */
 
 
-.theme_green ul, .theme_green li{
+.theme_green ul.index, .theme_green ul.index li{
     background: #34db98;
     border-top: 1px solid #29b980;
 
