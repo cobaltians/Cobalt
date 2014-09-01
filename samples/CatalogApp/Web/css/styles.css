@@ -1,92 +1,48 @@
 /*
-//
-// Body
-//
+    Basic styles
 */
 html {
     -webkit-text-size-adjust: 100%;
 	-ms-text-size-adjust:none;
+    margin: 0; padding: 0;
 }
 body{
 	font-family: "Helvetica Neue Light", Helvetica, Arial, sans-serif;
 	font-size:12px; line-height:1.5;
-    margin: inherit;
+    margin: 0; padding: 0;
 }
 .article{
     padding: 10px;
 }
-
-/*
-//
-// Header
-//
-*/
-.header{
-    background-color: #2980B9; 
-    text-align: center;
-    color: white;
-    margin: 0 auto;
-    display: block;
-    z-index: 2;
-    top: 0px;
-    width: 100%;
-    height: auto;
-}
-.header a{
-    font-size: 14px;
-    float: left;
-    margin: 10px;
-    padding: 0px;
-    color: black;
-    background: white;
-    border-radius: 3px;
-    width: 50px;
-    height: 20px;
-    display: inline-block;
-    line-height:inherit
-}
-h1{
-    margin: 0px;
-    font-size: 18px;
-    padding: 5px;
-}
-
-/*
-//
-// Index
-//
-*/
-
 ul, li{
-	margin:0; padding:0;
-	margin:0px;
-	list-style:none;
+    margin:0; padding:0;
+    list-style:none;
     width: 100%;
     background: #3498DB;
     border-top: 1px solid #2980B9;
     font-size:15px;
 }
 a{
-	text-decoration:none;
-	color: white;
-	line-height:40px;
-	padding: 10px 10px;
+    text-decoration:none;
+    color: white;
+    line-height:40px;
+    padding: 10px 10px;
     display:block
 }
 a, input{
-	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-	-webkit-focus-ring-color:  rgba(0, 0, 0, 0);
-	outline: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-focus-ring-color:  rgba(0, 0, 0, 0);
+    outline: none;
 }
 a.disabled{
-	color: #fff;
+    color: #fff;
 }
 a.touched{
-	background: #2980B9;
+    background: #2980B9;
 }
 
 input{
-	width:80%;
+    width:80%;
 }
 li img{
     margin-top: 5px;
@@ -99,9 +55,42 @@ li.green{
 
 
 /*
-//
-// block
-//
+    Header
+*/
+.header{
+    background-color: #2980B9; 
+    text-align: center;
+    color: white;
+    margin: 0 auto;
+    display: block;
+    z-index: 2;
+    top: 0;
+    width: 100%;
+    height: auto;
+}
+.header a{
+    font-size: 14px;
+    float: left;
+    margin: 10px;
+    padding: 0;
+    color: black;
+    background: white;
+    border-radius: 3px;
+    width: 50px;
+    height: 20px;
+    display: inline-block;
+    line-height:inherit
+}
+h1{
+    margin: 0;
+    font-size: 18px;
+    padding: 5px;
+}
+
+
+
+/*
+    Page blocks
 */
 
 .block{
@@ -119,10 +108,9 @@ li.green{
     text-align: center;
     font-size: 18px;
     font-weight: bold;
-    margin: 0px !important;
+    margin: 0 !important;
 }
 .block p{
-
     margin: 5px;
 }
 
@@ -148,9 +136,7 @@ li.green{
 }
 
 /*
-//
-// Liste
-//
+    Infinite scroll and PTR lists
 */
 
 .listItem{
@@ -158,7 +144,7 @@ li.green{
 	height:80px;
 	line-height: 80px;
 	background: #D7DBDB;
-	color:#F4921E;
+	color:#3E6B85;
 	border-top: 1px solid #fff;
 	border-bottom: 2px solid #3E6B85;
 	}
@@ -178,9 +164,7 @@ li.green{
 
 
 /*
-//
-// webLayers
-//
+    WebLayers
 */
 
 html.webLayer{
@@ -227,23 +211,8 @@ div.webLayer2 #text{
 }
 
 /*
-//
-//
-//
+    Color variation themes
 */
-
-div.awfull
-{
-	width:100%;
-	height:110px;
-	background:url(../img/ic_launcher.png) repeat 0 0;
-}
-
-#nativeBridge_logdiv{
-	border:1px solid blue;
-	padding: 5px;
-}
-
 
 
 .theme_green ul, .theme_green li{
@@ -264,3 +233,22 @@ div.awfull
 .theme_green .block h2,.theme_green  .block a{
     background: #29b980;
 }
+
+/*
+    Everything else
+*/
+
+div.awfull
+{
+	width:100%;
+	height:110px;
+	background:url(../img/ic_launcher.png) repeat 0 0;
+}
+
+#nativeBridge_logdiv{
+	border:1px solid blue;
+	padding: 5px;
+}
+
+
+

@@ -24,7 +24,6 @@
         </div>
 
         <div id="list">
-
         </div>
 
 
@@ -35,6 +34,8 @@
         <script type="text/javascript" src="js/app.js"></script>
 
         <script>
+
+            var someListItems='<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>';
 
             Zepto(function($){
                 cobalt.init({
@@ -50,7 +51,7 @@
 
                             setTimeout(function(){
                                 cobalt.log('We have new data');
-                                $('#list').html('<div class="listItem"><div class="num">#21454</div><div class="name">John Refreshed</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Refreshed</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Refreshed</div></div>');
+                                $('#list').html( someListItems );
 
                                 cobalt.log('Releasing the pullToRefresh');
                                 cobalt.sendCallback(calllback);
@@ -63,7 +64,9 @@
 
                 app.initPage('Pull to refresh');
 
-                $('#list').html('<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>');
+                while($("body").height() <= $(window).height()){
+                    $('#list').append( someListItems );
+                }
 
             })
 

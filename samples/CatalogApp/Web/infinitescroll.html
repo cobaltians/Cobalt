@@ -28,8 +28,6 @@
         </div>
         <p id="loading"  style="padding:10px; text-align:center; display:none;">Loading...</p>
 
-        <br/>
-
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="../platform/cobalt.js"></script>
@@ -38,7 +36,10 @@
 
         <script>
 
+            var someListItems='<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>'
+
             Zepto(function($){
+
                 cobalt.init({
                     debug:app.debug,
                     debugInBrowser:app.debugInBrowser,
@@ -49,18 +50,18 @@
                             $('#loading').show();
                             setTimeout(function(){
                                 $('#loading').hide();
-                                $('#list').append('<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>');
+                                $('#list').append( someListItems );
                                 cobalt.sendCallback(callback);
                             },1000, true);
                         }
-
                     }
                 });
 
-
-                $('#list').html('<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>');
-
                 app.initPage('Infinite scroll');
+
+                while($("body").height() <= $(window).height()){
+                    $('#list').append( someListItems );
+                }
 
             })
 

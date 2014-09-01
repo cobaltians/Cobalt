@@ -13,11 +13,6 @@
             <p>As you can see pullToRefresh header is handled by cobalt, but infiniteScroll footer is handled on the web side. We will enhance this one day.</p>
         </div>
         <div id="list">
-            <div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>
-            <div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>
-            <div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>
-            <div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>
-            <div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>
         </div>
         <p id="loading"  style="padding:10px; text-align:center; display:none;">Loading...</p>
 
@@ -27,6 +22,8 @@
         <script type="text/javascript" src="js/app.js"></script>
 
         <script>
+
+            var someListItems='<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>'
 
             Zepto(function($){
                 cobalt.init({
@@ -39,7 +36,7 @@
                             $('#list').html('');
                             setTimeout(function(){
 
-                                $('#list').html('<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>');
+                                $('#list').html(someListItems);
                                 cobalt.sendCallback(calllback);
                             },1000, true);
                         },
@@ -48,13 +45,17 @@
                             $('#loading').show();
                             setTimeout(function(){
                                 $('#loading').hide();
-                                $('#list').append('<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>');
+                                $('#list').append(someListItems);
                                 cobalt.sendCallback(calllback);
                             },1000, true);
                         }
 
                     }
                 });
+
+                while($("body").height() <= $(window).height()){
+                    $('#list').append( someListItems );
+                }
 
                 app.initPage('PTR & IS');
             })
