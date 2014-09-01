@@ -4,7 +4,7 @@ import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
 import org.json.JSONObject;
 
-public class ModalFragment extends CobaltFragment {
+public class ModalFragment extends AbstractFragment {
 
     @Override
     protected boolean onUnhandledCallback(String callback, JSONObject data) {
@@ -13,7 +13,8 @@ public class ModalFragment extends CobaltFragment {
 
     @Override
     protected boolean onUnhandledEvent(String event, JSONObject data, String callback) {
-        return false;
+        if (super.onUnhandledEvent(event, data, callback)) return true;
+        else return false;
     }
 
     @Override

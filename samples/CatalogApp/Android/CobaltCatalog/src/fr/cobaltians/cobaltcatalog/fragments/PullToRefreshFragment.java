@@ -4,11 +4,12 @@ import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
 import org.json.JSONObject;
 
-public class PullToRefreshFragment extends CobaltFragment {
+public class PullToRefreshFragment extends AbstractFragment {
 
 	@Override
 	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
-		return false;
+        if (super.onUnhandledEvent(name, data, callback)) return true;
+        else return false;
 	}
 
 	@Override

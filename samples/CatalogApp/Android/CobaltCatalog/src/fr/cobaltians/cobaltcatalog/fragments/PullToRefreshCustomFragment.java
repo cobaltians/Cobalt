@@ -4,7 +4,7 @@ import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
 import org.json.JSONObject;
 
-public class PullToRefreshCustomFragment extends CobaltFragment {
+public class PullToRefreshCustomFragment extends AbstractFragment {
 	
 	@Override
 	public void onStart() {
@@ -18,7 +18,8 @@ public class PullToRefreshCustomFragment extends CobaltFragment {
 
     @Override
     protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
-        return false;
+        if (super.onUnhandledEvent(name, data, callback)) return true;
+        else return false;
     }
 
     @Override

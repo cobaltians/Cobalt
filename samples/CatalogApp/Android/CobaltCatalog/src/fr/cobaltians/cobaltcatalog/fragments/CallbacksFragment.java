@@ -16,7 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class CallbacksFragment extends CobaltFragment {
+public class CallbacksFragment extends AbstractFragment {
 
 	protected static String JSAddValues = "addValues";
     protected static String JSValuesCallback = "valuesCallback";
@@ -85,7 +85,8 @@ public class CallbacksFragment extends CobaltFragment {
 	}
 	@Override
 	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
-        if (name.equals(JSAddValues)) {
+        if (super.onUnhandledEvent(name, data, callback)) return true;
+        else if (name.equals(JSAddValues)) {
             try {
                 JSONArray values = data.getJSONArray(kValues);
                 int val1 = values.getInt(0);
@@ -98,7 +99,7 @@ public class CallbacksFragment extends CobaltFragment {
             }
             return true;
         }
-        if (name.equals(JSEcho)) {
+        else if (name.equals(JSEcho)) {
             sendCallback(callback, data);
             return true;
         }

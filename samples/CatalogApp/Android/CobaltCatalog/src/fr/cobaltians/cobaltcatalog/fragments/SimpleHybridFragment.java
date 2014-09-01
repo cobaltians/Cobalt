@@ -8,7 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class SimpleHybridFragment extends CobaltFragment {
+public class SimpleHybridFragment extends AbstractFragment {
 
 	private JSONArray generateBigData(int size)
 	{
@@ -42,7 +42,8 @@ public class SimpleHybridFragment extends CobaltFragment {
 
 	@Override
 	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
-		return false;
+        if (super.onUnhandledEvent(name, data, callback)) return true;
+		else return false;
 	}
 
 	@Override
