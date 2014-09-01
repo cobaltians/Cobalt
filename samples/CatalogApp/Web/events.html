@@ -7,10 +7,6 @@
     </head>
     <body class="green">
 
-        <div class="header">
-            <a href="javascript:;" class="pop">POP</a>
-            <h1>Using Events</h1>
-        </div>
 
         <div class="block">
             <p>Button below should log this in the native IDE console</p>
@@ -62,9 +58,7 @@
                     cobalt.sendEvent('hello');
                 });
 
-                app.touch('a.pop',function(){
-                    cobalt.navigate('pop');
-                });
+                app.initPage('Using Events')
 
             })
         </script>

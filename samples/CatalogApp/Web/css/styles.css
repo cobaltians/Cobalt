@@ -45,14 +45,11 @@ body{
     display: inline-block;
     line-height:inherit
 }
-.dismiss{
-    float: right !important;
-}
 h1{
     margin: 0px;
     font-size: 18px;
     padding: 5px;
-}    
+}
 
 /*
 //
@@ -95,6 +92,9 @@ li img{
     margin-top: 5px;
     float: right;
     opacity: 0.6;
+}
+li.green{
+    background: #34db98;
 }
 
 
@@ -228,7 +228,7 @@ div.webLayer2 #text{
 
 /*
 //
-// 
+//
 //
 */
 
@@ -242,4 +242,25 @@ div.awfull
 #nativeBridge_logdiv{
 	border:1px solid blue;
 	padding: 5px;
+}
+
+
+
+.theme_green ul, .theme_green li{
+    background: #34db98;
+    border-top: 1px solid #29b980;
+
+}
+.theme_green a.touched{
+    background: #29b980;
+}
+.theme_green .header{
+    background-color: #29b980;
+}
+
+.theme_green .block{
+    border-color:#29b980;
+}
+.theme_green .block h2,.theme_green  .block a{
+    background: #29b980;
 }

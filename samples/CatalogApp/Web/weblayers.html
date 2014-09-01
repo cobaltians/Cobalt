@@ -7,10 +7,6 @@
     </head>
     <body>
 
-        <div class="header">
-            <a href="javascript:;" class="pop">POP</a>
-            <h1>Web layers</h1>
-        </div>
         <div class="block">
             <p><b>WebLayers</b> allow you to add a webview over the current webview.<br/>
                 The webview is positionned on the same place that the current one and the background is transparent so that you can define your own "popin" style.</p>
@@ -73,9 +69,8 @@
                     cobalt.webLayer("show","weblayer_content_2.html");
                 });
 
-                app.touch('a.pop',function(){
-                    cobalt.navigate('pop');
-                });
+
+                app.initPage("Web layers");
 
             })
 

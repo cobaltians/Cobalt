@@ -7,12 +7,6 @@
     </head>
     <body class="green">
 
-        <div class="header">
-            <a href="javascript:;" class="pop">POP</a>
-            <h1>Just a simple page</h1>
-        </div>
-
-
         <div class="article">
             <p>This is just a simple page with some images and stuff.</p>
 
@@ -41,10 +35,7 @@
                     debugInDiv:app.debugInDiv
                 });
 
-                $('a.pop').on('tap click',function(){
-                    cobalt.navigate('pop')
-                    return false;
-                });
+                app.initPage('Just a simple page');
 
             })
         </script>

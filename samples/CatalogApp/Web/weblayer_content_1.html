@@ -12,7 +12,7 @@
             <div class="block">
                 <p>It's your work to make it pretty.</p>
 
-                <a href="javascript:;" id="test1">Close</a>
+                <a href="javascript:;" id="close">Close</a>
             </div>
 
         </div>
@@ -33,9 +33,11 @@
                     debugInDiv:app.debugInDiv
                 });
 
-                app.touch('#test1',function(){
+                app.touch('#close',function(){
                     cobalt.webLayer("dismiss");
                 });
+
+                app.initPage();
 
             })
         </script>

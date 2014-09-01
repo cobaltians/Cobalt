@@ -29,6 +29,36 @@ var app={
         elem.unbind('click').on('click',touching);
     },
 
+    /*
+        initPage binds some common links like push and pop and send the page title to the native side
+     */
+    initPage:function(title){
+
+        app.touch('a.push',function(){
+            if ( ! $(this).hasClass('disabled') ){
+                cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
+            }
+        });
+        app.touch('a.pop',function(){
+            cobalt.navigate('pop');
+        });
+        app.touch('a.dismiss',function(){
+            cobalt.navigate('dismiss');
+        });
+        app.touch('a.modal',function(){
+            cobalt.navigate('modal',$(this).attr('data-href'));
+        });
+
+
+        if (title){
+            cobalt.sendEvent('setTexts',{
+                title : title
+            });
+        }
+
+    },
+
+
     /* change font size on body. used in events demo page */
     setZoom : function(zoomLevel){
         try{

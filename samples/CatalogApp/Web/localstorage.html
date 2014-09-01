@@ -5,12 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
         <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
     </head>
-    <body class="green">
+    <body>
 
-        <div class="header">
-            <a href="javascript:;" class="pop">POP</a>
-            <h1>Local strorage</h1>
-        </div>
         <div class="block">
             <p>This page use the LocalStorage, as fixed and enhanced with Cobalt</p>
 
@@ -59,16 +55,6 @@
                 cobalt.log("init dismissInformations : "+cobalt.storage.getItem("dismissInformations"));
                 cobalt.log("init testLocalStorageKey : "+cobalt.storage.getItem("testLocalStorageKey"));
 
-
-
-                app.touch('a.pop',function(){
-                    cobalt.navigate('pop');
-                });
-
-
-                app.touch('a.push',function(){
-                    cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
-                });
 
                 app.touch('a#store',function(){
                     var obj={ value: "stored"}
@@ -176,6 +162,8 @@
                 });
 
 
+
+                app.initPage('Local storage');
 
             })
 

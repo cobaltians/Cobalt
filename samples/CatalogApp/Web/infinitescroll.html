@@ -7,10 +7,6 @@
     </head>
     <body class="green">
 
-        <div class="header">
-            <a href="javascript:;" class="pop">POP</a>
-            <h1>Infinite scroll</h1>
-        </div>
         <div class="block">
             <p>This infiniteScroll demo page contain a list that is growing when the user is hitting the bottom of the page</p>
 
@@ -61,15 +57,10 @@
                     }
                 });
 
-                app.touch('a.push',function(){
-                    cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
-                });
-
-                app.touch('a.pop',function(){
-                    cobalt.navigate('pop');
-                });
 
                 $('#list').html('<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>');
+
+                app.initPage('Infinite scroll');
 
             })
 

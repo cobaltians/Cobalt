@@ -7,11 +7,6 @@
     </head>
     <body class="theme_green">
 
-        <div class="header">
-            <a href="javascript:;" class="pop">POP</a>
-            <h1>Location</h1>
-        </div>
-
         <div class="block">
             <p>Your location is : <span id="locationField">...</span></p>
         </div>
@@ -42,9 +37,7 @@
                 })
 
 
-                app.touch('a.pop',function(){
-                    cobalt.navigate('pop');
-                });
+                app.initPage('Location Plugin')
 
             })
 

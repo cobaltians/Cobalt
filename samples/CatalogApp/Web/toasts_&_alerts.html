@@ -7,10 +7,6 @@
     </head>
     <body class="green">
 
-        <div class="header">
-            <a href="javascript:;" class="pop">POP</a>
-            <h1>Toast & Alert</h1>
-        </div>
         <div class="block">
             <p>Here are a few examples that show many toasts calls and many alerts</p>
         </div>
@@ -59,11 +55,6 @@
                     debugInDiv:app.debugInDiv
                 });
 
-
-
-                app.touch('a.pop',function(){
-                    cobalt.navigate('pop');
-                });
 
                 app.touch('#toastA',function(){
                     cobalt.toast("Ok!")
@@ -126,6 +117,7 @@
                     return false;
                 });
 
+                app.initPage('Toasts & Alerts');
 
             })
 

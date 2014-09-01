@@ -5,28 +5,25 @@
 			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
 	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
     </head>
-    <body class="green">
+    <body>
   		
-  		<div class="header">
-            <a href="javascript:;" class="pop">POP</a>
-            <h1>Local storage page 2</h1>
-        </div>
-<div class="block">
+
+    <div class="block">
 		<p>Check if your value is still here.</p>
 
   		<a href="javascript:;" id="retrieve">Retrieve</a>
-</div>
+    </div>
         <div class="block">
 		<p>Change the value and get back to the other page</p>
 
 		<a href="javascript:;" id="store">Store 'changed'</a>
 		<a href="javascript:;" id="clean">Clean all values</a>
-</div>
-<div class="block">
+    </div>
+    <div class="block">
 		<p>You can also re-push the previous page for further testing.</p>
 
 		<a class="push" href="javascript:;" data-href="localstorage.html">push first page</a>
-</div>
+    </div>
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="../platform/cobalt.js"></script>
@@ -47,15 +44,6 @@
                	cobalt.log("init dismissInformations : "+cobalt.storage.getItem("dismissInformations"));
 				cobalt.log("init testLocalStorageKey : "+cobalt.storage.getItem("testLocalStorageKey"));
                 
-
-
-                app.touch('a.pop',function(){
-                    cobalt.navigate('pop');
-                });
-
-                app.touch('a.push',function(){
-	            	cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
-	            });
 
                 app.touch('a#store',function(){
                     var obj={ value: "changed"}
@@ -81,6 +69,8 @@
                     cobalt.log("Cleaning local storage.")
                     cobalt.storage.clear();
                 });
+
+                app.initPage('Local storage page2');
 
             })
             

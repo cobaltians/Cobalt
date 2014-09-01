@@ -6,10 +6,6 @@
         <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
     </head>
     <body>
-        <div class="header">
-            <h1>Available pages</h1>
-        </div>
-
         <ul>
             <li>
                 <a class="push" href="javascript:;" data-href="simple_page.html">A simple page<img src="img/next.png"alt="next"></a>
@@ -45,7 +41,7 @@
                 <a class="push" href="javascript:;" data-href="datePicker.html">DatePicker<img src="img/next.png" alt="next"></a>
             </li>
             <li>
-                <a class="push" href="javascript:;" data-href="location.html">Geolocation plugin<img src="img/next.png" alt="next"></a>
+                <a class="push" href="javascript:;" data-href="plugins.html" data-classid="plugins" class="green">Cobalt Plugins<img src="img/next.png" alt="next"></a>
             </li>
 
         </ul>
@@ -78,12 +74,7 @@
                 });
 
 
-                app.touch('a.push',function(){
-                    if ( ! $(this).hasClass('disabled') ){
-                        cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
-                    }
-                });
-
+                app.initPage('Available pages')
             })
         </script>
 

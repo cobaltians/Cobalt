@@ -7,10 +7,6 @@
     </head>
     <body>
 
-        <div class="header">
-            <a href="javascript:;" class="pop">POP</a>
-            <h1>Date Picker</h1>
-        </div>
         <div class="block">
             <p>This page shows usage and configuration of a datePicker with cobalt.</p>
             <p>On iOs, input type="date" works well, except for the placeholder text.<br/>
@@ -60,10 +56,7 @@
                                 )
                 });
 
-                $('a.pop').on('tap click',function(){
-                    cobalt.navigate('pop')
-                    return false;
-                });
+                app.initPage('Date Picker');
 
             })
         </script>

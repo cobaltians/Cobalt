@@ -7,10 +7,6 @@
     </head>
     <body>
 
-        <div class="header">
-            <a href="javascript:;" class="pop">POP</a>
-            <h1>Using callback</h1>
-        </div>
         <div class="block">
             <p>This page shows examples of events with callbacks. <br/>
                 Events are sent form one side to the other and are coming back with a result.</p>
@@ -127,11 +123,7 @@
 
                 });
 
-
-
-                app.touch('a.pop',function(){
-                    cobalt.navigate('pop');
-                });
+                app.initPage('Using callbacks')
 
             })
 

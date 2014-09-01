@@ -7,10 +7,6 @@
     </head>
     <body class="green">
 
-        <div class="header">
-            <a href="javascript:;" class="pop">POP</a>
-            <h1>Pull to refresh</h1>
-        </div>
         <div class="block">
             <p>This Pull to refresh demo page contain a list that is refreshed when the user is pulling the page down</p>
 
@@ -65,13 +61,7 @@
                 });
 
 
-                app.touch('a.push',function(){
-                    cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
-                });
-
-                app.touch('a.pop',function(){
-                    cobalt.navigate('pop');
-                });
+                app.initPage('Pull to refresh');
 
                 $('#list').html('<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>');
 

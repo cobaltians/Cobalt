@@ -8,25 +8,29 @@
     <body class="red">
   		<div class="header">
             <a href="javascript:;" class="pop">POP</a>
-            <a href="javascript:;" class="dismiss">DISMISS</a>
             <h1>Modal content 1</h1>
         </div>
-		<div class="block">
-  		<p>There is a dismiss button at the top. Use it to close the modal.</p>
 
-        <p>The pop button should do nothing if you just openned the modal.</p>
+        <div class="block">
+            <p>The pop command should do nothing if you just openned the modal.</p>
+            <p>There is a dismiss button bellow. Use it to close the modal.</p>
 
-  		<p>You can push other pages in this modal.</p>
+            <a href="javascript:;" class="dismiss">DISMISS</a>
+        </div>
 
-		<a class="push" href="javascript:;" data-href="modal_content_2.html">Push modal content 2</a>
+        <div class="block">
+            <p>You can push other pages in this modal.</p>
+
+            <a class="push" href="javascript:;" data-href="modal_content_2.html">Push modal content 2</a>
 		</div>
+
 		<script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="../platform/cobalt.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
 
 
         <script>
-            
+
             Zepto(function($){
 
 	            cobalt.init({
@@ -36,15 +40,7 @@
 	            });
 
 
-                app.touch('a.dismiss',function(){
-		        	cobalt.navigate('dismiss');
-	            });
-				app.touch('a.pop',function(){
-                    cobalt.navigate('pop');
-                });
-	            $('a.push').on('tap click',function(){
-	            	cobalt.navigate('push',$(this).attr('data-href'),$(this).attr('data-classid'))
-	            });
+                app.initPage();
 	            
 
             })
