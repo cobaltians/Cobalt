@@ -29,6 +29,8 @@
         <activity android:name=".activities.PullToRefreshActivity" />
         <activity android:name=".activities.PullToRefreshCustomActivity" />
         <activity android:name=".activities.EventsActivity" />
+        <activity android:name=".activities.PluginsActivity"
+                  android:theme="@style/PluginsTheme" />
     </application>
 
 </manifest>
