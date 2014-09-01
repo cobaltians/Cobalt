@@ -6,7 +6,8 @@
         <link rel="stylesheet" href="style.css"/>
     </head>
     <body>
-       <p id="content">Pull to refresh :)</p>
+		<p>Welcome to cobalt hello world ! Please use a pull-to-refresh gesture to change the message below. If it works, then you are ready to build your first app :)</p>
+    	<p id="hello">Pull to refresh :)</p>
 
         <script type="text/javascript" src="zepto.js"></script>
         <script type="text/javascript" src="../platform/cobalt.js"></script>
@@ -27,14 +28,14 @@
                 
             });			
 			
-			var messages=["Hello!","Bonjour !","guten Tag!","Ola !"],
+			var messages=["Hello!","Yes it works!","Bonjour !","guten Tag!","Ola !"],
 				i = 0, 
 			    len = messages.length,
-				content = $('#content');
+				hello = $('#hello');
 			
 			function pleaseRefresh( callback ){
 				cobalt.log('refreshing content')
-	            content.html( messages[i++] );
+	            hello.html( messages[i++] );
 				if (i >= len) { i = 0 };//loop over messages
 				
 				//say the native side we finished refreshing

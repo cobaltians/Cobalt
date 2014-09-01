@@ -7,114 +7,23 @@ body,html{
 }
 
 body{
-    text-align: center;
     height: 100%; 
-    background: rgb(80,80,80);
+	background: #3498DB;
+	color:#fff;
+	font-family: "Helvetica Neue Light", Helvetica, Arial, sans-serif;
+	font-size:18px; 
+	line-height:1.5;
+}
+p{
+	margin:30px;
 }
 
-ul{
-    
-    padding:0;
-    text-align: center;
-    
-    background: linear-gradient(rgba(20,20,20,.8),rgba(70,70,70,0.8));
-    background: -webkit-linear-gradient(rgba(20,20,20,.8),rgba(70,70,70,0.8));
-    border-radius: 2px;
-    box-shadow: 0 2px 10px rgba(30,30,30,.8);
-    
-    box-shadow: 0 1px 0 rgba(0, 0, 0, .7) inset, 
-        0 -1px 0 hsl(50, 0%, 20%) inset, 
-        0 -2px 0 hsl(50, 0%, 25%) inset, 
-        0 -3px 0 hsl(50, 0%, 30%) inset, 
-        0 -4px 0 hsl(50, 0%, 35%) inset, 
-        0 -5px 0 hsl(50, 0%, 40%) inset;
-    
-    
-    
-}
-ul li{
-    display:inline-block;
-    
-}
-ul li a{
-    display :block;
-    text-align: center;
-    font-family: Verdana;
-    font-size: 27px;
-    color:rgb(0, 71, 171);
-    text-decoration: none;  
-    padding: 5px 5px 5px 10px;
-    text-shadow: 0 1px 0 rgba(140,140,140,.4);
-    
-    
-    
-}
-.CobaltButton{
+#hello{
+	text-align:center;
+    margin-top: 37%;
+    font-size: 30px;
+	font-weight:bold;
     line-height: 1;
-    text-decoration: none;
-    margin: auto;
-    /* margin-top: 50%; */
-    color:rgb(0, 130, 220);
-    background: black;
-    background: -webkit-linear-gradient(rgba(50,50,50,1), rgba(20,20,20,1));
-    background:linear-gradient(rgba(50,50,50,1),rgba(80,80,80,1));
-    
-    font-size:30px;
-    border-radius: 10px;
-    padding: 3px 10px 3px 10px;   
-    -moz-box-shadow: 10px 10px 5px black;
-    -webkit-box-shadow: 5px 10px 5px black;
-    -o-box-shadow: 10px 10px 5px black;
-    box-shadow: 1px 1px 1px black;
-    border: 1px solid darkgray;
-    border-left: 1px solid grey;
-    border-top: 1px solid darkgray;
-    text-shadow: 0px 1px 1px darkblue;text-shadow: 0px -1px 1px darkblue ;
-    position: relative;
-    top: 50%;
-    margin-top: -30px;
-    height: 60px;
-}
-
-.CobaltButton:hover{
-    
-    box-shadow: none;
-    
-    color:rgb(0, 130, 220);
-    background: black;
-    background: -webkit-linear-gradient( rgba(20,20,20,1),rgba(50,50,50,1));
-    background:linear-gradient(rgba(80,80,80,1),rgba(50,50,50,1));
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
-    -o-box-shadow: none;
-    box-shadow: none;
-    border: 1px solid darkgray;  
-}
-.CobaltButton:active{
-    color:whitesmoke;
-    box-shadow: none;
-    -moz-box-shadow: 10px 10px 5px #656565;
-    -webkit-box-shadow: 5px 10px 5px #656565;
-    -o-box-shadow: 10px 10px 5px #656565;
-    box-shadow: 1px 1px 1px #656565;    
-}
-
-#CobaltContainer{
-    text-align: center;
-    height: 100%; 
-    background: rgb(80,80,80);
-    
-   
-}
-
-
- p{
-    position: relative;
-    top:50%;
-    margin-top: -25px;
-    font-size: 50px;
-    line-height: 1;
-    color:rgb(0, 130, 220);   
 }
 
 
