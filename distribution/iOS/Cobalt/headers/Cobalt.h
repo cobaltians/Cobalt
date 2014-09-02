@@ -31,6 +31,19 @@
 
 #import "CobaltViewController.h"
 
+#define viewControllerDeallocatedNotification   @"viewControllerDeallocatedNotification"
+
+#define haploidSpecialJSKey     @"cob@l7#k&y"
+
+// CONFIGURATION FILE
+#define confFileName            @"cobalt.conf"
+#define kIos                    @"ios"
+#define kControllers            @"controllers"
+#define kPlugins                @"plugins"
+#define kIosNibName             @"iosNibName"
+#define kPullToRefreshEnabled   @"pullToRefresh"
+#define kInfiniteScrollEnabled  @"infiniteScroll"
+
 @interface Cobalt : NSObject
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,5 +64,13 @@
  @abstract		this method gets the resource path for the whole application
  */
 + (NSString *)resourcePath;
+
+
++ (NSDictionary *)getControllersConfiguration;
++ (NSDictionary *)getPluginsConfiguration;
+
++ (NSString *)stringWithContentsOfFile:(NSString *)path;
+
++ (id)JSONObjectWithString:(NSString *)string;
 
 @end
