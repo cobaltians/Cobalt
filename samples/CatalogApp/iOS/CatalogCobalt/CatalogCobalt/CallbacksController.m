@@ -26,7 +26,7 @@ int i = 0;
     
     // Do any additional setup after loading the view from its nib.
     [self setDelegate:self];
-    [self.navigationController setNavigationBarHidden:YES];
+    //[self.navigationController setNavigationBarHidden:YES];
     
     dataAuto = @[@"quotes : it's working \"great\"",
                @"url &eactue;é&12;\n3#23:%20'\\u0020hop",
@@ -40,11 +40,6 @@ int i = 0;
 #pragma mark COBALT DELEGATE METHODS
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-- (BOOL)onUnhandledMessage:(NSDictionary *)message
-{
-    return NO;
-}
 
 - (BOOL)onUnhandledEvent:(NSString *)event withData:(NSDictionary *)data andCallback:(NSString *)callback
 {
@@ -133,8 +128,5 @@ int i = 0;
     }
     
 }
-- (BOOL)prefersStatusBarHidden
-{
-    return YES;
-}
+
 @end

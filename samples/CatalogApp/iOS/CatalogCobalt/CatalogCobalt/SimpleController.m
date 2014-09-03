@@ -22,7 +22,14 @@
     
     // Do any additional setup after loading the view from its nib.
     [self setDelegate:self];
-    [self.navigationController setNavigationBarHidden:YES];
+    
+    if([self respondsToSelector: @selector(setAutomaticallyAdjustsScrollViewInsets:)])
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    self.navigationController.navigationBar.translucent = NO;
+    self.navigationController.toolbar.translucent = NO;
+    //self.webView.scrollView.contentInset = UIEdgeInsetsMake(44.0, 0.0, 0.0, 0.0);
+    
+    //[self.navigationController setNavigationBarHidden:YES];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,7 +44,19 @@
 }
 
 - (BOOL)onUnhandledEvent:(NSString *)event withData:(NSDictionary *)data andCallback:(NSString *)callback
-{    
+{
+    // SET TEXTS
+    if ([event isEqualToString: @"setTexts"]) {
+        NSString * title = [data objectForKey: @"title"];
+        
+        if (title != nil
+            && [title isKindOfClass:[NSString class]]) {
+            self.navigationItem.title = title;
+        }
+        
+        return YES;
+    }
+    
     return NO;
 }
 

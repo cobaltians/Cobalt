@@ -13,6 +13,7 @@
 		71B4B1ED1886D9DD0027AC4F /* CobaltToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1E41886D9DD0027AC4F /* CobaltToast.m */; };
 		8E1070BF1987ED8800DED934 /* CustomizedPulltoRefreshViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E1070BE1987ED8800DED934 /* CustomizedPulltoRefreshViewController.m */; };
 		8E1070C11987EE7800DED934 /* CobaltViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8E1070C01987EE7800DED934 /* CobaltViewController.xib */; };
+		8E11545319B7573B0047622C /* PluginsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E11545219B7573B0047622C /* PluginsController.m */; };
 		8E2B7CF9198A3FA500BE2040 /* CobaltLocationPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2B7CF8198A3FA500BE2040 /* CobaltLocationPlugin.m */; };
 		8EC5CAD71980FB00001777FA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8EC5CAD61980FB00001777FA /* Images.xcassets */; };
 		8EE619AE1980074100B5767C /* CobaltAbstractPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EE619A91980074100B5767C /* CobaltAbstractPlugin.m */; };
@@ -48,6 +49,8 @@
 		8E1070BD1987ED8800DED934 /* CustomizedPulltoRefreshViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomizedPulltoRefreshViewController.h; sourceTree = "<group>"; };
 		8E1070BE1987ED8800DED934 /* CustomizedPulltoRefreshViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomizedPulltoRefreshViewController.m; sourceTree = "<group>"; };
 		8E1070C01987EE7800DED934 /* CobaltViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CobaltViewController.xib; sourceTree = "<group>"; };
+		8E11545119B7573B0047622C /* PluginsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PluginsController.h; sourceTree = "<group>"; };
+		8E11545219B7573B0047622C /* PluginsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PluginsController.m; sourceTree = "<group>"; };
 		8E2B7CF7198A3FA500BE2040 /* CobaltLocationPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltLocationPlugin.h; sourceTree = "<group>"; };
 		8E2B7CF8198A3FA500BE2040 /* CobaltLocationPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltLocationPlugin.m; sourceTree = "<group>"; };
 		8EC5CAD61980FB00001777FA /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -202,6 +205,8 @@
 				C49597551717090B006454BA /* CallbacksController.h */,
 				C49597561717090B006454BA /* CallbacksController.m */,
 				C49597571717090B006454BA /* CallbacksController.xib */,
+				8E11545119B7573B0047622C /* PluginsController.h */,
+				8E11545219B7573B0047622C /* PluginsController.m */,
 				C4D6649F171E8D97009EDE58 /* EventsController.h */,
 				C4D664A0171E8D97009EDE58 /* EventsController.m */,
 				C4D664A1171E8D97009EDE58 /* EventsController.xib */,
@@ -307,6 +312,7 @@
 				8EE619AE1980074100B5767C /* CobaltAbstractPlugin.m in Sources */,
 				71B4B1E91886D9DD0027AC4F /* CobaltViewController.m in Sources */,
 				C4D664AA171E91D5009EDE58 /* SimpleController.m in Sources */,
+				8E11545319B7573B0047622C /* PluginsController.m in Sources */,
 				71B4B1ED1886D9DD0027AC4F /* CobaltToast.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -389,6 +395,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CatalogCobalt/CatalogCobalt-Prefix.pch";
 				INFOPLIST_FILE = "CatalogCobalt/CatalogCobalt-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = CatalogCobalt;
 				USER_HEADER_SEARCH_PATHS = "../HPNativeBridge/HPNativeBridge/**";
 				WRAPPER_EXTENSION = app;
@@ -403,6 +410,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CatalogCobalt/CatalogCobalt-Prefix.pch";
 				INFOPLIST_FILE = "CatalogCobalt/CatalogCobalt-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = CatalogCobalt;
 				USER_HEADER_SEARCH_PATHS = "../HPNativeBridge/HPNativeBridge/**";
 				WRAPPER_EXTENSION = app;
