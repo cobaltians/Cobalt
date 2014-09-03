@@ -153,6 +153,9 @@
     int _alertViewCounter;
 	BOOL _isLoadingMore;
     BOOL _isRefreshing;
+    
+    NSAttributedString * _ptrRefreshText;
+    NSAttributedString * _ptrRefreshingText;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -299,7 +302,7 @@
  @method		- (void)customizeRefreshControlWithAttributedText:(NSAttributedString *)attributedText andTintColor: (UIColor *)tintColor
  @abstract		customize native pull to refresh control
  */
-- (void)customizeRefreshControlWithAttributedText:(NSAttributedString *)attributedText andTintColor: (UIColor *)tintColor;
+- (void)customizeRefreshControlWithAttributedRefreshText:(NSAttributedString *)attributedRefreshText andAttributedRefreshText:(NSAttributedString *)attributedRefreshingText andTintColor: (UIColor *)tintColor;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -

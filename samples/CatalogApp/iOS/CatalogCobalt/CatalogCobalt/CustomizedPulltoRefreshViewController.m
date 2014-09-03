@@ -27,8 +27,6 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    [self customizeRefreshControlWithAttributedText: [[NSAttributedString alloc] initWithString:@"customized text"] andTintColor: [UIColor redColor]];
 }
 
 - (void)didReceiveMemoryWarning

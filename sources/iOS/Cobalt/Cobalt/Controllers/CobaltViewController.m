@@ -95,11 +95,11 @@ NSString * webLayerPage;
     if (isPullToRefreshEnabled) {
         UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
         
-        refresh.attributedTitle = [[NSAttributedString alloc] initWithString:@"Tirer pour mettre à jour"];
-        
         [refresh addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
         
         self.refreshControl = refresh;
+        
+        [self customizeRefreshControlWithAttributedRefreshText: [[NSAttributedString alloc] initWithString:@"Tirer pour mettre à jour"] andAttributedRefreshText: [[NSAttributedString alloc] initWithString:@"Chargement en cours"] andTintColor: [UIColor grayColor]];
     }
     
     [webView.scrollView setDelegate:self];
@@ -306,6 +306,7 @@ NSString * webLayerPage;
                 && [callback isKindOfClass:[NSString class]]) {
                 if ([callback isEqualToString:JSCallbackPullToRefreshDidRefresh]) {
                     [self.refreshControl endRefreshing];
+                    self.refreshControl.attributedTitle = _ptrRefreshText;
                     _isRefreshing = NO;
                 }
                 else if ([callback isEqualToString:JSCallbackInfiniteScrollDidRefresh]) {
@@ -983,7 +984,7 @@ NSString * webLayerPage;
     if (isPullToRefreshEnabled) {
         _isRefreshing = YES;
         
-        //TODO ?
+        self.refreshControl.attributedTitle = _ptrRefreshingText;
         
         [self refreshWebView];
     }
@@ -1003,11 +1004,14 @@ NSString * webLayerPage;
 
 
 /*!
- @method		- (void)customizeRefreshControlWithAttributedText:(NSAttributedString *)attributedText andTintColor: (UIColor *)tintColor
+ @method		- (void)customizeRefreshControlWithAttributedRefreshText:(NSAttributedString *)attributedRefreshText andAttributedRefreshText:(NSAttributedString *)attributedRefreshingText andTintColor: (UIColor *)tintColor;
  @abstract		customize native pull to refresh control
  */
-- (void)customizeRefreshControlWithAttributedText:(NSAttributedString *)attributedText andTintColor: (UIColor *)tintColor {
-    self.refreshControl.attributedTitle = attributedText;
+- (void)customizeRefreshControlWithAttributedRefreshText:(NSAttributedString *)attributedRefreshText andAttributedRefreshText:(NSAttributedString *)attributedRefreshingText andTintColor: (UIColor *)tintColor {
+    _ptrRefreshText = attributedRefreshText;
+    _ptrRefreshingText = attributedRefreshingText;
+    
+    self.refreshControl.attributedTitle = attributedRefreshText;
     self.refreshControl.tintColor = tintColor;
 }
 
