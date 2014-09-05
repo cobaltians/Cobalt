@@ -28,7 +28,9 @@
     
     _sendToWeb = YES;
     
-    if(_locationManager.location) {
+    if([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorized) {
+        [self sendErrorToWeb];
+    } else if(_locationManager.location) {
         [self sendLocationToWeb: _locationManager.location];
     }
 }
@@ -38,7 +40,7 @@
 }
 
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
-    [self sendLocationToWeb: nil];
+    [self sendErrorToWeb];
 }
 
 
@@ -55,6 +57,21 @@
     
     [_viewController sendCallback: _callback withData: locationDict];
     //[_locationManager stopUpdatingLocation];
+}
+
+- (void)sendErrorToWeb {
+    if(!_sendToWeb)
+        return;
+    
+    _sendToWeb = NO;
+    
+    if([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorized) {
+        NSDictionary * data = @{ kJSType : kJSTypePlugin, kJSPluginName : @"location", kJSData : @{@"error": @YES, @"code": @"DISABLED", @"text" : @"Location detection has been disabled by user"}};
+        [_viewController sendMessage: data];
+    } else {
+        NSDictionary * data = @{ kJSType : kJSTypePlugin, kJSPluginName : @"location", kJSData : @{@"error": @YES, @"code": @"NULL", @"text" : @"No location found"}};
+        [_viewController sendMessage: data];
+    }
 }
 
 @end

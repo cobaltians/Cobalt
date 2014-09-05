@@ -5,34 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>2541CC6D-D296-4701-8B24-8A43B26AF775</string>
+	<string>86593D52-1EF9-45DF-A9A7-E5B2D7E4440C</string>
 	<key>IDESourceControlProjectName</key>
 	<string>CatalogCobalt</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>D5564001-F355-4076-B880-458E0551D78B</key>
+		<key>8F924602F3C51B7A18EF94EFB8636649C2AA30B2</key>
 		<string>https://github.com/cobaltians/cobalt.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>samples/CatalogApp/iOS/CatalogCobalt/CatalogCobalt.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>D5564001-F355-4076-B880-458E0551D78B</key>
+		<key>8F924602F3C51B7A18EF94EFB8636649C2AA30B2</key>
 		<string>../../../../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/cobaltians/cobalt.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>D5564001-F355-4076-B880-458E0551D78B</string>
+	<string>8F924602F3C51B7A18EF94EFB8636649C2AA30B2</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>D5564001-F355-4076-B880-458E0551D78B</string>
+			<string>8F924602F3C51B7A18EF94EFB8636649C2AA30B2</string>
 			<key>IDESourceControlWCCName</key>
 			<string>cobalt</string>
 		</dict>
