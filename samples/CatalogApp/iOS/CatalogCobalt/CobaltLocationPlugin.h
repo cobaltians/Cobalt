@@ -17,7 +17,6 @@
 
 @interface CobaltLocationPlugin : CobaltAbstractPlugin <CLLocationManagerDelegate>
 {
-    NSString * _callback;
     CobaltViewController * _viewController;
     BOOL _sendToWeb;
 }
