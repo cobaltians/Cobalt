@@ -27,9 +27,22 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear: animated];
+    
+    _oldNavigationBarTintColor = self.navigationController.navigationBar.barTintColor;
     
     self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed: 45/255.0 green: 185/255.0 blue: 108/255.0 alpha: 1.0];
 }
+
+- (void) viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear: animated];
+    
+    self.navigationController.navigationBar.barTintColor = _oldNavigationBarTintColor;
+}
+
 
 - (void)didReceiveMemoryWarning
 {

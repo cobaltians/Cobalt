@@ -9,5 +9,7 @@
 #import "SimpleController.h"
 
 @interface PluginsController : SimpleController
-
+{
+    UIColor * _oldNavigationBarTintColor;
+}
 @end

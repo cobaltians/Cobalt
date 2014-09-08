@@ -28,9 +28,6 @@
     self.navigationController.navigationBar.translucent = NO;
     self.navigationController.toolbar.translucent = NO;
     //self.webView.scrollView.contentInset = UIEdgeInsetsMake(44.0, 0.0, 0.0, 0.0);
-    
-    //[self.navigationController setNavigationBarHidden:YES];
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -63,11 +60,6 @@
 - (BOOL)onUnhandledCallback:(NSString *)callback withData:(NSDictionary *)data
 {
     return NO;
-}
-
-- (BOOL)prefersStatusBarHidden
-{
-    return YES;
 }
 
 @end
