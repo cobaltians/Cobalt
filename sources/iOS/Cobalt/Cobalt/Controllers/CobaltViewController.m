@@ -98,12 +98,12 @@ NSString * webLayerPage;
         [refresh addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
         
         self.refreshControl = refresh;
-        
+
         [self customizeRefreshControlWithAttributedRefreshText: [[NSAttributedString alloc] initWithString:@"Tirer pour mettre à jour"] andAttributedRefreshText: [[NSAttributedString alloc] initWithString:@"Chargement en cours"] andTintColor: [UIColor grayColor]];
     }
     
     [webView.scrollView setDelegate:self];
-    [self.tableView setScrollEnabled: NO];
+    //[self.tableView setScrollEnabled: NO];
     
     [self loadPage:pageName inWebView:webView];
 }
