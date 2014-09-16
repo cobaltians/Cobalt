@@ -54,7 +54,7 @@ public class Cobalt {
 	public static final String TAG = Cobalt.class.getSimpleName();
 
     // DEBUG
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
 
     // RESOURCES
     private static final String ASSETS_PATH = "file:///android_asset/";

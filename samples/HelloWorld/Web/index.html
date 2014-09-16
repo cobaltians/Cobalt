@@ -35,10 +35,18 @@
 			
 			function pleaseRefresh( callback ){
 				cobalt.log('refreshing content')
+<<<<<<< Updated upstream
 	            hello.html( messages[i++] );
 				if (i >= len) { i = 0 };//loop over messages
 				
 				//say the native side we finished refreshing
+=======
+			
+	            var hellos=new Array("Hello!","Bonjour !","guten Tag !","Ola !");
+	            var randomitem = hellos[ Math.floor( Math.random() * hellos.length )];
+	            $('p').html(randomitem);
+			
+>>>>>>> Stashed changes
 				if (callback){
 					cobalt.sendCallback(callback)
 				}

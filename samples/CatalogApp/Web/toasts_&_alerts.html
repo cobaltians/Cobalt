@@ -8,7 +8,7 @@
     <body class="green">
 
         <div class="block">
-            <p>Here are a few examples that show many toasts calls and many alerts</p>
+            <p>Here are a few examples that show many toasts calls and many alerts.</p>
         </div>
         <div class="block">
             <h2>Toasts</h2>
@@ -17,7 +17,7 @@
             <a href="javascript:;" id="toastB">basic toast</a>
             <a href="javascript:;" id="toastC">loooonnnnng toast</a>
             <a href="javascript:;" id="toastD">A toast with multiple lines using \n</a>
-            <a href="javascript:;" id="toastE">20 toasts in a row ! boom !</a>
+            <a href="javascript:;" id="toastE">20 toasts in a row! boom!</a>
         </div>
         <div class="block">
             <h2>Alerts</h2>
@@ -25,8 +25,8 @@
             <p>A basic alert setting title and text</p>
             <a href="javascript:;" id="test2">Show Alert</a>
 
-            <p>Three custom buttons on this one.<br>
-                When alert is closed, web knows which button was clicked</p>
+            <p>Three custom buttons on this one<br>
+                When the alert is closed, the Web knows which button was clicked.</p>
             <a href="javascript:;" id="test3">Show Alert</a>
 
             <p>Same thing but with an anonymous callback.</p>
@@ -62,7 +62,7 @@
                 });
 
                 app.touch('#toastB',function(){
-                    cobalt.toast("Hello Cobalt user !")
+                    cobalt.toast("Hello Cobalt user!")
                     return false;
                 });
                 app.touch('#toastC',function(){
@@ -81,15 +81,15 @@
                 });
 
                 app.touch('#test2',function(){
-                    cobalt.alert("My Title", "The default button is 'ok'. Is it OK for you ?")
+                    cobalt.alert("My Title", "The default button is 'ok'. Is it OK for you?")
                     return false;
                 });
 
                 var buttons=["Yes", "No", "I'm not sure"];
 
                 app.touch('#test3',function(){
-                    cobalt.alert("Close me !", "You gonna close this alert !", buttons, { callback : function(params){
-                        cobalt.toast("alert closed. you choice was : "+ buttons[params.index])
+                    cobalt.alert("Close me!", "You gonna close this alert!", buttons, { callback : function(params){
+                        cobalt.toast("alert closed. Your choice was: "+ buttons[params.index])
                     }});
                     return false;
                 });
@@ -97,23 +97,23 @@
                 window.myApp={
                     callMeBack:function(params){
                         cobalt.log('myApp.callMeBack called with params='+params)
-                        cobalt.toast("alert closed. you choice was : "+ buttons[params.index])
+                        cobalt.toast("alert closed. Your choice was: "+ buttons[params.index])
                     }
                 }
 
                 app.touch('#test4',function(){
-                    cobalt.alert("Close me !", "You gonna close this alert !", buttons, { callback : 'myApp.callMeBack', alertId:55});
+                    cobalt.alert("Close me!", "You gonna close this alert!", buttons, { callback : 'myApp.callMeBack', alertId:55});
                     return false;
                 });
 
 
                 app.touch('#test7',function(){
-                    cobalt.alert("Do you Lorem ?", "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?", ["Indeed.", "Me !", "..."]);
+                    cobalt.alert("Do you Lorem?", "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?", ["Indeed.", "Me !", "..."]);
                     return false;
                 });
 
                 app.touch('#test8',function(){
-                    cobalt.alert("Optional !", "This one can be dismissed by touching the empty zone around the alert on platforms supporting this feature.", ["Yes", "No"], { cancelable:true });
+                    cobalt.alert("Optional!", "This one can be dismissed by touching the empty zone around the alert on platforms supporting this feature.", ["Yes", "No"], { cancelable:true });
                     return false;
                 });
 

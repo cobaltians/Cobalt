@@ -9,24 +9,24 @@
 
         <div class="block">
             <p>This page shows examples of events with callbacks. <br/>
-                Events are sent form one side to the other and are coming back with a result.</p>
+                Events are sent from one side to the other and are coming back with a result.</p>
         </div>
         <div class="block">
-            <h2>From web to native and comming back :</h2>
+            <h2>From web to native and coming back:</h2>
 
-            <p>Button bellow should send an event to the native side to ask how many does 1 + 3. Native should do the math and send result. Web shows the result below :</p>
+            <p>The button below should send an event to the native side to ask how many does 1 + 3. Native should do the math and send the result. The Web shows the result below:</p>
             <a href="javascript:;" id="button_1">do some maths</a><br/>
-            <div id="result_1" class="expected">Result is : <span></span></div>
+            <div id="result_1" class="expected">the result is : <span></span></div>
         </div>
         <div class="block">
-            <h2>From native to web and comming back :</h2>
+            <h2>From native to web and coming back:</h2>
 
-            <p>Button "do some maths" in the bottom bar should send an event to the web side to ask how many does 1 + 3. Web is good at maths too and should send the result. Native shows the result in an alert</p>
+            <p>Button "do some maths" in the bottom bar should send an event to the web side to ask how many does 1 + 3. The Web is good at maths too and should send the result. the native shows the result in an alert.</p>
         </div>
         <div class="block">
             <h2>Some automatic testing</h2>
 
-            <p>Button below and native button "Launch Tests" are launching some automatic testing, exchanging weird strings and object, to ensure everything works great.</p>
+            <p>The button below and the native button "Launch Tests" are launching some automatic testing, exchanging weird strings and object, to ensure everything works great.</p>
             <a href="javascript:;" id="button_2">Launch Tests</a><br/>
         </div>
 
@@ -102,9 +102,9 @@
                         sendAndCheck(testIndex, next)
                     }else{
                         if (errorOccured){
-                            cobalt.toast("Some tests failed !s check logs.");
+                            cobalt.toast("Some tests failed! check logs.");
                         }else{
-                            cobalt.toast("All tests passed ! no errors");
+                            cobalt.toast("All tests passed! no errors");
                         }
                     }
                 }
