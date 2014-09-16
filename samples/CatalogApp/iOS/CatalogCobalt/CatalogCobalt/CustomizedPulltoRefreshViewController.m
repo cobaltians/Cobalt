@@ -30,7 +30,7 @@
     
     self.refreshControl.tintColor = [UIColor redColor];
     
-    NSMutableAttributedString *attString=[[NSMutableAttributedString alloc] initWithString:@"Tirer pour mettre à jour"];
+    NSMutableAttributedString *attString=[[NSMutableAttributedString alloc] initWithString:@"Pull to refresh"];
     
     NSInteger _stringLength=[attString length];
     
@@ -39,7 +39,7 @@
     [attString addAttribute:NSStrokeColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, _stringLength)];
     [attString addAttribute:NSStrokeWidthAttributeName value:[NSNumber numberWithFloat:3.0] range:NSMakeRange(0, _stringLength)];
     
-    NSMutableAttributedString *attRefreshString=[[NSMutableAttributedString alloc] initWithString:@"Chargement en cours"];
+    NSMutableAttributedString *attRefreshString=[[NSMutableAttributedString alloc] initWithString:@"Refreshing"];
     
     _stringLength=[attRefreshString length];
     

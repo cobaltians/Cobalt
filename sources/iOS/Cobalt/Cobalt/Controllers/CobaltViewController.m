@@ -99,7 +99,7 @@ NSString * webLayerPage;
         
         self.refreshControl = refresh;
 
-        [self customizeRefreshControlWithAttributedRefreshText: [[NSAttributedString alloc] initWithString:@"Tirer pour mettre à jour"] andAttributedRefreshText: [[NSAttributedString alloc] initWithString:@"Chargement en cours"] andTintColor: [UIColor grayColor]];
+        [self customizeRefreshControlWithAttributedRefreshText: [[NSAttributedString alloc] initWithString:@"Pull to refresh"] andAttributedRefreshText: [[NSAttributedString alloc] initWithString:@"Refreshing"] andTintColor: [UIColor grayColor]];
     }
     
     [webView.scrollView setDelegate:self];
