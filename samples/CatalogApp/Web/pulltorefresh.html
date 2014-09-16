@@ -37,6 +37,12 @@
 
             var someListItems='<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>';
 
+            var fillWithListItems = function(){
+                while($("body").height() <= $(window).height()){
+                    $('#list').append( someListItems );
+                }
+            }
+
             Zepto(function($){
                 cobalt.init({
                     debug:app.debug,
@@ -51,7 +57,7 @@
 
                             setTimeout(function(){
                                 cobalt.log('We have new data');
-                                $('#list').html( someListItems );
+                                fillWithListItems();
 
                                 cobalt.log('Releasing the pullToRefresh');
                                 cobalt.sendCallback(calllback);
@@ -64,9 +70,7 @@
 
                 app.initPage('Pull to refresh');
 
-                while($("body").height() <= $(window).height()){
-                    $('#list').append( someListItems );
-                }
+                fillWithListItems();
 
             })
 
