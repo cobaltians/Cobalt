@@ -103,7 +103,9 @@ NSString * webLayerPage;
     }
     
     [webView.scrollView setDelegate:self];
-    //[self.tableView setScrollEnabled: NO];
+    
+    if(!self.isPullToRefreshEnabled)
+        [self.tableView setScrollEnabled: NO];
     
     [self loadPage:pageName inWebView:webView];
 }
