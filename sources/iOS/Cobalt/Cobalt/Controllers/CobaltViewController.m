@@ -592,7 +592,10 @@ NSString * webLayerPage;
 }
 
 - (void) sendMessage:(NSDictionary *) message {
-    //default implementation does nothing
+    if (message != nil) [self executeScriptInWebView:webView withDictionary:message];
+#if DEBUG_COBALT
+    else NSLog(@"sendMessage: message is nil!");
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
