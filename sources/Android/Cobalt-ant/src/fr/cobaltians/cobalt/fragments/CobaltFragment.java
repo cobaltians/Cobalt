@@ -802,7 +802,10 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 		Intent intent = Cobalt.getInstance(mContext).getIntentForController(controller, page);
 		
 		if (intent != null) {
+            intent.putExtra(Cobalt.kPushAsModal, true);
+
 			mContext.startActivity(intent);
+
 			// Sends callback to store current activity & HTML page for dismiss
 			try {
 				JSONObject data = new JSONObject();
@@ -829,6 +832,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 
 				Intent intent = new Intent(mContext, pClass);
 				intent.putExtra(Cobalt.kExtras, bundle);
+                intent.putExtra(Cobalt.kPopAsModal, true);
 
 				NavUtils.navigateUpTo((Activity) mContext, intent);
 			}

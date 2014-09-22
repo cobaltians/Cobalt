@@ -71,6 +71,8 @@ public class Cobalt {
     public final static String kExtras = "extras";
     public final static String kPage = "page";
     private final static String kActivity = "activity";
+    public final static String kPopAsModal = "popAsModal";
+    public final static String kPushAsModal = "pushAsModal";
     public final static String kPullToRefresh = "pullToRefresh";
     public final static String kInfiniteScroll = "infiniteScroll";
     public final static String kSwipe = "swipe";
