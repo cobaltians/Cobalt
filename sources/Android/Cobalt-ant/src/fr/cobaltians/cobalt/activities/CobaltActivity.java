@@ -33,7 +33,6 @@ import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.R;
 import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -49,8 +48,9 @@ import org.json.JSONObject;
 public abstract class CobaltActivity extends ActionBarActivity {
 
     protected static final String TAG = CobaltActivity.class.getSimpleName();
+    private static boolean sWasPushedFromModal = false;
 
-    private boolean mIsModal;
+    private boolean mWasPushedAsModal;
 
     /***************************************************************************************************************
 	 * LIFECYCLE
@@ -70,10 +70,16 @@ public abstract class CobaltActivity extends ActionBarActivity {
                 if (bundle != null) {
                     if (bundle.containsKey(Cobalt.kExtras)) fragment.setArguments(bundle.getBundle(Cobalt.kExtras));
 
-                    mIsModal = bundle.getBoolean(Cobalt.kPushAsModal, false);
-                    if (mIsModal) overridePendingTransition(R.anim.modal_open_enter, android.R.anim.fade_out);
-
-                    if (bundle.getBoolean(Cobalt.kPopAsModal, false)) overridePendingTransition(android.R.anim.fade_in, R.anim.modal_close_exit);
+                    mWasPushedAsModal = bundle.getBoolean(Cobalt.kPushAsModal, false);
+                    if (mWasPushedAsModal) {
+                        sWasPushedFromModal = true;
+                        overridePendingTransition(R.anim.modal_open_enter, android.R.anim.fade_out);
+                    }
+                    else if (bundle.getBoolean(Cobalt.kPopAsModal, false)) {
+                        sWasPushedFromModal = false;
+                        overridePendingTransition(android.R.anim.fade_in, R.anim.modal_close_exit);
+                    }
+                    else if (sWasPushedFromModal) overridePendingTransition(R.anim.modal_push_enter, R.anim.modal_push_exit);
                 }
                 if (findViewById(getFragmentContainerId()) != null) {
                     getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), fragment).commit();
@@ -88,7 +94,8 @@ public abstract class CobaltActivity extends ActionBarActivity {
     public void finish() {
         super.finish();
 
-        if (mIsModal) overridePendingTransition(android.R.anim.fade_in, R.anim.modal_close_exit);
+        if (mWasPushedAsModal) overridePendingTransition(android.R.anim.fade_in, R.anim.modal_close_exit);
+        else if (sWasPushedFromModal) overridePendingTransition(R.anim.modal_pop_enter, R.anim.modal_pop_exit);
     }
 
 	/*****************************************************************************************************************
