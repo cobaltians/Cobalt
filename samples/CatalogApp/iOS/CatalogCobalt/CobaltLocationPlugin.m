@@ -42,6 +42,15 @@
     [self sendErrorToWeb];
 }
 
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    NSLog(@"");
+    if(status == kCLAuthorizationStatusAuthorized) {
+        if(_locationManager.location) {
+            _sendToWeb = YES;
+            [self sendLocationToWeb: _locationManager.location];
+        }
+    }
+}
 
 - (void)sendLocationToWeb: (CLLocation *) location {
     if(!_sendToWeb)
@@ -71,5 +80,7 @@
         [_viewController sendMessage: data];
     }
 }
+
+
 
 @end
