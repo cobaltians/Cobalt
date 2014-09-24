@@ -17,7 +17,11 @@
         _locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters; // 100 m
         _locationManager.delegate = self;
         
-        [_locationManager startUpdatingLocation];
+        if([_locationManager respondsToSelector: @selector(requestWhenInUseAuthorization)]) {
+            [_locationManager requestWhenInUseAuthorization];
+        } else {
+            [_locationManager startUpdatingLocation];
+        }
     }
 	return self;
 }
@@ -27,9 +31,9 @@
     
     _sendToWeb = YES;
     
-    if([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorized) {
+    if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
         [self sendErrorToWeb];
-    } else if(_locationManager.location) {
+    } else if(_locationManager.location && ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusNotDetermined)) {
         [self sendLocationToWeb: _locationManager.location];
     }
 }
@@ -43,12 +47,15 @@
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-    NSLog(@"");
     if(status == kCLAuthorizationStatusAuthorized) {
         if(_locationManager.location) {
             _sendToWeb = YES;
             [self sendLocationToWeb: _locationManager.location];
         }
+    }
+    
+    if([_locationManager respondsToSelector: @selector(requestWhenInUseAuthorization)]) {
+        [_locationManager startUpdatingLocation];
     }
 }
 
@@ -72,7 +79,7 @@
     
     _sendToWeb = NO;
     
-    if([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorized) {
+    if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
         NSDictionary * data = @{ kJSType : kJSTypePlugin, kJSPluginName : @"location", kJSData : @{@"error": @YES, @"code": @"DISABLED", @"text" : @"Location detection has been disabled by user"}};
         [_viewController sendMessage: data];
     } else {
