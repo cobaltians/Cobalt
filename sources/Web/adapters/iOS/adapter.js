@@ -11,7 +11,7 @@ cobalt.ios_adapter={
         cobalt.platform="iOs";
 
         if (typeof CobaltWebCommunicationClass === "undefined"){
-            cobalt.log('Warning : CobaltWebCommunicationClass undefined. We probably are below ios7.')
+            cobalt.divLog('Warning : CobaltWebCommunicationClass undefined. We probably are below ios7.')
             cobalt.adapter.isBelowIOS7 = true;
         }else{
             cobalt.adapter.isBelowIOS7 = false;
