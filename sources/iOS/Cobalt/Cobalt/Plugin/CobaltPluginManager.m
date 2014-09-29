@@ -59,12 +59,18 @@ static CobaltPluginManager * instance = nil;
     NSString * pluginName = [data objectForKey: kJSPluginName];
     
     if([pluginName isKindOfClass: [NSString class]]) {
-        Class class = NSClassFromString([[_pluginsDictionary objectForKey: pluginName] objectForKey: kIos]);
+        NSString * className = [[_pluginsDictionary objectForKey: pluginName] objectForKey: kIos];
+        Class class = NSClassFromString(className);
         if(class)
         {
             CobaltAbstractPlugin * plugin = [class sharedInstanceWithCobaltViewController: viewController];
             [plugin onMessageFromCobaltController: viewController andData: data];
             return YES;
+        }
+        else {
+            #if DEBUG_COBALT
+            NSLog(@"\n***********\n%@ class not found\n***********\n", className);
+            #endif
         }
     }
     

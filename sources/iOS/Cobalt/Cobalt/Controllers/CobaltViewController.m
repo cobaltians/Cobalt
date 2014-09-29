@@ -357,14 +357,21 @@ NSString * webLayerPage;
             
             if (event &&
                 [event isKindOfClass:[NSString class]]) {
-#if DEBUG_COBALT
-                NSLog(@"handleDictionarySentByJavaScript: unhandled event %@", [dict description]);
-#endif
                 if (_delegate != nil
                     && [_delegate respondsToSelector:@selector(onUnhandledEvent:withData:andCallback:)]) {
-                    return [_delegate onUnhandledEvent:event withData:data andCallback:callback];
+                    BOOL toReturn = [_delegate onUnhandledEvent:event withData:data andCallback:callback];
+                    if(!toReturn) {
+#if DEBUG_COBALT
+                        NSLog(@"handleDictionarySentByJavaScript: unhandled event %@", [dict description]);
+#endif
+                    }
+                    
+                    return toReturn;
                 }
                 else {
+#if DEBUG_COBALT
+                    NSLog(@"handleDictionarySentByJavaScript: unhandled event %@", [dict description]);
+#endif
                     return NO;
                 }
             }
