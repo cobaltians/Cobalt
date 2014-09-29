@@ -1,7 +1,7 @@
 var app={
     debug:true,
     //debugInBrowser:true,
-    //debugInDiv:true,
+    debugInDiv:true,
 
     /* This code below, combined with the touch module of zepto helps in resolving issues
        with fastclick on android devices : some devices receive "tap" event before "click" and

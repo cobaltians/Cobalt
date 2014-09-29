@@ -29,6 +29,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import <JavaScriptCore/JavaScriptCore.h>
+
 #import "CobaltToast.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -131,6 +133,13 @@
 
 @end
 
+
+@protocol CobaltViewControllerJS <JSExport>
+
+- (BOOL)_handleDictionarySentByJavaScript:(NSString *)json;
+
+@end
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark INTERFACE
@@ -141,7 +150,7 @@
  @class			CobaltViewController
  @abstract		Base class for a webView controller that allows javascript/native dialogs
  */
-@interface CobaltViewController : UITableViewController <UIAlertViewDelegate, UIScrollViewDelegate, UIWebViewDelegate, CobaltToastDelegate>
+@interface CobaltViewController : UITableViewController <UIAlertViewDelegate, UIScrollViewDelegate, UIWebViewDelegate, CobaltToastDelegate, CobaltViewControllerJS>
 {
     // Javascript queues
     NSOperationQueue * toJavaScriptOperationQueue;

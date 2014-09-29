@@ -706,7 +706,7 @@ var cobalt={
     init:function(){
         cobalt.platform="iOs";
 
-        if (typeof CobaltWebCommunicationClass === "undefined"){
+        if (typeof cobaltViewController === "undefined"){
             cobalt.divLog('Warning : CobaltWebCommunicationClass undefined. We probably are below ios7.')
             cobalt.adapter.isBelowIOS7 = true;
         }else{
@@ -729,9 +729,9 @@ var cobalt={
             if (obj && !cobalt.debugInBrowser){
                 cobalt.divLog('sending',obj)
                 try{
-                    CobaltWebCommunicationClass.handleMessageSentByJavaScript(JSON.stringify(obj));
+                    cobaltViewController._handleDictionarySentByJavaScript(JSON.stringify(obj));
                 }catch (e){
-                    cobalt.log('ERROR : cant connect to native.')
+                    cobalt.log('ERROR : cant connect to native.' + e)
                 }
 
             }
