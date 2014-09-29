@@ -44,15 +44,17 @@ cobalt.ios_adapter={
     //datePicker stuff
     datePicker:{
         init:function(inputs){
-            inputs.each(function(){
-                var input=$(this);
-                var id=input.attr('id');
+			cobalt.utils.each(inputs, function(){
+                var input=this;
+                var id=cobalt.utils.attr(input, 'id');
 
-                var placeholder=input.attr('placeholder');
+                var placeholder=cobalt.utils.attr(input, 'placeholder');
                 if (placeholder){
-                    $('head').append('<style> #'+id+':before{ content:"'+placeholder+'"; '+cobalt.datePicker.placeholderStyles+' } #'+id+':focus:before,#'+id+'.not_empty:before{ content:none }</style>');
+                    cobalt.utils.append(document.head, '<style> #'+id+':before{ content:"'+placeholder+'"; '+cobalt.datePicker.placeholderStyles+' } #'+id+':focus:before,#'+id+'.not_empty:before{ content:none }</style>')
                 }
-                input.on('change keyup',cobalt.datePicker.updateFromValue);
+				
+                input.addEventListener('change',cobalt.datePicker.updateFromValue, false);
+				input.addEventListener('keyup',cobalt.datePicker.updateFromValue, false);
             });
         }
     },

@@ -31,8 +31,6 @@
 
 #import "CobaltToast.h"
 
-@class PullToRefreshTableHeaderView;
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark JAVASCRIPT KEYS
@@ -110,6 +108,11 @@
 // HTML
 #define defaultHtmlPage                     @"index.html"
 
+//PLUGIN
+#define kJSTypePlugin                       @"plugin"
+#define kJSPluginName                       @"name"
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark PROTOCOL
@@ -118,7 +121,10 @@
 
 @protocol CobaltDelegate <NSObject>
 
+@optional
 - (void)onCobaltIsReady;
+
+@required
 - (BOOL)onUnhandledMessage:(NSDictionary *)message;
 - (BOOL)onUnhandledEvent:(NSString *)event withData:(NSDictionary *)data andCallback:(NSString *)callback;
 - (BOOL)onUnhandledCallback:(NSString *)callback withData:(NSDictionary *)data;
@@ -135,14 +141,11 @@
  @class			CobaltViewController
  @abstract		Base class for a webView controller that allows javascript/native dialogs
  */
-@interface CobaltViewController : UIViewController <UIAlertViewDelegate, UIScrollViewDelegate, UIWebViewDelegate, CobaltToastDelegate>
+@interface CobaltViewController : UITableViewController <UIAlertViewDelegate, UIScrollViewDelegate, UIWebViewDelegate, CobaltToastDelegate>
 {
     // Javascript queues
     NSOperationQueue * toJavaScriptOperationQueue;
     NSOperationQueue * fromJavaScriptOperationQueue;
-    
-    // UI components
-    PullToRefreshTableHeaderView * pullToRefreshTableHeaderView;
     
 @private
     
@@ -177,12 +180,6 @@
 @property (strong, nonatomic) NSString * pageName;
 
 @property (strong, nonatomic) UIWebView * webLayer;
-
-/*!
- @property		pullToRefreshTableHeaderView
- @abstract		The pull to refresh table header view.
- */
-@property (nonatomic, strong) PullToRefreshTableHeaderView * pullToRefreshTableHeaderView;
 
 /*!
  @property		isPullToRefreshEnabled
@@ -223,15 +220,6 @@
  @param         page: the page file
  */
 - (void)loadPage:(NSString *)page inWebView:(UIWebView *)mWebView;
-
-/*!
- @method		+ (NSString *)stringWithContentsOfFile:(NSString *)path
- @abstract		this method returns the content of the file at path path.
- @param         path: the path where to find this file
- @return        the content of the specified file or nil if an error occured
- */
-+ (NSString *)stringWithContentsOfFile:(NSString *)path;
-
 
 
 /*!
@@ -306,11 +294,12 @@
  */
 - (void)refreshWebView;
 
+
 /*!
- @method		- (void)onPullToRefreshDidRefresh
- @abstract		Tells the web view it has been refreshed.
+ @method		- (void)customizeRefreshControlWithAttributedText:(NSAttributedString *)attributedText andTintColor: (UIColor *)tintColor
+ @abstract		customize native pull to refresh control
  */
-- (void)onPullToRefreshDidRefresh;
+- (void)customizeRefreshControlWithAttributedText:(NSAttributedString *)attributedText andTintColor: (UIColor *)tintColor;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -329,94 +318,6 @@
  */
 - (void)loadMoreContentInWebview;
 
-@end
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark INTERFACE
-#pragma mark -
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-typedef enum {
-    RefreshStateNormal = 0,
-    RefreshStatePulling,
-    RefreshStateLoading
-} RefreshState;
-
-/*!
- @class			PullToRefreshTableHeaderView
- @abstract		Class for header of table view that pull to refresh.
- */
-@interface PullToRefreshTableHeaderView : UIView {
-    CGFloat loadingHeight;
-    UIActivityIndicatorView * progressView;
-    UIImageView * arrowImageView;
-    UILabel * lastUpdatedLabel;
-    UILabel * statusLabel;
-    RefreshState state;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark PROPERTIES
-#pragma mark -
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*!
- @property		loadingHeight
- @abstract		The view heigh when in loading state.
- */
-@property (nonatomic, assign) CGFloat loadingHeight;
-
-/*!
- @property		progressView
- @abstract		The progress view.
- */
-@property (nonatomic, retain) UIActivityIndicatorView * progressView;
-
-/*!
- @property		arrowImageView
- @abstract		The arrow image view.
- */
-@property (nonatomic, retain) UIImageView * arrowImageView;
-
-/*!
- @property		lastUpdatedLabel
- @abstract		The last updated label.
- */
-@property (nonatomic, retain)  UILabel * lastUpdatedLabel;
-
-/*!
- @property		statusLabel
- @abstract		The status label.
- */
-@property (nonatomic, retain) UILabel * statusLabel;
-
-/*!
- @property		state
- @abstract		The refresh state.
- */
-@property (nonatomic, assign) RefreshState state;
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark METHODS
-#pragma mark -
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*!
- @method		- (void)setLastUpdated:(NSString *)lastUpdated
- @abstract		Sets the last updated text.
- @param         lastUpdated The last updated text to set.
- */
-- (void)setLastUpdated:(NSString *)lastUpdated;
-
-/*!
- @method		- (NSString *)textForState:(RefreshState)newState
- @abstract		Sets the text for the status label depending on the newState given
- @param         newState The new state applied to the pullToRefreshTableHeaderView
- @return        a NSString containing the string to display for the given mode.
- @discussion    This method may be overriden in subclasses.
- */
-- (NSString *)textForState:(RefreshState)newState;
 @end
 
 

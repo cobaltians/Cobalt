@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+    </head>
+    <body class="green">
+
+        <div class="block">
+            <p>This infiniteScroll page contains a list that grows when the user hits the bottom of the page</p>
+
+            <p>So scroll to infinite and beyond!</p>
+
+            <p>Your view in cobalt.conf should have infiniteScroll set to true. Otherwise it won't work.<br/>
+                Below is a link to the same page but with infiniteScroll disabled. It should do nothing when hitting the bottom.</p>
+
+            <a class="push" href="javascript:;" data-href="infinitescroll.html" data-classid="infiniteScrollNonActive">infiniteScroll disabled</a>
+        </div>
+        <div class="block">
+            <p>This page uses infiniteScroll AND pullToRefresh together. So slide up and down.</p>
+
+            <a class="push" href="javascript:;" data-href="pulltorefresh_&_infinitescroll.html" data-classid="PTR_and_IfiniteScroll">PullToRefresh and InfiniteScroll</a>
+        </div>
+
+        <div id="list">
+
+        </div><a href="ajax.html" id="" title="ajax">ajax</a>
+        <p id="loading"  style="padding:10px; text-align:center; display:none;">Loading...</p>
+
+
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="../platform/cobalt.js"></script>
+        <script type="text/javascript" src="js/setTimeoutWorkaround.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+
+        <script>
+
+            var someListItems='<div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div><div class="listItem"><div class="num">#21454</div><div class="name">John Doe</div></div>'
+
+            Zepto(function($){
+
+                cobalt.init({
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInDiv:app.debugInDiv,
+                    events:{
+                        "infiniteScroll" : function(data, callback){
+                            cobalt.log('native asked to load more content');
+                            $('#loading').show();
+                            setTimeout(function(){
+                                $('#loading').hide();
+                                $('#list').append( someListItems );
+                                cobalt.sendCallback(callback);
+                            },1000, true);
+                        }
+                    }
+                });
+
+                app.initPage('Infinite scroll');
+
+                while($("body").height() <= $(window).height()){
+                    $('#list').append( someListItems );
+                }
+
+            })
+
+        </script>
+
+    </body>
+</html>

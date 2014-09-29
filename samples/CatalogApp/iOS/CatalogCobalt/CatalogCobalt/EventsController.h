@@ -7,8 +7,9 @@
 //
 
 #import "CobaltViewController.h"
+#import "SimpleController.h"
 
-@interface EventsController : CobaltViewController<CobaltDelegate>
+@interface EventsController : SimpleController <CobaltDelegate>
 
 @property (strong, nonatomic) IBOutlet UIButton * zoomOutButton;
 @property (strong, nonatomic) IBOutlet UIButton * zoomInButton;

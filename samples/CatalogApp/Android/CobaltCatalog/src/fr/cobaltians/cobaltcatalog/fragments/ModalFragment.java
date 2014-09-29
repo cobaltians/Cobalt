@@ -1,26 +1,23 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
-import org.json.JSONObject;
-
 import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
-public class ModalFragment extends CobaltFragment {
+import org.json.JSONObject;
 
-	// unhandled JS messages
-	@Override
-	protected void onUnhandledMessage(JSONObject message) { }
-	@Override
-	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
-		return false;
-	}
-	@Override
-	protected boolean onUnhandledCallback(String name, JSONObject data) {
-		return false;
-	}
-	@Override
-	protected void onPullToRefreshRefreshed() {
-	}
-	@Override
-	protected void onInfiniteScrollRefreshed() {		
-	}
+public class ModalFragment extends AbstractFragment {
+
+    @Override
+    protected boolean onUnhandledCallback(String callback, JSONObject data) {
+        return false;
+    }
+
+    @Override
+    protected boolean onUnhandledEvent(String event, JSONObject data, String callback) {
+        if (super.onUnhandledEvent(event, data, callback)) return true;
+        else return false;
+    }
+
+    @Override
+    protected void onUnhandledMessage(JSONObject message) { }
 }
+

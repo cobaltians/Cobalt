@@ -1,19 +1,15 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
-import fr.cobaltians.cobaltcatalog.R;
 import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
 import org.json.JSONObject;
 
-public class PullToRefreshFragment extends CobaltFragment {
-
-    protected int getLayoutToInflate() {
-        return R.layout.ptr_rotating_fragment;
-    }
+public class PullToRefreshFragment extends AbstractFragment {
 
 	@Override
 	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
-		return false;
+        if (super.onUnhandledEvent(name, data, callback)) return true;
+        else return false;
 	}
 
 	@Override
@@ -22,17 +18,5 @@ public class PullToRefreshFragment extends CobaltFragment {
 	}
 
     @Override
-    protected void onUnhandledMessage(JSONObject message) {
-
-    }
-
-    @Override
-    protected void onPullToRefreshRefreshed() {
-
-    }
-
-    @Override
-    protected void onInfiniteScrollRefreshed() {
-
-    }
+    protected void onUnhandledMessage(JSONObject message) { }
 }

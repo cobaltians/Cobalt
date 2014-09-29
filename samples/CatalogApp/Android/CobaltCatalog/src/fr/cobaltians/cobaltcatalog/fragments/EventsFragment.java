@@ -16,7 +16,7 @@ import android.widget.Button;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class EventsFragment extends CobaltFragment {
+public class EventsFragment extends AbstractFragment {
 
     // ZOOM
     protected final static String JSNameSetZoom = "setZoom";
@@ -102,7 +102,8 @@ public class EventsFragment extends CobaltFragment {
 	protected void onUnhandledMessage(JSONObject message) { }
 	@Override
 	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
-		if(name.equals(JSNameHello)) {
+        if (super.onUnhandledEvent(name, data, callback)) return true;
+        else if(name.equals(JSNameHello)) {
             AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
             alert.setMessage("hello world");
             AlertDialog mAlert = alert.create();

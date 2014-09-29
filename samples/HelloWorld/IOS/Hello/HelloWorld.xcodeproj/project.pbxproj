@@ -13,7 +13,6 @@
 		67A4433018649B3400F5C301 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A4432F18649B3400F5C301 /* XCTest.framework */; };
 		67A4433118649B3400F5C301 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A4430D18649B3400F5C301 /* Foundation.framework */; };
 		67A4433218649B3400F5C301 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A4431118649B3400F5C301 /* UIKit.framework */; };
-		67A4436618649C9000F5C301 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 67A4436518649C9000F5C301 /* www */; };
 		71B4B1CA1885C8DF0027AC4F /* Cobalt.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1B71885C8DF0027AC4F /* Cobalt.m */; };
 		71B4B1CD1885C8DF0027AC4F /* CobaltViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1BE1885C8DF0027AC4F /* CobaltViewController.m */; };
 		71B4B1D01885C8DF0027AC4F /* iToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1C41885C8DF0027AC4F /* iToast.m */; };
@@ -29,6 +28,10 @@
 		8E0133091920F4CD0015682B /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E0132EE1920F47F0015682B /* Main_iPhone.storyboard */; };
 		8E01330D1920F81A0015682B /* HelloWorldTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E01330C1920F81A0015682B /* HelloWorldTests.m */; };
 		8E0133111920FF080015682B /* CobaltViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8E0133101920FF080015682B /* CobaltViewController.xib */; };
+		8EF28A301982AABA00097AF4 /* CobaltAbstractPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EF28A2B1982AABA00097AF4 /* CobaltAbstractPlugin.m */; };
+		8EF28A321982AABA00097AF4 /* CobaltPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EF28A2F1982AABA00097AF4 /* CobaltPluginManager.m */; };
+		F0FB6E4419B4803900021401 /* platform in Resources */ = {isa = PBXBuildFile; fileRef = F0FB6E4319B4803900021401 /* platform */; };
+		F0FB6E4619B4804100021401 /* common in Resources */ = {isa = PBXBuildFile; fileRef = F0FB6E4519B4804100021401 /* common */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,7 +51,6 @@
 		67A4431118649B3400F5C301 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		67A4432E18649B3400F5C301 /* HelloWorldTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HelloWorldTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		67A4432F18649B3400F5C301 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		67A4436518649C9000F5C301 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = "<group>"; };
 		71B4B1B51885C8DF0027AC4F /* Cobalt-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Cobalt-Prefix.pch"; sourceTree = "<group>"; };
 		71B4B1B61885C8DF0027AC4F /* Cobalt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cobalt.h; sourceTree = "<group>"; };
 		71B4B1B71885C8DF0027AC4F /* Cobalt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cobalt.m; sourceTree = "<group>"; };
@@ -73,6 +75,12 @@
 		8E0133031920F4890015682B /* HelloWorldTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "HelloWorldTests-Info.plist"; sourceTree = "<group>"; };
 		8E01330C1920F81A0015682B /* HelloWorldTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelloWorldTests.m; sourceTree = "<group>"; };
 		8E0133101920FF080015682B /* CobaltViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CobaltViewController.xib; sourceTree = "<group>"; };
+		8EF28A2A1982AABA00097AF4 /* CobaltAbstractPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltAbstractPlugin.h; sourceTree = "<group>"; };
+		8EF28A2B1982AABA00097AF4 /* CobaltAbstractPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltAbstractPlugin.m; sourceTree = "<group>"; };
+		8EF28A2E1982AABA00097AF4 /* CobaltPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltPluginManager.h; sourceTree = "<group>"; };
+		8EF28A2F1982AABA00097AF4 /* CobaltPluginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltPluginManager.m; sourceTree = "<group>"; };
+		F0FB6E4319B4803900021401 /* platform */ = {isa = PBXFileReference; lastKnownFileType = folder; name = platform; path = www/platform; sourceTree = "<group>"; };
+		F0FB6E4519B4804100021401 /* common */ = {isa = PBXFileReference; lastKnownFileType = folder; name = common; path = www/common; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,7 +110,8 @@
 		67A4430118649B3400F5C301 = {
 			isa = PBXGroup;
 			children = (
-				67A4436518649C9000F5C301 /* www */,
+				F0FB6E4519B4804100021401 /* common */,
+				F0FB6E4319B4803900021401 /* platform */,
 				8E0132E91920F47F0015682B /* HelloWorld */,
 				8E0133001920F4890015682B /* HelloWorldTests */,
 				67A4430C18649B3400F5C301 /* Frameworks */,
@@ -134,6 +143,7 @@
 		71B4B1B41885C8DF0027AC4F /* Cobalt */ = {
 			isa = PBXGroup;
 			children = (
+				8EF28A291982AABA00097AF4 /* Plugin */,
 				71B4B1B51885C8DF0027AC4F /* Cobalt-Prefix.pch */,
 				71B4B1B61885C8DF0027AC4F /* Cobalt.h */,
 				71B4B1B71885C8DF0027AC4F /* Cobalt.m */,
@@ -200,6 +210,17 @@
 				8E0132F51920F47F0015682B /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8EF28A291982AABA00097AF4 /* Plugin */ = {
+			isa = PBXGroup;
+			children = (
+				8EF28A2A1982AABA00097AF4 /* CobaltAbstractPlugin.h */,
+				8EF28A2B1982AABA00097AF4 /* CobaltAbstractPlugin.m */,
+				8EF28A2E1982AABA00097AF4 /* CobaltPluginManager.h */,
+				8EF28A2F1982AABA00097AF4 /* CobaltPluginManager.m */,
+			);
+			path = Plugin;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -280,11 +301,12 @@
 			files = (
 				8E0133081920F4CD0015682B /* Main_iPad.storyboard in Resources */,
 				8E0133091920F4CD0015682B /* Main_iPhone.storyboard in Resources */,
-				67A4436618649C9000F5C301 /* www in Resources */,
 				8E0133051920F4890015682B /* InfoPlist.strings in Resources */,
 				8E0132FB1920F47F0015682B /* InfoPlist.strings in Resources */,
 				8E0133111920FF080015682B /* CobaltViewController.xib in Resources */,
+				F0FB6E4419B4803900021401 /* platform in Resources */,
 				8E0133061920F4890015682B /* HelloWorldTests-Info.plist in Resources */,
+				F0FB6E4619B4804100021401 /* common in Resources */,
 				8E0132FD1920F47F0015682B /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -304,7 +326,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8E0132FF1920F47F0015682B /* ViewController.m in Sources */,
+				8EF28A301982AABA00097AF4 /* CobaltAbstractPlugin.m in Sources */,
 				71B4B1CA1885C8DF0027AC4F /* Cobalt.m in Sources */,
+				8EF28A321982AABA00097AF4 /* CobaltPluginManager.m in Sources */,
 				71B4B1D01885C8DF0027AC4F /* iToast.m in Sources */,
 				71B4B1D11885C8DF0027AC4F /* CobaltToast.m in Sources */,
 				71B4B1CD1885C8DF0027AC4F /* CobaltViewController.m in Sources */,
@@ -451,6 +475,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HelloWorld/HelloWorld-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/HelloWorld/HelloWorld-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = HelloWorld;
 				WRAPPER_EXTENSION = app;
 			};
@@ -468,6 +493,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HelloWorld/HelloWorld-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/HelloWorld/HelloWorld-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = HelloWorld;
 				WRAPPER_EXTENSION = app;
 			};

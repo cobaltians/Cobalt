@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+	        <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
+    </head>
+    <body class="red">
+
+        <div class="block">
+            <p>The dismiss button always gets back to the state you had before opening the modal. Whatever you pushed in it since then.</p>
+
+            <a href="javascript:;" class="dismiss">DISMISS</a>
+        </div>
+
+		<div class="block">
+
+            <p>If you came from Modal content 1, you should be able to pop.</p>
+            <p>Below you can push again modal content 1.</p>
+            <a class="push" href="javascript:;" data-href="modal_content_1.html">Modal content 1</a>
+		</div>
+
+		<script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="../platform/cobalt.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+
+
+		<script>
+            
+            Zepto(function($){
+
+                cobalt.init({
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInDiv:app.debugInDiv
+                });
+
+
+                app.initPage('Modal content 2');
+
+            })
+
+        </script>
+        
+    </body>
+</html>

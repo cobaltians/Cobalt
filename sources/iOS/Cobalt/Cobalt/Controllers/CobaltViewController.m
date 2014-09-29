@@ -32,14 +32,8 @@
 #import "Cobalt.h"
 #import "iToast.h"
 
-#define haploidSpecialJSKey     @"cob@l7#k&y"
+#import "CobaltPluginManager.h"
 
-// CONFIGURATION FILE
-#define confFileName            @"cobalt.conf"
-#define kIosController          @"iosController"
-#define kIosNibName             @"iosNibName"
-#define kPullToRefreshEnabled   @"pullToRefresh"
-#define kInfiniteScrollEnabled  @"infiniteScroll"
 @interface CobaltViewController ()
 /*!
  @method		+(void) executeScriptInWebView:(UIWebView *)mWebView withDictionary:(NSDictionary *)dict
@@ -58,7 +52,6 @@
             isPullToRefreshEnabled,
             pageName,
             webLayer,
-            pullToRefreshTableHeaderView,
             webView;
 
 NSMutableDictionary * alertCallbacks;
@@ -100,24 +93,19 @@ NSString * webLayerPage;
     
     // Add pull-to-refresh table header view
     if (isPullToRefreshEnabled) {
-        [self customPullToRefreshDefaultView];
+        UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
         
-        pullToRefreshTableHeaderView.state = RefreshStateNormal;
-        pullToRefreshTableHeaderView.loadingHeight = pullToRefreshTableHeaderView.frame.size.height;
-        pullToRefreshTableHeaderView.frame = CGRectMake(0.0, -self.webView.bounds.size.height,
-                                                        self.webView.bounds.size.width, self.webView.bounds.size.height);
+        [refresh addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
         
-        if(pullToRefreshTableHeaderView) {
-            [webView.scrollView addSubview:pullToRefreshTableHeaderView];
-        }
-#if DEBUG_COBALT
-        else {
-            NSLog(@"WARNING: no pullToRefreshTableHeaderView set!");
-        }
-#endif
+        self.refreshControl = refresh;
+
+        [self customizeRefreshControlWithAttributedRefreshText: [[NSAttributedString alloc] initWithString:@"Pull to refresh"] andAttributedRefreshText: [[NSAttributedString alloc] initWithString:@"Refreshing"] andTintColor: [UIColor grayColor]];
     }
     
     [webView.scrollView setDelegate:self];
+    
+    if(!self.isPullToRefreshEnabled)
+        [self.tableView setScrollEnabled: NO];
     
     [self loadPage:pageName inWebView:webView];
 }
@@ -127,53 +115,17 @@ NSString * webLayerPage;
     [super viewWillAppear:animated];
 }
 
-- (void)viewDidUnload
-{
-    pullToRefreshTableHeaderView = nil;
-    
-    [webView.scrollView setDelegate:nil];
-    webView.delegate = nil;
-    [self setWebView:nil];
-    
-    [self setActivityIndicator:nil];
-    
-    toJavaScriptOperationQueue = nil;
-    
-    [super viewDidUnload];
-}
-
 - (void)dealloc
 {
     toJavaScriptOperationQueue = nil;
     fromJavaScriptOperationQueue = nil;
-    pullToRefreshTableHeaderView = nil;
     _delegate = nil;
     webView = nil;
     activityIndicator = nil;
     pageName = nil;
     webLayer = nil;
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    if (pullToRefreshTableHeaderView
-        && pullToRefreshTableHeaderView.superview) {
-        [pullToRefreshTableHeaderView setHidden: YES];
-    }
     
-    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-    if (pullToRefreshTableHeaderView
-        && pullToRefreshTableHeaderView.superview) {
-        [pullToRefreshTableHeaderView setHidden: NO];
-        pullToRefreshTableHeaderView.frame = CGRectMake(0.0, -self.webView.bounds.size.height,
-                                                        self.webView.bounds.size.width, self.webView.bounds.size.height);
-    }
-    
-    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    [[NSNotificationCenter defaultCenter] postNotificationName: viewControllerDeallocatedNotification  object: self];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -194,30 +146,6 @@ NSString * webLayerPage;
     
 }
 
--(void) customPullToRefreshDefaultView
-{
-    if (! pullToRefreshTableHeaderView) {
-        CGRect frame = CGRectMake(0.0, 0.0,
-                                  webView.bounds.size.width, 60.0);
-        pullToRefreshTableHeaderView = [[PullToRefreshTableHeaderView alloc] initWithFrame:frame];
-        [pullToRefreshTableHeaderView setAutoresizingMask:UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin];
-        
-        pullToRefreshTableHeaderView.statusLabel = [[UILabel alloc] initWithFrame:frame];
-        [pullToRefreshTableHeaderView.statusLabel setTextAlignment:NSTextAlignmentCenter];
-        [pullToRefreshTableHeaderView.statusLabel setTextColor:[UIColor blackColor]];
-        [pullToRefreshTableHeaderView.statusLabel setBackgroundColor:[UIColor clearColor]];
-        [pullToRefreshTableHeaderView.statusLabel setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleLeftMargin];
-        [pullToRefreshTableHeaderView addSubview:pullToRefreshTableHeaderView.statusLabel];
-        
-        pullToRefreshTableHeaderView.progressView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        [pullToRefreshTableHeaderView.progressView setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin];
-        [pullToRefreshTableHeaderView.progressView setColor:[UIColor blackColor]];
-        [pullToRefreshTableHeaderView.progressView setFrame:CGRectMake(0, 0,
-                                                                       60, 60)];
-        [pullToRefreshTableHeaderView addSubview:pullToRefreshTableHeaderView.progressView];
-    }
-}
-
 - (void)loadPage:(NSString *)page inWebView:(UIWebView *)mWebView
 {
     NSURL * fileURL = [NSURL fileURLWithPath:[[Cobalt resourcePath] stringByAppendingPathComponent:page]];
@@ -227,7 +155,7 @@ NSString * webLayerPage;
 
 + (NSDictionary *)getConfigurationForController:(NSString *)controller
 {
-    NSDictionary * configuration = [CobaltViewController getConfiguration];
+    NSDictionary * configuration = [Cobalt getControllersConfiguration];
     if (configuration) {
         if (controller) {
             NSDictionary * controllerConfiguration = [configuration objectForKey:controller];
@@ -259,56 +187,6 @@ NSString * webLayerPage;
     }
     
     return nil;
-}
-
-+ (NSDictionary *)getConfiguration
-{
-    NSString * configuration = [CobaltViewController stringWithContentsOfFile:[NSString stringWithFormat:@"%@%@", [Cobalt resourcePath], confFileName]];
-    if (configuration) {
-        return [CobaltViewController JSONObjectWithString:configuration];
-    }
-    else {
-        return nil;
-    }
-}
-
-+ (NSString *)stringWithContentsOfFile:(NSString *)path
-{
-    if (path != nil) {
-        NSURL * url = [NSURL fileURLWithPath:path isDirectory:NO];
-        NSError * error;
-        NSString * content = [[NSString alloc] initWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
-
-    #if DEBUG_COBALT
-        if (! content) {
-            NSLog(@"stringWithContentsOfFile: Error while reading file at %@\n%@", url, [error localizedFailureReason]);
-        }
-    #endif
-        
-        return content;
-    }
-    else {
-#if DEBUG_COBALT
-        NSLog(@"stringWithContentsOfFile: path is nil");
-#endif
-        return nil;
-    }
-}
-
-+ (id)JSONObjectWithString:(NSString *)string
-{
-    NSError * error;
-    NSData * data = [string dataUsingEncoding:NSUTF8StringEncoding];
-    
-    id dictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-    
-#if DEBUG_COBALT
-    if (! dictionary) {
-        NSLog(@"JSONObjectWithString: Error while reading JSON %@\n%@", string, [error localizedFailureReason]);
-    }
-#endif
-    
-    return dictionary;
 }
 
 - (void)executeScriptInWebView:(UIWebView *)mWebView withDictionary:(NSDictionary *)dict
@@ -430,7 +308,9 @@ NSString * webLayerPage;
             if (callback
                 && [callback isKindOfClass:[NSString class]]) {
                 if ([callback isEqualToString:JSCallbackPullToRefreshDidRefresh]) {
-                    [self onPullToRefreshDidRefresh];
+                    [self.refreshControl endRefreshing];
+                    self.refreshControl.attributedTitle = _ptrRefreshText;
+                    _isRefreshing = NO;
                 }
                 else if ([callback isEqualToString:JSCallbackInfiniteScrollDidRefresh]) {
                     [self onInfiniteScrollDidRefresh];
@@ -477,14 +357,21 @@ NSString * webLayerPage;
             
             if (event &&
                 [event isKindOfClass:[NSString class]]) {
-#if DEBUG_COBALT
-                NSLog(@"handleDictionarySentByJavaScript: unhandled event %@", [dict description]);
-#endif
                 if (_delegate != nil
                     && [_delegate respondsToSelector:@selector(onUnhandledEvent:withData:andCallback:)]) {
-                    return [_delegate onUnhandledEvent:event withData:data andCallback:callback];
+                    BOOL toReturn = [_delegate onUnhandledEvent:event withData:data andCallback:callback];
+                    if(!toReturn) {
+#if DEBUG_COBALT
+                        NSLog(@"handleDictionarySentByJavaScript: unhandled event %@", [dict description]);
+#endif
+                    }
+                    
+                    return toReturn;
                 }
                 else {
+#if DEBUG_COBALT
+                    NSLog(@"handleDictionarySentByJavaScript: unhandled event %@", [dict description]);
+#endif
                     return NO;
                 }
             }
@@ -678,6 +565,10 @@ NSString * webLayerPage;
                 }
             }
         }
+        // PLUGIN
+        else if ([type isEqualToString: kJSTypePlugin]) {
+            [[CobaltPluginManager sharedInstance] onMessageFromCobaltViewController: self andData: dict];
+        }
         else {
 #if DEBUG_COBALT
             NSLog(@"handleDictionarySentByJavaScript: unhandled message %@", [dict description]);
@@ -705,6 +596,13 @@ NSString * webLayerPage;
     }
     
     return YES;
+}
+
+- (void) sendMessage:(NSDictionary *) message {
+    if (message != nil) [self executeScriptInWebView:webView withDictionary:message];
+#if DEBUG_COBALT
+    else NSLog(@"sendMessage: message is nil!");
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -787,7 +685,7 @@ NSString * webLayerPage;
     NSDictionary * configuration = [CobaltViewController getConfigurationForController:controller];
     
     if (configuration) {
-        NSString * class = [configuration objectForKey:kIosController];
+        NSString * class = [configuration objectForKey: kIos];
         NSString * nib = [configuration objectForKey:kIosNibName];
         BOOL pullToRefreshEnabled = [[configuration objectForKey:kPullToRefreshEnabled] boolValue];
         BOOL infiniteScrollEnabled = [[configuration objectForKey:kInfiniteScrollEnabled] boolValue];
@@ -892,7 +790,7 @@ NSString * webLayerPage;
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSString * callback = [alertCallbacks objectForKey:[NSString stringWithFormat:@"%d", alertView.tag]];
+    NSString * callback = [alertCallbacks objectForKey:[NSString stringWithFormat:@"%ld", (long)alertView.tag]];
     
     if (callback
         && [callback isKindOfClass:[NSString class]]) {
@@ -989,7 +887,7 @@ NSString * webLayerPage;
     NSRange range = [requestURL rangeOfString:haploidSpecialJSKey];
     if (range.location != NSNotFound) {
         NSString * json = [requestURL substringFromIndex:range.location + haploidSpecialJSKey.length];
-        NSDictionary * jsonObj = [CobaltViewController JSONObjectWithString:json];
+        NSDictionary * jsonObj = [Cobalt JSONObjectWithString:json];
         
         [fromJavaScriptOperationQueue addOperationWithBlock:^{
             dispatch_sync(dispatch_get_main_queue(), ^{
@@ -1074,49 +972,11 @@ NSString * webLayerPage;
 - (void)scrollViewDidScroll:(UIScrollView *)_scrollView
 {
     if (_scrollView.isDragging) {
-        if (isPullToRefreshEnabled
-            && pullToRefreshTableHeaderView
-            && pullToRefreshTableHeaderView.superview) {
-            
-                if (pullToRefreshTableHeaderView.state == RefreshStatePulling
-                    && _scrollView.contentOffset.y > -65.0
-                    && webView.scrollView.contentOffset.y < 0.0
-                    && ! _isRefreshing) {
-                    pullToRefreshTableHeaderView.state = RefreshStateNormal;
-                }
-                else if (pullToRefreshTableHeaderView.state == RefreshStateNormal
-                         && _scrollView.contentOffset.y < -65.0
-                         && ! _isRefreshing) {
-                    pullToRefreshTableHeaderView.state = RefreshStatePulling;
-                }
-        }
-        
         if (isInfiniteScrollEnabled) {
             if (webView.scrollView.contentOffset.y > (_scrollView.contentSize.height - _scrollView.frame.size.height)
                && !_isLoadingMore){
                 [self loadMoreItems];
             }
-        }
-    }
-}
-
-//*******************
-// DID END DRAGGING *
-//*******************
-/*!
- @method        - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
- @abstract      Tells the delegate when dragging ended in the scroll view.
- @param         scrollView  The scroll-view object that finished scrolling the content view.
- @param         decelerate  YES if the scrolling movement will continue, but decelerate, after a touch-up gesture during a dragging operation.
- */
-- (void)scrollViewDidEndDragging:(UIScrollView *)_scrollView willDecelerate:(BOOL)decelerate
-{
-    if (isPullToRefreshEnabled
-        && pullToRefreshTableHeaderView
-        && pullToRefreshTableHeaderView.superview) {
-        if (_scrollView.contentOffset.y <= -65.0
-            && ! _isRefreshing) {
-            [self refresh];
         }
     }
 }
@@ -1136,13 +996,8 @@ NSString * webLayerPage;
 - (void)refresh {
     if (isPullToRefreshEnabled) {
         _isRefreshing = YES;
-        pullToRefreshTableHeaderView.state = RefreshStateLoading;
         
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:0.2];
-        webView.scrollView.contentInset = UIEdgeInsetsMake(pullToRefreshTableHeaderView.loadingHeight, 0.0f,
-                                                           0.0f, 0.0f);
-        [UIView commitAnimations];
+        self.refreshControl.attributedTitle = _ptrRefreshingText;
         
         [self refreshWebView];
     }
@@ -1160,35 +1015,17 @@ NSString * webLayerPage;
     [self sendEvent:JSEventPullToRefresh withData:nil andCallback:JSCallbackPullToRefreshDidRefresh];
 }
 
-//**************
-// DID REFRESH *
-//**************
-/*!
- @method		- (void)onPullToRefreshDidRefresh
- @abstract		Tells the table view it has been refreshed.
- */
-- (void)onPullToRefreshDidRefresh {
-    _isRefreshing = NO;
-    
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.3];
-    [UIView setAnimationDelegate:self];
-    [UIView setAnimationDidStopSelector:@selector(onPullToRefreshDidStop)];
-    webView.scrollView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f,
-                                                       0.0f, 0.0f);
-	[UIView commitAnimations];
-}
 
-//***********
-// DID STOP *
-//***********
 /*!
- @method		- (void)onPullToRefreshDidStop
- @abstract		Tells the table view the refresh animation has stopped.
+ @method		- (void)customizeRefreshControlWithAttributedRefreshText:(NSAttributedString *)attributedRefreshText andAttributedRefreshText:(NSAttributedString *)attributedRefreshingText andTintColor: (UIColor *)tintColor;
+ @abstract		customize native pull to refresh control
  */
-- (void)onPullToRefreshDidStop
-{
-    pullToRefreshTableHeaderView.state = RefreshStateNormal;
+- (void)customizeRefreshControlWithAttributedRefreshText:(NSAttributedString *)attributedRefreshText andAttributedRefreshText:(NSAttributedString *)attributedRefreshingText andTintColor: (UIColor *)tintColor {
+    _ptrRefreshText = attributedRefreshText;
+    _ptrRefreshingText = attributedRefreshingText;
+    
+    self.refreshControl.attributedTitle = attributedRefreshText;
+    self.refreshControl.tintColor = tintColor;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1214,127 +1051,5 @@ NSString * webLayerPage;
 {
     _isLoadingMore = NO;
 }
-
-@end
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark IMPLEMENTATION
-#pragma mark -
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-@implementation PullToRefreshTableHeaderView
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark PROPERTIES
-#pragma mark -
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-@synthesize arrowImageView,
-            lastUpdatedLabel,
-            loadingHeight,
-            progressView,
-            state,
-            statusLabel;
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark METHODS
-#pragma mark -
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-- (void)dealloc
-{
-    progressView = nil;
-    arrowImageView = nil;;
-    lastUpdatedLabel = nil;
-    statusLabel = nil;
-}
-
-//*******************
-// SET LAST UPDATED *
-//*******************
-/*!
- @method		- (void)setLastUpdated:(NSString *)lastUpdated
- @abstract		Sets the last updated text.
- @param         lastUpdated The last updated text to set.
- */
-- (void)setLastUpdated:(NSString *)lastUpdated
-{
-    lastUpdatedLabel.text = lastUpdated;
-}
-
-//************
-// SET STATE *
-//************
-/*!
- @method		- (void)setState:(RefreshState)newState
- @abstract		Sets the refresh state.
- @param         newState    The refresh state to set.
- */
-- (void)setState:(RefreshState)newState
-{
-    switch (newState) {
-        case RefreshStateNormal:
-            if (state == RefreshStatePulling) {
-                [UIView beginAnimations:nil context:nil];
-                [UIView setAnimationDuration:0.2];
-                arrowImageView.transform = CGAffineTransformIdentity;
-                [UIView commitAnimations];
-            }
-            statusLabel.text = [self textForState:newState];
-            [progressView stopAnimating];
-            arrowImageView.hidden = NO;
-            arrowImageView.transform = CGAffineTransformIdentity;
-            break;
-        case RefreshStatePulling:
-            statusLabel.text = [self textForState:newState];
-            [UIView beginAnimations:nil context:nil];
-            [UIView setAnimationDuration:0.2];
-            arrowImageView.transform = CGAffineTransformMakeRotation(M_PI);
-            [UIView commitAnimations];
-            break;
-        case RefreshStateLoading:
-            statusLabel.text = [self textForState:newState];
-            [progressView startAnimating];
-            arrowImageView.hidden = YES;
-            break;
-        default:
-            break;
-    }
-    
-    state = newState;
-}
-
-//************
-// SET TEXT FOR STATE *
-//************
-/*!
- @method		- (NSString *)textForState:(RefreshState)newState
- @abstract		Sets the text for the status label depending on the newState given
- @param         newState The new state applied to the pullToRefreshTableHeaderView
- @return        a NSString containing the string to display for the given mode.
- @discussion    This method may be overriden in subclasses.
- */
-- (NSString *)textForState:(RefreshState)newState
-{
-    switch (newState) {
-        case RefreshStateNormal:
-            return NSLocalizedString(@"Pull to refresh...", nil);
-            break;
-        case RefreshStatePulling:
-            return NSLocalizedString(@"Release to refresh...", nil);
-            break;
-        case RefreshStateLoading:
-            return NSLocalizedString(@"Loading...", nil);
-            break;
-        default:
-            break;
-    }
-    return @"";
-}
-
-
 
 @end

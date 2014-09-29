@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
+    </head>
+    <body>
+
+        <div class="block">
+            <p>This page shows usage and configuration of a datePicker with cobalt.</p>
+            <br/>
+
+            <p>The input below should be empty. When setting a date, its value should change.<br/>The "Value=?" button gives you the current value of the input.</p>
+
+            <input id="myDateField_1" type="date" class="date" value="" placeholder="enter a date"/><a href="javascript:;" class="valueBtn">Value=?</a><br/>
+
+            <p>The input below should be pre-filled with a date.</p>
+
+            <input type="date" class="date" value="2016-04-14" placeholder="enter a date"/><a href="javascript:;" class="valueBtn">Value=?</a><br/>
+
+            <p>On iOS, the date format depends on device language. On other plaforms, we have changed the date input format to be dd/mm/yyyy instead of yyyy-mm-dd by defining a format function for datePicker in cobalt.init.</p>
+        </div>
+
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="../platform/cobalt.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+
+        <script>
+
+            Zepto(function($){
+
+                cobalt.init({
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInDiv:app.debugInDiv,
+
+                    datePicker:{
+                        format:function(value){
+                            //from yyyy-mm-dd to dd/mm/yyyy
+                            var values=value.split('-');
+                            return (values.length==3) ? values.reverse().join('/') : value;
+                        }
+                    }
+
+                });
+
+
+                app.touch('.valueBtn',function(){
+                    var input=$(this).prev('input');
+                    cobalt.alert('Input value',
+                                 'value is '+ $(input).val()+'\n' +
+                                 'cobalt.datePicker.val is ' + cobalt.datePicker.val(input)
+                                )
+                });
+
+                app.initPage('Date Picker');
+
+            })
+        </script>
+
+    </body>
+</html>

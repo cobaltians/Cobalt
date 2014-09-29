@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
+    </head>
+    <body>
+        <ul class="index">
+            <li>
+                <a class="push" href="javascript:;" data-href="simple_page.html">A simple page<img src="img/next.png"alt="next"></a>
+            </li>
+            <li>
+                <a class="push" href="javascript:;" data-href="events.html" data-classid="events">Using events<img src="img/next.png" alt="next"></a>
+            </li>
+            <li>
+                <a class="push" href="javascript:;" data-href="callbacks.html" data-classid="callbacks">Using callbacks<img src="img/next.png" alt="next"></a>
+            </li>
+            <li>
+                <a class="push" href="javascript:;" data-href="toasts_&_alerts.html">Toasts & alerts<img src="img/next.png" alt="next"></a>
+            </li>
+            <li>
+                <a class="push" href="javascript:;" data-href="localstorage.html">LocalStorage<img src="img/next.png" alt="next"></a>
+            </li>
+            <li>
+                <a class="push" href="javascript:;" data-href="pulltorefresh.html" data-classid="pullToRefresh">Pull to refresh<img src="img/next.png" alt="next"></a>
+            </li>
+            <li>
+                <a class="push" href="javascript:;" data-href="infinitescroll.html" data-classid="infiniteScroll">Infinite scroll<img src="img/next.png" alt="next"></a>
+            </li>
+            <li>
+                <a class="push" href="javascript:;" data-href="ajax.html">Ajax<img src="img/next.png" alt="next"></a>
+            </li>
+            <li>
+                <a class="push" href="javascript:;" data-href="weblayers.html">WebLayers<img src="img/next.png" alt="next"></a>
+            </li>
+            <li>
+                <a class="push" href="javascript:;" data-href="modals.html" data-classid="modalTest">Modals<img src="img/next.png" alt="next"></a>
+            </li>
+            <li>
+                <a class="push" href="javascript:;" data-href="datePicker.html">DatePicker<img src="img/next.png" alt="next"></a>
+            </li>
+            <li class="green">
+                <a class="push" href="javascript:;" data-href="plugins.html" data-classid="plugins">Cobalt Plugins<img src="img/next.png" alt="next"></a>
+            </li>
+
+        </ul>
+        
+
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="../platform/cobalt.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+
+        <script>
+
+            Zepto(function($){
+
+
+                cobalt.init({
+                    debug : app.debug,
+                    debugInBrowser : app.debugInBrowser,
+                    debugInDiv : app.debugInDiv,
+
+                    events:{
+                        "onBackButtonPressed":function(data, callback){
+                            cobalt.alert('Quit ?',"Are you sure you want to quit the app ?", ["Yeah","No"],{ callback:function(params){
+                                if (params.index===0){
+                                    //allow quitting
+                                    cobalt.sendCallback(callback,{value : true});
+                                }
+                            }})
+                        }
+                    }
+                });
+
+
+                app.initPage('Available pages')
+            })
+        </script>
+
+    </body>
+</html>

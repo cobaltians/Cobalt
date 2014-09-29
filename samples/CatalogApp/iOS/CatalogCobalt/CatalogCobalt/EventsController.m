@@ -32,7 +32,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     [self setDelegate:self];
-    [self.navigationController setNavigationBarHidden:YES];
+    //[self.navigationController setNavigationBarHidden:YES];
 
     textSizeMaxZoomLevel = [NSNumber numberWithInt:20];
     textSizeMinZoomLevel = [NSNumber numberWithInt:5];
@@ -48,11 +48,6 @@
 #pragma mark COBALT DELEGATE METHODS
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-- (BOOL)onUnhandledMessage:(NSString *)message
-{
-    return NO;
-}
 
 - (BOOL)onUnhandledEvent:(NSString *)event withData:(NSDictionary *)data andCallback:(NSString *)callback
 {

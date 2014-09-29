@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
+    </head>
+    <body class="green">
+
+        <div class="article">
+            <p>This is just a simple page with some images and stuff.</p>
+
+            <p>This image comes from the folder img. you can organize your app with folders like any website.</p>
+            <img src="img/ic_launcher.png" alt=""/>
+            <br/>
+
+            <p>This div below has an awful repeating background defined in the CSS.</p>
+            <div class="awfull"></div>
+
+            <p>That's all. Use the "pop" button at the top of the page to go back or use back button if it's available.</p>
+        </div>
+
+
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="../platform/cobalt.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+
+        <script>
+
+            Zepto(function($){
+
+                cobalt.init({
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInDiv:app.debugInDiv
+                });
+
+                app.initPage('Just a simple page');
+
+            })
+        </script>
+
+    </body>
+</html>

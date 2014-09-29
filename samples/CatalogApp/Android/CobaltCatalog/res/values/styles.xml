@@ -1,20 +1,28 @@
 <resources>
-
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
-    </style>
-
-    <!-- Application theme. -->
+    <!-- Base theme applied to the application or activity -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/AppBaseActionBarTheme</item>
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/AppBaseActionBarTheme</item>
+    </style>
+    <!-- Plugin theme applied to the application or activity -->
+    <style name="PluginsTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/PluginsActionBarTheme</item>
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/PluginsActionBarTheme</item>
     </style>
 
+    <!-- ActionBar themes -->
+    <style name="AppBaseActionBarTheme" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/cobalt_blue</item>
+        <!-- Support library compatibility -->
+        <item name="background">@color/cobalt_blue</item>
+    </style>
+    <style name="PluginsActionBarTheme" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/cobalt_green</item>
+        <!-- Support library compatibility -->
+        <item name="background">@color/cobalt_green</item>
+    </style>
 </resources>

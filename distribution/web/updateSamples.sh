@@ -1,8 +1,8 @@
 #/bin/sh
 
 ##updating Helloworld
-cp Android/* ../../samples/HelloWorld/Android/Hello/assets/www/cobalt/
-cp iOs/* ../../samples/HelloWorld/iOs/Hello/www/cobalt/
+cp Android/* ../../samples/HelloWorld/Android/Hello/assets/www/platform/
+cp iOs/* ../../samples/HelloWorld/iOs/Hello/www/platform/
 
 ##updating Catalog
 cp Android/* ../../samples/CatalogApp/Android/CobaltCatalog/assets/www/platform

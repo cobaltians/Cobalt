@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+    </head>
+    <body>
+
+        <div class="block">
+            <p><b>WebLayers</b> allow you to add a webview over the current webview.<br/>
+                The webview is positionned on the same place that the current one and the background is transparent so that you can define your own "popin" style.</p>
+
+            <p>Here is a simple one.</p>
+
+            <a href="javascript:;" id="test1">Simple one</a>
+        </div>
+        <div class="block">
+            <p>Same thing below but with a longer fadeIn effect.</p>
+
+            <a href="javascript:;" id="test2">Longer fadeIn</a>
+        </div>
+        <div class="block">
+            <p>No fadeIn at all for this one:</p>
+
+            <a href="javascript:;" id="test3">no fadeIn</a>
+        </div>
+        <div class="block">
+            <p>This one is a bit more complex. It has an editable field and when you validate, the parent page is warned and can show what was written.</p>
+
+            <a href="javascript:;" id="test4">Try it</a>
+        </div>
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="../platform/cobalt.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+
+        <script>
+
+            Zepto(function($){
+
+                cobalt.init({
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInDiv:app.debugInDiv,
+
+                    events:{
+                        "onWebLayerDismissed":function(data, callback){
+                            if (data && data.page=="weblayer_content_2.html"){
+
+                                cobalt.toast('webLayer '+data.page+' closed')
+                                if (data.data){
+                                    cobalt.toast('webLayer result is '+JSON.stringify(data.data))
+                                }
+                            }
+                        }
+                    }
+                });
+
+                app.touch('#test1',function(){
+                    cobalt.webLayer("show","weblayer_content_1.html");
+                });
+                app.touch('#test2',function(){
+                    cobalt.webLayer("show","weblayer_content_1.html",1.2);
+                });
+                app.touch('#test3',function(){
+                    cobalt.webLayer("show","weblayer_content_1.html",0);
+                });
+                app.touch('#test4',function(){
+                    cobalt.webLayer("show","weblayer_content_2.html");
+                });
+
+
+                app.initPage("Web layers");
+
+            })
+
+
+        </script>
+
+    </body>
+</html>
