@@ -94,7 +94,10 @@ public abstract class CobaltActivity extends ActionBarActivity {
     public void finish() {
         super.finish();
 
-        if (mWasPushedAsModal) overridePendingTransition(android.R.anim.fade_in, R.anim.modal_close_exit);
+        if (mWasPushedAsModal) {
+            sWasPushedFromModal = false;
+            overridePendingTransition(android.R.anim.fade_in, R.anim.modal_close_exit);
+        }
         else if (sWasPushedFromModal) overridePendingTransition(R.anim.modal_pop_enter, R.anim.modal_pop_exit);
     }
 
