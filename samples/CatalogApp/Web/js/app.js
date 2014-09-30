@@ -49,7 +49,6 @@ var app={
             cobalt.navigate('modal',$(this).attr('data-href'));
         });
 
-
         if (title){
             cobalt.sendEvent('setTexts',{
                 title : title

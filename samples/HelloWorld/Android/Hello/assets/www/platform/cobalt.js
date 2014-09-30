@@ -169,6 +169,11 @@ var cobalt={
 					cobalt.send({ "type":"navigation", "action":"push", data : { page :page, controller: controller }});
 				}
 			break;
+            case "replace":
+                if (page){
+                    cobalt.send({ "type":"navigation", "action":"replace", data : { page :page, controller: controller }});
+                }
+                break;
 			case "pop":
 				cobalt.send({ "type":"navigation", "action":"pop"});
 			break;
