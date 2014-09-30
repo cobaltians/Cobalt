@@ -133,7 +133,6 @@
 
 @end
 
-
 @protocol CobaltViewControllerJS <JSExport>
 
 - (BOOL)_handleDictionarySentByJavaScript:(NSString *)json;

@@ -14,6 +14,7 @@
 		8E1070BF1987ED8800DED934 /* CustomizedPulltoRefreshViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E1070BE1987ED8800DED934 /* CustomizedPulltoRefreshViewController.m */; };
 		8E1070C11987EE7800DED934 /* CobaltViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8E1070C01987EE7800DED934 /* CobaltViewController.xib */; };
 		8E11545319B7573B0047622C /* PluginsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E11545219B7573B0047622C /* PluginsController.m */; };
+		8E22E87E19DA965C00938B5B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E22E87D19DA965C00938B5B /* JavaScriptCore.framework */; };
 		8EC5CAD71980FB00001777FA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8EC5CAD61980FB00001777FA /* Images.xcassets */; };
 		8EE619AE1980074100B5767C /* CobaltAbstractPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EE619A91980074100B5767C /* CobaltAbstractPlugin.m */; };
 		8EE619B01980074100B5767C /* CobaltPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EE619AD1980074100B5767C /* CobaltPluginManager.m */; };
@@ -49,6 +50,7 @@
 		8E1070C01987EE7800DED934 /* CobaltViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CobaltViewController.xib; sourceTree = "<group>"; };
 		8E11545119B7573B0047622C /* PluginsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PluginsController.h; sourceTree = "<group>"; };
 		8E11545219B7573B0047622C /* PluginsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PluginsController.m; sourceTree = "<group>"; };
+		8E22E87D19DA965C00938B5B /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		8EC5CAD61980FB00001777FA /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		8EE619A81980074100B5767C /* CobaltAbstractPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltAbstractPlugin.h; sourceTree = "<group>"; };
 		8EE619A91980074100B5767C /* CobaltAbstractPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltAbstractPlugin.m; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E22E87E19DA965C00938B5B /* JavaScriptCore.framework in Frameworks */,
 				8EE619B2198007EA00B5767C /* CoreLocation.framework in Frameworks */,
 				F01A5A0C1716EF4C0000DD94 /* UIKit.framework in Frameworks */,
 				F01A5A0E1716EF4C0000DD94 /* Foundation.framework in Frameworks */,
@@ -161,6 +164,7 @@
 		F01A5A0A1716EF4C0000DD94 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8E22E87D19DA965C00938B5B /* JavaScriptCore.framework */,
 				71B4B1D31886D9DD0027AC4F /* Cobalt */,
 				8EE619B1198007EA00B5767C /* CoreLocation.framework */,
 				F01A5A0B1716EF4C0000DD94 /* UIKit.framework */,

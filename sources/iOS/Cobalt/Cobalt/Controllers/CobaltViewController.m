@@ -27,8 +27,6 @@
  *
  */
 
-#import <JavaScriptCore/JavaScriptCore.h>
-
 #import "CobaltViewController.h"
 
 #import "Cobalt.h"
@@ -111,15 +109,16 @@ NSString * webLayerPage;
     
     [self loadPage:pageName inWebView:webView];
     
-    // get JSContext from UIWebView instance
-    JSContext *context = [self.webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+    if([JSContext class]) {
+        JSContext *context = [self.webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     
-    [context setExceptionHandler:^(JSContext *context, JSValue *value) {
-        NSLog(@"%@", value);
-    }];
+        //[context setExceptionHandler:^(JSContext *context, JSValue *value) {
+        //    NSLog(@"%@", value);
+        //}];
     
-    // register CobaltWebCommunicationClass class
-    context[@"cobaltViewController"] = self;
+        // register CobaltWebCommunicationClass class
+        context[@"cobaltViewController"] = self;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
