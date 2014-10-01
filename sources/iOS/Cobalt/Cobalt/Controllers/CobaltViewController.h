@@ -73,6 +73,10 @@
 #define kJSNavigationController             @"controller"
 #define JSNavigationControllerDefault       @"default"
 
+//LIFE CYCLE
+#define JSEventOnAppForeground              @"onAppForeground"
+#define JSEventOnAppBackground              @"onAppBackground"
+#define JSEventOnPageShown                  @"onPageShown"
 
 // PULL TO REFRESH
 #define JSEventPullToRefresh                @"pullToRefresh"

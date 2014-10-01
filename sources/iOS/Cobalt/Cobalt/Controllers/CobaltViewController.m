@@ -116,14 +116,28 @@ NSString * webLayerPage;
         //    NSLog(@"%@", value);
         //}];
     
-        // register CobaltWebCommunicationClass class
+        // register CobaltViewController class
         context[@"cobaltViewController"] = self;
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAppBackground:) name: kOnAppBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAppForeground:) name:kOnAppForegroundNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    [self sendEvent: JSEventOnPageShown withData:nil andCallback:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onPageShown:) name:kOnPageShownNotification object:nil];
+}
+
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear: animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOnPageShownNotification object:nil];
 }
 
 - (void)dealloc
@@ -137,7 +151,29 @@ NSString * webLayerPage;
     webLayer = nil;
     
     [[NSNotificationCenter defaultCenter] postNotificationName: viewControllerDeallocatedNotification  object: self];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOnAppBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOnAppForegroundNotification object:nil];
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark NOTIFICATIONS
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)onAppBackground:(NSNotification *)notification {
+    [self sendEvent: JSEventOnAppBackground withData: nil andCallback: nil];
+}
+
+- (void)onAppForeground:(NSNotification *)notification {
+    [self sendEvent: JSEventOnAppForeground withData: nil andCallback: nil];
+}
+
+- (void)onPageShown:(NSNotification *)notification {
+    [self sendEvent: JSEventOnPageShown withData: nil andCallback: nil];
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
