@@ -162,16 +162,19 @@ var cobalt={
 	},
 	//Navigate to an other page or do some special navigation actions
 	//See doc for guidelines.
-	navigate:function(navigationType, page, controller){
+	navigate:function(navigationType, page, controller, animated){
+        if (typeof animated === "undefined"){
+            animated=true;
+        }
 		switch (navigationType){
 			case "push":
 				if (page){
-					cobalt.send({ "type":"navigation", "action":"push", data : { page :page, controller: controller }});
+					cobalt.send({ "type":"navigation", "action":"push", data : { page :page, controller: controller, animated : animated }});
 				}
 			break;
             case "replace":
                 if (page){
-                    cobalt.send({ "type":"navigation", "action":"replace", data : { page :page, controller: controller }});
+                    cobalt.send({ "type":"navigation", "action":"replace", data : { page :page, controller: controller, animated : animated }});
                 }
                 break;
 			case "pop":

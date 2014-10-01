@@ -12,8 +12,8 @@
 
             <p>Here you can see it in action. Buttons bellow will replace the current view with an other one. This other one should work as expected. When going back, you will not come back on this page, but on the index page.</p>
 
-            <a class="replace" href="javascript:;" data-href="events.html" data-classid="events">Using events</a>
-            <a class="replace" href="javascript:;" data-href="plugins.html" data-classid="plugins">Cobalt Plugins</a>
+            <a class="replace" href="javascript:;" data-href="events.html" data-classid="events" data-animated="true">Using events (animated replace)</a>
+            <a class="replace" href="javascript:;" data-href="plugins.html" data-classid="plugins" data-animated="false">Cobalt Plugins (rough replace)</a>
 
         </div>
         <script type="text/javascript" src="js/zepto.min.js"></script>
@@ -34,7 +34,8 @@
                 app.initPage('Modals');
 
                 app.touch('a.replace',function(){
-                    cobalt.navigate('replace',$(this).attr('data-href'),$(this).attr('data-classid'));
+                    var animated = ($(this).attr('data-animated') === "true");
+                    cobalt.navigate('replace',$(this).attr('data-href'),$(this).attr('data-classid'), animated);
                 });
 
             })
