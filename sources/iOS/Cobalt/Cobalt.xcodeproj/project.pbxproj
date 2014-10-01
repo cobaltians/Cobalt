@@ -10,7 +10,6 @@
 		71B4B1AB1885C7CE0027AC4F /* Cobalt.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1981885C7CE0027AC4F /* Cobalt.m */; };
 		71B4B1AE1885C7CE0027AC4F /* CobaltViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B19F1885C7CE0027AC4F /* CobaltViewController.m */; };
 		71B4B1B21885C7CE0027AC4F /* CobaltToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1A81885C7CE0027AC4F /* CobaltToast.m */; };
-		8E8815BC19D41A730066C8EE /* CobaltWebCommunicationClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E8815BB19D41A730066C8EE /* CobaltWebCommunicationClass.m */; };
 		8EA5A52E18DB199600330396 /* ImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA5A52D18DB199600330396 /* ImageManager.m */; };
 		8EA5A53018DB1AEE00330396 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EA5A52F18DB1AEE00330396 /* AssetsLibrary.framework */; };
 		8EE6199C197FEAF500B5767C /* CobaltAbstractPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EE6199B197FEAF500B5767C /* CobaltAbstractPlugin.m */; };
@@ -39,8 +38,6 @@
 		71B4B19F1885C7CE0027AC4F /* CobaltViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltViewController.m; sourceTree = "<group>"; };
 		71B4B1A71885C7CE0027AC4F /* CobaltToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltToast.h; sourceTree = "<group>"; };
 		71B4B1A81885C7CE0027AC4F /* CobaltToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltToast.m; sourceTree = "<group>"; };
-		8E8815BA19D41A730066C8EE /* CobaltWebCommunicationClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltWebCommunicationClass.h; sourceTree = "<group>"; };
-		8E8815BB19D41A730066C8EE /* CobaltWebCommunicationClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltWebCommunicationClass.m; sourceTree = "<group>"; };
 		8EA5A52C18DB199600330396 /* ImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageManager.h; path = Model/ImageManager.h; sourceTree = "<group>"; };
 		8EA5A52D18DB199600330396 /* ImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImageManager.m; path = Model/ImageManager.m; sourceTree = "<group>"; };
 		8EA5A52F18DB1AEE00330396 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
@@ -72,8 +69,6 @@
 		71B4B1951885C7CE0027AC4F /* Cobalt */ = {
 			isa = PBXGroup;
 			children = (
-				8E8815BA19D41A730066C8EE /* CobaltWebCommunicationClass.h */,
-				8E8815BB19D41A730066C8EE /* CobaltWebCommunicationClass.m */,
 				8EE61999197FEAF500B5767C /* Plugin */,
 				71B4B1961885C7CE0027AC4F /* Cobalt-Prefix.pch */,
 				71B4B1971885C7CE0027AC4F /* Cobalt.h */,
@@ -213,7 +208,6 @@
 				8EE6199C197FEAF500B5767C /* CobaltAbstractPlugin.m in Sources */,
 				71B4B1AE1885C7CE0027AC4F /* CobaltViewController.m in Sources */,
 				71B4B1B21885C7CE0027AC4F /* CobaltToast.m in Sources */,
-				8E8815BC19D41A730066C8EE /* CobaltWebCommunicationClass.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

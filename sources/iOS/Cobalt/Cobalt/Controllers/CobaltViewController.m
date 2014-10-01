@@ -447,6 +447,21 @@ NSString * webLayerPage;
                 else if ([action isEqualToString:JSActionNavigationDismiss]) {
                     [self dismissViewController];
                 }
+                //REPLACE
+                else if ([action isEqualToString:kJSActionNavigationReplace]) {
+                    [self dismissViewController];
+                    NSDictionary * data = [dict objectForKey:kJSData];
+                    if (data
+                        && [data isKindOfClass:[NSDictionary class]]) {
+                        [self replaceViewControllerWithData:data];
+                    }
+#if DEBUG_COBALT
+                    else {
+                        NSLog(@"handleDictionarySentByJavaScript: data field missing or not an object (message: %@)", [dict description]);
+                    }
+#endif
+
+                }
                 else {
 #if DEBUG_COBALT
                     NSLog(@"handleDictionarySentByJavaScript: unhandled navigation %@", [dict description]);
@@ -626,6 +641,28 @@ NSString * webLayerPage;
 #pragma mark NAVIGATION METHODS
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)replaceViewControllerWithData:(NSDictionary *)data
+{
+    NSString * page = [data objectForKey:kJSPage];
+    NSString * controller = [data objectForKey:kJSNavigationController];
+    
+    if (page
+        && [page isKindOfClass:[NSString class]]) {
+        UIViewController * viewController = [CobaltViewController getViewControllerForController:controller andPage:page];
+        if (viewController) {
+            // replace current view with corresponding viewController
+            NSMutableArray * viewControllers = [NSMutableArray arrayWithArray: [self.navigationController viewControllers]];
+            [viewControllers replaceObjectAtIndex: (viewControllers.count - 1) withObject: viewController];
+            [self.navigationController setViewControllers: viewControllers animated: YES];
+        }
+    }
+#if DEBUG_COBALT
+    else {
+        NSLog(@"handleDictionarySentByJavaScript: page field missing or not a string (data: %@)", [data description]);
+    }
+#endif
+}
 
 - (void)pushViewControllerWithData:(NSDictionary *)data
 {

@@ -69,8 +69,10 @@
 #define JSActionNavigationPop               @"pop"
 #define JSActionNavigationModal             @"modal"
 #define JSActionNavigationDismiss           @"dismiss"
+#define kJSActionNavigationReplace          @"replace"
 #define kJSNavigationController             @"controller"
 #define JSNavigationControllerDefault       @"default"
+
 
 // PULL TO REFRESH
 #define JSEventPullToRefresh                @"pullToRefresh"
@@ -113,6 +115,11 @@
 //PLUGIN
 #define kJSTypePlugin                       @"plugin"
 #define kJSPluginName                       @"name"
+
+//NOTIFS
+#define kOnAppForegroundNotification        @"onAppForegroundNotification"
+#define kOnAppBackgroundNotification        @"onAppBackgroundNotification"
+#define kOnPageShownNotification            @"onPageShownNotification"
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
