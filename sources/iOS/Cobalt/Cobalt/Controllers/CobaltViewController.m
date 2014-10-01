@@ -682,6 +682,7 @@ NSString * webLayerPage;
 {
     NSString * page = [data objectForKey:kJSPage];
     NSString * controller = [data objectForKey:kJSNavigationController];
+    BOOL animated = [[data objectForKey: kJSAnimated] boolValue];
     
     if (page
         && [page isKindOfClass:[NSString class]]) {
@@ -690,7 +691,7 @@ NSString * webLayerPage;
             // replace current view with corresponding viewController
             NSMutableArray * viewControllers = [NSMutableArray arrayWithArray: [self.navigationController viewControllers]];
             [viewControllers replaceObjectAtIndex: (viewControllers.count - 1) withObject: viewController];
-            [self.navigationController setViewControllers: viewControllers animated: YES];
+            [self.navigationController setViewControllers: viewControllers animated: animated];
         }
     }
 #if DEBUG_COBALT

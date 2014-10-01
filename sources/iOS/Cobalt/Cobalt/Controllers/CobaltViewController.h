@@ -73,6 +73,8 @@
 #define kJSNavigationController             @"controller"
 #define JSNavigationControllerDefault       @"default"
 
+#define kJSAnimated                         @"animated"
+
 //LIFE CYCLE
 #define JSEventOnAppForeground              @"onAppForeground"
 #define JSEventOnAppBackground              @"onAppBackground"
