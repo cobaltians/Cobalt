@@ -552,7 +552,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 				// NAVIGATION
 				else if (type.equals(Cobalt.JSTypeNavigation)) {
 					String action = jsonObj.getString(Cobalt.kJSAction);
-					
+
 					// PUSH
 					if (action.equals(Cobalt.JSActionNavigationPush)) {
 						JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
@@ -587,7 +587,17 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 						dismissModal(controller, page);
 						return true;
 					}
-					
+
+                    //REPLACE
+                    else if (action.equals(Cobalt.JSActionNavigationReplace)) {
+                        JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
+                        String controller = data.getString(Cobalt.kJSController);
+                        String page = data.getString(Cobalt.kJSPage);
+                        boolean animated = data.getBoolean(Cobalt.kJSAnimated);
+                        replace(controller, page, animated);
+                        return true;
+                    }
+
 					// UNHANDLED NAVIGATION
 					else {
 						onUnhandledMessage(jsonObj);
@@ -843,6 +853,17 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			exception.printStackTrace();
 		}
 	}
+
+    private void replace(String controller, String page, boolean animated) {
+        //TODO do something with animated ?
+        Intent intent = Cobalt.getInstance(mContext).getIntentForController(controller, page);
+        if (intent != null) {
+            intent.putExtra(Cobalt.kJSAnimated, animated);
+            mContext.startActivity(intent);
+            ((Activity) mContext).finish();
+        }
+        else if (Cobalt.DEBUG) Log.e(Cobalt.TAG,  TAG + " - push: Unable to push " + controller + " controller");
+    }
 	
 	/**
 	 * Called when onBackPressed event is fired. Asks the Web view for back permission.

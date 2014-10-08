@@ -114,7 +114,9 @@ public class Cobalt {
     public final static String JSActionNavigationPop ="pop";
     public final static String JSActionNavigationModal = "modal";
     public final static String JSActionNavigationDismiss = "dismiss";
+    public final static String JSActionNavigationReplace = "replace";
     public final static String kJSController = "controller";
+    public final static String kJSAnimated = "animated";
 
     // BACK BUTTON
     public final static String JSEventOnBackButtonPressed = "onBackButtonPressed";
