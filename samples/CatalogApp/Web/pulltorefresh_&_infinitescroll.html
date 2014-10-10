@@ -37,22 +37,22 @@
                     debugInBrowser:app.debugInBrowser,
                     debugInDiv:app.debugInDiv,
                     events:{
-                        "pullToRefresh" : function(data, calllback){
+                        "pullToRefresh" : function(data, callback){
                             cobalt.log('native asked to refresh');
                             $('#list').html('');
                             setTimeout(function(){
 
                                 fillWithListItems();
-                                cobalt.sendCallback(calllback);
+                                cobalt.sendCallback(callback);
                             },1000, true);
                         },
-                        "infiniteScroll" : function(data, calllback){
+                        "infiniteScroll" : function(data, callback){
                             cobalt.log('native asked to load more content');
                             $('#loading').show();
                             setTimeout(function(){
                                 $('#loading').hide();
                                 $('#list').append(someListItems);
-                                cobalt.sendCallback(calllback);
+                                cobalt.sendCallback(callback);
                             },1000, true);
                         }
 

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
+    </head>
+    <body class="green">
+
+
+        <div class="block">
+            <p>Cobalt provides a way for the web part of your app to be noticed when the app is going foreground or background, or when a view is shown. Those events are tracked below.</p>
+        </div>
+        <div id="blockzone_events" class="block" style="padding-top:10px; padding-bottom:10px;">
+        </div>
+        
+        <div class="block">
+            <p>onPageShown will be fired when you come back from another page, allowing you to refresh content.</p>
+                    <a class="push" href="javascript:;" data-href="simple_page.html">Open an other page and come back</a>
+            </div>
+
+
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="../platform/cobalt.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+
+        <script>
+            
+            function log(eventName){
+                var now = new Date();
+                $('#blockzone_events').prepend('<b>'+eventName+'</b> at '+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds()+'<br/>')
+            }
+
+            Zepto(function($){
+
+                cobalt.init({
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInDiv:false,
+
+                    events:{
+                        "onAppForeground":function(data, callback){
+                            log("onAppForeground");
+                        },
+                        "onAppBackground":function(data, callback){
+                            log("onAppBackground");
+                        },
+                        "onPageShown":function(data, callback){
+                            log("onPageShown");
+                         },                            
+                        "pullToRefresh" : function(data, callback){
+                            cobalt.log('native asked to refresh');
+                            log("Cleaned up by a pull-to-refresh");
+                            cobalt.sendCallback(callback);
+
+                        }
+                    }
+                });
+
+                app.initPage('Using Events')
+
+            })
+        </script>
+
+    </body>
+</html>
