@@ -470,7 +470,32 @@ NSString * webLayerPage;
                 }
                 //POP
                 else if ([action isEqualToString:JSActionNavigationPop]) {
-                    [self popViewController];
+                    NSDictionary * controllersConfigration = [Cobalt getControllersConfiguration];
+                    NSDictionary * data = [dict objectForKey:kJSData];
+                    
+                    if (data
+                        && [data isKindOfClass:[NSDictionary class]]) {
+                        NSString * controllerKey = [data objectForKey: kJSNavigationController];
+                        NSString * controllerPage = [data objectForKey: kJSPage];
+                        
+                        NSDictionary * controllerConfiguration = [controllersConfigration objectForKey: controllerKey];
+                        NSString * controllerClassName = [controllerConfiguration objectForKey: kIos];
+                        
+                        for(UIViewController * viewController in self.navigationController.viewControllers) {
+                            if([viewController isKindOfClass: [CobaltViewController class]]) {
+                                if([viewController isKindOfClass: NSClassFromString(controllerClassName)] && [((CobaltViewController *)viewController).pageName isEqualToString: controllerPage]) {
+                                    [self.navigationController popToViewController: viewController animated: YES];
+                                    break;
+                                }
+                            }
+                        }
+                        
+#if DEBUG_COBALT
+                        NSLog(@"pop: controller/page not found");
+#endif
+                    }
+                    else
+                        [self popViewController];
                 }
                 //MODAL
                 else if ([action isEqualToString:JSActionNavigationModal]) {
