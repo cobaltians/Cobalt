@@ -40,12 +40,17 @@
             <li>
                 <a class="push" href="javascript:;" data-href="datePicker.html">DatePicker<img src="img/next.png" alt="next"></a>
             </li>
+
             <li>
-                <a class="push" href="javascript:;" data-href="navigation_replace.html">Advanced navigation<img src="img/next.png" alt="next"></a>
+                <a class="push" href="javascript:;" data-href="appEvents.html" data-classid="appEvents">AppEvents <b>(new in 0.2.7)</b><img src="img/next.png" alt="next"></a>
             </li>
             <li>
-                <a class="push" href="javascript:;" data-href="appEvents.html" data-classid="appEvents">AppEvents<img src="img/next.png" alt="next"></a>
+                <a class="push" href="javascript:;" data-href="navigation_replace.html">Advanced navigation <b>(new in 0.2.7)</b><img src="img/next.png" alt="next"></a>
             </li>
+            <li>
+                <a class="push" href="javascript:;" data-href="nativeBars.html" data-classid="nativeBars">nativeBars <b>(new in 0.2.7)</b><img src="img/next.png" alt="next"></a>
+            </li>
+
             <li class="green">
                 <a class="push" href="javascript:;" data-href="plugins.html" data-classid="plugins">Cobalt Plugins<img src="img/next.png" alt="next"></a>
             </li>
@@ -69,7 +74,7 @@
 
                     events:{
                         "onBackButtonPressed":function(data, callback){
-                            cobalt.alert('Quit ?',"Are you sure you want to quit the app ?", ["Yeah","No"],{ callback:function(params){
+                            cobalt.alert('Quit ?',"Are you sure you want to quit the app ?", ["Yes","No"],{ callback:function(params){
                                 if (params.index===0){
                                     //allow quitting
                                     cobalt.sendCallback(callback,{value : true});
