@@ -302,7 +302,7 @@ public class Cobalt {
             }
             else {
                 activity = controllers.getJSONObject(kDefaultController).getString(kAndroid);
-                actionBar = controllers.getJSONObject(controller).optJSONObject(kBars);
+                actionBar = controllers.getJSONObject(kDefaultController).optJSONObject(kBars);
                 enablePullToRefresh = controllers.getJSONObject(kDefaultController).optBoolean(kPullToRefresh);
                 enableInfiniteScroll = controllers.getJSONObject(kDefaultController).optBoolean(kInfiniteScroll);
             }
