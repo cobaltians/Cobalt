@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 var cobalt={
-    
+    version : '0.2.7',
     userEvents:{}, //objects of events defined by the user
 	debug:false,
 	debugInBrowser:false,
@@ -67,7 +67,7 @@ var cobalt={
         cobalt.plugins.init();
 
         //send cobalt is ready event to native
-		cobalt.send({'type':'cobaltIsReady'})
+		cobalt.send({'type':'cobaltIsReady', version : this.version})
     },
 	addEventListener:function(eventName, handlerFunction){
 		if (typeof eventName === "string" && typeof handlerFunction === "function"){
