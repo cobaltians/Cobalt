@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="css/styles.css"/>	        
+    </head>
+    <body class="green">
+
+        <div class="block">
+
+            <p>Push views "A" and "B" in pullToRefresh controller, then push "C" in simpleController, then try Pop to "A" or "B"</p>
+
+            <p>You are on C. <b>now pop to index, A, B or popTo main page</b></p>
+
+
+            <a class="pop" href="javascript:;" data-href="navigation_popTo_A.html" data-classid="pullToRefresh">Pop to A</a>
+            <a class="pop" href="javascript:;" data-href="navigation_popTo_B.html" data-classid="pullToRefresh">Pop to B</a>
+            <a class="pop" href="javascript:;" data-href="index.html" data-classid="default">Pop to index</a>
+            <a class="pop" href="javascript:;" data-href="navigation_popToController.html" data-classid="default">Pop to "popTo main page"</a>
+
+        </div>
+
+        <div class="block">
+            <p>Or try some weird things</p>
+
+            <a class="pop" href="javascript:;" data-href="navigation_popTo_A.html" data-classid="wrongController">Pop to A page with wrong controller</a>
+            <a class="pop" href="javascript:;" data-href="wrongPage.html" data-classid="pullToRefresh">Pop to existing controller with wrong page</a>
+
+
+        </div>
+
+
+
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="../platform/cobalt.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+
+
+        <script>
+
+            Zepto(function($){
+
+                cobalt.init({
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInDiv:app.debugInDiv
+                });
+
+                app.initPage('popTo, page C');
+
+            })
+
+
+        </script>
+
+    </body>
+</html>

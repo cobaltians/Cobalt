@@ -8,25 +8,17 @@
     <body class="green">
 
         <div class="block">
-            <p>Going back to the index file, in one pop animation.</p>
-
-            <a class="pop" href="javascript:;" data-href="index.html" data-classid="default">Pop to index</a>
-        </div>
 
 
-        <div class="block">
-            <p>Some other pops</p>
 
             <p>Push views "A" and "B" in pullToRefresh controller, then push "C" in simpleController, then try Pop to "A" or "B"</p>
-            <a class="push" href="javascript:;" data-href="navigation_popTo_A.html" data-classid="pullToRefresh">Push A</a>
+
+            <p>You are on B. <b>now push C</b></p>
 
 
+            <a class="push" href="javascript:;" data-href="navigation_popTo_C.html" data-classid="default">Push C</a>
 
-            <p>Going back to a page that doesn't exist.</p>
-            <a class="pop" href="javascript:;" data-href="nowhere.html" data-classid="unknown">Pop nothing</a>
         </div>
-
-
 
 
 
@@ -42,10 +34,17 @@
                 cobalt.init({
                     debug:app.debug,
                     debugInBrowser:app.debugInBrowser,
-                    debugInDiv:app.debugInDiv
+                    debugInDiv:app.debugInDiv,
+
+                    events:{
+                        "pullToRefresh":function(data,callback){
+                            cobalt.toast('reloading B.')
+                            cobalt.sendCallback(callback)
+                        }
+                    }
                 });
 
-                app.initPage('navigation popTo');
+                app.initPage('popTo, page B');
 
             })
 
