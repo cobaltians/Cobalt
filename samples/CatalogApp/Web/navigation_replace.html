@@ -19,7 +19,7 @@
 
         <div class="block">
             <p>On the next page below, you will be able to pop to the index</p>
-            <a class="push" href="javascript:;" data-href="navPopTo.html">navPopTo</a>
+            <a class="push" href="javascript:;" data-href="navigation_popToController.html">navPopTo</a>
         </div>
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
@@ -37,7 +37,7 @@
                     debugInDiv:app.debugInDiv
                 });
 
-                app.initPage('navReplace');
+                app.initPage('navigation replace');
 
                 app.touch('a.replace',function(){
                     var animated = ($(this).attr('data-animated') === "true");
