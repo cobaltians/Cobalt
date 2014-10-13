@@ -293,7 +293,7 @@ var cobalt={
                     cobalt.adapter.handleCallback(json)
                     break;
                 case "ui":
-                    switch (json.ui){
+                    switch (json.control){
                         case "bars":
                             cobalt.nativeBars.handleEvent(json.data);
                             break;
@@ -506,6 +506,7 @@ var cobalt={
         },
         handleEvent:function(data){
             if (data && data.action == "buttonPressed"){
+                cobalt.log('button pressed', data.button)
                 if (data.button && cobalt.nativeBars.handlers[data.button]){
                     cobalt.nativeBars.handlers[data.button]();
                 }else{
