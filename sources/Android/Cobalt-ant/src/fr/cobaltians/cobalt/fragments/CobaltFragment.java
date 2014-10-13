@@ -29,6 +29,7 @@
 
 package fr.cobaltians.cobalt.fragments;
 
+import android.content.pm.PackageManager;
 import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.R;
 import fr.cobaltians.cobalt.activities.CobaltActivity;
@@ -510,7 +511,11 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 				
 				// COBALT IS READY
 				else if (type.equals(Cobalt.JSTypeCobaltIsReady)) {
-					onCobaltIsReady();
+                    String versionWeb = jsonObj.optString(Cobalt.kJSVersion, null);
+                    String versionNative = getResources().getString(R.string.version_name);
+                    if (versionWeb != null && !versionWeb.equals(versionNative))
+                        Log.e(TAG, "Warning : Cobalt version mismatch : Android Cobalt version is " + versionNative + " but Web Cobalt version is " + versionWeb + ". You should fix this. ");
+                    onCobaltIsReady();
 					return true;
 				}
 				
@@ -564,7 +569,14 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 					
 					// POP
 					else if (action.equals(Cobalt.JSActionNavigationPop)) {
-						pop();
+                        JSONObject data = jsonObj.optJSONObject(Cobalt.kJSData);
+                        if (data != null) {
+                            String page = data.getString(Cobalt.kJSPage);
+                            String controller = data.optString(Cobalt.kJSController, null);
+                            String callBackId = jsonObj.optString(Cobalt.kJSCallback, null);
+                            pop(page, controller, callBackId);
+                        }
+                        else pop();
 						return true;
 					}
 					
@@ -573,8 +585,8 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 						JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
 						String page = data.getString(Cobalt.kJSPage);
 						String controller = data.optString(Cobalt.kJSController, null);
-						String callBackId = jsonObj.optString(Cobalt.kJSCallback, null);
-						presentModal(controller, page, callBackId);
+						String callbackId = jsonObj.optString(Cobalt.kJSCallback, null);
+						presentModal(controller, page, callbackId);
 						return true;
 					}
 					
@@ -663,7 +675,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	}
 	
 	private void onCobaltIsReady() {
-		if (Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - onReady");
+		if (Cobalt.DEBUG) Log.i(Cobalt.TAG, TAG + " - onReady - version "+getResources().getString(R.string.version_name));
 
 		mCobaltIsReady = true;
 		executeWaitingCalls();
@@ -807,6 +819,10 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	private void pop() {
         onBackPressed(true);
 	}
+
+    private void pop(String controller, String page, String callbackId) {
+
+    }
 	
 	private void presentModal(String controller, String page, String callBackID) {
 		Intent intent = Cobalt.getInstance(mContext).getIntentForController(controller, page);

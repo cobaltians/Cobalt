@@ -89,6 +89,7 @@ public class Cobalt {
     public final static String kJSPage = "page";
     public final static String kJSType = "type";
     public final static String kJSValue = "value";
+    public final static String kJSVersion = "version";
 
     // CALLBACKS
     public final static String JSTypeCallBack = "callback";
