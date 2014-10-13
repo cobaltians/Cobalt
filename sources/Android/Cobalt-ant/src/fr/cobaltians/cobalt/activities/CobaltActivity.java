@@ -41,7 +41,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -109,6 +112,34 @@ public abstract class CobaltActivity extends ActionBarActivity {
 	}
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        Bundle bundle = getIntent().getExtras();
+        Bundle extras = (bundle != null) ? bundle.getBundle(Cobalt.kExtras) : null;
+
+        if (extras != null && extras.containsKey(Cobalt.kBars)) {
+            try {
+                JSONObject actionBar = new JSONObject(extras.getString(Cobalt.kBars));
+                JSONArray actions = actionBar.optJSONArray(Cobalt.kActions);
+                if (actions != null) return setupOptionsMenu(menu, actions);
+            }
+            catch (JSONException exception) {
+                if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - onCreate: action bar configuration parsing failed. " + extras.getString(Cobalt.kBars));
+                exception.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // TODO: handle MenuItem selection
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void finish() {
         super.finish();
 
@@ -170,13 +201,10 @@ public abstract class CobaltActivity extends ActionBarActivity {
         }
 
         // Icon
-        String icon = configuration.optString(Cobalt.kAndroidIcon);
+        String icon = configuration.optString(Cobalt.kIcon);
         try {
             if (icon.isEmpty()) throw new IllegalArgumentException();
-            // TODO delete debug log
-            Log.d(Cobalt.TAG, TAG + "setupActionBar: split" + icon);
             String[] split = icon.split(":");
-            for (int i = 0 ; i < split.length ; i++) Log.d(Cobalt.TAG, TAG + "setupActionBar: split[" + i + "]: " + split[i]);
             if (split.length != 2) throw new IllegalArgumentException();
             int resId = getResources().getIdentifier(split[1], "drawable", split[0]);
             if (resId == 0) Log.w(Cobalt.TAG, TAG + "setupActionBar: androidIcon " + icon + " not found.");
@@ -202,6 +230,37 @@ public abstract class CobaltActivity extends ActionBarActivity {
         boolean visible = configuration.optBoolean(Cobalt.kVisible, true);
         if (visible) actionBar.show();
         else actionBar.hide();
+    }
+
+    private boolean setupOptionsMenu(Menu menu, JSONArray actions) {
+        // Actions
+        int length = actions.length();
+        for (int i = 0; i < length; i++) {
+            try {
+                JSONObject action = actions.getJSONObject(i);
+                String name = action.getString(Cobalt.kName);
+                String position = action.getString(Cobalt.kPosition);
+                String title = action.optString(Cobalt.kTitle, null);
+                String icon = action.optString(Cobalt.kIcon, null);
+                boolean visible = action.optBoolean(Cobalt.kVisible, true);
+
+                if (position.equals(Cobalt.kPositionOverflow)) {
+                    if (title == null) throw new JSONException("Actions positionned in overflow must specify a title attribute. Current: " + title);
+                    // TODO: create and add MenuItem to menu
+                }
+                else if (position.equals(Cobalt.kPositionTop) || position.equals(Cobalt.kPositionBottom)) {
+                    if (icon == null) throw new JSONException("Actions positionned at top or bottom must specify an icon attribute. Current: " + icon);
+                    // TODO: create and add MenuItem to menu
+                    //ActionMenuItem menuItem = new ActionMenuItem(this, Menu.NONE);
+                }
+            }
+            catch (JSONException exception) {
+                if (Cobalt.DEBUG) Log.w(Cobalt.TAG, TAG + "setupActionBar: actions " + actions.toString() + " format not supported.");
+                exception.printStackTrace();
+            }
+        }
+
+        return true;
     }
 
 	/*****************************************************************************************************************

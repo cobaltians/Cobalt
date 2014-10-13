@@ -71,7 +71,7 @@ public class Cobalt {
     public final static String kBars = "bars";
     public final static String kVisible = "visible";
     public final static String kBackgroundColor = "backgroundColor";
-    public final static String kAndroidIcon = "androidIcon";
+    public final static String kIcon = "androidIcon";
     public final static String kTheme = "androidTheme";
     public final static String kTitle = "title";
     public final static String kActions = "actions";
