@@ -292,6 +292,13 @@ var cobalt={
 	            case "callback":
                     cobalt.adapter.handleCallback(json)
                     break;
+                case "ui":
+                    switch (json.ui){
+                        case "bars":
+                            cobalt.nativeBars.handleEvent(json.data);
+                            break;
+                    }
+                    break;
 		        default:
                     cobalt.adapter.handleUnknown(json)
 	        }
@@ -488,6 +495,21 @@ var cobalt={
                     node.classList.remove(css_class);
                 }else{
                     node.setAttribute("class",  node.getAttribute("class").replace(css_class,'') );
+                }
+            }
+        }
+    },
+    nativeBars:{
+        handlers:{},
+        onBarButtonPressed:function(actionHandlers){
+            $.extend(cobalt.nativeBars.handlers, actionHandlers);
+        },
+        handleEvent:function(data){
+            if (data && data.action == "buttonPressed"){
+                if (data.button && cobalt.nativeBars.handlers[data.button]){
+                    cobalt.nativeBars.handlers[data.button]();
+                }else{
+                    cobalt.log('no handler for button ', data.button);
                 }
             }
         }
