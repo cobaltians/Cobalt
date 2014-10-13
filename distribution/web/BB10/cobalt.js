@@ -178,7 +178,8 @@ var cobalt={
                 }
                 break;
 			case "pop":
-				cobalt.send({ "type":"navigation", "action":"pop"});
+				var data = (page && controller) ? { page :page, controller: controller } : undefined;
+				cobalt.send({ "type":"navigation", "action":"pop", data : data});
 			break;
 			case "modal":
 				if (page){
