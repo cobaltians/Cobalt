@@ -40,7 +40,7 @@ var app={
             }
         });
         app.touch('a.pop',function(){
-            cobalt.navigate('pop');
+            cobalt.navigate('pop',$(this).attr('data-href'),$(this).attr('data-classid'));
         });
         app.touch('a.dismiss',function(){
             cobalt.navigate('dismiss');

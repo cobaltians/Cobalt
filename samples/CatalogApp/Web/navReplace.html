@@ -16,6 +16,12 @@
             <a class="replace" href="javascript:;" data-href="plugins.html" data-classid="plugins" data-animated="false">Cobalt Plugins (rough replace)</a>
 
         </div>
+
+        <div class="block">
+            <p>On the next page below, you will be able to pop to the index</p>
+            <a class="push" href="javascript:;" data-href="navPopTo.html">navPopTo</a>
+        </div>
+
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="../platform/cobalt.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
@@ -31,7 +37,7 @@
                     debugInDiv:app.debugInDiv
                 });
 
-                app.initPage('Modals');
+                app.initPage('navReplace');
 
                 app.touch('a.replace',function(){
                     var animated = ($(this).attr('data-animated') === "true");
