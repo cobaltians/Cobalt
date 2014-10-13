@@ -34,11 +34,15 @@ import fr.cobaltians.cobalt.R;
 import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -62,13 +66,26 @@ public abstract class CobaltActivity extends ActionBarActivity {
 
 		setContentView(getLayoutToInflate());
 
+        Bundle bundle = getIntent().getExtras();
+        Bundle extras = (bundle != null) ? bundle.getBundle(Cobalt.kExtras) : null;
+
+        if (extras != null && extras.containsKey(Cobalt.kBars)) {
+            try {
+                JSONObject actionBar = new JSONObject(extras.getString(Cobalt.kBars));
+                setupActionBar(actionBar);
+            }
+            catch (JSONException exception) {
+                if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - onCreate: action bar configuration parsing failed. " + extras.getString(Cobalt.kBars));
+                exception.printStackTrace();
+            }
+        }
+
 		if (savedInstanceState == null) {
             CobaltFragment fragment = getFragment();
 
             if (fragment != null) {
-                Bundle bundle = getIntent().getExtras();
                 if (bundle != null) {
-                    if (bundle.containsKey(Cobalt.kExtras)) fragment.setArguments(bundle.getBundle(Cobalt.kExtras));
+                    if (extras != null) fragment.setArguments(extras);
 
                     mWasPushedAsModal = bundle.getBoolean(Cobalt.kPushAsModal, false);
                     if (mWasPushedAsModal) {
@@ -81,6 +98,7 @@ public abstract class CobaltActivity extends ActionBarActivity {
                     }
                     else if (sWasPushedFromModal) overridePendingTransition(R.anim.modal_push_enter, R.anim.modal_push_exit);
                 }
+
                 if (findViewById(getFragmentContainerId()) != null) {
                     getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), fragment).commit();
                 }
@@ -123,6 +141,68 @@ public abstract class CobaltActivity extends ActionBarActivity {
 	public int getFragmentContainerId() {
 		return R.id.fragment_container;
 	}
+
+    private void setupActionBar(JSONObject configuration) {
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar == null) {
+            if (Cobalt.DEBUG) Log.w(Cobalt.TAG, TAG + "setupActionBar: activity does not have an action bar");
+            return;
+        }
+
+        // Reset
+        actionBar.setLogo(null);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setTitle(null);
+        actionBar.setDisplayShowTitleEnabled(false);
+
+        // Color
+        String backgroundColor = configuration.optString(Cobalt.kBackgroundColor);
+        try {
+            if (backgroundColor.isEmpty()) throw new IllegalArgumentException();
+            int colorInt = Color.parseColor(backgroundColor);
+            actionBar.setBackgroundDrawable(new ColorDrawable(colorInt));
+            // TODO: setSplitBackgroundDrawable
+        }
+        catch (IllegalArgumentException exception) {
+            if (Cobalt.DEBUG) Log.w(Cobalt.TAG, TAG + "setupActionBar: backgroundColor " + backgroundColor + " format not supported, use #RRGGBB.");
+            exception.printStackTrace();
+        }
+
+        // Icon
+        String icon = configuration.optString(Cobalt.kAndroidIcon);
+        try {
+            if (icon.isEmpty()) throw new IllegalArgumentException();
+            // TODO delete debug log
+            Log.d(Cobalt.TAG, TAG + "setupActionBar: split" + icon);
+            String[] split = icon.split(":");
+            for (int i = 0 ; i < split.length ; i++) Log.d(Cobalt.TAG, TAG + "setupActionBar: split[" + i + "]: " + split[i]);
+            if (split.length != 2) throw new IllegalArgumentException();
+            int resId = getResources().getIdentifier(split[1], "drawable", split[0]);
+            if (resId == 0) Log.w(Cobalt.TAG, TAG + "setupActionBar: androidIcon " + icon + " not found.");
+            else {
+                actionBar.setLogo(resId);
+                actionBar.setDisplayShowHomeEnabled(true);
+            }
+        }
+        catch (IllegalArgumentException exception) {
+            if (Cobalt.DEBUG) Log.w(Cobalt.TAG, TAG + "setupActionBar: androidIcon " + icon + " format not supported, use com.example.app:icon.");
+            exception.printStackTrace();
+        }
+
+        // Title
+        String title = configuration.optString(Cobalt.kTitle);
+        if (! title.isEmpty()) {
+            actionBar.setTitle(title);
+            actionBar.setDisplayShowTitleEnabled(true);
+        }
+        else if (Cobalt.DEBUG) Log.w(Cobalt.TAG, TAG + "setupActionBar: title is empty.");
+
+        // Visibility
+        boolean visible = configuration.optBoolean(Cobalt.kVisible, true);
+        if (visible) actionBar.show();
+        else actionBar.hide();
+    }
 
 	/*****************************************************************************************************************
 	 * Back

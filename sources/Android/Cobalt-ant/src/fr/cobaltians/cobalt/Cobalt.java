@@ -68,6 +68,18 @@ public class Cobalt {
     private final static String kPlugins = "plugins";
     private final static String kAndroid = "android";
     private final static String kDefaultController = "default";
+    public final static String kBars = "bars";
+    public final static String kVisible = "visible";
+    public final static String kBackgroundColor = "backgroundColor";
+    public final static String kAndroidIcon = "androidIcon";
+    public final static String kTheme = "androidTheme";
+    public final static String kTitle = "title";
+    public final static String kActions = "actions";
+    public final static String kName = "name";
+    public final static String kPosition = "androidPosition";
+    public final static String kPositionOverflow = "overflow";
+    public final static String kPositionTop = "top";
+    public final static String kPositionBottom = "bottom";
     public final static String kExtras = "extras";
     public final static String kPage = "page";
     private final static String kActivity = "activity";
@@ -76,7 +88,7 @@ public class Cobalt {
     public final static String kPullToRefresh = "pullToRefresh";
     public final static String kInfiniteScroll = "infiniteScroll";
     public final static String kSwipe = "swipe";
-    
+
     /*******************************************************************************************
      * JS KEYWORDS
      *******************************************************************************************/
@@ -276,6 +288,7 @@ public class Cobalt {
             JSONObject controllers = configuration.getJSONObject(kControllers);
 
             String activity;
+            JSONObject actionBar;
             boolean enablePullToRefresh;
             boolean enableInfiniteScroll;
             // TODO: add enableGesture
@@ -283,16 +296,19 @@ public class Cobalt {
             if (controller != null
                 && controllers.has(controller)) {
                 activity = controllers.getJSONObject(controller).getString(kAndroid);
+                actionBar = controllers.getJSONObject(controller).optJSONObject(kBars);
                 enablePullToRefresh = controllers.getJSONObject(controller).optBoolean(kPullToRefresh);
                 enableInfiniteScroll = controllers.getJSONObject(controller).optBoolean(kInfiniteScroll);
             }
             else {
                 activity = controllers.getJSONObject(kDefaultController).getString(kAndroid);
+                actionBar = controllers.getJSONObject(controller).optJSONObject(kBars);
                 enablePullToRefresh = controllers.getJSONObject(kDefaultController).optBoolean(kPullToRefresh);
                 enableInfiniteScroll = controllers.getJSONObject(kDefaultController).optBoolean(kInfiniteScroll);
             }
 
             bundle.putString(kActivity, activity);
+            if (actionBar != null) bundle.putString(kBars, actionBar.toString());
             bundle.putBoolean(kPullToRefresh, enablePullToRefresh);
             bundle.putBoolean(kInfiniteScroll, enableInfiniteScroll);
 
