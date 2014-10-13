@@ -38,6 +38,8 @@
 #pragma mark JAVASCRIPT KEYS
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//COBALT VERSION
+#define IOSCurrentVersion                   @"0.2.7"
 
 // GENERAL
 #define kJSAction                           @"action"
@@ -45,6 +47,7 @@
 #define kJSData                             @"data"
 #define kJSPage                             @"page"
 #define kJSType                             @"type"
+#define KJSVersion                          @"version"
 #define kJSValue                            @"value"
 #define kJSValues                           @"values"
 #define kJSResult                           @"result"

@@ -397,10 +397,16 @@ NSString * webLayerPage;
                 [_delegate onCobaltIsReady];
             }
 #if DEBUG_COBALT
-            NSLog(@"handleDictionarySentByJavaScript: CobaltIsReady!");
+            NSString * versionWeb = [dict objectForKey:KJSVersion];
+            if (![IOSCurrentVersion isEqualToString:versionWeb]) {
+                NSLog(@"Warning : Cobalt version mismatch : iOS Cobalt version is %@ but Web Cobalt version is %@. You should fix this.",IOSCurrentVersion, versionWeb);
+            }else{
+                NSLog(@"handleDictionarySentByJavaScript: CobaltIsReady, version %@",versionWeb);
+            }
+            
+            
 #endif
         }
-        
         // EVENT
         else if ([type isEqualToString:JSTypeEvent]) {
             NSString * event = [dict objectForKey:kJSEvent];
