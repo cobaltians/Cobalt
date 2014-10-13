@@ -12,7 +12,7 @@
 
             <p>Tap on bar buttons and watch below, buttons names should appears</p>
         </div>
-        <div id="barLog" class="block" style="padding:5px;">
+        <div id="barLog" class="block" style="padding:5px; background:#CCC">
 
         </div>
 
@@ -23,17 +23,33 @@
 
         <script>
 
+            var barLog = function(str){
+                $('#barLog').append(str+'<br/>');
+            }
+
             Zepto(function($){
 
                 cobalt.init({
                     debug:app.debug,
                     debugInBrowser:app.debugInBrowser,
-                    debugInDiv:app.debugInDiv,
+                    debugInDiv:false
+                });
 
-                    onBarButtonPressed:{
-                        "edit":function(){
-
-                        }
+                cobalt.nativeBars.onBarButtonPressed({
+                    "black_sun":function(){
+                        barLog("black sun")
+                    },
+                    "cloudy":function(){
+                        barLog('Oh no, clouds again !')
+                    },
+                    "moon":function(){
+                        barLog('Moon is the queen !')
+                    },
+                    "sun":function(){
+                        barLog("Sun is the button's king !")
+                    },
+                    "wind":function(){
+                        barLog('Wind !')
                     }
                 });
 
