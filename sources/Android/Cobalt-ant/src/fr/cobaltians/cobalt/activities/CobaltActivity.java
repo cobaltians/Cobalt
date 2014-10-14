@@ -43,10 +43,16 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 /**
  * {@link Activity} containing a {@link CobaltFragment}.
@@ -58,6 +64,7 @@ public abstract class CobaltActivity extends ActionBarActivity {
     private static boolean sWasPushedFromModal = false;
 
     private boolean mWasPushedAsModal;
+    private HashMap<Integer, String> mMenuItemsHashMap;
 
     /***************************************************************************************************************
 	 * LIFECYCLE
@@ -135,7 +142,7 @@ public abstract class CobaltActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO: handle MenuItem selection
+        // TODO: handle click events and send them to Web
         return super.onOptionsItemSelected(item);
     }
 
@@ -175,9 +182,10 @@ public abstract class CobaltActivity extends ActionBarActivity {
 
     private void setupActionBar(JSONObject configuration) {
         ActionBar actionBar = getSupportActionBar();
+        LinearLayout bottomActionBar = (LinearLayout) findViewById(R.id.bottom_actionbar);
 
         if (actionBar == null) {
-            if (Cobalt.DEBUG) Log.w(Cobalt.TAG, TAG + "setupActionBar: activity does not have an action bar");
+            if (Cobalt.DEBUG) Log.w(Cobalt.TAG, TAG + "setupActionBar: activity does not have an action bar.");
             return;
         }
 
@@ -186,6 +194,7 @@ public abstract class CobaltActivity extends ActionBarActivity {
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setTitle(null);
         actionBar.setDisplayShowTitleEnabled(false);
+        bottomActionBar.setVisibility(View.GONE);
 
         // Color
         String backgroundColor = configuration.optString(Cobalt.kBackgroundColor);
@@ -193,7 +202,7 @@ public abstract class CobaltActivity extends ActionBarActivity {
             if (backgroundColor.isEmpty()) throw new IllegalArgumentException();
             int colorInt = Color.parseColor(backgroundColor);
             actionBar.setBackgroundDrawable(new ColorDrawable(colorInt));
-            // TODO: setSplitBackgroundDrawable
+            bottomActionBar.setBackgroundColor(colorInt);
         }
         catch (IllegalArgumentException exception) {
             if (Cobalt.DEBUG) Log.w(Cobalt.TAG, TAG + "setupActionBar: backgroundColor " + backgroundColor + " format not supported, use #RRGGBB.");
@@ -232,34 +241,89 @@ public abstract class CobaltActivity extends ActionBarActivity {
         else actionBar.hide();
     }
 
+    // TODO: add bottom action bar item listener and send click events to Web
     private boolean setupOptionsMenu(Menu menu, JSONArray actions) {
-        // Actions
+        ActionBar actionBar = getSupportActionBar();
+        LinearLayout bottomActionBar = (LinearLayout) findViewById(R.id.bottom_actionbar);
+        boolean showBottomActionBar = false;
+
+        if (actionBar == null) {
+            if (Cobalt.DEBUG) Log.w(Cobalt.TAG, TAG + "setupOptionsMenu: activity does not have an action bar.");
+            return false;
+        }
+
+        mMenuItemsHashMap = new HashMap<Integer, String>();
+        int menuItemsAddedToTop = 0;
+        int menuItemsAddedToOverflow = 0;
+
         int length = actions.length();
+
         for (int i = 0; i < length; i++) {
             try {
                 JSONObject action = actions.getJSONObject(i);
                 String name = action.getString(Cobalt.kName);
-                String position = action.getString(Cobalt.kPosition);
-                String title = action.optString(Cobalt.kTitle, null);
-                String icon = action.optString(Cobalt.kIcon, null);
+                String title = action.getString(Cobalt.kTitle);
+                String icon = action.optString(Cobalt.kIcon);
+                String position = action.optString(Cobalt.kPosition, Cobalt.kPositionTop);
                 boolean visible = action.optBoolean(Cobalt.kVisible, true);
 
-                if (position.equals(Cobalt.kPositionOverflow)) {
-                    if (title == null) throw new JSONException("Actions positionned in overflow must specify a title attribute. Current: " + title);
-                    // TODO: create and add MenuItem to menu
+                if (position.equals(Cobalt.kPositionTop)) {
+                    if (icon.isEmpty()) throw new JSONException("Actions positionned at top or bottom must specify an icon attribute. Current: " + icon);
+                    String[] split = icon.split(":");
+                    if (split.length != 2) throw new JSONException("androidIcon " + icon + " format not supported, use com.example.app:icon.");
+                    int resId = getResources().getIdentifier(split[1], "drawable", split[0]);
+                    if (resId == 0) throw new JSONException("androidIcon " + icon + " not found.");
+
+                    MenuItem menuItem = menu.add(Menu.NONE, i, menuItemsAddedToTop++, title);
+                    menuItem.setIcon(resId);
+                    if (menuItemsAddedToTop > 2) menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    else menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    menuItem.setVisible(visible);
                 }
-                else if (position.equals(Cobalt.kPositionTop) || position.equals(Cobalt.kPositionBottom)) {
-                    if (icon == null) throw new JSONException("Actions positionned at top or bottom must specify an icon attribute. Current: " + icon);
-                    // TODO: create and add MenuItem to menu
-                    //ActionMenuItem menuItem = new ActionMenuItem(this, Menu.NONE);
+                else if (position.equals(Cobalt.kPositionOverflow)) {
+                    MenuItem menuItem = menu.add(Menu.NONE, i, menuItemsAddedToOverflow++, title);
+                    menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                    menuItem.setVisible(visible);
                 }
+                else if (position.equals(Cobalt.kPositionBottom)) {
+                    if (icon.isEmpty()) throw new JSONException("Actions positionned at top or bottom must specify an icon attribute. Current: " + icon);
+                    String[] split = icon.split(":");
+                    if (split.length != 2) throw new JSONException("androidIcon " + icon + " format not supported, use com.example.app:icon.");
+                    int resId = getResources().getIdentifier(split[1], "drawable", split[0]);
+                    if (resId == 0) throw new JSONException("androidIcon " + icon + " not found.");
+
+                    ImageButton button = new ImageButton(this);
+                    button.setImageResource(resId);
+                    button.setBackgroundResource(R.drawable.menu_item_background_dark);
+                    ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                                                        getResources().getDimensionPixelSize(R.dimen.bottom_actionbar_button_size));
+                    button.setLayoutParams(layoutParams);
+                    int padding = getResources().getDimensionPixelSize(R.dimen.bottom_actionBar_button_padding);
+                    button.setPadding(padding, padding, padding, padding);
+                    // TODO: add accessibility tooltip
+                    //if (title != null) button.setContentDescription(title);
+                    if (visible) {
+                        button.setVisibility(View.VISIBLE);
+                        showBottomActionBar = true;
+                    }
+                    else button.setVisibility(View.GONE);
+
+                    bottomActionBar.addView(button);
+                }
+                else throw new JSONException("androidPosition attribute must be top, overflow or bottom.");
             }
             catch (JSONException exception) {
-                if (Cobalt.DEBUG) Log.w(Cobalt.TAG, TAG + "setupActionBar: actions " + actions.toString() + " format not supported.");
+                if (Cobalt.DEBUG) Log.w(Cobalt.TAG, TAG + "setupActionBar: actions " + actions.toString() + " format not supported, use at least {\n"
+                                                    + "\tname: \"name\",\n"
+                                                    + "\ttitle: \"title\",\n"
+                                                    + "}");
                 exception.printStackTrace();
             }
         }
 
+        if (actionBar != null && actionBar.isShowing() && showBottomActionBar) bottomActionBar.setVisibility(View.VISIBLE);
+
+        // true to display menu
         return true;
     }
 
