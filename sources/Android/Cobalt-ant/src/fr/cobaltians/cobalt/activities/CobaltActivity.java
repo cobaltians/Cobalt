@@ -38,6 +38,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -300,15 +301,15 @@ public abstract class CobaltActivity extends ActionBarActivity {
 
                     MenuItem menuItem = menu.add(Menu.NONE, i, menuItemsAddedToTop++, title);
                     menuItem.setIcon(resId);
-                    if (menuItemsAddedToTop > 2) menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-                    else menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    if (menuItemsAddedToTop > 2) MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    else MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_ALWAYS);
                     menuItem.setVisible(visible);
 
                     mMenuItemsHashMap.put(i, name);
                 }
                 else if (position.equals(Cobalt.kPositionOverflow)) {
                     MenuItem menuItem = menu.add(Menu.NONE, i, menuItemsAddedToOverflow++, title);
-                    menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                    MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_NEVER);
                     menuItem.setVisible(visible);
 
                     mMenuItemsHashMap.put(i, name);
