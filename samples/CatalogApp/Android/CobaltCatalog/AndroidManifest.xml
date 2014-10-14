@@ -31,7 +31,8 @@
         <activity android:name=".activities.EventsActivity" />
         <activity android:name=".activities.PluginsActivity"
                   android:theme="@style/PluginsTheme" />
-        <activity android:name=".activities.NativeBarsActivity" />
+        <activity android:name=".activities.NativeBarsActivity"
+                  android:theme="@style/NativeBarsTheme"/>
     </application>
 
 </manifest>

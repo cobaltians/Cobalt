@@ -7,11 +7,19 @@
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/AppBaseActionBarTheme</item>
     </style>
+
     <!-- Plugin theme applied to the application or activity -->
     <style name="PluginsTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/PluginsActionBarTheme</item>
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/PluginsActionBarTheme</item>
+    </style>
+
+    <!-- Plugin theme applied to the application or activity -->
+    <style name="NativeBarsTheme" parent="@style/Theme.AppCompat.Light">
+        <item name="android:actionBarStyle">@style/AppBaseActionBarTheme</item>
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/AppBaseActionBarTheme</item>
     </style>
 
     <!-- ActionBar themes -->
