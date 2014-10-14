@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bottom_actionbar_button_size">48dp</dimen>
+    <dimen name="bottom_actionBar_button_padding">8dp</dimen>
+</resources>
