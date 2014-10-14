@@ -513,9 +513,34 @@ var cobalt={
                     cobalt.log('no handler for button ', data.button);
                 }
             }
+        },
+        send:function(data){
+            if (data){
+                cobalt.send({ type : "ui", control : "bars", data : data});
+            }
+        },
+        show:function(){
+            cobalt.nativeBars.send({ action : "show" });
+        },
+        hide:function(){
+            cobalt.nativeBars.send({ action : "hide" });
+        },
+        showButton:function(buttonName){
+            if (buttonName){
+                cobalt.nativeBars.send({ action : "showButton", button:buttonName });
+            }
+        },
+        hideButton:function(buttonName){
+            if (buttonName){
+                cobalt.nativeBars.send({ action : "hideButton", button:buttonName });
+            }
+        },
+        setTexts:function(newTexts){
+            if (newTexts){
+                cobalt.nativeBars.send({ action : "setTexts", texts:newTexts });
+            }
         }
     },
-
     datePicker:{
         //USER OPTIONS
         enabled : true,
@@ -602,7 +627,6 @@ var cobalt={
             }
         }
     },
-
 	storage : {
 		/*	localStorage helper
 
