@@ -146,6 +146,11 @@ public class Cobalt {
     public final static String kJSAlertCancelable = "cancelable";
     public final static String kJSAlertButtonIndex  = "index";
 
+    // BARS
+    public final static String JSControlBars = "bars";
+    public final static String JSActionButtonPressed = "buttonPressed";
+    public final static String kJSBarsButton = "button";
+
     // DATE PICKER
     public static final String JSControlPicker = "picker";
     public static final String JSPickerDate = "date";

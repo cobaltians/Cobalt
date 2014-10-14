@@ -142,8 +142,33 @@ public abstract class CobaltActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO: handle click events and send them to Web
-        return super.onOptionsItemSelected(item);
+        if (mMenuItemsHashMap.containsKey(item.getItemId())) {
+            String name = mMenuItemsHashMap.get(item.getItemId());
+
+            Fragment fragment = getSupportFragmentManager().findFragmentById(getFragmentContainerId());
+            if (fragment != null
+                && CobaltFragment.class.isAssignableFrom(fragment.getClass())) {
+                try {
+                    JSONObject data = new JSONObject();
+                    data.put(Cobalt.kJSAction, Cobalt.JSActionButtonPressed);
+                    data.put(Cobalt.kJSBarsButton, name);
+
+                    JSONObject message = new JSONObject();
+                    message.put(Cobalt.kJSType, Cobalt.JSTypeUI);
+                    message.put(Cobalt.kJSUIControl, Cobalt.JSControlBars);
+                    message.put(Cobalt.kJSData, data);
+
+                    ((CobaltFragment) fragment).sendMessage(message);
+                }
+                catch(JSONException exception) { exception.printStackTrace(); }
+            }
+            else if (Cobalt.DEBUG) Log.i(Cobalt.TAG,    TAG + " - onOptionsItemSelected: no fragment container found \n"
+                                                        + " or fragment found is not an instance of CobaltFragment. \n"
+                                                        + "Drop " + name + "bars button pressed event.");
+
+            return true;
+        }
+        else return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -240,8 +265,7 @@ public abstract class CobaltActivity extends ActionBarActivity {
         if (visible) actionBar.show();
         else actionBar.hide();
     }
-
-    // TODO: add bottom action bar item listener and send click events to Web
+    
     private boolean setupOptionsMenu(Menu menu, JSONArray actions) {
         ActionBar actionBar = getSupportActionBar();
         LinearLayout bottomActionBar = (LinearLayout) findViewById(R.id.bottom_actionbar);
@@ -261,7 +285,7 @@ public abstract class CobaltActivity extends ActionBarActivity {
         for (int i = 0; i < length; i++) {
             try {
                 JSONObject action = actions.getJSONObject(i);
-                String name = action.getString(Cobalt.kName);
+                final String name = action.getString(Cobalt.kName);
                 String title = action.getString(Cobalt.kTitle);
                 String icon = action.optString(Cobalt.kIcon);
                 String position = action.optString(Cobalt.kPosition, Cobalt.kPositionTop);
@@ -279,11 +303,15 @@ public abstract class CobaltActivity extends ActionBarActivity {
                     if (menuItemsAddedToTop > 2) menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
                     else menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                     menuItem.setVisible(visible);
+
+                    mMenuItemsHashMap.put(i, name);
                 }
                 else if (position.equals(Cobalt.kPositionOverflow)) {
                     MenuItem menuItem = menu.add(Menu.NONE, i, menuItemsAddedToOverflow++, title);
                     menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                     menuItem.setVisible(visible);
+
+                    mMenuItemsHashMap.put(i, name);
                 }
                 else if (position.equals(Cobalt.kPositionBottom)) {
                     if (icon.isEmpty()) throw new JSONException("Actions positionned at top or bottom must specify an icon attribute. Current: " + icon);
@@ -307,6 +335,33 @@ public abstract class CobaltActivity extends ActionBarActivity {
                         showBottomActionBar = true;
                     }
                     else button.setVisibility(View.GONE);
+
+                    button.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            Fragment fragment = getSupportFragmentManager().findFragmentById(getFragmentContainerId());
+                            if (fragment != null
+                                && CobaltFragment.class.isAssignableFrom(fragment.getClass())) {
+                                try {
+                                    JSONObject data = new JSONObject();
+                                    data.put(Cobalt.kJSAction, Cobalt.JSActionButtonPressed);
+                                    data.put(Cobalt.kJSBarsButton, name);
+
+                                    JSONObject message = new JSONObject();
+                                    message.put(Cobalt.kJSType, Cobalt.JSTypeUI);
+                                    message.put(Cobalt.kJSUIControl, Cobalt.JSControlBars);
+                                    message.put(Cobalt.kJSData, data);
+
+                                    ((CobaltFragment) fragment).sendMessage(message);
+                                }
+                                catch(JSONException exception) { exception.printStackTrace(); }
+                            }
+                            else if (Cobalt.DEBUG) Log.i(Cobalt.TAG,    TAG + " - onBarsButtonClick: no fragment container found \n"
+                                                                        + " or fragment found is not an instance of CobaltFragment. \n"
+                                                                        + "Drop " + name + "bars button pressed event.");
+                        }
+                    });
 
                     bottomActionBar.addView(button);
                 }
