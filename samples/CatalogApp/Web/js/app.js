@@ -10,23 +10,26 @@ var app={
     touchTimer:null,
     touch:function(selector, touchHandler, allowDefault){
         var preventDefault = allowDefault ? false : true;
-        var elem=$(selector)
-        var touchup=function(){
-           elem.removeClass('touched');
-        };
-        var touching=function(e){
-            if (!$(this).hasClass('touched')){
-                $(this).addClass('touched');
-                clearTimeout(app.touchTimer);
-                app.touchTimer = setTimeout(touchup,1000);
-                touchHandler.apply([this, e ]);
 
+        $(selector).each(function(i,elem){
+            var elem= $(elem);
+            var touchup=function(){
+                elem.removeClass('touched');
+            };
+            var touching=function(e){
+                if (!elem.hasClass('touched')){
+                    elem.addClass('touched');
+                    clearTimeout(app.touchTimer);
+                    app.touchTimer = setTimeout(touchup,1000);
+                    touchHandler.apply([this, e ]);
+
+                }
+                if (preventDefault)
+                    return false;
             }
-            if (preventDefault)
-                return false;
-        }
-        elem.unbind('tap').on('tap',touching);
-        elem.unbind('click').on('click',touching);
+            elem.unbind('tap').on('tap',touching);
+            elem.unbind('click').on('click',touching);
+        });
     },
 
     /*

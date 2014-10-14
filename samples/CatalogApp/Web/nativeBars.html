@@ -12,9 +12,20 @@
 
             <p>Tap on bar buttons and watch below, buttons names should appears</p>
         </div>
-        <div id="barLog" class="block" style="padding:5px; background:#CCC">
+        <div id="barLog" class="block" style="padding:5px; background:#CCC; min-height: 40px;">
 
         </div>
+        <div class="block">
+            <p>You can show/hide the bar and toggle button visibility too</p>
+
+            <a href="javascript:;" id="showHideBar">show/hide the native bars</a>
+            <a href="javascript:;" class="showHideButton" data-button-name="moon">show/hide the moon</a>
+            <a href="javascript:;" class="showHideButton" data-button-name="sun">show/hide the sun</a>
+            <a href="javascript:;" class="showHideButton" data-button-name="wind">show/hide the wind</a>
+            <a href="javascript:;" class="showHideButton" data-button-name="cloudy">show/hide the clouds</a>
+            <a href="javascript:;" class="showHideButton" data-button-name="black_sun">show/hide the black sun</a>
+        </div>
+
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="../platform/cobalt.js"></script>
@@ -54,6 +65,32 @@
                 });
 
                 app.initPage('native bars');
+
+                app.touch('#showHideBar',function(){
+                    if ($(this).hasClass('barShown')){
+                        cobalt.nativeBars.hide();
+                        cobalt.toast('hiding bar');
+                        $(this).removeClass('barShown')
+                    }else{
+                        cobalt.nativeBars.show();
+                        cobalt.toast('showing bar');
+                        $(this).addClass('barShown')
+                    }
+                })
+
+                app.touch('.showHideButton',function(){
+                    console.log($(this));
+                    var button = $(this).attr('data-button-name');
+                    if ($(this).hasClass('buttonShown')){
+                        cobalt.toast('hiding button');
+                        cobalt.nativeBars.hideButton(button);
+                        $(this).removeClass('buttonShown')
+                    }else{
+                        cobalt.toast('showing button');
+                        cobalt.nativeBars.showButton(button);
+                        $(this).addClass('buttonShown')
+                    }
+                })
             })
 
 
