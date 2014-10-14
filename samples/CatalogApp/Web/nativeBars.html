@@ -26,6 +26,12 @@
             <a href="javascript:;" class="showHideButton" data-button-name="black_sun">show/hide the black sun</a>
         </div>
 
+        <div class="block">
+            <p>You can also change titles</p>
+
+            <a href="javascript:;" id="changeTitles">change page title and wind title.</a>
+        </div>
+
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="../platform/cobalt.js"></script>
@@ -90,6 +96,13 @@
                         cobalt.nativeBars.showButton(button);
                         $(this).addClass('buttonShown')
                     }
+                })
+
+                app.touch('#changeTitles',function(){
+                   cobalt.nativeBars.setTexts({
+                       title : "new page title",
+                       wind : "new wind text"
+                   });
                 })
             })
 
