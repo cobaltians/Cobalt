@@ -49,10 +49,12 @@ var cobalt={
 	        }
             cobalt.storage.enable();
 
+			cobalt.utils.extend(cobalt.nativeBars.handlers, options.onBarButtonPressed);
             cobalt.utils.extend(cobalt.datePicker, options.datePicker)
             if (cobalt.datePicker.enabled){
                 cobalt.datePicker.init();
             }
+			
 
 
 		}else{
