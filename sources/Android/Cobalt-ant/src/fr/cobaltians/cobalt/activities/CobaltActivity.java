@@ -29,6 +29,10 @@
 
 package fr.cobaltians.cobalt.activities;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.NavUtils;
 import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.R;
 import fr.cobaltians.cobalt.fragments.CobaltFragment;
@@ -53,7 +57,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * {@link Activity} containing a {@link CobaltFragment}.
@@ -64,8 +71,11 @@ public abstract class CobaltActivity extends ActionBarActivity {
     protected static final String TAG = CobaltActivity.class.getSimpleName();
     private static boolean sWasPushedFromModal = false;
 
+    private static ArrayList<CobaltActivity> sActivitiesArrayList = new ArrayList<CobaltActivity>();
+
     private boolean mWasPushedAsModal;
     private HashMap<Integer, String> mMenuItemsHashMap;
+
 
     /***************************************************************************************************************
 	 * LIFECYCLE
@@ -76,6 +86,8 @@ public abstract class CobaltActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(getLayoutToInflate());
+
+        sActivitiesArrayList.add(0, this);
 
         Bundle bundle = getIntent().getExtras();
         Bundle extras = (bundle != null) ? bundle.getBundle(Cobalt.kExtras) : null;
@@ -183,7 +195,13 @@ public abstract class CobaltActivity extends ActionBarActivity {
         else if (sWasPushedFromModal) overridePendingTransition(R.anim.modal_pop_enter, R.anim.modal_pop_exit);
     }
 
-	/*****************************************************************************************************************
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sActivitiesArrayList.remove(0);
+    }
+
+    /*****************************************************************************************************************
 	 * COBALT
      *****************************************************************************************************************/
 
@@ -439,4 +457,50 @@ public abstract class CobaltActivity extends ActionBarActivity {
 		}
         else if (Cobalt.DEBUG) Log.e(Cobalt.TAG,   TAG + " - onWebLayerDismiss: no fragment container found");
 	}
+
+    public void popTo(String controller, String page){
+        Intent intent = Cobalt.getInstance(this).getIntentForController(controller, page);
+        if (intent != null) {
+            Bundle bundleNewActivity = intent.getBundleExtra(Cobalt.kExtras);
+            String newActivity = bundleNewActivity.getString(Cobalt.kActivity);
+
+            ArrayList<CobaltActivity> activityToFinish = new ArrayList<CobaltActivity>();
+            Boolean foundPage = false;
+            int maxPageId = -1;
+            int oldPageId = -1;
+
+            for (int i = 0; i < sActivitiesArrayList.size(); i++) {
+                CobaltActivity activity = sActivitiesArrayList.get(i);
+                activityToFinish.add(activity);
+
+                Intent intentStack = activity.getIntent();
+
+                if (!intentStack.hasCategory(Intent.CATEGORY_LAUNCHER)) {
+                    Bundle bundle = intentStack.getBundleExtra(Cobalt.kExtras);
+                    String oldActivity = bundle.getString(Cobalt.kActivity);
+                    if (newActivity.equals(oldActivity)) {
+                        maxPageId = i;
+                        String oldPage = bundle.getString(Cobalt.kPage);
+                        if (oldPage.equals(page)) {
+                            foundPage = true;
+                            oldPageId = i;
+                        }
+                    }
+                }
+            }
+            if (!foundPage) this.startActivity(intent);
+            else {
+                if (maxPageId == oldPageId) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                }
+                else {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                }
+                NavUtils.navigateUpTo(this, intent);
+
+            }
+        }
+        else if (Cobalt.DEBUG) Log.e(Cobalt.TAG,  TAG + " - push: Unable to push " + controller + " controller");
+
+    }
 }

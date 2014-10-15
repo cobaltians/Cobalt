@@ -29,6 +29,9 @@
 
 package fr.cobaltians.cobalt.fragments;
 
+import android.content.ComponentName;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import fr.cobaltians.cobalt.Cobalt;
 import fr.cobaltians.cobalt.R;
@@ -573,8 +576,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
                         if (data != null) {
                             String page = data.getString(Cobalt.kJSPage);
                             String controller = data.optString(Cobalt.kJSController, null);
-                            String callBackId = jsonObj.optString(Cobalt.kJSCallback, null);
-                            pop(page, controller, callBackId);
+                            pop(controller, page);
                         }
                         else pop();
 						return true;
@@ -809,9 +811,9 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 ****************************************************************************************************************/
 
 	private void push(String controller, String page) {
-		Intent intent = Cobalt.getInstance(mContext).getIntentForController(controller, page);
-		if (intent != null) {
-			mContext.startActivity(intent);
+        Intent intent = Cobalt.getInstance(mContext).getIntentForController(controller, page);
+        if (intent != null) {
+            mContext.startActivity(intent);
 		}
 		else if (Cobalt.DEBUG) Log.e(Cobalt.TAG,  TAG + " - push: Unable to push " + controller + " controller");
 	}
@@ -820,8 +822,8 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
         onBackPressed(true);
 	}
 
-    private void pop(String controller, String page, String callbackId) {
-
+    private void pop(String controller, String page) {
+        ((CobaltActivity) mContext).popTo(controller, page);
     }
 	
 	private void presentModal(String controller, String page, String callBackID) {
