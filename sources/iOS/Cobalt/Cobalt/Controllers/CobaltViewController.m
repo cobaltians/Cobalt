@@ -34,6 +34,20 @@
 
 #import "CobaltPluginManager.h"
 
+////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark GET POST REQUEST
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////////
+
+@interface CobaltButton : UIButton
+
+@property (nonatomic, retain) NSString * iconName;
+@end
+
+@implementation CobaltButton
+@end
+
 @interface CobaltViewController ()
 /*!
  @method		+(void) executeScriptInWebView:(UIWebView *)mWebView withDictionary:(NSDictionary *)dict
@@ -120,6 +134,8 @@ NSString * webLayerPage;
         context[@"cobaltViewController"] = self;
     }
     
+    [self configureBars];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAppBackground:) name: kOnAppBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAppForeground:) name:kOnAppForegroundNotification object:nil];
 }
@@ -127,6 +143,8 @@ NSString * webLayerPage;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    self.navigationController.toolbarHidden = !self.hasToolBar;
     
     [self sendEvent: JSEventOnPageShown withData:nil andCallback:nil];
     
@@ -592,6 +610,66 @@ NSString * webLayerPage;
                     [self showAlert:dict];
                 }
                 
+                // BARS
+                else if ([control isEqualToString: JSControlBars]) {
+                    if (data
+                        && [data isKindOfClass:[NSDictionary class]]) {
+                        NSString * action = [data objectForKey: kJSAction];
+                        NSString * button = [data objectForKey: kJSButton];
+                        
+                        if (action
+                            && [action isKindOfClass: [NSString class]]) {
+                            if (button
+                                && [button isKindOfClass: [NSString class]]) {
+                                
+                                    if([action isEqualToString: @"showButton"]) {
+                                        NSMutableArray * barActionsArray = [self.barsConfiguration objectForKey: kBarActions];
+                                        for(NSMutableDictionary * barAction in barActionsArray) {
+                                            if([[barAction objectForKey: kBarActionName] isEqualToString: button]) {
+                                                [barAction setObject: @"true" forKey: kBarActionVisible];
+                                                break;
+                                            }
+                                        }
+                                        
+                                        [self configureBars];
+                                    } else if([action isEqualToString: @"hideButton"]) {
+                                        NSMutableArray * barActionsArray = [self.barsConfiguration objectForKey: kBarActions];
+                                        for(NSMutableDictionary * barAction in barActionsArray) {
+                                            if([[barAction objectForKey: kBarActionName] isEqualToString: button]) {
+                                                [barAction setObject: @"false" forKey: kBarActionVisible];
+                                                break;
+                                            }
+                                        }
+                                        
+                                        [self configureBars];
+                                    }
+                            }
+                            else {
+                                if([action isEqualToString: @"hide"]) {
+                                    [self.navigationController setToolbarHidden: YES animated: YES];
+                                    [self.navigationController setNavigationBarHidden: YES animated: YES];
+                                    
+                                } else if([action isEqualToString: @"show"]) {
+                                    [self.navigationController setToolbarHidden: NO animated: YES];
+                                    [self.navigationController setNavigationBarHidden: NO animated: YES];
+                                    
+                                }
+                            }
+
+                        }
+#if DEBUG_COBALT
+                        else {
+                            NSLog(@"handleDictionarySentByJavaScript: action field missing or not a string (message: %@)", [dict description]);
+                        }
+#endif
+                    }
+#if DEBUG_COBALT
+                    else {
+                        NSLog(@"handleDictionarySentByJavaScript: data field missing or not an object (message: %@)", [dict description]);
+                    }
+#endif
+                }
+                
                 else {
 #if DEBUG_COBALT
                     NSLog(@"handleDictionarySentByJavaScript: unhandled message %@", [dict description]);
@@ -810,6 +888,15 @@ NSString * webLayerPage;
         NSString * nib = [configuration objectForKey:kIosNibName];
         BOOL pullToRefreshEnabled = [[configuration objectForKey:kPullToRefreshEnabled] boolValue];
         BOOL infiniteScrollEnabled = [[configuration objectForKey:kInfiniteScrollEnabled] boolValue];
+        NSMutableDictionary * barsDictionary = [NSMutableDictionary dictionaryWithDictionary: [configuration objectForKey: kBars]];
+        
+        NSDictionary * barActionsArray = [barsDictionary objectForKey: kBarActions];
+        NSMutableArray * mutableBarActionsArray = [NSMutableArray arrayWithCapacity: barActionsArray.count];
+        for(NSDictionary * barActionDictionary in barActionsArray) {
+            [mutableBarActionsArray addObject: [NSMutableDictionary dictionaryWithDictionary: barActionDictionary]];
+        }
+        
+        [barsDictionary setObject: mutableBarActionsArray forKey: kBarActions];
         
         if (! class) {
 #if DEBUG_COBALT
@@ -834,6 +921,8 @@ NSString * webLayerPage;
                 CobaltViewController * viewController = [[NSClassFromString(class) alloc] initWithNibName:nib bundle:[NSBundle mainBundle]];
                 viewController.isPullToRefreshEnabled = pullToRefreshEnabled;
                 viewController.isInfiniteScrollEnabled = infiniteScrollEnabled;
+                viewController.barsConfiguration = barsDictionary;
+                
                 return viewController;
             }
             else {
@@ -862,6 +951,69 @@ NSString * webLayerPage;
 #endif
     
     return isValidClass && isValidNib;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark BARS METHODS
+#pragma mark -
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)configureBars {
+    NSArray * barsAction = [self.barsConfiguration objectForKey: kBarActions];
+    
+    NSMutableArray * topLeftButtonsArray = [NSMutableArray arrayWithCapacity: 5];
+    NSMutableArray * topRightButtonsArray = [NSMutableArray arrayWithCapacity: 5];
+    NSMutableArray * bottomLeftButtonsArray = [NSMutableArray arrayWithCapacity: 5];
+    NSMutableArray * bottomRightButtonsArray = [NSMutableArray arrayWithCapacity: 5];
+    
+    for(NSDictionary * barActionConfiguration in barsAction) {
+        if([[barActionConfiguration objectForKey: kBarActionVisible] isEqualToString: @"false"])
+            continue;
+        
+        CobaltButton *barButtonAction =  [[CobaltButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 22.0, 22.0)];
+        barButtonAction.iconName = [barActionConfiguration objectForKey: kBarActionName];
+        [barButtonAction setImage:[UIImage imageNamed: [barActionConfiguration objectForKey: kBarActionIcon]] forState:UIControlStateNormal];
+        UIBarButtonItem * barButtonItemAction = [[UIBarButtonItem alloc] initWithCustomView:barButtonAction];
+        
+        NSString * barActionPosition = [barActionConfiguration objectForKey: kBarActionPosition];
+        
+        if([barActionPosition isEqualToString: @"topLeft"]) {
+            [topLeftButtonsArray addObject: barButtonItemAction];
+        } else if([barActionPosition isEqualToString: @"topRight"]) {
+            [topRightButtonsArray addObject: barButtonItemAction];
+        } else if([barActionPosition isEqualToString: @"bottomLeft"]) {
+            [bottomLeftButtonsArray addObject: barButtonItemAction];
+        } else if([barActionPosition isEqualToString: @"bottomRight"]) {
+            [bottomRightButtonsArray addObject: barButtonItemAction];
+        }
+        
+        [barButtonAction addTarget:self action:@selector(onBarButtonItem:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+    self.navigationItem.leftItemsSupplementBackButton = YES;
+    
+    [self.navigationItem setLeftBarButtonItems: topLeftButtonsArray animated: YES];
+    [self.navigationItem setRightBarButtonItems: topRightButtonsArray animated: YES];
+    
+    NSMutableArray * bottomButtonsArray = [NSMutableArray arrayWithCapacity: bottomLeftButtonsArray.count + bottomRightButtonsArray.count + 1];
+    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+
+    [bottomButtonsArray addObjectsFromArray: bottomLeftButtonsArray];
+    [bottomButtonsArray addObject: flexibleSpace];
+    [bottomButtonsArray addObjectsFromArray: bottomRightButtonsArray];
+    
+    [self setToolbarItems: bottomButtonsArray animated: YES];
+    
+    //TODO replace this test by "visible" test
+    if(self.toolbarItems.count > 1)
+        self.hasToolBar = YES;
+}
+
+- (void)onBarButtonItem: (CobaltButton *)button {
+    NSDictionary * data = @{ @"type" : @"ui", @"control" : @"bars", @"data" : @{ @"action" : @"buttonPressed", @"button" : button.iconName }};
+    
+    [self sendMessage: data];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

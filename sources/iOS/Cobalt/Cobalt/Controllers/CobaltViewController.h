@@ -106,6 +106,10 @@
 // TOAST
 #define JSControlToast                      @"toast"
 
+//BARS
+#define JSControlBars                       @"bars"
+#define kJSButton                           @"button"
+
 // WEB LAYER
 #define JSTypeWebLayer                      @"webLayer"
 #define JSActionWebLayerShow                @"show"
@@ -219,6 +223,18 @@
  @abstract		allows or not the infinite scroll functionality
  */
 @property BOOL isInfiniteScrollEnabled;
+
+/*!
+ @property		hasToolBar
+ @abstract		allows or not the toolbar display
+ */
+@property BOOL hasToolBar;
+
+/*!
+ @property		barsConfiguration
+ @abstract		bars configuration as defined in cobalt.conf
+ */
+@property NSMutableDictionary * barsConfiguration;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

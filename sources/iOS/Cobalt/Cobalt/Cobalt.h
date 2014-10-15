@@ -43,6 +43,16 @@
 #define kIosNibName             @"iosNibName"
 #define kPullToRefreshEnabled   @"pullToRefresh"
 #define kInfiniteScrollEnabled  @"infiniteScroll"
+#define kBars                   @"bars"
+#define kBarVisible             @"visible"
+#define kBarBackgroundColor     @"backgroundColor"
+#define kBarTitle               @"title"
+#define kBarActions             @"actions"
+#define kBarActionIcon          @"iosIcon"
+#define kBarActionName          @"name"
+#define kBarActionTitle         @"title"
+#define kBarActionVisible       @"visible"
+#define kBarActionPosition      @"iosPosition"
 
 @interface Cobalt : NSObject
 
