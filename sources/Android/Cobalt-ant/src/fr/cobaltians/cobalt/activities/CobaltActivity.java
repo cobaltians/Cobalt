@@ -471,7 +471,6 @@ public abstract class CobaltActivity extends ActionBarActivity {
 
             for (int i = 0; i < sActivitiesArrayList.size(); i++) {
                 CobaltActivity activity = sActivitiesArrayList.get(i);
-                activityToFinish.add(activity);
 
                 Intent intentStack = activity.getIntent();
 
@@ -491,16 +490,20 @@ public abstract class CobaltActivity extends ActionBarActivity {
             if (!foundPage) this.startActivity(intent);
             else {
                 if (maxPageId == oldPageId) {
-                    intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                    for (int index = 0; index <= maxPageId ; index++) {
+                        activityToFinish.add(sActivitiesArrayList.get(index));
+                    }
+                    this.startActivity(intent);
+                    for (CobaltActivity activity : activityToFinish) {
+                        activity.finish();
+                    }
                 }
                 else {
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    NavUtils.navigateUpTo(this, intent);
                 }
-                NavUtils.navigateUpTo(this, intent);
-
             }
         }
         else if (Cobalt.DEBUG) Log.e(Cobalt.TAG,  TAG + " - push: Unable to push " + controller + " controller");
-
     }
 }
