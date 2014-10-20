@@ -78,8 +78,8 @@ NSString * webLayerPage;
 
 - (id) init {
     if(self = [super init]) {
-        _navigationBarTintColor = [UIColor whiteColor];
-        _toolbarTintColor = [UIColor whiteColor];
+        _navigationBarTintColor = [[UINavigationBar appearance] barTintColor];
+        _toolbarTintColor = [[UIToolbar appearance] barTintColor];
     }
     
     return self;
