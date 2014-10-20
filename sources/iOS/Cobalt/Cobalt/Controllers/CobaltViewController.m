@@ -1016,6 +1016,14 @@ UIColor * SKColorFromHexString(NSString * hexString) {
 }
 
 - (void)configureBars {
+    
+    NSDictionary * visibilities = [self.barsConfiguration objectForKey: kJSVisibility];
+    BOOL topVisible = [[visibilities objectForKey: kJSTop] boolValue] || ![visibilities objectForKey: kJSTop];
+    BOOL bottomVisible = [[visibilities objectForKey: kJSBottom] boolValue];
+    
+    [self.navigationController setNavigationBarHidden: !topVisible animated: NO];
+    self.hasToolBar = bottomVisible;
+    
     NSString * backgroundColorString = [self.barsConfiguration objectForKey: kBarBackgroundColor];
     
     if(backgroundColorString.length > 0) {
@@ -1069,10 +1077,6 @@ UIColor * SKColorFromHexString(NSString * hexString) {
     [bottomButtonsArray addObjectsFromArray: bottomRightButtonsArray];
     
     [self setToolbarItems: bottomButtonsArray animated: YES];
-    
-    //TODO replace this test by "visible" test
-    if(self.toolbarItems.count > 1)
-        self.hasToolBar = YES;
 }
 
 - (void)onBarButtonItem: (CobaltButton *)button {
