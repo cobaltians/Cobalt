@@ -109,6 +109,8 @@
 //BARS
 #define JSControlBars                       @"bars"
 #define kJSButton                           @"button"
+#define kJSTexts                            @"texts"
+#define kJSTitleBar                         @"title"
 
 // WEB LAYER
 #define JSTypeWebLayer                      @"webLayer"

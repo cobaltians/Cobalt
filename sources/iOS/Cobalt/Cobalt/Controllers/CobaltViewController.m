@@ -619,43 +619,51 @@ NSString * webLayerPage;
                         
                         if (action
                             && [action isKindOfClass: [NSString class]]) {
-                            if (button
-                                && [button isKindOfClass: [NSString class]]) {
-                                
-                                    if([action isEqualToString: @"showButton"]) {
-                                        NSMutableArray * barActionsArray = [self.barsConfiguration objectForKey: kBarActions];
-                                        for(NSMutableDictionary * barAction in barActionsArray) {
-                                            if([[barAction objectForKey: kBarActionName] isEqualToString: button]) {
-                                                [barAction setObject: @"true" forKey: kBarActionVisible];
-                                                break;
-                                            }
+                            
+                            
+                            if([action isEqualToString: @"showButton"]) {
+                                if (button
+                                    && [button isKindOfClass: [NSString class]]) {
+                                    
+                                    NSMutableArray * barActionsArray = [self.barsConfiguration objectForKey: kBarActions];
+                                    for(NSMutableDictionary * barAction in barActionsArray) {
+                                        if([[barAction objectForKey: kBarActionName] isEqualToString: button]) {
+                                            [barAction setObject: @"true" forKey: kBarActionVisible];
+                                            break;
                                         }
-                                        
-                                        [self configureBars];
-                                    } else if([action isEqualToString: @"hideButton"]) {
-                                        NSMutableArray * barActionsArray = [self.barsConfiguration objectForKey: kBarActions];
-                                        for(NSMutableDictionary * barAction in barActionsArray) {
-                                            if([[barAction objectForKey: kBarActionName] isEqualToString: button]) {
-                                                [barAction setObject: @"false" forKey: kBarActionVisible];
-                                                break;
-                                            }
-                                        }
-                                        
-                                        [self configureBars];
                                     }
-                            }
-                            else {
-                                if([action isEqualToString: @"hide"]) {
-                                    [self.navigationController setToolbarHidden: YES animated: YES];
-                                    [self.navigationController setNavigationBarHidden: YES animated: YES];
                                     
-                                } else if([action isEqualToString: @"show"]) {
-                                    [self.navigationController setToolbarHidden: NO animated: YES];
-                                    [self.navigationController setNavigationBarHidden: NO animated: YES];
+                                    [self configureBars];
+                                }
+                            } else if([action isEqualToString: @"hideButton"]) {
+                                if (button
+                                    && [button isKindOfClass: [NSString class]]) {
+                                    NSMutableArray * barActionsArray = [self.barsConfiguration objectForKey: kBarActions];
+                                    for(NSMutableDictionary * barAction in barActionsArray) {
+                                        if([[barAction objectForKey: kBarActionName] isEqualToString: button]) {
+                                            [barAction setObject: @"false" forKey: kBarActionVisible];
+                                            break;
+                                        }
+                                    }
                                     
+                                    [self configureBars];
                                 }
                             }
-
+                            else if([action isEqualToString: @"hide"]) {
+                                [self.navigationController setToolbarHidden: YES animated: YES];
+                                [self.navigationController setNavigationBarHidden: YES animated: YES];
+                                
+                            } else if([action isEqualToString: @"show"]) {
+                                [self.navigationController setToolbarHidden: NO animated: YES];
+                                [self.navigationController setNavigationBarHidden: NO animated: YES];
+                                
+                            } else if([action isEqualToString: @"setTexts"]) {
+                                NSDictionary * texts = [data objectForKey: kJSTexts];
+                                NSString * title = [texts objectForKey: kJSTitleBar];
+                                [self.navigationItem setTitle: title];
+                            }
+                            
+                            
                         }
 #if DEBUG_COBALT
                         else {
