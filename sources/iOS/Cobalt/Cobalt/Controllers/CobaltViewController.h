@@ -111,6 +111,9 @@
 #define kJSButton                           @"button"
 #define kJSTexts                            @"texts"
 #define kJSTitleBar                         @"title"
+#define kJSVisibility                       @"visibility"
+#define kJSTop                              @"top"
+#define kJSBottom                           @"bottom"
 
 // WEB LAYER
 #define JSTypeWebLayer                      @"webLayer"

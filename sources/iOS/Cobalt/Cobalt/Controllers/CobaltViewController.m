@@ -672,6 +672,13 @@ NSString * webLayerPage;
                                 NSDictionary * texts = [data objectForKey: kJSTexts];
                                 NSString * title = [texts objectForKey: kJSTitleBar];
                                 [self.navigationItem setTitle: title];
+                            } else if ([action isEqualToString: @"setVisibility"]) {
+                                NSDictionary * visibilities = [data objectForKey: kJSVisibility];
+                                BOOL topVisible = [[visibilities objectForKey: kJSTop] boolValue];
+                                BOOL bottomVisible = [[visibilities objectForKey: kJSBottom] boolValue];
+                                
+                                [self.navigationController setNavigationBarHidden: !topVisible animated:YES];
+                                [self.navigationController setToolbarHidden: !bottomVisible animated:YES];
                             }
                             
                             
