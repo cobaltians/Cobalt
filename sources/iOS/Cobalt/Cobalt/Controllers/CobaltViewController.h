@@ -177,6 +177,9 @@
     NSOperationQueue * toJavaScriptOperationQueue;
     NSOperationQueue * fromJavaScriptOperationQueue;
     
+    UIColor * _navigationBarTintColor;
+    UIColor * _toolbarTintColor;
+    
 @private
     
     id<CobaltDelegate> _delegate;

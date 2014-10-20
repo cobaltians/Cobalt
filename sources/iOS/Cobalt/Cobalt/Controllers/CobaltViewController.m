@@ -76,6 +76,14 @@ BOOL toastIsShown;
 NSString * webLayerPage;
 
 
+- (id) init {
+    if(self = [super init]) {
+        _navigationBarTintColor = [UIColor whiteColor];
+        _toolbarTintColor = [UIColor whiteColor];
+    }
+    
+    return self;
+}
 
 - (void)viewDidLoad
 {
@@ -143,6 +151,9 @@ NSString * webLayerPage;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    self.navigationController.navigationBar.barTintColor = _navigationBarTintColor;
+    self.navigationController.toolbar.barTintColor = _toolbarTintColor;
     
     self.navigationController.toolbarHidden = !self.hasToolBar;
     
@@ -967,7 +978,46 @@ NSString * webLayerPage;
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+//TODO put this code (2 following functions) in a UIColor category
+void SKScanHexColor(NSString * hexString, float * red, float * green, float * blue, float * alpha) {
+    NSString *cleanString = [hexString stringByReplacingOccurrencesOfString:@"#" withString:@""];
+    if([cleanString length] == 3) {
+        cleanString = [NSString stringWithFormat:@"%@%@%@%@%@%@",
+                       [cleanString substringWithRange:NSMakeRange(0, 1)],[cleanString substringWithRange:NSMakeRange(0, 1)],
+                       [cleanString substringWithRange:NSMakeRange(1, 1)],[cleanString substringWithRange:NSMakeRange(1, 1)],
+                       [cleanString substringWithRange:NSMakeRange(2, 1)],[cleanString substringWithRange:NSMakeRange(2, 1)]];
+    }
+    if([cleanString length] == 6) {
+        cleanString = [cleanString stringByAppendingString:@"ff"];
+    }
+    
+    unsigned int baseValue;
+    [[NSScanner scannerWithString:cleanString] scanHexInt:&baseValue];
+    
+    if (red) { *red = ((baseValue >> 24) & 0xFF)/255.0f; }
+    if (green) { *green = ((baseValue >> 16) & 0xFF)/255.0f; }
+    if (blue) { *blue = ((baseValue >> 8) & 0xFF)/255.0f; }
+    if (alpha) { *alpha = ((baseValue >> 0) & 0xFF)/255.0f; }
+}
+
+UIColor * SKColorFromHexString(NSString * hexString) {
+    float red, green, blue, alpha;
+    SKScanHexColor(hexString, &red, &green, &blue, &alpha);
+    
+    return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+}
+
 - (void)configureBars {
+    NSString * backgroundColorString = [self.barsConfiguration objectForKey: kBarBackgroundColor];
+    
+    if(backgroundColorString.length > 0) {
+        UIColor * backgroundColor = SKColorFromHexString(backgroundColorString);
+    
+        _navigationBarTintColor = backgroundColor;
+        _toolbarTintColor = backgroundColor;
+    }
+    
     NSArray * barsAction = [self.barsConfiguration objectForKey: kBarActions];
     
     NSMutableArray * topLeftButtonsArray = [NSMutableArray arrayWithCapacity: 5];
