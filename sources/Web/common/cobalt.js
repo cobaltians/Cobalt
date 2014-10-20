@@ -521,11 +521,12 @@ var cobalt={
                 cobalt.send({ type : "ui", control : "bars", data : data});
             }
         },
-        show:function(){
-            cobalt.nativeBars.send({ action : "show" });
-        },
-        hide:function(){
-            cobalt.nativeBars.send({ action : "hide" });
+		setVisibility:function(visibility){
+            if (visibility && (typeof visibility.top != "undefined" || typeof visibility.top != "undefined")){
+                cobalt.nativeBars.send({ action : "setVisibility", visibility : visibility });
+            }else{
+                cobalt.log('you should change at least one bar visibility')
+            }
         },
         showButton:function(buttonName){
             if (buttonName){

@@ -18,7 +18,7 @@
         <div class="block">
             <p>You can show/hide the bar and toggle button visibility too</p>
 
-            <a href="javascript:;" id="showHideBar">show/hide the native bars</a>
+            <a href="javascript:;" id="showHideBars">change native bars visibility</a>
             <a href="javascript:;" class="showHideButton" data-button-name="moon">show/hide the moon</a>
             <a href="javascript:;" class="showHideButton" data-button-name="sun">show/hide the sun</a>
             <a href="javascript:;" class="showHideButton" data-button-name="wind">show/hide the wind</a>
@@ -43,6 +43,13 @@
             var barLog = function(str){
                 $('#barLog').append(str+'<br/>');
             }
+            var visibilities = [
+                { top : true, bottom:true },
+                { top : false, bottom:true },
+                { top : false, bottom:false },
+                { top : true, bottom:false }
+            ]
+            var visibilitiesIndex=0;
 
             Zepto(function($){
 
@@ -72,16 +79,11 @@
 
                 app.initPage('native bars');
 
-                app.touch('#showHideBar',function(){
-                    if ($(this).hasClass('barShown')){
-                        cobalt.nativeBars.hide();
-                        cobalt.toast('hiding bar');
-                        $(this).removeClass('barShown')
-                    }else{
-                        cobalt.nativeBars.show();
-                        cobalt.toast('showing bar');
-                        $(this).addClass('barShown')
-                    }
+                app.touch('#showHideBars',function(){
+                    var newVisibility = visibilities[visibilitiesIndex];
+                    cobalt.toast('setting bar visibility to ', newVisibility);
+                    cobalt.nativeBars.setVisibility(newVisibility);
+                    visibilitiesIndex = ( visibilitiesIndex+1 < visibilities.length ) ? visibilitiesIndex+1 : 0;
                 })
 
                 app.touch('.showHideButton',function(){
