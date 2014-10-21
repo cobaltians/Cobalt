@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+    </head>
+    <body class="theme_green">
+
+        <div class="block">
+            <p>Below is a button to fetch images from Google using the native webservice&cache API. The first time you will use it it will have to wait until the server response. Next time, the data will already be in the storage so you will be able to have the cache result in instant.</p>
+
+            <a href="javascript:;" id="try">Ask webservice for images</a>
+        </div>
+
+        <div id="pageLog" class="block" style="padding:5px; background:#CCC; min-height: 40px;">
+
+        </div>
+
+        <script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="../platform/cobalt.js"></script>
+
+
+        <script type="text/javascript" src="js/cobalt.webservices.js"></script>
+        <script type="text/javascript" src="js/setTimeoutWorkaround.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+
+        <script>
+
+            var pageLog = function(str){
+                $('#pageLog').append(str+'<br/>');
+            }
+
+            Zepto(function($){
+                cobalt.init({
+                    debug:app.debug,
+                    debugInBrowser:app.debugInBrowser,
+                    debugInDiv:false,
+
+                    plugins:{
+                        //equals to cobalt.ws.config()
+                        webservices:{
+                            base:{
+                                url : "https://ajax.googleapis.com/ajax/services/search/"
+                            },
+                            defaultParameters:{
+                                errorCallback : function( data, concernedCall ){
+                                    pageLog('WS error for call '+ concernedCall.callId + '. server response is '+ JSON.stringify(data) )
+                                }
+                            }
+                        }
+
+                    }
+                });
+
+                app.initPage('Webservices Plugin')
+
+                app.touch('#try',function(){
+
+                    cobalt.ws.call({
+                        url : "images",
+                        params:{
+                            v : "1.0",rsz : 8, q:"test",
+                            imgsz:"medium", start : 0
+                        },
+                        storageKey : "googleImages:0",
+                        successCallback : function( data, concernedCall ){
+
+                            if (data && data.responseData && data.responseData.results){
+                                pageLog('SUCCESS : Google replied with '+data.responseData.results.length+' images');
+
+                            }else{
+                                if (data && data.responseDetails){
+                                    pageLog('SUCCESS : Call success but Google API error : '+data.responseDetails)
+                                }else{
+                                    pageLog('ERROR : no answers from Google or data not parsed to json : '+ JSON.stringify(data))
+                                }
+                            }
+                        },
+                        cacheCallback : function( data ){
+                            if (data && data.responseData && data.responseData.results){
+                                pageLog('STORE : already got a result with '+data.responseData.results.length+' images in the WS storage');
+                            }else{
+                                pageLog('STORE : Warning : got something in storage but that is NOT some google images');
+                            }
+                        }
+                    })
+
+                })
+
+
+            })
+
+        </script>
+
+    </body>
+</html>
