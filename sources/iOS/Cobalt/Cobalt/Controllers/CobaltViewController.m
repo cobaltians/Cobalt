@@ -1046,7 +1046,18 @@ UIColor * SKColorFromHexString(NSString * hexString) {
         
         CobaltButton *barButtonAction =  [[CobaltButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 22.0, 22.0)];
         barButtonAction.iconName = [barActionConfiguration objectForKey: kBarActionName];
-        [barButtonAction setImage:[UIImage imageNamed: [barActionConfiguration objectForKey: kBarActionIcon]] forState:UIControlStateNormal];
+        
+        NSString * barButtonImageName = [barActionConfiguration objectForKey: kBarActionIcon];
+        UIImage * barButtonImage = nil;
+        
+        if([barButtonImageName hasPrefix: @"fa-"]) {
+            barButtonImage = [UIImage imageWithIcon:barButtonImageName backgroundColor:[UIColor clearColor] iconColor:[UIColor whiteColor] iconScale:[[UIScreen mainScreen] scale] andSize:CGSizeMake(22, 22)];
+        } else {
+            barButtonImage = [UIImage imageNamed: barButtonImageName];
+        }
+        
+        [barButtonAction setImage: barButtonImage forState:UIControlStateNormal];
+        
         UIBarButtonItem * barButtonItemAction = [[UIBarButtonItem alloc] initWithCustomView:barButtonAction];
         
         NSString * barActionPosition = [barActionConfiguration objectForKey: kBarActionPosition];

@@ -13,6 +13,9 @@
 		71B4B1ED1886D9DD0027AC4F /* CobaltToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1E41886D9DD0027AC4F /* CobaltToast.m */; };
 		8E1070BF1987ED8800DED934 /* CustomizedPulltoRefreshViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E1070BE1987ED8800DED934 /* CustomizedPulltoRefreshViewController.m */; };
 		8E1070C11987EE7800DED934 /* CobaltViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8E1070C01987EE7800DED934 /* CobaltViewController.xib */; };
+		8E12048C19F6523900A1FBE5 /* FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E12048A19F6523900A1FBE5 /* FontAwesome.m */; };
+		8E12048D19F6523900A1FBE5 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E12048B19F6523900A1FBE5 /* FontAwesome.ttf */; };
+		8E12048F19F6556900A1FBE5 /* FontAwesome.h in Sources */ = {isa = PBXBuildFile; fileRef = 8E12048919F6523900A1FBE5 /* FontAwesome.h */; };
 		8E22E87E19DA965C00938B5B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E22E87D19DA965C00938B5B /* JavaScriptCore.framework */; };
 		8E751EA819EEB62400EDFF4D /* black_sun.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E751E9919EEB62400EDFF4D /* black_sun.png */; };
 		8E751EA919EEB62400EDFF4D /* black_sun@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E751E9A19EEB62400EDFF4D /* black_sun@2x.png */; };
@@ -62,6 +65,9 @@
 		8E1070BD1987ED8800DED934 /* CustomizedPulltoRefreshViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomizedPulltoRefreshViewController.h; sourceTree = "<group>"; };
 		8E1070BE1987ED8800DED934 /* CustomizedPulltoRefreshViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomizedPulltoRefreshViewController.m; sourceTree = "<group>"; };
 		8E1070C01987EE7800DED934 /* CobaltViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CobaltViewController.xib; sourceTree = "<group>"; };
+		8E12048919F6523900A1FBE5 /* FontAwesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontAwesome.h; sourceTree = "<group>"; };
+		8E12048A19F6523900A1FBE5 /* FontAwesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontAwesome.m; sourceTree = "<group>"; };
+		8E12048B19F6523900A1FBE5 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
 		8E22E87D19DA965C00938B5B /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		8E751E9919EEB62400EDFF4D /* black_sun.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = black_sun.png; sourceTree = "<group>"; };
 		8E751E9A19EEB62400EDFF4D /* black_sun@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "black_sun@2x.png"; sourceTree = "<group>"; };
@@ -126,6 +132,7 @@
 		71B4B1D31886D9DD0027AC4F /* Cobalt */ = {
 			isa = PBXGroup;
 			children = (
+				8E12048E19F6523F00A1FBE5 /* FA */,
 				8EE619A71980074100B5767C /* Plugin */,
 				71B4B1D41886D9DD0027AC4F /* Cobalt-Prefix.pch */,
 				71B4B1D51886D9DD0027AC4F /* Cobalt.h */,
@@ -156,6 +163,16 @@
 				71B4B1E41886D9DD0027AC4F /* CobaltToast.m */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		8E12048E19F6523F00A1FBE5 /* FA */ = {
+			isa = PBXGroup;
+			children = (
+				8E12048919F6523900A1FBE5 /* FontAwesome.h */,
+				8E12048A19F6523900A1FBE5 /* FontAwesome.m */,
+				8E12048B19F6523900A1FBE5 /* FontAwesome.ttf */,
+			);
+			name = FA;
 			sourceTree = "<group>";
 		};
 		8E751E9819EEB62400EDFF4D /* Design */ = {
@@ -325,6 +342,7 @@
 				8E751EAA19EEB62400EDFF4D /* black_sun@3x.png in Resources */,
 				8E751EB119EEB62400EDFF4D /* sun.png in Resources */,
 				8EC5CAD71980FB00001777FA /* Images.xcassets in Resources */,
+				8E12048D19F6523900A1FBE5 /* FontAwesome.ttf in Resources */,
 				8E751EB519EEB62400EDFF4D /* wind@2x.png in Resources */,
 				8E751EAC19EEB62400EDFF4D /* cloudy@2x.png in Resources */,
 				C49597591717090B006454BA /* CallbacksController.xib in Resources */,
@@ -347,9 +365,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E12048F19F6556900A1FBE5 /* FontAwesome.h in Sources */,
 				8EE619B01980074100B5767C /* CobaltPluginManager.m in Sources */,
 				F01A5A181716EF4D0000DD94 /* main.m in Sources */,
 				F01A5A1C1716EF4D0000DD94 /* AppDelegate.m in Sources */,
+				8E12048C19F6523900A1FBE5 /* FontAwesome.m in Sources */,
 				71B4B1E71886D9DD0027AC4F /* Cobalt.m in Sources */,
 				71B4B1EC1886D9DD0027AC4F /* iToast.m in Sources */,
 				8E1070BF1987ED8800DED934 /* CustomizedPulltoRefreshViewController.m in Sources */,
