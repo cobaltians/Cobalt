@@ -10,7 +10,9 @@
 	<string>CatalogCobalt</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>8F924602F3C51B7A18EF94EFB8636649C2AA30B2</key>
+		<key>7F346375E8E073B3A7CE55C31DAF342C703A9EDE</key>
+		<string>https://github.com/cobaltians/plugins.git</string>
+		<key>fc0c6543-89c8-464d-ab6c-d0866aaddc71++1587</key>
 		<string>https://github.com/cobaltians/cobalt.git</string>
 		<key>fc0c6543-89c8-464d-ab6c-d0866aaddc71++7960</key>
 		<string>https://pluton.haploid.fr/svn/haploid/svn/Famicity</string>
@@ -19,7 +21,9 @@
 	<string>samples/CatalogApp/iOS/CatalogCobalt/CatalogCobalt.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>8F924602F3C51B7A18EF94EFB8636649C2AA30B2</key>
+		<key>7F346375E8E073B3A7CE55C31DAF342C703A9EDE</key>
+		<string>../../../../../../../CobaltPlugins</string>
+		<key>fc0c6543-89c8-464d-ab6c-d0866aaddc71++1587</key>
 		<string>../../../../../..</string>
 		<key>fc0c6543-89c8-464d-ab6c-d0866aaddc71++7960</key>
 		<string>../../../../../../..</string>
@@ -34,7 +38,7 @@
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>8F924602F3C51B7A18EF94EFB8636649C2AA30B2</string>
+	<string>fc0c6543-89c8-464d-ab6c-d0866aaddc71++1587</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
@@ -49,9 +53,17 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>8F924602F3C51B7A18EF94EFB8636649C2AA30B2</string>
+			<string>fc0c6543-89c8-464d-ab6c-d0866aaddc71++1587</string>
 			<key>IDESourceControlWCCName</key>
 			<string>cobalt</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>7F346375E8E073B3A7CE55C31DAF342C703A9EDE</string>
+			<key>IDESourceControlWCCName</key>
+			<string>CobaltPlugins</string>
 		</dict>
 	</array>
 </dict>
