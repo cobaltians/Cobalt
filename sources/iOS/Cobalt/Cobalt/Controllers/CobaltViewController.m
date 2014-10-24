@@ -670,8 +670,22 @@ NSString * webLayerPage;
                                 
                             } else if([action isEqualToString: @"setTexts"]) {
                                 NSDictionary * texts = [data objectForKey: kJSTexts];
-                                NSString * title = [texts objectForKey: kJSTitleBar];
-                                [self.navigationItem setTitle: title];
+                                for(NSString * key in [texts allKeys]) {
+                                    if([key isEqualToString: kJSTitleBar])
+                                    {
+                                        [self.navigationItem setTitle: [texts objectForKey: kJSTitleBar]];
+                                    } else {
+                                        NSMutableArray * barActionsArray = [self.barsConfiguration objectForKey: kBarActions];
+                                        for(NSMutableDictionary * barAction in barActionsArray) {
+                                            if([[barAction objectForKey: kBarActionName] isEqualToString: key]) {
+                                                [barAction setObject: [texts objectForKey: key] forKey: kBarActionTitle];
+                                                break;
+                                            }
+                                        }
+                                        
+                                        [self configureBars];
+                                    }
+                                }
                             } else if ([action isEqualToString: @"setVisibility"]) {
                                 NSDictionary * visibilities = [data objectForKey: kJSVisibility];
                                 BOOL topVisible = [[visibilities objectForKey: kJSTop] boolValue];
@@ -1046,7 +1060,27 @@ UIColor * SKColorFromHexString(NSString * hexString) {
         
         CobaltButton *barButtonAction =  [[CobaltButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 22.0, 22.0)];
         barButtonAction.iconName = [barActionConfiguration objectForKey: kBarActionName];
-        [barButtonAction setImage:[UIImage imageNamed: [barActionConfiguration objectForKey: kBarActionIcon]] forState:UIControlStateNormal];
+        
+        NSString * barButtonImageName = [barActionConfiguration objectForKey: kBarActionIcon];
+        UIImage * barButtonImage = nil;
+        
+        
+        if([barButtonImageName hasPrefix: @"fa-"]) {
+            barButtonImage = [UIImage imageWithIcon:barButtonImageName backgroundColor:[UIColor clearColor] iconColor:[UIColor whiteColor] iconScale:[[UIScreen mainScreen] scale] andSize: barButtonAction.frame.size];
+        } else {
+            barButtonImage = [UIImage imageNamed: barButtonImageName];
+        }
+        
+        if(barButtonImage) {
+            [barButtonAction setImage: barButtonImage forState:UIControlStateNormal];
+        }
+        else
+        {
+            NSString * barButtonTitle = [barActionConfiguration objectForKey: kBarActionTitle];
+            [barButtonAction setTitle: barButtonTitle forState: UIControlStateNormal];
+            [barButtonAction sizeToFit];
+        }
+        
         UIBarButtonItem * barButtonItemAction = [[UIBarButtonItem alloc] initWithCustomView:barButtonAction];
         
         NSString * barActionPosition = [barActionConfiguration objectForKey: kBarActionPosition];

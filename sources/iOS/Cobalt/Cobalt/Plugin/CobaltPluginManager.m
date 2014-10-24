@@ -18,7 +18,7 @@
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static CobaltPluginManager * instance = nil;
+static CobaltPluginManager * cobaltPluginManagerInstance = nil;
 
 //******************
 // SHARED INSTANCE *
@@ -30,11 +30,11 @@ static CobaltPluginManager * instance = nil;
  */
 + (CobaltPluginManager *)sharedInstance {
 	@synchronized(self) {
-		if (instance == nil) {
-			instance = [[self alloc] init];
+		if (cobaltPluginManagerInstance == nil) {
+			cobaltPluginManagerInstance = [[self alloc] init];
 		}
 	}
-	return instance;
+	return cobaltPluginManagerInstance;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

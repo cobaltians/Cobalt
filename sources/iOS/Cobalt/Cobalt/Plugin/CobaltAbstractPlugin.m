@@ -8,8 +8,7 @@
 
 #import "CobaltAbstractPlugin.h"
 #import "Cobalt.h"
-
-@implementation CobaltAbstractPlugin
+#import <objc/runtime.h>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -17,7 +16,9 @@
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static CobaltAbstractPlugin * instance = nil;
+static CobaltAbstractPlugin * cobaltPluginInstance;
+
+@implementation CobaltAbstractPlugin
 
 //******************
 // SHARED INSTANCE *
@@ -28,14 +29,13 @@ static CobaltAbstractPlugin * instance = nil;
  @result		The singleton instance of web services.
  */
 + (CobaltAbstractPlugin *)sharedInstanceWithCobaltViewController: (CobaltViewController *)viewController {
-	@synchronized(self) {
-		if (instance == nil) {
-			instance = [[self alloc] init];
-		}
+    CobaltAbstractPlugin * instance = (CobaltAbstractPlugin *)objc_getAssociatedObject(self, &cobaltPluginInstance);
+    if( !instance ){
+        instance = [[self alloc] init];
         
-        [instance.viewControllersArray addObject: [NSValue valueWithNonretainedObject: viewController]];
-	}
-	return instance;
+        objc_setAssociatedObject(self, &cobaltPluginInstance, instance, OBJC_ASSOCIATION_RETAIN);
+    }
+    return instance;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,7 +63,7 @@ static CobaltAbstractPlugin * instance = nil;
 - (void)viewControllerDeallocated:(NSNotification *)notification {
     CobaltViewController * viewController = [notification object];
     
-    [instance.viewControllersArray removeObject: [NSValue valueWithNonretainedObject: viewController]];
+    [cobaltPluginInstance.viewControllersArray removeObject: [NSValue valueWithNonretainedObject: viewController]];
 }
 
 - (void) dealloc {
