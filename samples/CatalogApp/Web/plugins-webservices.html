@@ -13,9 +13,27 @@
             <a href="javascript:;" id="try">Ask webservice for images</a>
         </div>
 
+        <div class="block">
+            <p>You can also use some filter information to treat the data on the nativeSide if you want.</p>
+
+            <div style="display:flex;">
+            <a href="javascript:;" id="pngOnly" style="flex:1;">Filter png images</a>
+            <a href="javascript:;" id="jpgOnly" style="flex:1;">Filter jpg images</a>
+            </div>
+        </div>
+
         <div id="pageLog" class="block" style="padding:5px; background:#CCC; min-height: 40px;">
 
+
+
         </div>
+
+        <div class="block">
+            <p>Result images</p>
+
+            <div id="result"></div>
+        </div>
+
 
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="../platform/cobalt.js"></script>
@@ -30,6 +48,38 @@
             var pageLog = function(str){
                 $('#pageLog').append(str+'<br/>');
             }
+
+            var handleCacheResults = function(data, concernedCall){
+
+                if (data && data.responseData && data.responseData.results){
+                    pageLog('STORE SUCCESS : got '+data.responseData.results.length+' images from the WS storage');
+                    showResults(data.responseData.results);
+                }else{
+                    pageLog('STORE : Warning : got something in storage but that is NOT some google images');
+                }
+            }
+            var handleSuccess = function(data, concernedCall){
+
+                if (data && data.responseData && data.responseData.results){
+                    pageLog('SUCCESS : Google replied with '+data.responseData.results.length+' images');
+                    showResults(data.responseData.results);
+
+                }else{
+                    if (data && data.responseDetails){
+                        pageLog('SUCCESS : Call success but Google API error : '+data.responseDetails)
+                    }else{
+                        pageLog('ERROR : no answers from Google or data not parsed to json : '+ JSON.stringify(data))
+                    }
+                }
+            }
+            var showResults = function(results){
+                var images="";
+                $.each(results,function(index,item){
+                    images+='<img src="'+item.url+'" width="300" height="200" /><br>';
+                });
+                $('#result').append(images)
+            }
+
 
             Zepto(function($){
                 cobalt.init({
@@ -57,6 +107,7 @@
 
                 app.touch('#try',function(){
 
+                    $('#result').html();
                     cobalt.ws.call({
                         url : "images",
                         params:{
@@ -64,29 +115,31 @@
                             imgsz:"medium", start : 0
                         },
                         storageKey : "googleImages:0",
-                        successCallback : function( data, concernedCall ){
-
-                            if (data && data.responseData && data.responseData.results){
-                                pageLog('SUCCESS : Google replied with '+data.responseData.results.length+' images');
-
-                            }else{
-                                if (data && data.responseDetails){
-                                    pageLog('SUCCESS : Call success but Google API error : '+data.responseDetails)
-                                }else{
-                                    pageLog('ERROR : no answers from Google or data not parsed to json : '+ JSON.stringify(data))
-                                }
-                            }
-                        },
-                        cacheCallback : function( data ){
-                            if (data && data.responseData && data.responseData.results){
-                                pageLog('STORE : already got a result with '+data.responseData.results.length+' images in the WS storage');
-                            }else{
-                                pageLog('STORE : Warning : got something in storage but that is NOT some google images');
-                            }
-                        }
+                        successCallback : handleSuccess,
+                        cacheCallback : handleCacheResults
                     })
 
-                })
+                });
+
+                app.touch('#pngOnly',function(){
+                    $('#result').html();
+                    cobalt.ws.call({
+                        storageKey : "googleImages:0",
+                        filterData : { ext : "png"}, //optionnal native side filtering/sorting
+                        cacheCallback : handleCacheResults
+                    })
+                });
+
+                app.touch('#jpgOnly',function(){
+                    $('#result').html();
+                    cobalt.ws.call({
+                        storageKey : "googleImages:0",
+                        filterData : { ext : "jpg"}, //ooptionnal native side filtering/sorting
+                        cacheCallback : handleCacheResults
+                    })
+                });
+
+
 
 
             })
