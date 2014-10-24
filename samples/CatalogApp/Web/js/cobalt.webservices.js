@@ -38,13 +38,12 @@
             }
         },
         call:function(options){
-            console.log("this=",this)
             var self=this;
             var newCall = {
                 url :           self.settings.base.url + options.url,
                 params :        cobalt.utils.extend( this.settings.base.params, options.params ),
                 type :          options.type || this.settings.defaultParameters.type,
-                storageKey :    ( options.storageKey =="string" && options.storageKey.length ) ? options.storageKey : undefined,
+                storageKey :    ( typeof options.storageKey =="string" && options.storageKey.length ) ? options.storageKey : undefined,
 
                 successCallback : (typeof options.successCallback =="function") ?  options.successCallback : self.settings.defaultParameters.successCallback || undefined,
                 errorCallback : (typeof options.errorCallback =="function") ?  options.errorCallback : self.settings.defaultParameters.errorCallback || undefined
