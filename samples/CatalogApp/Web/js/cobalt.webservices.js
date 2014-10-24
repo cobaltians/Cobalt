@@ -50,7 +50,7 @@
             }
             if (newCall.storageKey){
                 newCall.saveToStorage = true;
-                newCall.cacheCallback = (typeof options.successCallback =="function") ?  options.successCallback : self.settings.defaultParameters.errorCallback || undefined;
+                newCall.cacheCallback = (typeof options.cacheCallback =="function") ?  options.cacheCallback : self.settings.defaultParameters.cacheCallback || undefined;
             }
 
             self.send(newCall, function( data ){
