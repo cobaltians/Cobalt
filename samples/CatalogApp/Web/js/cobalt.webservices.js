@@ -9,7 +9,9 @@
             },
             defaultParameters:{
                 type : "GET",
-                saveToStorage : false
+                saveToStorage : true,
+                filterData : undefined,
+                sendCacheResult : true
             }
         },
         calls:{},
@@ -40,7 +42,7 @@
         call:function(options){
             var self=this;
             var newCall = {
-                url :           self.settings.base.url + options.url,
+                url :           (options.url) ? self.settings.base.url + options.url : undefined,
                 params :        cobalt.utils.extend( this.settings.base.params, options.params ),
                 type :          options.type || this.settings.defaultParameters.type,
                 filterData :    options.filterData || this.settings.defaultParameters.filterData,
@@ -50,8 +52,15 @@
                 errorCallback : (typeof options.errorCallback =="function") ?  options.errorCallback : self.settings.defaultParameters.errorCallback || undefined
             }
             if (newCall.storageKey){
-                newCall.saveToStorage = true;
                 newCall.cacheCallback = (typeof options.cacheCallback =="function") ?  options.cacheCallback : self.settings.defaultParameters.cacheCallback || undefined;
+
+                if (newCall.url){
+                    newCall.saveToStorage = options.saveToStorage || this.settings.defaultParameters.saveToStorage;
+                }
+
+                if (newCall.cacheCallback){
+                    newCall.sendCacheResult = options.saveToStorage || this.settings.defaultParameters.saveToStorage;
+                }
             }
 
             self.send(newCall, function( data ){
@@ -69,7 +78,6 @@
                 var concernedCall = this.calls[data.callId];
                 switch (json.action){
                     case "onWSError":
-                        cobalt.log("dddaata",data.data)
                         if (concernedCall.errorCallback){
                             concernedCall.errorCallback( data.data || data.text, concernedCall )
                         }else{
