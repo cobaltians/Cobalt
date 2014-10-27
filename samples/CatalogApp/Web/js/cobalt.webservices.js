@@ -53,6 +53,7 @@
             }
             if (newCall.storageKey){
                 newCall.cacheCallback = (typeof options.cacheCallback =="function") ?  options.cacheCallback : self.settings.defaultParameters.cacheCallback || undefined;
+                newCall.cacheError = (typeof options.cacheError =="function") ?  options.cacheError : self.settings.defaultParameters.cacheError || undefined;
 
                 if (newCall.url){
                     newCall.saveToStorage = options.saveToStorage || this.settings.defaultParameters.saveToStorage;
@@ -94,6 +95,13 @@
                     case "onStorageResult":
                         if (concernedCall.cacheCallback){
                             concernedCall.cacheCallback( data.data || data.text, concernedCall )
+                        }else{
+                            cobalt.log('Some data in storage but no JS callback for call '+ data.callId)
+                        }
+                        break;
+                    case "onStorageError":
+                        if (concernedCall.cacheError){
+                            concernedCall.cacheError( data.data || data.text, concernedCall )
                         }else{
                             cobalt.log('Some data in storage but no JS callback for call '+ data.callId)
                         }

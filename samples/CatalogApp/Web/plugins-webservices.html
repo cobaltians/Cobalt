@@ -58,6 +58,9 @@
                     pageLog('STORE : Warning : got something in storage but that is NOT some google images');
                 }
             }
+            var handleCacheErrors = function(data, concernedCall){
+                pageLog('STORE Error : ', data);
+            }
             var handleSuccess = function(data, concernedCall){
 
                 if (data && data.responseData && data.responseData.results){
@@ -126,7 +129,8 @@
                     cobalt.ws.call({
                         storageKey : "googleImages:0",
                         filterData : { ext : "png"}, //optionnal native side filtering/sorting
-                        cacheCallback : handleCacheResults
+                        cacheCallback : handleCacheResults,
+                        cacheError : handleCacheErrors
                     })
                 });
 
@@ -135,7 +139,8 @@
                     cobalt.ws.call({
                         storageKey : "googleImages:0",
                         filterData : { ext : "jpg"}, //ooptionnal native side filtering/sorting
-                        cacheCallback : handleCacheResults
+                        cacheCallback : handleCacheResults,
+                        cacheError : handleCacheErrors
                     })
                 });
 
