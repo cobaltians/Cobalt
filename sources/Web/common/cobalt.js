@@ -237,6 +237,22 @@ var cobalt={
 			cobalt.send(obj, callback);
 		}
 	},
+	pullToRefresh: {
+	    setTexts:function(pullToRefreshText, refreshingText) {
+            if (typeof pullToRefreshText != "string") pullToRefreshText = undefined;
+            if (typeof refreshingText != "string") pullToRefreshText = undefined;
+
+            cobalt.send({
+                type: "ui",
+                control: "pullToRefresh",
+                action: "setTexts",
+                data: {
+                    pullToRefresh: pullToRefreshText,
+                    refreshing: refreshingText
+                }
+            });
+	    }
+	},
 	/*
 		show a web page as an layer.
 		//see doc for guidelines.
