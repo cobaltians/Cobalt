@@ -252,7 +252,7 @@ var cobalt={
                 type: "ui",
                 control: "pullToRefresh",
                 action: "setTexts",
-                data: {
+                texts: {
                     pullToRefresh: pullToRefreshText,
                     refreshing: refreshingText
                 }
