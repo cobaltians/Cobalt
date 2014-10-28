@@ -248,13 +248,15 @@ var cobalt={
             if (typeof pullToRefreshText != "string") pullToRefreshText = undefined;
             if (typeof refreshingText != "string") pullToRefreshText = undefined;
 
-            cobalt.send({
+			cobalt.send({
                 type: "ui",
                 control: "pullToRefresh",
-                action: "setTexts",
-                texts: {
-                    pullToRefresh: pullToRefreshText,
-                    refreshing: refreshingText
+                data: {
+                    action: "setTexts",
+                    texts :{
+                        pullToRefresh: pullToRefreshText,
+                        refreshing: refreshingText
+                    }
                 }
             });
 	    }
