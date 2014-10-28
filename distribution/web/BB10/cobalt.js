@@ -237,6 +237,28 @@ var cobalt={
 			cobalt.send(obj, callback);
 		}
 	},
+	pullToRefresh: {
+		/*
+			set texts of Pull-to-Refresh.
+			//see doc for guidelines.
+			//cobalt.pullToRefresh.setTexts("Pull to refresh", "Refreshing...");
+			//cobalt.pullToRefresh.setTexts(undefined, undefined);
+		 */
+	    setTexts:function(pullToRefreshText, refreshingText) {
+            if (typeof pullToRefreshText != "string") pullToRefreshText = undefined;
+            if (typeof refreshingText != "string") pullToRefreshText = undefined;
+
+            cobalt.send({
+                type: "ui",
+                control: "pullToRefresh",
+                action: "setTexts",
+                data: {
+                    pullToRefresh: pullToRefreshText,
+                    refreshing: refreshingText
+                }
+            });
+	    }
+	},
 	/*
 		show a web page as an layer.
 		//see doc for guidelines.
