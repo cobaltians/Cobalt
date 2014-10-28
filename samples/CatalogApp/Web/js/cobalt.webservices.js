@@ -45,7 +45,7 @@
                 url :           (options.url) ? self.settings.base.url + options.url : undefined,
                 params :        cobalt.utils.extend( this.settings.base.params, options.params ),
                 type :          options.type || this.settings.defaultParameters.type,
-                filterData :    options.filterData || this.settings.defaultParameters.filterData,
+                processData :    options.processData || this.settings.defaultParameters.processData,
                 storageKey :    ( typeof options.storageKey =="string" && options.storageKey.length ) ? options.storageKey : undefined,
 
                 successCallback : (typeof options.successCallback =="function") ?  options.successCallback : self.settings.defaultParameters.successCallback || undefined,

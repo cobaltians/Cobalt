@@ -14,7 +14,7 @@
         </div>
 
         <div class="block">
-            <p>You can also use some filter information to treat the data on the nativeSide if you want.</p>
+            <p>You can also use some processData to treat the data on the nativeSide if you want.</p>
 
             <div style="display:flex;">
             <a href="javascript:;" id="pngOnly" style="flex:1;">Filter png images</a>
@@ -128,7 +128,7 @@
                     $('#result').html();
                     cobalt.ws.call({
                         storageKey : "googleImages:0",
-                        filterData : { ext : "png"}, //optionnal native side filtering/sorting
+                        processData : { ext : "png"}, //optionnal native side filtering/sorting
                         cacheCallback : handleCacheResults,
                         cacheError : handleCacheErrors
                     })
@@ -138,7 +138,7 @@
                     $('#result').html();
                     cobalt.ws.call({
                         storageKey : "googleImages:0",
-                        filterData : { ext : "jpg"}, //ooptionnal native side filtering/sorting
+                        processData : { ext : "jpg"}, //ooptionnal native side filtering/sorting
                         cacheCallback : handleCacheResults,
                         cacheError : handleCacheErrors
                     })
