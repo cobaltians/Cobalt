@@ -621,6 +621,29 @@ NSString * webLayerPage;
                     [self showAlert:dict];
                 }
                 
+                // PULL TO REFRESH
+                else if([control isEqualToString:JSControlpullToRefresh]) {
+                    if (data
+                        && [data isKindOfClass:[NSDictionary class]]) {
+                        
+                        NSString * action = [data objectForKey: kJSAction];
+                        
+                        if (action
+                            && [action isKindOfClass: [NSString class]]) {
+                            
+                            
+                            if([action isEqualToString: @"setTexts"]) {
+                                NSDictionary * texts = [data objectForKey: kJSTexts];
+                                NSString * pullToRefreshText = [texts objectForKey: @"pullToRefresh"];
+                                NSString * refreshingText = [texts objectForKey: @"refreshing"];
+                                
+                                [self customizeRefreshControlWithAttributedRefreshText: [[NSAttributedString alloc] initWithString: pullToRefreshText] andAttributedRefreshText: [[NSAttributedString alloc] initWithString: refreshingText] andTintColor: self.refreshControl.tintColor];
+                                
+                            }
+                        }
+                    }
+                }
+                
                 // BARS
                 else if ([control isEqualToString: JSControlBars]) {
                     if (data

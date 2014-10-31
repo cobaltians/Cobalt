@@ -98,6 +98,11 @@
 #define kJSUIControl                        @"control"
 #define kJSTypeImage                        @"image"
 
+
+// PULL TO REFRESH
+
+#define JSControlpullToRefresh              @"pullToRefresh"
+
 // ALERT
 #define JSControlAlert                      @"alert"
 #define kJSAlertTitle                       @"title"
