@@ -704,7 +704,7 @@ var cobalt={
 				if (val){
 					switch(type){
 						case undefined :return val;
-						case "int":     return parseInt(val);
+						case "int":     return parseInt(val, 10);
 						case "float":   return parseFloat(val);
 						case "date":    return new Date(val);
 						case "json":    return JSON.parse(val)
