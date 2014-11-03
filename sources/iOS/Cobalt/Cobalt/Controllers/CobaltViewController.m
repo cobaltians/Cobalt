@@ -1165,11 +1165,28 @@ UIColor * SKColorFromHexString(NSString * hexString) {
                                                   message:message
                                                   preferredStyle:UIAlertControllerStyleAlert];
             if (! buttons.count) {
-                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){}];
+                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
+                    if (callback
+                        && [callback isKindOfClass:[NSString class]]) {
+                        NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys:@0,
+                                               kJSAlertButtonIndex,
+                                               nil];
+                        [self sendCallback:callback withData:data];
+                    }
+                }];
                 [alertController addAction:cancelAction];
-            }else{
+            }
+            else {
                 
-                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[buttons objectAtIndex:0] style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){}];
+                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[buttons objectAtIndex:0] style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
+                    if (callback
+                        && [callback isKindOfClass:[NSString class]]) {
+                        NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys:@0,
+                                               kJSAlertButtonIndex,
+                                               nil];
+                        [self sendCallback:callback withData:data];
+                    }
+                }];
                 for (int i = 1 ; i < buttons.count ; i++) {
                     UIAlertAction *otherAction = [UIAlertAction actionWithTitle:[buttons objectAtIndex:i] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action)
                                                {
