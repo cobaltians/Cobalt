@@ -1,14 +1,12 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
-import fr.cobaltians.cobaltcatalog.R;
 
-import fr.cobaltians.cobalt.fragments.CobaltFragment;
-
+import fr.haploid.WebservicesPlugin.WebservicesInterface;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class SimpleHybridFragment extends AbstractFragment {
+public class SimpleHybridFragment extends AbstractFragment implements WebservicesInterface{
 
 	private JSONArray generateBigData(int size)
 	{
@@ -40,7 +38,7 @@ public class SimpleHybridFragment extends AbstractFragment {
 
     }
 
-	@Override
+    @Override
 	protected boolean onUnhandledEvent(String name, JSONObject data, String callback) {
         if (super.onUnhandledEvent(name, data, callback)) return true;
 		else return false;
@@ -60,4 +58,48 @@ public class SimpleHybridFragment extends AbstractFragment {
 	protected void onInfiniteScrollRefreshed() {
 
 	}
+
+    @Override
+    public JSONObject treatData(JSONObject data, JSONObject process) {
+        try {
+            String extension = process.getString("ext");
+            JSONObject dataInData = data.getJSONObject("data");
+            JSONObject responseData = dataInData.getJSONObject("responseData");
+            JSONArray results = responseData.getJSONArray("results");
+
+            if (results.length()>0) {
+                JSONArray resultsTreat = null;
+                for (int i = 0 ; i < results.length() ; i++) {
+                    JSONObject item = results.getJSONObject(i);
+                    String url = item.getString("url");
+
+                    int urlLength = url.length();
+                    int extensionLength = extension.length();
+
+                    String urlExtension = url.substring(urlLength - extensionLength);
+                    if (urlExtension.equals(extension)) {
+                        if (resultsTreat == null)
+                            resultsTreat = new JSONArray();
+                        resultsTreat.put(item);
+                    }
+                }
+                responseData.put("results", resultsTreat);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return data;
+    }
+
+    @Override
+    public boolean storeValue(String value, String key) {
+        return false;
+    }
+
+    @Override
+    public String storedValueForKey(String key) {
+        return null;
+    }
 }
