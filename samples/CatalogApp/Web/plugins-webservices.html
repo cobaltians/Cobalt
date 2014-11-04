@@ -58,8 +58,8 @@
                     pageLog('STORE : Warning : got something in storage but that is NOT some google images');
                 }
             }
-            var handleCacheErrors = function(data, concernedCall){
-                pageLog('STORE Error : ', data);
+            var handleCacheErrors = function(error, concernedCall){
+                pageLog('STORE Error : ' + error);
             }
             var handleSuccess = function(data, concernedCall){
 
@@ -80,7 +80,7 @@
                 $.each(results,function(index,item){
                     images+='<img src="'+item.url+'" width="300" height="200" /><br>';
                 });
-                $('#result').append(images)
+                $('#result').html(images)
             }
 
 
@@ -97,8 +97,8 @@
                                 url : "https://ajax.googleapis.com/ajax/services/search/"
                             },
                             defaultParameters:{
-                                errorCallback : function( data, concernedCall ){
-                                    pageLog('WS error for call '+ concernedCall.callId + '. server response is '+ JSON.stringify(data) )
+                                errorCallback : function( data, error, concernedCall ){
+                                    pageLog('WS error for call '+ concernedCall.callId + '. server response is '+ error )
                                 }
                             }
                         }
@@ -143,8 +143,6 @@
                         cacheError : handleCacheErrors
                     })
                 });
-
-
 
 
             })

@@ -43,8 +43,6 @@
             var self=this;
             var newCall = {
                 url :           (options.url) ? self.settings.base.url + options.url : undefined,
-                params :        cobalt.utils.extend( this.settings.base.params, options.params ),
-                type :          options.type || this.settings.defaultParameters.type,
                 processData :    options.processData || this.settings.defaultParameters.processData,
                 storageKey :    ( typeof options.storageKey =="string" && options.storageKey.length ) ? options.storageKey : undefined,
 
@@ -56,6 +54,9 @@
                 newCall.cacheError = (typeof options.cacheError =="function") ?  options.cacheError : self.settings.defaultParameters.cacheError || undefined;
 
                 if (newCall.url){
+                    newCall.params = cobalt.utils.extend( this.settings.base.params, options.params );
+                    newCall.type = options.type || this.settings.defaultParameters.type;
+
                     newCall.saveToStorage = options.saveToStorage || this.settings.defaultParameters.saveToStorage;
                 }
 
@@ -80,7 +81,7 @@
                 switch (json.action){
                     case "onWSError":
                         if (concernedCall.errorCallback){
-                            concernedCall.errorCallback( data.data || data.text, concernedCall )
+                            concernedCall.errorCallback( data.data || data.text, data.errorCode, concernedCall )
                         }else{
                             cobalt.log('WS error : No JS error callback for call ' + data.callId)
                         }
