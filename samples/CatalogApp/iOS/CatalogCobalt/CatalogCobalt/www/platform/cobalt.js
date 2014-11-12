@@ -523,6 +523,27 @@ var cobalt={
                     node.setAttribute("class",  node.getAttribute("class").replace(css_class,'') );
                 }
             }
+        },
+        escape : encodeURIComponent,
+        serialize : function (params, obj, traditional, scope){
+            var type, array = $.isArray(obj), hash = $.isPlainObject(obj)
+            $.each(obj, function(key, value) {
+                type = $.type(value)
+                if (scope) key = traditional ? scope :
+                    scope + '[' + (hash || type == 'object' || type == 'array' ? key : '') + ']'
+                // handle data in serializeArray() format
+                if (!scope && array) params.add(value.name, value.value)
+                // recurse into nested objects
+                else if (type == "array" || (!traditional && type == "object"))
+                    cobalt.utils.serialize(params, value, traditional, key)
+                else params.add(key, value)
+            })
+        },
+        param : function(obj, traditional){
+            var params = []
+            params.add = function(k, v){ this.push(cobalt.utils.escape(k) + '=' + cobalt.utils.escape(v)) }
+            cobalt.utils.serialize(params, obj, traditional)
+            return params.join('&').replace(/%20/g, '+')
         }
     },
     nativeBars:{
