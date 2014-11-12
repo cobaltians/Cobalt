@@ -192,7 +192,7 @@ public class Cobalt {
      *************************************/
 
     private static Cobalt sInstance;
-    private final Context mContext;
+    private static Context mContext;
     private String mResourcePath = "www/";
 
     /****************************************************************************************
@@ -224,6 +224,10 @@ public class Cobalt {
         if (resourcePath != null) mResourcePath = resourcePath;
         else mResourcePath = new String();
 	}
+
+    public static Context getAppContext() {
+        return mContext;
+    }
 
     /**************************************************************************************************************
      * CONFIGURATION FILE
