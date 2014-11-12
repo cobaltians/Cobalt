@@ -17,8 +17,6 @@
         calls:{},
 
         init:function(options){
-            cobalt.log('init webservices plugin with options', options)
-
             //create shortcuts
             cobalt.ws={
                 call : this.call.bind(this),
@@ -30,6 +28,7 @@
 
         },
         config:function(settings){
+            cobalt.log('config webservices plugin with settings', settings)
             if (settings){
                 if (settings.base){
                     this.settings.base = cobalt.utils.extend(this.settings.base, settings.base);
@@ -42,21 +41,28 @@
         call:function(options){
             var self=this;
             var newCall = {
-                url :           (options.url) ? self.settings.base.url + options.url : undefined,
                 processData :    options.processData || this.settings.defaultParameters.processData,
-                storageKey :    ( typeof options.storageKey =="string" && options.storageKey.length ) ? options.storageKey : undefined,
-
-                successCallback : (typeof options.successCallback =="function") ?  options.successCallback : self.settings.defaultParameters.successCallback || undefined,
-                errorCallback : (typeof options.errorCallback =="function") ?  options.errorCallback : self.settings.defaultParameters.errorCallback || undefined
+                storageKey :    ( typeof options.storageKey =="string" && options.storageKey.length ) ? options.storageKey : undefined
             }
+
+            if (options.url){
+                newCall.url = ((/^https?:/).test(options.url)) ? options.url : self.settings.base.url + options.url;
+                newCall.successCallback = (typeof options.successCallback =="function") ?  options.successCallback : self.settings.defaultParameters.successCallback || undefined;
+                newCall.errorCallback = (typeof options.errorCallback =="function") ?  options.errorCallback : self.settings.defaultParameters.errorCallback || undefine;
+
+                var params = cobalt.utils.extend( this.settings.base.params, options.params );
+                if (params){
+                    newCall.params = cobalt.utils.param(params);
+                }
+                newCall.headers = cobalt.utils.extend( this.settings.base.headers, options.headers );
+                newCall.type = options.type || this.settings.defaultParameters.type;
+            }
+
             if (newCall.storageKey){
                 newCall.cacheCallback = (typeof options.cacheCallback =="function") ?  options.cacheCallback : self.settings.defaultParameters.cacheCallback || undefined;
                 newCall.cacheError = (typeof options.cacheError =="function") ?  options.cacheError : self.settings.defaultParameters.cacheError || undefined;
 
                 if (newCall.url){
-                    newCall.params = cobalt.utils.extend( this.settings.base.params, options.params );
-                    newCall.type = options.type || this.settings.defaultParameters.type;
-
                     newCall.saveToStorage = options.saveToStorage || this.settings.defaultParameters.saveToStorage;
                 }
 
@@ -64,9 +70,8 @@
                     newCall.sendCacheResult = options.saveToStorage || this.settings.defaultParameters.saveToStorage;
                 }
             }
-
             self.send(newCall, function( data ){
-                cobalt.log('WS call started with id = '+data.callId)
+                cobalt.log('WS call started with id = '+data.callId, newCall)
                 newCall.callId = data.callId;
                 self.calls[data.callId] = newCall;
             })
@@ -81,14 +86,14 @@
                 switch (json.action){
                     case "onWSError":
                         if (concernedCall.errorCallback){
-                            concernedCall.errorCallback( data.data || data.text, data.errorCode, concernedCall )
+                            concernedCall.errorCallback( data.data || data.text, data.statusCode, concernedCall )
                         }else{
                             cobalt.log('WS error : No JS error callback for call ' + data.callId)
                         }
                         break;
                     case "onWSResult":
                         if (concernedCall.successCallback){
-                            concernedCall.successCallback( data.data || data.text, concernedCall )
+                            concernedCall.successCallback( data.data || data.text, data.statusCode, concernedCall )
                         }else{
                             cobalt.log('WS success but no JS callback for call ' + data.callId)
                         }
