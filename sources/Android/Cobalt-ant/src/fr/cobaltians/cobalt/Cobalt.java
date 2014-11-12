@@ -113,6 +113,9 @@ public class Cobalt {
     public final static String JSTypeEvent = "event";
     public final static String kJSEvent = "event";
 
+    // APP EVENTS
+    public final static String JSEventOnPageShown = "onPageShown";
+
     // INTENT
     public final static String JSTypeIntent = "intent";
     public final static String JSActionIntentOpenExternalUrl = "openExternalUrl";
