@@ -34,12 +34,16 @@ import fr.cobaltians.cobalt.R;
 import fr.cobaltians.cobalt.fragments.CobaltFragment;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -70,6 +74,36 @@ public abstract class CobaltActivity extends ActionBarActivity {
     private static boolean sBackPressed = false;
     private static boolean sAppWentToBackground = false;
     private static boolean sWindowFocused = false;
+    private static String ACTION_ON_APP_BACKGROUND = "fr.cobaltians.cobalt.activities.CobaltActivity.ACTION_ON_APP_BACKGROUND";
+    private static String ACTION_ON_APP_FOREGROUND = "fr.cobaltians.cobalt.activities.CobaltActivity.ACTION_ON_APP_FOREGROUND";
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            if (action == ACTION_ON_APP_BACKGROUND) {
+                Fragment fragment = getSupportFragmentManager().findFragmentById(getFragmentContainerId());
+                if (fragment != null
+                    && CobaltFragment.class.isAssignableFrom(fragment.getClass())) {
+                    ((CobaltFragment) fragment).sendEvent(Cobalt.JSEventOnAppBackground, null, null);
+                }
+                else if (Cobalt.DEBUG) Log.i(Cobalt.TAG,    TAG + " - onAppBackground: no fragment container found \n"
+                                                            + " or fragment found is not an instance of CobaltFragment. \n"
+                                                            + "Drop onAppBackground event.");
+            }
+            else if (action == ACTION_ON_APP_FOREGROUND) {
+                Fragment fragment = getSupportFragmentManager().findFragmentById(getFragmentContainerId());
+                if (fragment != null
+                    && CobaltFragment.class.isAssignableFrom(fragment.getClass())) {
+                    ((CobaltFragment) fragment).sendEvent(Cobalt.JSEventOnAppForeground, null, null);
+                }
+                else if (Cobalt.DEBUG) Log.i(Cobalt.TAG,    TAG + " - onAppForeground: no fragment container found \n"
+                                                            + " or fragment found is not an instance of CobaltFragment. \n"
+                                                            + "Drop onAppForeground event.");
+            }
+        }
+    };
 
     // POP
     private static ArrayList<CobaltActivity> sActivitiesArrayList = new ArrayList<CobaltActivity>();
@@ -133,6 +167,13 @@ public abstract class CobaltActivity extends ActionBarActivity {
             }
             else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - onCreate: getFragment() returned null");
 		}
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ACTION_ON_APP_BACKGROUND);
+        intentFilter.addAction(ACTION_ON_APP_FOREGROUND);
+
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        localBroadcastManager.registerReceiver(mBroadcastReceiver, intentFilter);
 	}
 
     @Override
@@ -145,7 +186,9 @@ public abstract class CobaltActivity extends ActionBarActivity {
         if (sAppWentToBackground) {
             sAppWentToBackground = false;
 
-            // TODO: send onAppForeground event
+            LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+            Intent intent = new Intent(ACTION_ON_APP_FOREGROUND);
+            localBroadcastManager.sendBroadcast(intent);
         }
     }
 
@@ -244,15 +287,21 @@ public abstract class CobaltActivity extends ActionBarActivity {
     private void applicationDidEnterBackground() {
         if (! sWindowFocused) {
             sAppWentToBackground = true;
-
-            // TODO: send onAppBackground event
+            
+            LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+            Intent intent = new Intent(ACTION_ON_APP_BACKGROUND);
+            localBroadcastManager.sendBroadcast(intent);
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         sActivitiesArrayList.remove(0);
+
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        localBroadcastManager.unregisterReceiver(mBroadcastReceiver);
     }
 
     /*****************************************************************************************************************

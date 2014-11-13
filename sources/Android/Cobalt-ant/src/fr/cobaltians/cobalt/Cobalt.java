@@ -114,6 +114,8 @@ public class Cobalt {
     public final static String kJSEvent = "event";
 
     // APP EVENTS
+    public final static String JSEventOnAppBackground = "onAppBackground";
+    public final static String JSEventOnAppForeground = "onAppForeground";
     public final static String JSEventOnPageShown = "onPageShown";
 
     // INTENT
