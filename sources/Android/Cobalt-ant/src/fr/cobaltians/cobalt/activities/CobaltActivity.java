@@ -83,6 +83,8 @@ public abstract class CobaltActivity extends ActionBarActivity {
             String action = intent.getAction();
 
             if (action == ACTION_ON_APP_BACKGROUND) {
+                onAppBackground();
+
                 Fragment fragment = getSupportFragmentManager().findFragmentById(getFragmentContainerId());
                 if (fragment != null
                     && CobaltFragment.class.isAssignableFrom(fragment.getClass())) {
@@ -93,6 +95,8 @@ public abstract class CobaltActivity extends ActionBarActivity {
                                                             + "Drop onAppBackground event.");
             }
             else if (action == ACTION_ON_APP_FOREGROUND) {
+                onAppForeground();
+
                 Fragment fragment = getSupportFragmentManager().findFragmentById(getFragmentContainerId());
                 if (fragment != null
                     && CobaltFragment.class.isAssignableFrom(fragment.getClass())) {
@@ -115,9 +119,9 @@ public abstract class CobaltActivity extends ActionBarActivity {
     // ACTION BAR MENU ITEMS
     private HashMap<Integer, String> mMenuItemsHashMap;
 
-    /***************************************************************************************************************
+    /************************************************************************************************************************
 	 * LIFECYCLE
-	 ***************************************************************************************************************/
+	 ************************************************************************************************************************/
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -192,6 +196,8 @@ public abstract class CobaltActivity extends ActionBarActivity {
         }
     }
 
+    protected void onAppForeground() { }
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         sWindowFocused = hasFocus;
@@ -213,6 +219,51 @@ public abstract class CobaltActivity extends ActionBarActivity {
 
         super.onWindowFocusChanged(hasFocus);
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+
+        if (mWasPushedAsModal) {
+            sWasPushedFromModal = false;
+            overridePendingTransition(android.R.anim.fade_in, R.anim.modal_close_exit);
+        }
+        else if (sWasPushedFromModal) overridePendingTransition(R.anim.modal_pop_enter, R.anim.modal_pop_exit);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        applicationDidEnterBackground();
+    }
+
+    private void applicationDidEnterBackground() {
+        if (! sWindowFocused) {
+            sAppWentToBackground = true;
+            
+            LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+            Intent intent = new Intent(ACTION_ON_APP_BACKGROUND);
+            localBroadcastManager.sendBroadcast(intent);
+        }
+    }
+
+    public void onAppBackground() {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        sActivitiesArrayList.remove(0);
+
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        localBroadcastManager.unregisterReceiver(mBroadcastReceiver);
+    }
+
+    /**************************************************************************************************
+     * MENU
+     **************************************************************************************************/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -243,7 +294,7 @@ public abstract class CobaltActivity extends ActionBarActivity {
 
             Fragment fragment = getSupportFragmentManager().findFragmentById(getFragmentContainerId());
             if (fragment != null
-                && CobaltFragment.class.isAssignableFrom(fragment.getClass())) {
+                    && CobaltFragment.class.isAssignableFrom(fragment.getClass())) {
                 try {
                     JSONObject data = new JSONObject();
                     data.put(Cobalt.kJSAction, Cobalt.JSActionButtonPressed);
@@ -259,54 +310,17 @@ public abstract class CobaltActivity extends ActionBarActivity {
                 catch(JSONException exception) { exception.printStackTrace(); }
             }
             else if (Cobalt.DEBUG) Log.i(Cobalt.TAG,    TAG + " - onOptionsItemSelected: no fragment container found \n"
-                                                        + " or fragment found is not an instance of CobaltFragment. \n"
-                                                        + "Drop " + name + "bars button pressed event.");
+                    + " or fragment found is not an instance of CobaltFragment. \n"
+                    + "Drop " + name + "bars button pressed event.");
 
             return true;
         }
         else return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-
-        if (mWasPushedAsModal) {
-            sWasPushedFromModal = false;
-            overridePendingTransition(android.R.anim.fade_in, R.anim.modal_close_exit);
-        }
-        else if (sWasPushedFromModal) overridePendingTransition(R.anim.modal_pop_enter, R.anim.modal_pop_exit);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        applicationDidEnterBackground();
-    }
-
-    private void applicationDidEnterBackground() {
-        if (! sWindowFocused) {
-            sAppWentToBackground = true;
-            
-            LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
-            Intent intent = new Intent(ACTION_ON_APP_BACKGROUND);
-            localBroadcastManager.sendBroadcast(intent);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        sActivitiesArrayList.remove(0);
-
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        localBroadcastManager.unregisterReceiver(mBroadcastReceiver);
-    }
-
-    /*****************************************************************************************************************
+    /***************************************************************************************************************************************************************
 	 * COBALT
-     *****************************************************************************************************************/
+     ***************************************************************************************************************************************************************/
 
 	/*********************************************
 	 * Ui
@@ -504,9 +518,9 @@ public abstract class CobaltActivity extends ActionBarActivity {
         return true;
     }
 
-	/*****************************************************************************************************************
+	/**********************************************************************************************
 	 * Back
-	 *****************************************************************************************************************/
+	 **********************************************************************************************/
 
 	/**
 	 * Called when back button is pressed. 
@@ -547,9 +561,9 @@ public abstract class CobaltActivity extends ActionBarActivity {
 		super.onBackPressed();
 	}
 
-    /*****************************************************************************************************************
+    /*********************************************************************************************************************
 	 * Web Layer dismiss
-	 *****************************************************************************************************************/
+	 *********************************************************************************************************************/
 
 	/**
 	 * Called when a {@link CobaltWebLayerFragment} has been dismissed.
