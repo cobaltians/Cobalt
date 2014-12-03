@@ -883,7 +883,7 @@ NSString * webLayerPage;
         UIViewController * viewController = [CobaltViewController getViewControllerForController:controller andPage:page];
         if (viewController) {
             // Push corresponding viewController
-            dispatch_sync(dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
                 [self.navigationController pushViewController:viewController animated:YES];
             });
         }
@@ -1339,7 +1339,7 @@ UIColor * SKColorFromHexString(NSString * hexString) {
         NSDictionary * jsonObj = [Cobalt JSONObjectWithString:json];
         
         [fromJavaScriptOperationQueue addOperationWithBlock:^{
-            dispatch_sync(dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
                 [self handleDictionarySentByJavaScript:jsonObj];
             });
         }];
