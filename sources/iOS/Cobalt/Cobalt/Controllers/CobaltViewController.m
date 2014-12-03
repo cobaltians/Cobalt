@@ -883,7 +883,9 @@ NSString * webLayerPage;
         UIViewController * viewController = [CobaltViewController getViewControllerForController:controller andPage:page];
         if (viewController) {
             // Push corresponding viewController
-            [self.navigationController pushViewController:viewController animated:YES];
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [self.navigationController pushViewController:viewController animated:YES];
+            });
         }
     }
 #if DEBUG_COBALT
