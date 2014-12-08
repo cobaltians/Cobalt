@@ -87,12 +87,10 @@ public class CobaltImageCache {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
                 // encode image
-                encodeImage = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT | Base64.NO_WRAP);
+                encodeImage = Base64.encodeToString(baos.toByteArray(), Base64.NO_WRAP);
             }
         }
-        else {
-            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - toBase64: id could not be null!");
-        }
+        else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - toBase64: id could not be null!");
 
         return encodeImage;
 	}
