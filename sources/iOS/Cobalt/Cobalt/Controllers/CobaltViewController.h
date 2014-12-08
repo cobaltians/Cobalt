@@ -128,6 +128,7 @@
 #define JSActionWebLayerDismiss             @"dismiss"
 #define kJSWebLayerFadeDuration             @"fadeDuration"
 #define JSEventWebLayerOnDismiss            @"onWebLayerDismissed"
+#define kJSIsWebLayer                       @"isWebLayer"
 
 //INTENT
 #define kJSTypeIntent                        @"intent"
@@ -287,6 +288,8 @@
  @discussion    This method should NOT be overridden in subclasses.
  */
 - (void) sendMessage:(NSDictionary *) message;
+
+- (void) sendMessageToWebLayer:(NSDictionary *) message;
 
 /*!
  @method		-(void) sendCallback:(NSString *)callbackId withData:(NSObject *)data

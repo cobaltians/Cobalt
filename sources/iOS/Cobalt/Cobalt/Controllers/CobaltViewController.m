@@ -844,6 +844,14 @@ NSString * webLayerPage;
 #endif
 }
 
+
+- (void) sendMessageToWebLayer:(NSDictionary *) message {
+    if (message != nil && webLayer != nil) [self executeScriptInWebView:webLayer withDictionary:message];
+#if DEBUG_COBALT
+    else NSLog(@"sendMessage: message is nil!");
+#endif
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark NAVIGATION METHODS

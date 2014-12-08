@@ -60,6 +60,11 @@ static CobaltAbstractPlugin * cobaltPluginInstance;
 - (void)onMessageFromCobaltController:(CobaltViewController *)viewController andData: (NSDictionary *)data {
 }
 
+- (void)onMessageFromWebLayerWithCobaltController:(CobaltViewController *)viewController andData: (NSDictionary *)data {
+
+}
+
+
 - (void)viewControllerDeallocated:(NSNotification *)notification {
     CobaltViewController * viewController = [notification object];
     

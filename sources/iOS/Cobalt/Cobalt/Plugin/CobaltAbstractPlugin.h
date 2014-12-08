@@ -15,5 +15,5 @@
 
 + (CobaltAbstractPlugin *)sharedInstanceWithCobaltViewController: (CobaltViewController *)viewController;
 - (void)onMessageFromCobaltController:(CobaltViewController *)viewController andData: (NSDictionary *)data;
-
+- (void)onMessageFromWebLayerWithCobaltController:(CobaltViewController *)viewController andData: (NSDictionary *)data;
 @end
