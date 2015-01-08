@@ -35,18 +35,15 @@ import org.json.JSONObject;
 
 /**
  * 
- * @author SŽbastien Famel
+ * @author SÃ©bastien Famel
  */
 public abstract class CobaltAbstractPlugin {
 
     /*******************************************************************************************************
      * MEMBERS
      *******************************************************************************************************/
-	
-	/**
-	 * 
-	 */
-	protected static CobaltAbstractPlugin sInstance;
+	//TODO : Need to declare sInstance in each plugin
+	//protected static CobaltAbstractPlugin sInstance;
 	
 	/**
 	 * {@link Vector} containing all {@link CobaltPluginWebContainer}s which sent at least one message to this {@link CobaltAbstractPlugin} inherited singleton.
