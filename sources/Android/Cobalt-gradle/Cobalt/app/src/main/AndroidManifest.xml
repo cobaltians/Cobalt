@@ -34,11 +34,6 @@
     android:versionCode="2"
     android:versionName="@string/version_name" >
 
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="21" />
-
     <uses-permission android:name="android.permission.INTERNET" />
-
 
 </manifest>
