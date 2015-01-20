@@ -1,11 +1,15 @@
 <resources>
-    <!-- Base theme applied to the application or activity -->
-    <style name="AppTheme" parent="AppBaseTheme">
-    </style>
+
+    <!-- Base application theme -->
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
         <item name="android:actionBarStyle">@style/AppBaseActionBarTheme</item>
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/AppBaseActionBarTheme</item>
+    </style>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
     </style>
 
     <!-- Plugin theme applied to the application or activity -->
@@ -33,4 +37,5 @@
         <!-- Support library compatibility -->
         <item name="background">@color/cobalt_green</item>
     </style>
+
 </resources>

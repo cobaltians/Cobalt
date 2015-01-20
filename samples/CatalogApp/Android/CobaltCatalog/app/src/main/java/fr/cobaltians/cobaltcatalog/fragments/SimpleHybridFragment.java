@@ -1,12 +1,12 @@
 package fr.cobaltians.cobaltcatalog.fragments;
 
-import fr.haploid.WebservicesPlugin.WebservicesInterface;
+import fr.haploid.webservices.WebServicesInterface;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class SimpleHybridFragment extends AbstractFragment implements WebservicesInterface {
+public class SimpleHybridFragment extends AbstractFragment implements WebServicesInterface {
 
 	private JSONArray generateBigData(int size)
 	{
