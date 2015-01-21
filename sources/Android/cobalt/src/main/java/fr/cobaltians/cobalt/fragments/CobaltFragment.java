@@ -1010,7 +1010,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
             alertDialog.setCancelable(cancelable);
 
 			if (buttons.length() == 0) {
-                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "OK", new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -1030,15 +1030,44 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			}
 			else {
 				int buttonsLength = Math.min(buttons.length(), 3);
-				for (int i = 1 ; i <= buttonsLength ; i++) {
-                    alertDialog.setButton(-i, buttons.getString(i-1), new DialogInterface.OnClickListener() {
+				for (int i = 0 ; i < buttonsLength ; i++) {
+                    int buttonId;
+
+                    switch(i) {
+                        case 0:
+                        default:
+                            buttonId = DialogInterface.BUTTON_NEGATIVE;
+                            break;
+                        case 1:
+                            buttonId = DialogInterface.BUTTON_NEUTRAL;
+                            break;
+                        case 2:
+                            buttonId = DialogInterface.BUTTON_POSITIVE;
+                            break;
+                    }
+
+                    alertDialog.setButton(buttonId, buttons.getString(i), new DialogInterface.OnClickListener() {
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							if (callback != null) {
+                                int buttonIndex;
+                                switch(which) {
+                                    case DialogInterface.BUTTON_NEGATIVE:
+                                    default:
+                                        buttonIndex = 0;
+                                        break;
+                                    case DialogInterface.BUTTON_NEUTRAL:
+                                        buttonIndex = 1;
+                                        break;
+                                    case DialogInterface.BUTTON_POSITIVE:
+                                        buttonIndex = 2;
+                                        break;
+                                }
+
 								try {
 									JSONObject data = new JSONObject();
-									data.put(Cobalt.kJSAlertButtonIndex, -which - 1);
+									data.put(Cobalt.kJSAlertButtonIndex, buttonIndex);
 									sendCallback(callback, data);
 								} 
 								catch (JSONException exception) {
