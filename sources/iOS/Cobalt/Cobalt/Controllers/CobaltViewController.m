@@ -1162,77 +1162,76 @@ UIColor * SKColorFromHexString(NSString * hexString) {
     NSDictionary * data = [dict objectForKey:kJSData];
     NSString * callback = [dict objectForKey:kJSCallback];
     
-    if (data
-        && [data isKindOfClass:[NSDictionary class]]) {
+    if (data && [data isKindOfClass:[NSDictionary class]]) {
         NSString * title = ([data objectForKey:kJSAlertTitle] && [[data objectForKey:kJSAlertTitle] isKindOfClass:[NSString class]]) ? [data objectForKey:kJSAlertTitle] : @"";
         NSString * message = ([data objectForKey:kJSAlertMessage] && [[data objectForKey:kJSAlertMessage] isKindOfClass:[NSString class]]) ? [data objectForKey:kJSAlertMessage] : @"";
         NSArray * buttons = ([data objectForKey:kJSAlertButtons] && [[data objectForKey:kJSAlertButtons] isKindOfClass:[NSArray class]]) ? [data objectForKey:kJSAlertButtons] : [NSArray array];
         
-        NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
-        if ([currSysVer compare: @"8.0" options:NSNumericSearch] != NSOrderedAscending) {
-            UIAlertController *alertController = [UIAlertController
-                                                  alertControllerWithTitle:title
-                                                  message:message
-                                                  preferredStyle:UIAlertControllerStyleAlert];
+        NSString * systemVersion = [[UIDevice currentDevice] systemVersion];
+        if ([systemVersion compare: @"8.0" options:NSNumericSearch] != NSOrderedAscending) {
+            UIAlertController * alertController = [UIAlertController alertControllerWithTitle:title
+                                                                                      message:message
+                                                                               preferredStyle:UIAlertControllerStyleAlert];
             if (! buttons.count) {
-                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
-                    if (callback
-                        && [callback isKindOfClass:[NSString class]]) {
-                        NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys:@0,
-                                               kJSAlertButtonIndex,
-                                               nil];
-                        [self sendCallback:callback withData:data];
+                UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                        style:UIAlertActionStyleCancel
+                                                                      handler:^(UIAlertAction * action) {
+                        if (callback && [callback isKindOfClass:[NSString class]]) {
+                            NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys:@0, kJSAlertButtonIndex, nil];
+                            [self sendCallback:callback withData:data];
+                        }
                     }
-                }];
+                ];
+                
                 [alertController addAction:cancelAction];
             }
             else {
-                
-                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[buttons objectAtIndex:0] style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
-                    if (callback
-                        && [callback isKindOfClass:[NSString class]]) {
-                        NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys:@0,
-                                               kJSAlertButtonIndex,
-                                               nil];
-                        [self sendCallback:callback withData:data];
-                    }
-                }];
-                for (int i = 1 ; i < buttons.count ; i++) {
-                    UIAlertAction *otherAction = [UIAlertAction actionWithTitle:[buttons objectAtIndex:i] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action)
-                                               {
-                                                   if (callback
-                                                       && [callback isKindOfClass:[NSString class]]) {
-                                                       NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:i],
-                                                                              kJSAlertButtonIndex,
-                                                                              nil];
-                                                       [self sendCallback:callback withData:data];
-                                                   }
-                                               }];
-                    [alertController addAction:otherAction];
+                for (int i = 0 ; i < buttons.count ; i++) {
+                    UIAlertAction * action = [UIAlertAction actionWithTitle:[buttons objectAtIndex:i]
+                                                                      style:UIAlertActionStyleDefault
+                                                                    handler:^(UIAlertAction * action) {
+                           if (callback && [callback isKindOfClass:[NSString class]]) {
+                               NSDictionary * data = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:i], kJSAlertButtonIndex, nil];
+                               [self sendCallback:callback withData:data];
+                           }
+                       }
+                    ];
+                    
+                    [alertController addAction:action];
                 }
-                [alertController addAction:cancelAction];
             }
+            
             [self presentViewController:alertController animated:YES completion:nil];
             
-        }else{
+        }
+        else {
             UIAlertView * alertView;
             id delegate = (callback && [callback isKindOfClass:[NSString class]]) ? self : nil;
             
             if (! buttons.count) {
-                alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:delegate cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                alertView = [[UIAlertView alloc] initWithTitle:title
+                                                       message:message
+                                                      delegate:delegate
+                                             cancelButtonTitle:@"OK"
+                                             otherButtonTitles:nil];
             }
             else {
-                alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:delegate cancelButtonTitle:[buttons objectAtIndex:0] otherButtonTitles:nil];
+                alertView = [[UIAlertView alloc] initWithTitle:title
+                                                       message:message
+                                                      delegate:delegate
+                                             cancelButtonTitle:nil
+                                             otherButtonTitles:nil];
                 
-                // Add other buttons
-                for (int i = 1 ; i < buttons.count ; i++) {
+                // Add buttons
+                for (int i = 0 ; i < buttons.count ; i++) {
                     [alertView addButtonWithTitle:[buttons objectAtIndex:i]];
                 }
             }
             
             if (delegate) {
                 alertView.tag = ++_alertViewCounter;
-                [alertCallbacks setObject:callback forKey:[NSString stringWithFormat:@"%ld", (long)alertView.tag]];
+                [alertCallbacks setObject:callback
+                                   forKey:[NSString stringWithFormat:@"%ld", (long)alertView.tag]];
             }
             
             [alertView show];
