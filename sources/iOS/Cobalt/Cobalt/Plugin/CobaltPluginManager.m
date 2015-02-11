@@ -57,7 +57,7 @@ static CobaltPluginManager * cobaltPluginManagerInstance = nil;
 
 - (BOOL)onMessageFromCobaltViewController:(CobaltViewController *)viewController andData: (NSDictionary *)data {
     NSString * pluginName = [data objectForKey: kJSPluginName];
-    BOOL isFromWebLayer = [[data objectForKey:kJSData] objectForKey: kJSIsWebLayer];
+    BOOL isFromWebLayer = [[[data objectForKey:kJSData] objectForKey: kJSIsWebLayer] boolValue];
     
     if([pluginName isKindOfClass: [NSString class]]) {
         NSString * className = [[_pluginsDictionary objectForKey: pluginName] objectForKey: kIos];
