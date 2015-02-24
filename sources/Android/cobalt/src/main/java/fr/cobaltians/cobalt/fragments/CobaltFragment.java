@@ -674,7 +674,11 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
             if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: JSONException");
 			exception.printStackTrace();
 		}
-		
+        catch (NullPointerException exception) {
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: NullPointerException");
+            exception.printStackTrace();
+        }
+        
 		return false;
 	}
 	
