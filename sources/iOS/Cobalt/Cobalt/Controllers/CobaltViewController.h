@@ -81,6 +81,7 @@
 #define kJSAnimated                         @"animated"
 
 //LIFE CYCLE
+#define JSEventOnAppStarted                 @"onAppStarted"
 #define JSEventOnAppForeground              @"onAppForeground"
 #define JSEventOnAppBackground              @"onAppBackground"
 #define JSEventOnPageShown                  @"onPageShown"
@@ -143,10 +144,9 @@
 #define kJSPluginName                       @"name"
 
 //NOTIFS
+#define kOnAppStarted                       @"onAppStarted"
 #define kOnAppForegroundNotification        @"onAppForegroundNotification"
 #define kOnAppBackgroundNotification        @"onAppBackgroundNotification"
-#define kOnPageShownNotification            @"onPageShownNotification"
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -177,6 +177,11 @@
 #pragma mark INTERFACE
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+typedef enum {
+    WEB_VIEW,
+    WEB_LAYER
+} WebViewType;
 
 /*!
  @class			CobaltViewController

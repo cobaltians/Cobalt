@@ -50,14 +50,15 @@
 
 @interface CobaltViewController ()
 /*!
- @method		+(void) executeScriptInWebView:(UIWebView *)mWebView withDictionary:(NSDictionary *)dict
+ @method		+(void) executeScriptInWebView:(WebViewType)webViewType withDictionary:(NSDictionary *)dict
  @abstract		this method sends a JSON to the webView to execute a script (allows interactions from the native to the webView)
- @param         mWebView : the webview where the script is due to be executed
- @param         dict : a NSDictionary that contains the necessary informations to execute the script
+ @param         webViewType: the webview where the script is due to be executed
+ @param         dict: a NSDictionary that contains the necessary informations to execute the script
  @discussion    the webView MUST have a function "nativeBridge.execute(%@);" that receives the JSON (representing dict) as parameter
  @discussion    This method should NOT be overridden in subclasses.
  */
-- (void)executeScriptInWebView:(UIWebView *)mWebView withDictionary:(NSDictionary *)dict;
+- (void)executeScriptInWebView:(WebViewType)webViewType withDictionary:(NSDictionary *)dict;
+
 @end
 
 @implementation CobaltViewController
@@ -75,9 +76,15 @@ BOOL toastIsShown;
 
 NSString * webLayerPage;
 
-
-- (id) init {
-    if(self = [super init]) {
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        toJavaScriptOperationQueue = [[NSOperationQueue alloc] init] ;
+        [toJavaScriptOperationQueue setSuspended:YES];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(onAppStarted:)
+                                                     name:kOnAppStarted object:nil];
+        
         _navigationBarTintColor = [[UINavigationBar appearance] barTintColor];
         _toolbarTintColor = [[UIToolbar appearance] barTintColor];
     }
@@ -92,9 +99,6 @@ NSString * webLayerPage;
     // Do any additional setup after loading the view from its nib.
     [self customWebView];
     [webView setDelegate:self];
-    
-    toJavaScriptOperationQueue = [[NSOperationQueue alloc] init] ;
-    [toJavaScriptOperationQueue setSuspended:YES];
     
     fromJavaScriptOperationQueue = [[NSOperationQueue alloc] init] ;
     
@@ -143,30 +147,36 @@ NSString * webLayerPage;
     }
     
     [self configureBars];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAppBackground:) name: kOnAppBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAppForeground:) name:kOnAppForegroundNotification object:nil];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     self.navigationController.navigationBar.barTintColor = _navigationBarTintColor;
     self.navigationController.toolbar.barTintColor = _toolbarTintColor;
+    self.navigationController.toolbarHidden = ! self.hasToolBar;
     
-    self.navigationController.toolbarHidden = !self.hasToolBar;
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onAppBackground:)
+                                                 name:kOnAppBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onAppForeground:)
+                                                 name:kOnAppForegroundNotification object:nil];
     
-    [self sendEvent: JSEventOnPageShown withData:nil andCallback:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onPageShown:) name:kOnPageShownNotification object:nil];
+    [self sendEvent:JSEventOnPageShown
+           withData:nil
+        andCallback:nil];
 }
 
-
 - (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear: animated];
+    [super viewWillDisappear:animated];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOnPageShownNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:kOnAppBackgroundNotification
+                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:kOnAppForegroundNotification
+                                                  object:nil];
 }
 
 - (void)dealloc
@@ -179,10 +189,12 @@ NSString * webLayerPage;
     pageName = nil;
     webLayer = nil;
     
-    [[NSNotificationCenter defaultCenter] postNotificationName: viewControllerDeallocatedNotification  object: self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:kOnAppStarted
+                                                  object:nil];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOnAppBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOnAppForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:viewControllerDeallocatedNotification
+                                                        object:self];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -191,18 +203,26 @@ NSString * webLayerPage;
 #pragma mark -
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+- (void)onAppStarted:(NSNotification *)notification {
+    [self sendEvent:JSEventOnAppStarted
+           withData:nil
+        andCallback:nil];
+}
+
 - (void)onAppBackground:(NSNotification *)notification {
-    [self sendEvent: JSEventOnAppBackground withData: nil andCallback: nil];
+    [self sendEvent:JSEventOnAppBackground
+           withData:nil
+        andCallback:nil];
 }
 
 - (void)onAppForeground:(NSNotification *)notification {
-    [self sendEvent: JSEventOnAppForeground withData: nil andCallback: nil];
+    [self sendEvent:JSEventOnAppForeground
+           withData:nil
+        andCallback:nil];
+    [self sendEvent:JSEventOnPageShown
+           withData:nil
+        andCallback:nil];
 }
-
-- (void)onPageShown:(NSNotification *)notification {
-    [self sendEvent: JSEventOnPageShown withData: nil andCallback: nil];
-}
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -265,7 +285,7 @@ NSString * webLayerPage;
     return nil;
 }
 
-- (void)executeScriptInWebView:(UIWebView *)mWebView withDictionary:(NSDictionary *)dict
+- (void)executeScriptInWebView:(WebViewType)webViewType withDictionary:(NSDictionary *)dict
 {
     [toJavaScriptOperationQueue addOperationWithBlock:^{
         if ([NSJSONSerialization isValidJSONObject:dict]) {
@@ -278,7 +298,17 @@ NSString * webLayerPage;
                 
                 NSString * script = [NSString stringWithFormat:@"cobalt.execute(%@);", message];
                 
-                [mWebView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:script waitUntilDone:NO];
+                UIWebView * webViewToExecute;
+                switch(webViewType) {
+                    default:
+                    case WEB_VIEW:
+                        webViewToExecute = webView;
+                        break;
+                    case WEB_LAYER:
+                        webViewToExecute = webLayer;
+                        break;
+                }
+                [webViewToExecute performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:script waitUntilDone:NO];
             }
 #if DEBUG_COBALT
             else {
@@ -297,7 +327,7 @@ NSString * webLayerPage;
                                                                             callback, kJSCallback,
                                                                             data, kJSData,
                                                                             nil];
-        [self executeScriptInWebView:webView withDictionary:dict];
+        [self executeScriptInWebView:WEB_VIEW withDictionary:dict];
     }
 #if DEBUG_COBALT
     else {
@@ -320,7 +350,7 @@ NSString * webLayerPage;
             [dict setObject:callback forKey:kJSCallback];
         }
         
-        [self executeScriptInWebView:webView withDictionary:dict];
+        [self executeScriptInWebView:WEB_VIEW withDictionary:dict];
     }
 #if DEBUG_COBALT
     else {
@@ -337,7 +367,7 @@ NSString * webLayerPage;
                                callback, kJSCallback,
                                data, kJSData,
                                nil];
-        [self executeScriptInWebView:webLayer withDictionary:dict];
+        [self executeScriptInWebView:WEB_LAYER withDictionary:dict];
     }
 #if DEBUG_COBALT
     else {
@@ -360,7 +390,7 @@ NSString * webLayerPage;
             [dict setObject:callback forKey:kJSCallback];
         }
         
-        [self executeScriptInWebView:webLayer withDictionary:dict];
+        [self executeScriptInWebView:WEB_LAYER withDictionary:dict];
     }
 #if DEBUG_COBALT
     else {
@@ -838,7 +868,7 @@ NSString * webLayerPage;
 }
 
 - (void) sendMessage:(NSDictionary *) message {
-    if (message != nil) [self executeScriptInWebView:webView withDictionary:message];
+    if (message != nil) [self executeScriptInWebView:WEB_VIEW withDictionary:message];
 #if DEBUG_COBALT
     else NSLog(@"sendMessage: message is nil!");
 #endif
@@ -846,7 +876,7 @@ NSString * webLayerPage;
 
 
 - (void) sendMessageToWebLayer:(NSDictionary *) message {
-    if (message != nil && webLayer != nil) [self executeScriptInWebView:webLayer withDictionary:message];
+    if (message != nil && webLayer != nil) [self executeScriptInWebView:WEB_LAYER withDictionary:message];
 #if DEBUG_COBALT
     else NSLog(@"sendMessage: message is nil!");
 #endif
@@ -1383,7 +1413,7 @@ UIColor * SKColorFromHexString(NSString * hexString) {
         NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:   JSTypeCallBack, kJSType,
                                                                             JSCallbackSimpleAcquitment, kJSCallback,
                                                                             nil];
-        [self executeScriptInWebView:webLayer withDictionary:dict];
+        [self executeScriptInWebView:WEB_LAYER withDictionary:dict];
     }
 }
 
