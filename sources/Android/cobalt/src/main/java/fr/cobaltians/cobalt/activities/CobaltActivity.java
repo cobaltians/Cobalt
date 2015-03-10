@@ -70,45 +70,6 @@ public abstract class CobaltActivity extends ActionBarActivity {
 
     protected static final String TAG = CobaltActivity.class.getSimpleName();
 
-    // APP EVENTS
-    private static boolean sBackPressed = false;
-    private static boolean sAppWentToBackground = false;
-    private static boolean sWindowFocused = false;
-    private static String ACTION_ON_APP_BACKGROUND = "fr.cobaltians.cobalt.activities.CobaltActivity.ACTION_ON_APP_BACKGROUND";
-    private static String ACTION_ON_APP_FOREGROUND = "fr.cobaltians.cobalt.activities.CobaltActivity.ACTION_ON_APP_FOREGROUND";
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-
-            if (action == ACTION_ON_APP_BACKGROUND) {
-                onAppBackground();
-
-                Fragment fragment = getSupportFragmentManager().findFragmentById(getFragmentContainerId());
-                if (fragment != null
-                    && CobaltFragment.class.isAssignableFrom(fragment.getClass())) {
-                    ((CobaltFragment) fragment).sendEvent(Cobalt.JSEventOnAppBackground, null, null);
-                }
-                else if (Cobalt.DEBUG) Log.i(Cobalt.TAG,    TAG + " - onAppBackground: no fragment container found \n"
-                                                            + " or fragment found is not an instance of CobaltFragment. \n"
-                                                            + "Drop onAppBackground event.");
-            }
-            else if (action == ACTION_ON_APP_FOREGROUND) {
-                onAppForeground();
-
-                Fragment fragment = getSupportFragmentManager().findFragmentById(getFragmentContainerId());
-                if (fragment != null
-                    && CobaltFragment.class.isAssignableFrom(fragment.getClass())) {
-                    ((CobaltFragment) fragment).sendEvent(Cobalt.JSEventOnAppForeground, null, null);
-                }
-                else if (Cobalt.DEBUG) Log.i(Cobalt.TAG,    TAG + " - onAppForeground: no fragment container found \n"
-                                                            + " or fragment found is not an instance of CobaltFragment. \n"
-                                                            + "Drop onAppForeground event.");
-            }
-        }
-    };
-
     // POP
     private static ArrayList<CobaltActivity> sActivitiesArrayList = new ArrayList<CobaltActivity>();
 
@@ -171,53 +132,35 @@ public abstract class CobaltActivity extends ActionBarActivity {
             }
             else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - onCreate: getFragment() returned null");
 		}
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ACTION_ON_APP_BACKGROUND);
-        intentFilter.addAction(ACTION_ON_APP_FOREGROUND);
-
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        localBroadcastManager.registerReceiver(mBroadcastReceiver, intentFilter);
 	}
 
     @Override
     protected void onStart() {
-        applicationWillEnterForeground();
         super.onStart();
+
+        Cobalt.getInstance(getApplicationContext()).onActivityStarted(this);
     }
 
-    private void applicationWillEnterForeground() {
-        if (sAppWentToBackground) {
-            sAppWentToBackground = false;
-
-            LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
-            Intent intent = new Intent(ACTION_ON_APP_FOREGROUND);
-            localBroadcastManager.sendBroadcast(intent);
+    public void onAppStarted() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(getFragmentContainerId());
+        if (fragment != null
+            && CobaltFragment.class.isAssignableFrom(fragment.getClass())) {
+            ((CobaltFragment) fragment).sendEvent(Cobalt.JSEventOnAppStarted, null, null);
         }
+        else if (Cobalt.DEBUG) Log.i(Cobalt.TAG,    TAG + " - onAppStarted: no fragment container found \n"
+                                                    + " or fragment found is not an instance of CobaltFragment. \n"
+                                                    + "Drop onAppStarted event.");
     }
 
-    protected void onAppForeground() { }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        sWindowFocused = hasFocus;
-
-        if (hasFocus) {
-            Fragment fragment = getSupportFragmentManager().findFragmentById(getFragmentContainerId());
-            if (fragment != null
-                && CobaltFragment.class.isAssignableFrom(fragment.getClass())) {
-                ((CobaltFragment) fragment).sendEvent(Cobalt.JSEventOnPageShown, null, null);
-            }
-            else if (Cobalt.DEBUG) Log.i(Cobalt.TAG,    TAG + " - onWindowFocusChanged: no fragment container found \n"
-                                                        + " or fragment found is not an instance of CobaltFragment. \n"
-                                                        + "Drop onPageShown event.");
+    public void onAppForeground() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(getFragmentContainerId());
+        if (fragment != null
+            && CobaltFragment.class.isAssignableFrom(fragment.getClass())) {
+            ((CobaltFragment) fragment).sendEvent(Cobalt.JSEventOnAppForeground, null, null);
         }
-        else if (sBackPressed) {
-            sBackPressed = false;
-            sWindowFocused = true;
-        }
-
-        super.onWindowFocusChanged(hasFocus);
+        else if (Cobalt.DEBUG) Log.i(Cobalt.TAG,    TAG + " - onAppForeground: no fragment container found \n"
+                                                    + " or fragment found is not an instance of CobaltFragment. \n"
+                                                    + "Drop onAppForeground event.");
     }
 
     @Override
@@ -234,21 +177,19 @@ public abstract class CobaltActivity extends ActionBarActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        applicationDidEnterBackground();
-    }
 
-    private void applicationDidEnterBackground() {
-        if (! sWindowFocused) {
-            sAppWentToBackground = true;
-            
-            LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
-            Intent intent = new Intent(ACTION_ON_APP_BACKGROUND);
-            localBroadcastManager.sendBroadcast(intent);
-        }
+        Cobalt.getInstance(getApplicationContext()).onActivityStopped(this);
     }
 
     public void onAppBackground() {
-
+        Fragment fragment = getSupportFragmentManager().findFragmentById(getFragmentContainerId());
+        if (fragment != null
+            && CobaltFragment.class.isAssignableFrom(fragment.getClass())) {
+            ((CobaltFragment) fragment).sendEvent(Cobalt.JSEventOnAppBackground, null, null);
+        }
+        else if (Cobalt.DEBUG) Log.i(Cobalt.TAG,    TAG + " - onAppBackground: no fragment container found \n"
+                                                    + " or fragment found is not an instance of CobaltFragment. \n"
+                                                    + "Drop onAppBackground event.");
     }
 
     @Override
@@ -256,9 +197,6 @@ public abstract class CobaltActivity extends ActionBarActivity {
         super.onDestroy();
 
         sActivitiesArrayList.remove(0);
-
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        localBroadcastManager.unregisterReceiver(mBroadcastReceiver);
     }
 
     /**************************************************************************************************
@@ -360,7 +298,7 @@ public abstract class CobaltActivity extends ActionBarActivity {
         // Color
         String backgroundColor = configuration.optString(Cobalt.kBackgroundColor);
         try {
-            if (backgroundColor.isEmpty()) throw new IllegalArgumentException();
+            if (backgroundColor.length() == 0) throw new IllegalArgumentException();
             int colorInt = Color.parseColor(backgroundColor);
             actionBar.setBackgroundDrawable(new ColorDrawable(colorInt));
             bottomActionBar.setBackgroundColor(colorInt);
@@ -373,7 +311,7 @@ public abstract class CobaltActivity extends ActionBarActivity {
         // Icon
         String icon = configuration.optString(Cobalt.kIcon);
         try {
-            if (icon.isEmpty()) throw new IllegalArgumentException();
+            if (icon.length() == 0) throw new IllegalArgumentException();
             String[] split = icon.split(":");
             if (split.length != 2) throw new IllegalArgumentException();
             int resId = getResources().getIdentifier(split[1], "drawable", split[0]);
@@ -390,7 +328,7 @@ public abstract class CobaltActivity extends ActionBarActivity {
 
         // Title
         String title = configuration.optString(Cobalt.kTitle);
-        if (! title.isEmpty()) {
+        if (title.length() != 0) {
             actionBar.setTitle(title);
             actionBar.setDisplayShowTitleEnabled(true);
         }
@@ -534,7 +472,6 @@ public abstract class CobaltActivity extends ActionBarActivity {
             ((CobaltFragment) fragment).askWebViewForBackPermission();
         }
         else {
-            sBackPressed = true;
             super.onBackPressed();
             if (Cobalt.DEBUG) Log.i(Cobalt.TAG,     TAG + " - onBackPressed: no fragment container found \n"
                                                     + " or fragment found is not an instance of CobaltFragment. \n"
@@ -557,7 +494,6 @@ public abstract class CobaltActivity extends ActionBarActivity {
 	}
 
 	private void backWithSuper() {
-        sBackPressed = true;
 		super.onBackPressed();
 	}
 

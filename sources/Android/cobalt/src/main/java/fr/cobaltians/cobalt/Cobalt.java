@@ -29,6 +29,7 @@
 
 package fr.cobaltians.cobalt;
 
+import fr.cobaltians.cobalt.activities.CobaltActivity;
 import fr.cobaltians.cobalt.fragments.CobaltFragment;
 import fr.cobaltians.cobalt.plugin.CobaltAbstractPlugin;
 
@@ -59,9 +60,9 @@ public class Cobalt {
     // RESOURCES
     private static final String ASSETS_PATH = "file:///android_asset/";
 
-    /********************************************************************
+    /**********************************************************************************************
      * CONFIGURATION FILE
-     ********************************************************************/
+     **********************************************************************************************/
 
     private final static String CONF_FILE = "cobalt.conf";
     private final static String kControllers = "controllers";
@@ -89,9 +90,9 @@ public class Cobalt {
     public final static String kInfiniteScroll = "infiniteScroll";
     public final static String kSwipe = "swipe";
 
-    /*******************************************************************************************
+    /**********************************************************************************************
      * JS KEYWORDS
-     *******************************************************************************************/
+     **********************************************************************************************/
 
     // GENERAL
     public final static String kJSAction = "action";
@@ -114,6 +115,7 @@ public class Cobalt {
     public final static String kJSEvent = "event";
 
     // APP EVENTS
+    public final static String JSEventOnAppStarted = "onAppStarted";
     public final static String JSEventOnAppBackground = "onAppBackground";
     public final static String JSEventOnAppForeground = "onAppForeground";
     public final static String JSEventOnPageShown = "onPageShown";
@@ -192,17 +194,21 @@ public class Cobalt {
     public final static String JSTypePlugin = "plugin";
     public final static String kJSPluginName = "name";
 
-    /*************************************
+    /**********************************************************************************************
      * MEMBERS
-     *************************************/
+     **********************************************************************************************/
 
     private static Cobalt sInstance;
     private static Context mContext;
+
     private String mResourcePath = "www/";
 
-    /****************************************************************************************
+    private int mRunningActivities = 0;
+    private boolean mFirstActivityStart = true;
+
+    /**********************************************************************************************
      * CONSTRUCTORS
-     ****************************************************************************************/
+     **********************************************************************************************/
 
     private Cobalt(Context context) {
         mContext = context.getApplicationContext();
@@ -217,9 +223,9 @@ public class Cobalt {
         return sInstance;
     }
 
-    /**********************************************************
+    /**********************************************************************************************
      * GETTERS / SETTERS
-     **********************************************************/
+     **********************************************************************************************/
 	
 	public String getResourcePath() {
 		return ASSETS_PATH + mResourcePath;
@@ -234,9 +240,28 @@ public class Cobalt {
         return mContext;
     }
 
-    /**************************************************************************************************************
+    /**********************************************************************************************
+     * APP LIFECYCLE
+     **********************************************************************************************/
+
+    public void onActivityStarted(CobaltActivity activity) {
+        if (++mRunningActivities == 1) {
+            if (mFirstActivityStart) {
+                mFirstActivityStart = false;
+                
+                activity.onAppStarted();
+            }
+            else activity.onAppForeground();
+        }
+    }
+
+    public void onActivityStopped(CobaltActivity activity) {
+        if (--mRunningActivities == 0) activity.onAppBackground();
+    }
+
+    /**********************************************************************************************
      * CONFIGURATION FILE
-     **************************************************************************************************************/
+     **********************************************************************************************/
 
     public CobaltFragment getFragmentForController(Class<?> CobaltFragmentClass, String controller, String page) {
         CobaltFragment fragment = null;
@@ -339,9 +364,9 @@ public class Cobalt {
         return bundle;
     }
 
-    /*********************************************************************
+    /**********************************************************************************************
      * PLUGINS FILE
-     *********************************************************************/
+     **********************************************************************************************/
 
     public HashMap<String, Class<? extends CobaltAbstractPlugin>> getPlugins() {
         HashMap<String, Class<? extends CobaltAbstractPlugin>> pluginsMap = new HashMap<String, Class<? extends CobaltAbstractPlugin>>();

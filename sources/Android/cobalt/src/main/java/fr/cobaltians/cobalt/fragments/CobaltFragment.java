@@ -48,6 +48,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -57,6 +58,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.*;
 import android.webkit.JavascriptInterface;
@@ -68,6 +70,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import org.apache.http.cookie.CookieOrigin;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -161,6 +164,13 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 		addWebView();
 		preloadContent();
 	}
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        sendEvent(Cobalt.JSEventOnPageShown, null, null);
+    }
 	
 	@Override
 	public void onStop() {
@@ -262,6 +272,14 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
     protected void setWebViewSettings(Object javascriptInterface) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) mWebView.setLayerType(View.LAYER_TYPE_HARDWARE ,null);
 
+        // Disable scrolling
+        mWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        mWebView.setScrollContainer(false);
+        // Clear background
+        mWebView.setBackgroundColor(0x00000000);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) mWebView.setBackground(null);
+        else mWebView.setBackgroundDrawable(null);
+
         mWebView.setScrollListener(this);
         mWebView.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
 
@@ -338,6 +356,10 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
      */
     private void loadFileFromAssets(String file) {
         mWebView.loadUrl(Cobalt.getInstance(mContext).getResourcePath() + file);
+        // Clear background
+        mWebView.setBackgroundColor(0x00000000);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) mWebView.setBackground(null);
+        else mWebView.setBackgroundDrawable(null);
     }
 
 	/**
@@ -690,7 +712,12 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
         onReady();
 	}
 
-    protected void onReady() { }
+    protected void onReady() {
+        // Clear background
+        mWebView.setBackgroundColor(0x00000000);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) mWebView.setBackground(null);
+        else mWebView.setBackgroundDrawable(null);
+    }
 
 	private boolean handleCallback(String callback, JSONObject data) {
 		try {
