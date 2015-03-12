@@ -45,6 +45,7 @@
 #define kIosNibName             @"iosNibName"
 #define kPullToRefreshEnabled   @"pullToRefresh"
 #define kInfiniteScrollEnabled  @"infiniteScroll"
+#define kInfiniteScrollOffset   @"infiniteScrollOffset"
 #define kBars                   @"bars"
 #define kBarVisible             @"visible"
 #define kBarBackgroundColor     @"backgroundColor"

@@ -991,6 +991,7 @@ NSString * webLayerPage;
         NSString * nib = [configuration objectForKey:kIosNibName];
         BOOL pullToRefreshEnabled = [[configuration objectForKey:kPullToRefreshEnabled] boolValue];
         BOOL infiniteScrollEnabled = [[configuration objectForKey:kInfiniteScrollEnabled] boolValue];
+        int infiniteScrollOffset = [configuration objectForKey:kInfiniteScrollOffset] != nil ? [[configuration objectForKey:kInfiniteScrollOffset] intValue] : 0;
         NSMutableDictionary * barsDictionary = [NSMutableDictionary dictionaryWithDictionary: [configuration objectForKey: kBars]];
         
         NSDictionary * barActionsArray = [barsDictionary objectForKey: kBarActions];
@@ -1024,6 +1025,7 @@ NSString * webLayerPage;
                 CobaltViewController * viewController = [[NSClassFromString(class) alloc] initWithNibName:nib bundle:[NSBundle mainBundle]];
                 viewController.isPullToRefreshEnabled = pullToRefreshEnabled;
                 viewController.isInfiniteScrollEnabled = infiniteScrollEnabled;
+                viewController.infiniteScrollOffset = infiniteScrollOffset;
                 viewController.barsConfiguration = barsDictionary;
                 
                 return viewController;
@@ -1455,15 +1457,20 @@ UIColor * SKColorFromHexString(NSString * hexString) {
  @abstract      Tells the delegate when the user scrolls the content view within the receiver.
  @param         scrollView  The scroll-view object in which the scrolling occurred.
  */
-- (void)scrollViewDidScroll:(UIScrollView *)_scrollView
-{
-    if (_scrollView.isDragging) {
-        if (isInfiniteScrollEnabled) {
-            if (webView.scrollView.contentOffset.y > (_scrollView.contentSize.height - _scrollView.frame.size.height)
-               && !_isLoadingMore){
-                [self loadMoreItems];
-            }
+- (void)scrollViewDidScroll:(UIScrollView *)_scrollView {
+    if ([_scrollView isEqual:webView.scrollView]) {
+        float height = _scrollView.frame.size.height;
+        float contentHeight = _scrollView.contentSize.height;
+        float contentOffset = _scrollView.contentOffset.y;
+        
+        if (isInfiniteScrollEnabled
+            && ! _isLoadingMore
+            && _scrollView.isDragging && contentOffset > _lastWebviewContentOffset
+            && contentOffset > (contentHeight - height * (1 + _infiniteScrollOffset / 100))) {
+            [self loadMoreItems];
         }
+        
+        _lastWebviewContentOffset = contentOffset;
     }
 }
 

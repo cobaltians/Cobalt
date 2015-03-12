@@ -200,6 +200,7 @@ typedef enum {
     
     id<CobaltDelegate> _delegate;
     int _alertViewCounter;
+    float _lastWebviewContentOffset;
 	BOOL _isLoadingMore;
     BOOL _isRefreshing;
     
@@ -244,6 +245,12 @@ typedef enum {
  @abstract		allows or not the infinite scroll functionality
  */
 @property BOOL isInfiniteScrollEnabled;
+
+/*!
+ @property		infiniteScrollOffset
+ @abstract		offset to trigger infinite scroll
+ */
+@property int infiniteScrollOffset;
 
 /*!
  @property		hasToolBar
