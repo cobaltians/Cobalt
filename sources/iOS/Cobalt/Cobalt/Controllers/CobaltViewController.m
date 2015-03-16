@@ -1466,7 +1466,7 @@ UIColor * SKColorFromHexString(NSString * hexString) {
         if (isInfiniteScrollEnabled
             && ! _isLoadingMore
             && _scrollView.isDragging && contentOffset > _lastWebviewContentOffset
-            && contentOffset > (contentHeight - height * (1 + _infiniteScrollOffset / 100))) {
+			&& (contentOffset + height) > (contentHeight - height * _infiniteScrollOffset / 100)) {
             [self loadMoreItems];
         }
         
