@@ -268,7 +268,8 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 
     protected void setWebViewSettings(Object javascriptInterface) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) mWebView.setLayerType(View.LAYER_TYPE_HARDWARE ,null);
-		
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) mWebView.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
         mWebView.setScrollListener(this);
         mWebView.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
 
@@ -1200,30 +1201,26 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	
 	@Override
 	public void onOverScrolled(int scrollX, int scrollY, int oldscrollX, int oldscrollY) {
-		float density = mContext.getResources().getDisplayMetrics().density;
-		// Round density in case it is too precise (and big)
-		if (density > 1) {
-			density = (float) (Math.floor(density * 10) / 10.0);
-		}
-		
-		int yPosition = (int) ((mWebView.getScrollY() + mWebView.getHeight()) / density);
-		if (yPosition >= mWebView.getContentHeight()) {
+        int height = mWebView.getHeight();
+        long contentHeight = (long) Math.floor(mWebView.getContentHeight() * mContext.getResources().getDisplayMetrics().density);
+
+		if (isInfiniteScrollActive()
+            && ! mIsInfiniteScrollRefreshing
+            && scrollY > oldscrollY
+            && scrollY + height > contentHeight - height * getInfiniteScrollOffset() / 100) {
 			infiniteScrollRefresh();
 		}
 	}
 
 	private void infiniteScrollRefresh() {
-		if (isInfiniteScrollActive()
-			&& ! mIsInfiniteScrollRefreshing) {
-			mHandler.post(new Runnable() {
+        mHandler.post(new Runnable() {
 
-				@Override
-				public void run() {
-                    sendEvent(Cobalt.JSEventInfiniteScroll, null, Cobalt.JSCallbackInfiniteScrollDidRefresh);
-                    mIsInfiniteScrollRefreshing = true;
-				}
-			});
-		}
+            @Override
+            public void run() {
+                sendEvent(Cobalt.JSEventInfiniteScroll, null, Cobalt.JSCallbackInfiniteScrollDidRefresh);
+                mIsInfiniteScrollRefreshing = true;
+            }
+        });
 	}
 	
 	private void onInfiniteScrollDidRefresh() {
@@ -1259,6 +1256,16 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			return false;
 		}
 	}
+
+    private int getInfiniteScrollOffset() {
+        Bundle args = getArguments();
+        if (args != null) {
+            return args.getInt(Cobalt.kInfiniteScrollOffset);
+        }
+        else {
+            return Cobalt.INFINITE_SCROLL_OFFSET_DEFAULT_VALUE;
+        }
+    }
 
     protected String getPage() {
         Bundle args = getArguments();

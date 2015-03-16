@@ -60,6 +60,9 @@ public class Cobalt {
     // RESOURCES
     private static final String ASSETS_PATH = "file:///android_asset/";
 
+    // INFINITE SCROLL
+    public static final int INFINITE_SCROLL_OFFSET_DEFAULT_VALUE = 0;
+
     /**********************************************************************************************
      * CONFIGURATION FILE
      **********************************************************************************************/
@@ -88,6 +91,7 @@ public class Cobalt {
     public final static String kPushAsModal = "pushAsModal";
     public final static String kPullToRefresh = "pullToRefresh";
     public final static String kInfiniteScroll = "infiniteScroll";
+    public final static String kInfiniteScrollOffset = "infiniteScrollOffset";
     public final static String kSwipe = "swipe";
 
     /**********************************************************************************************
@@ -330,6 +334,7 @@ public class Cobalt {
             JSONObject actionBar;
             boolean enablePullToRefresh;
             boolean enableInfiniteScroll;
+            int infiniteScrollOffset;
             // TODO: add enableGesture
 
             if (controller != null
@@ -338,18 +343,21 @@ public class Cobalt {
                 actionBar = controllers.getJSONObject(controller).optJSONObject(kBars);
                 enablePullToRefresh = controllers.getJSONObject(controller).optBoolean(kPullToRefresh);
                 enableInfiniteScroll = controllers.getJSONObject(controller).optBoolean(kInfiniteScroll);
+                infiniteScrollOffset = controllers.getJSONObject(controller).optInt(kInfiniteScrollOffset, INFINITE_SCROLL_OFFSET_DEFAULT_VALUE);
             }
             else {
                 activity = controllers.getJSONObject(kDefaultController).getString(kAndroid);
                 actionBar = controllers.getJSONObject(kDefaultController).optJSONObject(kBars);
                 enablePullToRefresh = controllers.getJSONObject(kDefaultController).optBoolean(kPullToRefresh);
                 enableInfiniteScroll = controllers.getJSONObject(kDefaultController).optBoolean(kInfiniteScroll);
+                infiniteScrollOffset = controllers.getJSONObject(controller).optInt(kInfiniteScrollOffset, INFINITE_SCROLL_OFFSET_DEFAULT_VALUE);
             }
 
             bundle.putString(kActivity, activity);
             if (actionBar != null) bundle.putString(kBars, actionBar.toString());
             bundle.putBoolean(kPullToRefresh, enablePullToRefresh);
             bundle.putBoolean(kInfiniteScroll, enableInfiniteScroll);
+            bundle.putInt(kInfiniteScrollOffset, infiniteScrollOffset);
 
             return bundle;
         }
