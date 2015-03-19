@@ -78,7 +78,7 @@ public abstract class CobaltActivity extends ActionBarActivity {
     private static boolean sWasPushedFromModal = false;
 
     // ACTION BAR MENU ITEMS
-    private HashMap<Integer, String> mMenuItemsHashMap;
+    private HashMap<Integer, String> mMenuItemsHashMap = new HashMap<Integer, String>();
 
     /************************************************************************************************************************
 	 * LIFECYCLE
@@ -350,7 +350,6 @@ public abstract class CobaltActivity extends ActionBarActivity {
             return false;
         }
 
-        mMenuItemsHashMap = new HashMap<Integer, String>();
         int menuItemsAddedToTop = 0;
         int menuItemsAddedToOverflow = 0;
 
