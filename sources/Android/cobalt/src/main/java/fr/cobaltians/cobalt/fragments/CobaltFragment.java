@@ -617,7 +617,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
                         JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
                         String controller = data.getString(Cobalt.kJSController);
                         String page = data.getString(Cobalt.kJSPage);
-                        boolean animated = data.getBoolean(Cobalt.kJSAnimated);
+                        boolean animated = data.optBoolean(Cobalt.kJSAnimated);
                         replace(controller, page, animated);
                         return true;
                     }
