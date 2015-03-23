@@ -62,7 +62,7 @@ var cobalt={
         }
 
 
-		if (cobalt.adapter.init){
+		if (cobalt.adapter && cobalt.adapter.init){
 			cobalt.adapter.init();
 		}
 
@@ -138,9 +138,12 @@ var cobalt={
 			}
 	    }
         if (cobalt.debugInBrowser){
-            cobalt.log('sending', obj)
+            cobalt.log('sending', obj);
         }
-		cobalt.adapter.send(obj, callback)
+		
+		if(cobalt.adapter){
+			cobalt.adapter.send(obj, callback);
+		}
 	},
 	//Sends an event to native side.
 	//See doc for guidelines.
@@ -184,12 +187,13 @@ var cobalt={
 				cobalt.send({ "type":"navigation", "action":"pop", data : data});
 			break;
 			case "modal":
-				if (page){
+				if (cobalt.adapter && page){
 					cobalt.adapter.navigateToModal(page, controller);
 				}
 			break;
 			case "dismiss":
-				cobalt.adapter.dismissFromModal();
+				if(cobalt.adapter)
+					cobalt.adapter.dismissFromModal();
 			break;
 		}
 	},
@@ -616,7 +620,7 @@ var cobalt={
                 cobalt.datePicker.updateFromValue.apply(input);
             });
 
-            if (cobalt.adapter.datePicker && cobalt.adapter.datePicker.init){
+            if (cobalt.adapter && cobalt.adapter.datePicker && cobalt.adapter.datePicker.init){
                 cobalt.adapter.datePicker.init(inputs);
             }
         },
@@ -666,7 +670,7 @@ var cobalt={
             if (input[0] && input[0].value!==undefined){
                 input=input[0];
             }
-            if (cobalt.adapter.datePicker && cobalt.adapter.datePicker.val){
+            if (cobalt.adapter && cobalt.adapter.datePicker && cobalt.adapter.datePicker.val){
                 cobalt.log('returning cobalt adapter datePicker value')
                 return cobalt.adapter.datePicker.val(input);
             }else{
@@ -833,7 +837,7 @@ var cobalt={
             if (obj && !cobalt.debugInBrowser){
                 cobalt.divLog('sending',obj)
                 try{
-                    cobaltViewController._handleDictionarySentByJavaScript(JSON.stringify(obj));
+                    cobaltViewController.onCobaltMessage(JSON.stringify(obj));
                 }catch (e){
                     cobalt.log('ERROR : cant connect to native.' + e)
                 }

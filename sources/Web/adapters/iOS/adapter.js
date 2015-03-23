@@ -33,7 +33,7 @@ cobalt.ios_adapter={
             if (obj && !cobalt.debugInBrowser){
                 cobalt.divLog('sending',obj)
                 try{
-                    cobaltViewController._handleDictionarySentByJavaScript(JSON.stringify(obj));
+                    cobaltViewController.onCobaltMessage(JSON.stringify(obj));
                 }catch (e){
                     cobalt.log('ERROR : cant connect to native.' + e)
                 }

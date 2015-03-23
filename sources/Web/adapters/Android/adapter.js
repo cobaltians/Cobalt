@@ -27,7 +27,7 @@ cobalt.android_adapter={
         if (obj && !cobalt.debugInBrowser){
         	cobalt.divLog('sending',obj)
 	        try{	        	
-		        Android.handleMessageSentByJavaScript(JSON.stringify(obj));
+		        Android.onCobaltMessage(JSON.stringify(obj));
 	        }catch (e){
 		        cobalt.log('ERROR : cant connect to native')
 	        }
