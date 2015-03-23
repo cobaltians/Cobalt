@@ -399,8 +399,8 @@ NSString * webLayerPage;
 #endif
 }
 
-- (BOOL)_handleDictionarySentByJavaScript:(NSString *)json {
-    NSDictionary * jsonObj = [Cobalt JSONObjectWithString:json];
+- (BOOL)onCobaltMessage:(NSString *)message {
+    NSDictionary * jsonObj = [Cobalt JSONObjectWithString:message];
     return [self handleDictionarySentByJavaScript: jsonObj];
 }
 
@@ -906,7 +906,7 @@ NSString * webLayerPage;
     }
 #if DEBUG_COBALT
     else {
-        NSLog(@"handleDictionarySentByJavaScript: page field missing or not a string (data: %@)", [data description]);
+        NSLog(@"replaceViewControllerWithData: page field missing or not a string (data: %@)", [data description]);
     }
 #endif
 }
@@ -928,7 +928,7 @@ NSString * webLayerPage;
     }
 #if DEBUG_COBALT
     else {
-        NSLog(@"handleDictionarySentByJavaScript: page field missing or not a string (data: %@)", [data description]);
+        NSLog(@"pushViewControllerWithData: page field missing or not a string (data: %@)", [data description]);
     }
 #endif
 }
@@ -952,7 +952,7 @@ NSString * webLayerPage;
     }
 #if DEBUG_COBALT
     else {
-        NSLog(@"handleDictionarySentByJavaScript: page field missing or not a string (message: %@)", [data description]);
+        NSLog(@"presentViewControllerWithData: page field missing or not a string (data: %@)", [data description]);
     }
 #endif
 }

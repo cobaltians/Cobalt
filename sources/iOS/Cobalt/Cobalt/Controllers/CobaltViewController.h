@@ -168,7 +168,7 @@
 
 @protocol CobaltViewControllerJS <JSExport>
 
-- (BOOL)_handleDictionarySentByJavaScript:(NSString *)json;
+- (BOOL)onCobaltMessage:(NSString *)message;
 
 @end
 
@@ -327,13 +327,13 @@ typedef enum {
 - (void)sendEventToWebLayer:(NSString *)event withData:(NSObject *)data andCallback:(NSString *)callback;
 
 /*!
- @method		-(void)handleDictionarySentByJavaScript:(NSDictionary *)dict
- @abstract		this method gets a JSON from the webView to use so as to fire native methods (allows interactions from the webView to the native)
- @param        dict : the NSDictionary given by the webView to handle with
- @result        BOOL : if YES, the action to do by the controller has been completed. Otherwise, returns NO.
- @discussion    This method MUST be overridden in subclasses.
+ @method        - (BOOL)handleDictionarySentByJavaScript:(NSDictionary *)message
+ @abstract      Catches the message sent by the WebView as JSON used to fire native methods (allows interactions from the WebView to the native)
+ @param         message: the JSON sent by the WebView
+ @result        Returns YES if the message has been catched by the native, NO otherwise.
+ @discussion    This method SHOULD NOT be overridden in subclasses.
  */
-- (BOOL)handleDictionarySentByJavaScript:(NSDictionary *)dict;
+- (BOOL)handleDictionarySentByJavaScript:(NSDictionary *)message;
 
 /*!
  @method		- (void)sendACK
