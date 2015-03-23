@@ -506,7 +506,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	 */
 	// This method must be public !!!
 	@JavascriptInterface
-	public boolean handleMessageSentByJavaScript(String message) {
+	public boolean onCobaltMessage(String message) {
 		try {
 			final JSONObject jsonObj = new JSONObject(message);
 			
@@ -679,11 +679,11 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 			}
 		} 
 		catch (JSONException exception) {
-            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: JSONException");
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - onCobaltMessage: JSONException");
 			exception.printStackTrace();
 		}
         catch (NullPointerException exception) {
-            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: NullPointerException");
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - onCobaltMessage: NullPointerException");
             exception.printStackTrace();
         }
         

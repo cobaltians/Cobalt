@@ -102,7 +102,7 @@ public class CobaltWebLayerFragment extends CobaltFragment {
             }
         }
         catch (JSONException exception) {
-            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - handleMessageSentByJavaScript: JSONException");
+            if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - onUnhandledMessage: JSONException");
             exception.printStackTrace();
         }
     }
