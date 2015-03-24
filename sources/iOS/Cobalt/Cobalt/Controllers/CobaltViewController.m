@@ -40,6 +40,8 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////
 
+// TODO: uncomment for Bars
+/*
 @interface CobaltButton : UIButton
 
 @property (nonatomic, retain) NSString * iconName;
@@ -47,6 +49,7 @@
 
 @implementation CobaltButton
 @end
+*/
 
 @interface CobaltViewController ()
 /*!
@@ -85,8 +88,11 @@ NSString * webLayerPage;
                                                  selector:@selector(onAppStarted:)
                                                      name:kOnAppStarted object:nil];
         
+        // TODO: uncomment for Bars
+        /*
         _navigationBarTintColor = [[UINavigationBar appearance] barTintColor];
         _toolbarTintColor = [[UIToolbar appearance] barTintColor];
+        */
     }
     
     return self;
@@ -146,15 +152,19 @@ NSString * webLayerPage;
         context[@"cobaltViewController"] = self;
     }
     
-    [self configureBars];
+    // TODO: uncomment for Bars
+    //[self configureBars];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    // TODO: uncomment for Bars
+    /*
     self.navigationController.navigationBar.barTintColor = _navigationBarTintColor;
     self.navigationController.toolbar.barTintColor = _toolbarTintColor;
     self.navigationController.toolbarHidden = ! self.hasToolBar;
+    */
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(onAppBackground:)
@@ -675,6 +685,8 @@ NSString * webLayerPage;
                 }
                 
                 // BARS
+                // TODO: uncomment for Bars
+                /*
                 else if ([control isEqualToString: JSControlBars]) {
                     if (data
                         && [data isKindOfClass:[NSDictionary class]]) {
@@ -762,6 +774,7 @@ NSString * webLayerPage;
                     }
 #endif
                 }
+                */
                 
                 else {
 #if DEBUG_COBALT
@@ -992,6 +1005,8 @@ NSString * webLayerPage;
         BOOL pullToRefreshEnabled = [[configuration objectForKey:kPullToRefreshEnabled] boolValue];
         BOOL infiniteScrollEnabled = [[configuration objectForKey:kInfiniteScrollEnabled] boolValue];
         int infiniteScrollOffset = [configuration objectForKey:kInfiniteScrollOffset] != nil ? [[configuration objectForKey:kInfiniteScrollOffset] intValue] : 0;
+        // TODO: uncomment for Bars
+        /*
         NSMutableDictionary * barsDictionary = [NSMutableDictionary dictionaryWithDictionary: [configuration objectForKey: kBars]];
         
         NSDictionary * barActionsArray = [barsDictionary objectForKey: kBarActions];
@@ -1001,6 +1016,7 @@ NSString * webLayerPage;
         }
         
         [barsDictionary setObject: mutableBarActionsArray forKey: kBarActions];
+        */
         
         if (! class) {
 #if DEBUG_COBALT
@@ -1026,7 +1042,8 @@ NSString * webLayerPage;
                 viewController.isPullToRefreshEnabled = pullToRefreshEnabled;
                 viewController.isInfiniteScrollEnabled = infiniteScrollEnabled;
                 viewController.infiniteScrollOffset = infiniteScrollOffset;
-                viewController.barsConfiguration = barsDictionary;
+                // TODO: uncomment for Bars
+                //viewController.barsConfiguration = barsDictionary;
                 
                 return viewController;
             }
@@ -1087,6 +1104,8 @@ void SKScanHexColor(NSString * hexString, float * red, float * green, float * bl
     if (alpha) { *alpha = ((baseValue >> 0) & 0xFF)/255.0f; }
 }
 
+// TODO: uncomment for Bars
+/*
 UIColor * SKColorFromHexString(NSString * hexString) {
     float red, green, blue, alpha;
     SKScanHexColor(hexString, &red, &green, &blue, &alpha);
@@ -1183,6 +1202,7 @@ UIColor * SKColorFromHexString(NSString * hexString) {
     
     [self sendMessage: data];
 }
+*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -

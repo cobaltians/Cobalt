@@ -48,6 +48,7 @@
 #define kJSCallback                         @"callback"
 #define kJSData                             @"data"
 #define kJSPage                             @"page"
+#define kJSTexts                            @"texts"
 #define kJSType                             @"type"
 #define KJSVersion                          @"version"
 #define kJSValue                            @"value"
@@ -115,13 +116,15 @@
 #define JSControlToast                      @"toast"
 
 //BARS
+// TODO: uncomment for Bars
+/*
 #define JSControlBars                       @"bars"
 #define kJSButton                           @"button"
-#define kJSTexts                            @"texts"
 #define kJSTitleBar                         @"title"
 #define kJSVisibility                       @"visibility"
 #define kJSTop                              @"top"
 #define kJSBottom                           @"bottom"
+*/
 
 // WEB LAYER
 #define JSTypeWebLayer                      @"webLayer"
@@ -193,8 +196,11 @@ typedef enum {
     NSOperationQueue * toJavaScriptOperationQueue;
     NSOperationQueue * fromJavaScriptOperationQueue;
     
+    // TODO: uncomment for Bars
+    /*
     UIColor * _navigationBarTintColor;
     UIColor * _toolbarTintColor;
+    */
     
 @private
     
@@ -252,17 +258,18 @@ typedef enum {
  */
 @property int infiniteScrollOffset;
 
+// TODO: uncomment for Bars
 /*!
  @property		hasToolBar
  @abstract		allows or not the toolbar display
  */
-@property BOOL hasToolBar;
+//@property BOOL hasToolBar;
 
 /*!
  @property		barsConfiguration
  @abstract		bars configuration as defined in cobalt.conf
  */
-@property NSMutableDictionary * barsConfiguration;
+//@property NSMutableDictionary * barsConfiguration;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

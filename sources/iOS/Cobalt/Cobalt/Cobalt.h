@@ -46,6 +46,8 @@
 #define kPullToRefreshEnabled   @"pullToRefresh"
 #define kInfiniteScrollEnabled  @"infiniteScroll"
 #define kInfiniteScrollOffset   @"infiniteScrollOffset"
+// TODO: uncomment for Bars
+/*
 #define kBars                   @"bars"
 #define kBarVisible             @"visible"
 #define kBarBackgroundColor     @"backgroundColor"
@@ -56,6 +58,7 @@
 #define kBarActionTitle         @"title"
 #define kBarActionVisible       @"visible"
 #define kBarActionPosition      @"iosPosition"
+*/
 
 @interface Cobalt : NSObject
 
