@@ -72,11 +72,12 @@ public class Cobalt {
     private final static String kPlugins = "plugins";
     private final static String kAndroid = "android";
     private final static String kDefaultController = "default";
+    // TODO: uncomment for Bars
+    /*
     public final static String kBars = "bars";
     public final static String kVisible = "visible";
     public final static String kBackgroundColor = "backgroundColor";
     public final static String kIcon = "androidIcon";
-    public final static String kTheme = "androidTheme";
     public final static String kTitle = "title";
     public final static String kActions = "actions";
     public final static String kName = "name";
@@ -84,6 +85,7 @@ public class Cobalt {
     public final static String kPositionOverflow = "overflow";
     public final static String kPositionTop = "top";
     public final static String kPositionBottom = "bottom";
+    */
     public final static String kExtras = "extras";
     public final static String kPage = "page";
     public final static String kActivity = "activity";
@@ -157,10 +159,14 @@ public class Cobalt {
     public final static String kJSAlertCancelable = "cancelable";
     public final static String kJSAlertButtonIndex  = "index";
 
+
+    // TODO: uncomment for Bars
     // BARS
+    /*
     public final static String JSControlBars = "bars";
     public final static String JSActionButtonPressed = "buttonPressed";
     public final static String kJSBarsButton = "button";
+    */
 
     // DATE PICKER
     public static final String JSControlPicker = "picker";
@@ -237,7 +243,7 @@ public class Cobalt {
 	
 	public void setResourcePath(String resourcePath) {
         if (resourcePath != null) mResourcePath = resourcePath;
-        else mResourcePath = new String();
+        else mResourcePath = "";
 	}
 
     public static Context getAppContext() {
@@ -331,7 +337,8 @@ public class Cobalt {
             JSONObject controllers = configuration.getJSONObject(kControllers);
 
             String activity;
-            JSONObject actionBar;
+            // TODO: uncomment for Bars
+            //JSONObject actionBar;
             boolean enablePullToRefresh;
             boolean enableInfiniteScroll;
             int infiniteScrollOffset;
@@ -340,21 +347,21 @@ public class Cobalt {
             if (controller != null
                 && controllers.has(controller)) {
                 activity = controllers.getJSONObject(controller).getString(kAndroid);
-                actionBar = controllers.getJSONObject(controller).optJSONObject(kBars);
+                //actionBar = controllers.getJSONObject(controller).optJSONObject(kBars);
                 enablePullToRefresh = controllers.getJSONObject(controller).optBoolean(kPullToRefresh);
                 enableInfiniteScroll = controllers.getJSONObject(controller).optBoolean(kInfiniteScroll);
                 infiniteScrollOffset = controllers.getJSONObject(controller).optInt(kInfiniteScrollOffset, INFINITE_SCROLL_OFFSET_DEFAULT_VALUE);
             }
             else {
                 activity = controllers.getJSONObject(kDefaultController).getString(kAndroid);
-                actionBar = controllers.getJSONObject(kDefaultController).optJSONObject(kBars);
+                //actionBar = controllers.getJSONObject(kDefaultController).optJSONObject(kBars);
                 enablePullToRefresh = controllers.getJSONObject(kDefaultController).optBoolean(kPullToRefresh);
                 enableInfiniteScroll = controllers.getJSONObject(kDefaultController).optBoolean(kInfiniteScroll);
                 infiniteScrollOffset = controllers.getJSONObject(kDefaultController).optInt(kInfiniteScrollOffset, INFINITE_SCROLL_OFFSET_DEFAULT_VALUE);
             }
 
             bundle.putString(kActivity, activity);
-            if (actionBar != null) bundle.putString(kBars, actionBar.toString());
+            //if (actionBar != null) bundle.putString(kBars, actionBar.toString());
             bundle.putBoolean(kPullToRefresh, enablePullToRefresh);
             bundle.putBoolean(kInfiniteScroll, enableInfiniteScroll);
             bundle.putInt(kInfiniteScrollOffset, infiniteScrollOffset);
@@ -430,8 +437,7 @@ public class Cobalt {
         String configuration = readFileFromAssets(mResourcePath + CONF_FILE);
 
         try {
-            JSONObject jsonObj = new JSONObject(configuration);
-            return jsonObj;
+            return new JSONObject(configuration);
         }
         catch (JSONException exception) {
             if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - getConfiguration: check cobalt.conf. File is missing or not at " + ASSETS_PATH + mResourcePath + CONF_FILE);
@@ -463,6 +469,6 @@ public class Cobalt {
             exception.printStackTrace();
         }
 
-        return new String();
+        return "";
     }
 }

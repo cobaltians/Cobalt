@@ -39,6 +39,8 @@
         android:layout_height="0dp"
         android:layout_weight="1.0"/>
 
+    <!-- TODO: uncomment for Bars -->
+    <!--
     <LinearLayout 
         android:id="@+id/bottom_actionbar"
         android:layout_width="match_parent"
@@ -46,5 +48,5 @@
         android:gravity="center_vertical|end"
         android:orientation="horizontal"
         android:visibility="gone" />
-
+    -->
 </LinearLayout>
