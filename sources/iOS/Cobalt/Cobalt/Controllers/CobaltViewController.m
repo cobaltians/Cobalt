@@ -1253,8 +1253,9 @@ UIColor * SKColorFromHexString(NSString * hexString) {
                 }
             }
             
-            [self presentViewController:alertController animated:YES completion:nil];
-            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+                [self presentViewController:alertController animated:YES completion:nil];
+            }];
         }
         else {
             UIAlertView * alertView;
@@ -1286,7 +1287,9 @@ UIColor * SKColorFromHexString(NSString * hexString) {
                                    forKey:[NSString stringWithFormat:@"%ld", (long)alertView.tag]];
             }
             
-            [alertView show];
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+                [alertView show];
+            }];
         }
     }
 #if DEBUG_COBALT
