@@ -34,13 +34,13 @@
 		8E751EB519EEB62400EDFF4D /* wind@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E751EA619EEB62400EDFF4D /* wind@2x.png */; };
 		8E751EB619EEB62400EDFF4D /* wind@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E751EA719EEB62400EDFF4D /* wind@3x.png */; };
 		8EC5CAD71980FB00001777FA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8EC5CAD61980FB00001777FA /* Images.xcassets */; };
-		8EDCD5E519F7EDF300BC095D /* CobaltLocationPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EDCD5E419F7EDF300BC095D /* CobaltLocationPlugin.m */; };
-		8EDCD5E819F7EE8B00BC095D /* CobaltWebservicesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EDCD5E719F7EE8B00BC095D /* CobaltWebservicesPlugin.m */; };
-		8EDCD5ED19F7F7C100BC095D /* NSThread+withBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EDCD5EA19F7F7C100BC095D /* NSThread+withBlocks.m */; };
-		8EDCD5EE19F7F7C100BC095D /* WebServicesAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EDCD5EC19F7F7C100BC095D /* WebServicesAPI.m */; };
 		8EE619AE1980074100B5767C /* CobaltAbstractPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EE619A91980074100B5767C /* CobaltAbstractPlugin.m */; };
 		8EE619B01980074100B5767C /* CobaltPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EE619AD1980074100B5767C /* CobaltPluginManager.m */; };
 		8EE619B2198007EA00B5767C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EE619B1198007EA00B5767C /* CoreLocation.framework */; };
+		BE3DEE971AC19A0F00EF45ED /* CobaltWebservicesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3DEE921AC19A0F00EF45ED /* CobaltWebservicesPlugin.m */; };
+		BE3DEE981AC19A0F00EF45ED /* NSThread+withBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3DEE941AC19A0F00EF45ED /* NSThread+withBlocks.m */; };
+		BE3DEE991AC19A0F00EF45ED /* WebServicesAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3DEE961AC19A0F00EF45ED /* WebServicesAPI.m */; };
+		BE3DEE9D1AC19A8500EF45ED /* CobaltLocationPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3DEE9C1AC19A8500EF45ED /* CobaltLocationPlugin.m */; };
 		C49597581717090B006454BA /* CallbacksController.m in Sources */ = {isa = PBXBuildFile; fileRef = C49597561717090B006454BA /* CallbacksController.m */; };
 		C49597591717090B006454BA /* CallbacksController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C49597571717090B006454BA /* CallbacksController.xib */; };
 		C4D664A2171E8D97009EDE58 /* EventsController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D664A0171E8D97009EDE58 /* EventsController.m */; };
@@ -92,19 +92,19 @@
 		8E751EA619EEB62400EDFF4D /* wind@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "wind@2x.png"; sourceTree = "<group>"; };
 		8E751EA719EEB62400EDFF4D /* wind@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "wind@3x.png"; sourceTree = "<group>"; };
 		8EC5CAD61980FB00001777FA /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		8EDCD5E319F7EDF300BC095D /* CobaltLocationPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CobaltLocationPlugin.h; path = ../../../../../../CobaltPlugins/LocationPlugin/iOS/CobaltLocationPlugin.h; sourceTree = "<group>"; };
-		8EDCD5E419F7EDF300BC095D /* CobaltLocationPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CobaltLocationPlugin.m; path = ../../../../../../CobaltPlugins/LocationPlugin/iOS/CobaltLocationPlugin.m; sourceTree = "<group>"; };
-		8EDCD5E619F7EE8B00BC095D /* CobaltWebservicesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CobaltWebservicesPlugin.h; path = ../../../../../../CobaltPlugins/Webservices/iOs/CobaltWebservicesPlugin.h; sourceTree = "<group>"; };
-		8EDCD5E719F7EE8B00BC095D /* CobaltWebservicesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CobaltWebservicesPlugin.m; path = ../../../../../../CobaltPlugins/Webservices/iOs/CobaltWebservicesPlugin.m; sourceTree = "<group>"; };
-		8EDCD5E919F7F7C100BC095D /* NSThread+withBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSThread+withBlocks.h"; path = "../../../../../../CobaltPlugins/Webservices/iOs/NSThread+withBlocks.h"; sourceTree = "<group>"; };
-		8EDCD5EA19F7F7C100BC095D /* NSThread+withBlocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSThread+withBlocks.m"; path = "../../../../../../CobaltPlugins/Webservices/iOs/NSThread+withBlocks.m"; sourceTree = "<group>"; };
-		8EDCD5EB19F7F7C100BC095D /* WebServicesAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebServicesAPI.h; path = ../../../../../../CobaltPlugins/Webservices/iOs/WebServicesAPI.h; sourceTree = "<group>"; };
-		8EDCD5EC19F7F7C100BC095D /* WebServicesAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebServicesAPI.m; path = ../../../../../../CobaltPlugins/Webservices/iOs/WebServicesAPI.m; sourceTree = "<group>"; };
 		8EE619A81980074100B5767C /* CobaltAbstractPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltAbstractPlugin.h; sourceTree = "<group>"; };
 		8EE619A91980074100B5767C /* CobaltAbstractPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltAbstractPlugin.m; sourceTree = "<group>"; };
 		8EE619AC1980074100B5767C /* CobaltPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltPluginManager.h; sourceTree = "<group>"; };
 		8EE619AD1980074100B5767C /* CobaltPluginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltPluginManager.m; sourceTree = "<group>"; };
 		8EE619B1198007EA00B5767C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		BE3DEE911AC19A0F00EF45ED /* CobaltWebservicesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CobaltWebservicesPlugin.h; path = ../../../../../Cobalt_plugins/Webservices/iOs/CobaltWebservicesPlugin.h; sourceTree = "<group>"; };
+		BE3DEE921AC19A0F00EF45ED /* CobaltWebservicesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CobaltWebservicesPlugin.m; path = ../../../../../Cobalt_plugins/Webservices/iOs/CobaltWebservicesPlugin.m; sourceTree = "<group>"; };
+		BE3DEE931AC19A0F00EF45ED /* NSThread+withBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSThread+withBlocks.h"; path = "../../../../../Cobalt_plugins/Webservices/iOs/NSThread+withBlocks.h"; sourceTree = "<group>"; };
+		BE3DEE941AC19A0F00EF45ED /* NSThread+withBlocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSThread+withBlocks.m"; path = "../../../../../Cobalt_plugins/Webservices/iOs/NSThread+withBlocks.m"; sourceTree = "<group>"; };
+		BE3DEE951AC19A0F00EF45ED /* WebServicesAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebServicesAPI.h; path = ../../../../../Cobalt_plugins/Webservices/iOs/WebServicesAPI.h; sourceTree = "<group>"; };
+		BE3DEE961AC19A0F00EF45ED /* WebServicesAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebServicesAPI.m; path = ../../../../../Cobalt_plugins/Webservices/iOs/WebServicesAPI.m; sourceTree = "<group>"; };
+		BE3DEE9B1AC19A8500EF45ED /* CobaltLocationPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CobaltLocationPlugin.h; path = ../../../../../Cobalt_plugins/Location/iOS/CobaltLocationPlugin.h; sourceTree = "<group>"; };
+		BE3DEE9C1AC19A8500EF45ED /* CobaltLocationPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CobaltLocationPlugin.m; path = ../../../../../Cobalt_plugins/Location/iOS/CobaltLocationPlugin.m; sourceTree = "<group>"; };
 		C49597551717090B006454BA /* CallbacksController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CallbacksController.h; sourceTree = "<group>"; };
 		C49597561717090B006454BA /* CallbacksController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CallbacksController.m; sourceTree = "<group>"; };
 		C49597571717090B006454BA /* CallbacksController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CallbacksController.xib; sourceTree = "<group>"; };
@@ -124,8 +124,8 @@
 		F01A5A191716EF4D0000DD94 /* CatalogCobalt-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CatalogCobalt-Prefix.pch"; sourceTree = "<group>"; };
 		F01A5A1A1716EF4D0000DD94 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F01A5A1B1716EF4D0000DD94 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		F0FB6E3F19B45EED00021401 /* platform */ = {isa = PBXFileReference; lastKnownFileType = folder; name = platform; path = CatalogCobalt/www/platform; sourceTree = "<group>"; };
-		F0FB6E4119B45EF600021401 /* common */ = {isa = PBXFileReference; lastKnownFileType = folder; name = common; path = CatalogCobalt/www/common; sourceTree = "<group>"; };
+		F0FB6E3F19B45EED00021401 /* platform */ = {isa = PBXFileReference; lastKnownFileType = folder; name = platform; path = www/platform; sourceTree = "<group>"; };
+		F0FB6E4119B45EF600021401 /* common */ = {isa = PBXFileReference; lastKnownFileType = folder; name = common; path = www/common; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,21 +212,6 @@
 			path = Design;
 			sourceTree = "<group>";
 		};
-		8EDCD5E219F7EDD600BC095D /* CobaltPlugin */ = {
-			isa = PBXGroup;
-			children = (
-				8EDCD5E919F7F7C100BC095D /* NSThread+withBlocks.h */,
-				8EDCD5EA19F7F7C100BC095D /* NSThread+withBlocks.m */,
-				8EDCD5EB19F7F7C100BC095D /* WebServicesAPI.h */,
-				8EDCD5EC19F7F7C100BC095D /* WebServicesAPI.m */,
-				8EDCD5E619F7EE8B00BC095D /* CobaltWebservicesPlugin.h */,
-				8EDCD5E719F7EE8B00BC095D /* CobaltWebservicesPlugin.m */,
-				8EDCD5E319F7EDF300BC095D /* CobaltLocationPlugin.h */,
-				8EDCD5E419F7EDF300BC095D /* CobaltLocationPlugin.m */,
-			);
-			name = CobaltPlugin;
-			sourceTree = "<group>";
-		};
 		8EE619A71980074100B5767C /* Plugin */ = {
 			isa = PBXGroup;
 			children = (
@@ -238,12 +223,69 @@
 			path = Plugin;
 			sourceTree = "<group>";
 		};
+		BE3DEE901AC199E700EF45ED /* Webservices */ = {
+			isa = PBXGroup;
+			children = (
+				BE3DEE911AC19A0F00EF45ED /* CobaltWebservicesPlugin.h */,
+				BE3DEE921AC19A0F00EF45ED /* CobaltWebservicesPlugin.m */,
+				BE3DEE931AC19A0F00EF45ED /* NSThread+withBlocks.h */,
+				BE3DEE941AC19A0F00EF45ED /* NSThread+withBlocks.m */,
+				BE3DEE951AC19A0F00EF45ED /* WebServicesAPI.h */,
+				BE3DEE961AC19A0F00EF45ED /* WebServicesAPI.m */,
+			);
+			name = Webservices;
+			sourceTree = "<group>";
+		};
+		BE3DEE9A1AC19A3F00EF45ED /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				BE3DEE9B1AC19A8500EF45ED /* CobaltLocationPlugin.h */,
+				BE3DEE9C1AC19A8500EF45ED /* CobaltLocationPlugin.m */,
+			);
+			name = Location;
+			sourceTree = "<group>";
+		};
+		BE3DEED01AC19B2400EF45ED /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				C49597551717090B006454BA /* CallbacksController.h */,
+				C49597561717090B006454BA /* CallbacksController.m */,
+				C49597571717090B006454BA /* CallbacksController.xib */,
+				8E1070BD1987ED8800DED934 /* CustomizedPulltoRefreshViewController.h */,
+				8E1070BE1987ED8800DED934 /* CustomizedPulltoRefreshViewController.m */,
+				C4D6649F171E8D97009EDE58 /* EventsController.h */,
+				C4D664A0171E8D97009EDE58 /* EventsController.m */,
+				C4D664A1171E8D97009EDE58 /* EventsController.xib */,
+				8E3C678719FF96D2007353AC /* PluginsController.h */,
+				8E3C678819FF96D2007353AC /* PluginsController.m */,
+				C4D664A7171E91D5009EDE58 /* SimpleController.h */,
+				C4D664A8171E91D5009EDE58 /* SimpleController.m */,
+				C4D664A9171E91D5009EDE58 /* SimpleController.xib */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		BE3DEED21AC19B8600EF45ED /* assets */ = {
+			isa = PBXGroup;
+			children = (
+				F0FB6E4119B45EF600021401 /* common */,
+				F0FB6E3F19B45EED00021401 /* platform */,
+			);
+			name = assets;
+			sourceTree = "<group>";
+		};
+		BE3DEED31AC19BAC00EF45ED /* AppDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				F01A5A1A1716EF4D0000DD94 /* AppDelegate.h */,
+				F01A5A1B1716EF4D0000DD94 /* AppDelegate.m */,
+			);
+			name = AppDelegate;
+			sourceTree = "<group>";
+		};
 		F01A59FF1716EF4C0000DD94 = {
 			isa = PBXGroup;
 			children = (
-				8EDCD5E219F7EDD600BC095D /* CobaltPlugin */,
-				F0FB6E4119B45EF600021401 /* common */,
-				F0FB6E3F19B45EED00021401 /* platform */,
 				F01A5A111716EF4C0000DD94 /* CatalogCobalt */,
 				F01A5A0A1716EF4C0000DD94 /* Frameworks */,
 				F01A5A091716EF4C0000DD94 /* Products */,
@@ -261,12 +303,14 @@
 		F01A5A0A1716EF4C0000DD94 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8E22E87D19DA965C00938B5B /* JavaScriptCore.framework */,
 				71B4B1D31886D9DD0027AC4F /* Cobalt */,
-				8EE619B1198007EA00B5767C /* CoreLocation.framework */,
-				F01A5A0B1716EF4C0000DD94 /* UIKit.framework */,
-				F01A5A0D1716EF4C0000DD94 /* Foundation.framework */,
 				F01A5A0F1716EF4C0000DD94 /* CoreGraphics.framework */,
+				8EE619B1198007EA00B5767C /* CoreLocation.framework */,
+				F01A5A0D1716EF4C0000DD94 /* Foundation.framework */,
+				8E22E87D19DA965C00938B5B /* JavaScriptCore.framework */,
+				BE3DEE9A1AC19A3F00EF45ED /* Location */,
+				F01A5A0B1716EF4C0000DD94 /* UIKit.framework */,
+				BE3DEE901AC199E700EF45ED /* Webservices */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -274,22 +318,10 @@
 		F01A5A111716EF4C0000DD94 /* CatalogCobalt */ = {
 			isa = PBXGroup;
 			children = (
+				BE3DEED21AC19B8600EF45ED /* assets */,
+				BE3DEED31AC19BAC00EF45ED /* AppDelegate */,
+				BE3DEED01AC19B2400EF45ED /* Controllers */,
 				8E751E9819EEB62400EDFF4D /* Design */,
-				8E1070BD1987ED8800DED934 /* CustomizedPulltoRefreshViewController.h */,
-				8E1070BE1987ED8800DED934 /* CustomizedPulltoRefreshViewController.m */,
-				C4D664A7171E91D5009EDE58 /* SimpleController.h */,
-				C4D664A8171E91D5009EDE58 /* SimpleController.m */,
-				C4D664A9171E91D5009EDE58 /* SimpleController.xib */,
-				8E3C678719FF96D2007353AC /* PluginsController.h */,
-				8E3C678819FF96D2007353AC /* PluginsController.m */,
-				C49597551717090B006454BA /* CallbacksController.h */,
-				C49597561717090B006454BA /* CallbacksController.m */,
-				C49597571717090B006454BA /* CallbacksController.xib */,
-				C4D6649F171E8D97009EDE58 /* EventsController.h */,
-				C4D664A0171E8D97009EDE58 /* EventsController.m */,
-				C4D664A1171E8D97009EDE58 /* EventsController.xib */,
-				F01A5A1A1716EF4D0000DD94 /* AppDelegate.h */,
-				F01A5A1B1716EF4D0000DD94 /* AppDelegate.m */,
 				8EC5CAD61980FB00001777FA /* Images.xcassets */,
 				F01A5A121716EF4C0000DD94 /* Supporting Files */,
 			);
@@ -300,9 +332,9 @@
 			isa = PBXGroup;
 			children = (
 				F01A5A131716EF4C0000DD94 /* CatalogCobalt-Info.plist */,
+				F01A5A191716EF4D0000DD94 /* CatalogCobalt-Prefix.pch */,
 				F01A5A141716EF4C0000DD94 /* InfoPlist.strings */,
 				F01A5A171716EF4D0000DD94 /* main.m */,
-				F01A5A191716EF4D0000DD94 /* CatalogCobalt-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -400,6 +432,8 @@
 			files = (
 				8E3C678919FF96D2007353AC /* PluginsController.m in Sources */,
 				8E12048F19F6556900A1FBE5 /* FontAwesome.h in Sources */,
+				BE3DEE9D1AC19A8500EF45ED /* CobaltLocationPlugin.m in Sources */,
+				BE3DEE971AC19A0F00EF45ED /* CobaltWebservicesPlugin.m in Sources */,
 				8EE619B01980074100B5767C /* CobaltPluginManager.m in Sources */,
 				F01A5A181716EF4D0000DD94 /* main.m in Sources */,
 				F01A5A1C1716EF4D0000DD94 /* AppDelegate.m in Sources */,
@@ -408,14 +442,12 @@
 				71B4B1EC1886D9DD0027AC4F /* iToast.m in Sources */,
 				8E1070BF1987ED8800DED934 /* CustomizedPulltoRefreshViewController.m in Sources */,
 				C49597581717090B006454BA /* CallbacksController.m in Sources */,
+				BE3DEE991AC19A0F00EF45ED /* WebServicesAPI.m in Sources */,
 				C4D664A2171E8D97009EDE58 /* EventsController.m in Sources */,
-				8EDCD5E819F7EE8B00BC095D /* CobaltWebservicesPlugin.m in Sources */,
 				8EE619AE1980074100B5767C /* CobaltAbstractPlugin.m in Sources */,
-				8EDCD5E519F7EDF300BC095D /* CobaltLocationPlugin.m in Sources */,
+				BE3DEE981AC19A0F00EF45ED /* NSThread+withBlocks.m in Sources */,
 				71B4B1E91886D9DD0027AC4F /* CobaltViewController.m in Sources */,
-				8EDCD5EE19F7F7C100BC095D /* WebServicesAPI.m in Sources */,
 				C4D664AA171E91D5009EDE58 /* SimpleController.m in Sources */,
-				8EDCD5ED19F7F7C100BC095D /* NSThread+withBlocks.m in Sources */,
 				71B4B1ED1886D9DD0027AC4F /* CobaltToast.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
