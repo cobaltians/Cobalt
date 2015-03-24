@@ -1486,6 +1486,9 @@ UIColor * SKColorFromHexString(NSString * hexString) {
         float contentHeight = _scrollView.contentSize.height;
         float contentOffset = _scrollView.contentOffset.y;
         
+        if (contentOffset > 0) [((UITableView *) self.view) setScrollEnabled:NO];
+        else [((UITableView *) self.view) setScrollEnabled:YES];
+        
         if (isInfiniteScrollEnabled
             && ! _isLoadingMore
             && _scrollView.isDragging && contentOffset > _lastWebviewContentOffset
