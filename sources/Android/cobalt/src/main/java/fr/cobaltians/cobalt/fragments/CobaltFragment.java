@@ -779,6 +779,8 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 
                         return true;
                     }
+
+                    break;
                 case Cobalt.JSControlAlert:
                     showAlertDialog(data, callback);
                     return true;
