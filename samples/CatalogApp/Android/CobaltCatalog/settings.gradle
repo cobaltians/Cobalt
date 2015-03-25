@@ -1,1 +1,1 @@
-include ':app', ':cobalt', ':webservices'
+include ':app', ':cobalt', ':webservices', ':locationplugin'
