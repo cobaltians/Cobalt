@@ -1198,11 +1198,11 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	public void onOverScrolled(int scrollX, int scrollY, int oldscrollX, int oldscrollY) {
         int height = mWebView.getHeight();
         long contentHeight = (long) Math.floor(mWebView.getContentHeight() * mContext.getResources().getDisplayMetrics().density);
-
+        
 		if (isInfiniteScrollActive()
             && ! mIsInfiniteScrollRefreshing
-            && scrollY > oldscrollY
-            && scrollY + height > contentHeight - height * getInfiniteScrollOffset() / 100) {
+            && scrollY >= oldscrollY
+            && scrollY + height >= contentHeight - height * getInfiniteScrollOffset() / 100) {
 			infiniteScrollRefresh();
 		}
 	}
