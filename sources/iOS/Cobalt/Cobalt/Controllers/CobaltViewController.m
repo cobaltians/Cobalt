@@ -839,10 +839,12 @@ NSString * webLayerPage;
                 && [action isKindOfClass:[NSString class]]) {
                 
                 // OPEN EXTERNAL URL
-                if ([action isEqualToString: kJSActionOpenExternalUrl]) {
-                    NSString * url = [data objectForKey: kJSUrl];
-                    if([url isKindOfClass: [NSString class]]) {
-                        [[UIApplication sharedApplication] openURL: [NSURL URLWithString: url]];
+                if ([action isEqualToString:kJSActionOpenExternalUrl]) {
+                    NSString *urlString = [data objectForKey:kJSUrl];
+                    if([urlString isKindOfClass:[NSString class]]) {
+                        NSString *encodedUrlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                        NSURL *url = [NSURL URLWithString:encodedUrlString];
+                        [[UIApplication sharedApplication] openURL:url];
                     }
                 }
             }
