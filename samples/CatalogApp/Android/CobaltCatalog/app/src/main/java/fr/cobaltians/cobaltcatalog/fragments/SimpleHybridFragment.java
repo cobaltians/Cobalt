@@ -63,8 +63,7 @@ public class SimpleHybridFragment extends AbstractFragment implements WebService
     public JSONObject treatData(JSONObject data, JSONObject process) {
         try {
             String extension = process.getString("ext");
-            JSONObject dataInData = data.getJSONObject("data");
-            JSONObject responseData = dataInData.getJSONObject("responseData");
+            JSONObject responseData = data.getJSONObject("responseData");
             JSONArray results = responseData.getJSONArray("results");
 
             if (results.length()>0) {
