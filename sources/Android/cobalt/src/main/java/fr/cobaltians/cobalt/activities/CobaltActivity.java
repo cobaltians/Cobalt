@@ -70,7 +70,7 @@ public abstract class CobaltActivity extends ActionBarActivity {
     private boolean mAnimatedTransition;
 
     // Pop
-    private static ArrayList<CobaltActivity> sActivitiesArrayList = new ArrayList<CobaltActivity>();
+    private static ArrayList<Activity> sActivitiesArrayList = new ArrayList<>();
 
     // Modal
     private boolean mWasPushedAsModal;
@@ -90,7 +90,7 @@ public abstract class CobaltActivity extends ActionBarActivity {
 
 		setContentView(getLayoutToInflate());
 
-        sActivitiesArrayList.add(0, this);
+        sActivitiesArrayList.add(this);
 
         Bundle bundle = getIntent().getExtras();
         Bundle extras = (bundle != null) ? bundle.getBundle(Cobalt.kExtras) : null;
@@ -206,7 +206,7 @@ public abstract class CobaltActivity extends ActionBarActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        sActivitiesArrayList.remove(0);
+        sActivitiesArrayList.remove(this);
     }
 
     /**************************************************************************************************
@@ -538,51 +538,55 @@ public abstract class CobaltActivity extends ActionBarActivity {
 	}
 
     public void popTo(String controller, String page){
-        Intent intent = Cobalt.getInstance(this).getIntentForController(controller, page);
-        if (intent != null) {
-            Bundle bundleNewActivity = intent.getBundleExtra(Cobalt.kExtras);
-            String newActivity = bundleNewActivity.getString(Cobalt.kActivity);
+        Intent popToIntent = Cobalt.getInstance(this).getIntentForController(controller, page);
 
-            ArrayList<CobaltActivity> activityToFinish = new ArrayList<CobaltActivity>();
-            Boolean foundPage = false;
-            int maxPageId = -1;
-            int oldPageId = -1;
+        if (popToIntent != null) {
+            Bundle popToExtras = popToIntent.getBundleExtra(Cobalt.kExtras);
+            String popToActivityClassName = popToExtras.getString(Cobalt.kActivity);
 
-            for (int i = 0; i < sActivitiesArrayList.size(); i++) {
-                CobaltActivity activity = sActivitiesArrayList.get(i);
+            try {
+                Class<?> popToActivityClass = Class.forName(popToActivityClassName);
 
-                Intent intentStack = activity.getIntent();
+                boolean popToControllerFound = false;
+                int popToControllerIndex = -1;
 
-                if (!intentStack.hasCategory(Intent.CATEGORY_LAUNCHER)) {
-                    Bundle bundle = intentStack.getBundleExtra(Cobalt.kExtras);
-                    String oldActivity = bundle.getString(Cobalt.kActivity);
-                    if (newActivity.equals(oldActivity)) {
-                        maxPageId = i;
-                        String oldPage = bundle.getString(Cobalt.kPage);
-                        if (oldPage.equals(page)) {
-                            foundPage = true;
-                            oldPageId = i;
+                for (int i = sActivitiesArrayList.size() - 1; i >= 0; i--) {
+                    Activity oldActivity = sActivitiesArrayList.get(i);
+                    Class<?> oldActivityClass = oldActivity.getClass();
+
+                    Bundle oldBundle = oldActivity.getIntent().getExtras();
+                    Bundle oldExtras = (oldBundle != null) ? oldBundle.getBundle(Cobalt.kExtras) : null;
+                    String oldPage = (oldExtras != null) ? oldExtras.getString(Cobalt.kPage) : null;
+
+                    if (oldPage == null
+                        && CobaltActivity.class.isAssignableFrom(oldActivityClass)) {
+                        Fragment fragment = ((CobaltActivity) oldActivity).getSupportFragmentManager().findFragmentById(((CobaltActivity) oldActivity).getFragmentContainerId());
+                        if (fragment != null) {
+                            oldExtras = fragment.getArguments();
+                            oldPage = (oldExtras != null) ? oldExtras.getString(Cobalt.kPage) : null;
                         }
                     }
+
+                    if (popToActivityClass.equals(oldActivityClass)
+                        &&  (! CobaltActivity.class.isAssignableFrom(oldActivityClass)
+                            || (CobaltActivity.class.isAssignableFrom(oldActivityClass) && page.equals(oldPage)))) {
+                        popToControllerFound = true;
+                        popToControllerIndex = i;
+                        break;
+                    }
                 }
+
+                if (popToControllerFound) {
+                    while (popToControllerIndex + 1 <= sActivitiesArrayList.size()) {
+                        sActivitiesArrayList.get(popToControllerIndex + 1).finish();
+                    }
+                }
+                else if (Cobalt.DEBUG) Log.w(Cobalt.TAG, TAG + " - popTo: controller " + controller + (page == null ? "" : " with page " + page) + " not found in history. Abort.");
             }
-            if (!foundPage) this.startActivity(intent);
-            else {
-                if (maxPageId == oldPageId) {
-                    for (int index = 0; index <= maxPageId ; index++) {
-                        activityToFinish.add(sActivitiesArrayList.get(index));
-                    }
-                    this.startActivity(intent);
-                    for (CobaltActivity activity : activityToFinish) {
-                        activity.finish();
-                    }
-                }
-                else {
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    NavUtils.navigateUpTo(this, intent);
-                }
+            catch (ClassNotFoundException exception) {
+                exception.printStackTrace();
             }
         }
-        else if (Cobalt.DEBUG) Log.e(Cobalt.TAG,  TAG + " - push: Unable to push " + controller + " controller");
+        else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - popTo: unable to pop to null controller");
     }
 }
