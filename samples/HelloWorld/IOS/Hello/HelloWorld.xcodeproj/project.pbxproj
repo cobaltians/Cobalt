@@ -7,275 +7,313 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		67A4430E18649B3400F5C301 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A4430D18649B3400F5C301 /* Foundation.framework */; };
-		67A4431018649B3400F5C301 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A4430F18649B3400F5C301 /* CoreGraphics.framework */; };
-		67A4431218649B3400F5C301 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A4431118649B3400F5C301 /* UIKit.framework */; };
-		67A4433018649B3400F5C301 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A4432F18649B3400F5C301 /* XCTest.framework */; };
-		67A4433118649B3400F5C301 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A4430D18649B3400F5C301 /* Foundation.framework */; };
-		67A4433218649B3400F5C301 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A4431118649B3400F5C301 /* UIKit.framework */; };
-		71B4B1CA1885C8DF0027AC4F /* Cobalt.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1B71885C8DF0027AC4F /* Cobalt.m */; };
-		71B4B1CD1885C8DF0027AC4F /* CobaltViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1BE1885C8DF0027AC4F /* CobaltViewController.m */; };
-		71B4B1D01885C8DF0027AC4F /* iToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1C41885C8DF0027AC4F /* iToast.m */; };
-		71B4B1D11885C8DF0027AC4F /* CobaltToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 71B4B1C71885C8DF0027AC4F /* CobaltToast.m */; };
-		8E0132F81920F47F0015682B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E0132EB1920F47F0015682B /* AppDelegate.m */; };
-		8E0132FB1920F47F0015682B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8E0132F01920F47F0015682B /* InfoPlist.strings */; };
-		8E0132FD1920F47F0015682B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E0132F41920F47F0015682B /* Images.xcassets */; };
-		8E0132FE1920F47F0015682B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E0132F51920F47F0015682B /* main.m */; };
-		8E0132FF1920F47F0015682B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E0132F71920F47F0015682B /* ViewController.m */; };
-		8E0133051920F4890015682B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8E0133011920F4890015682B /* InfoPlist.strings */; };
-		8E0133061920F4890015682B /* HelloWorldTests-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8E0133031920F4890015682B /* HelloWorldTests-Info.plist */; };
-		8E0133081920F4CD0015682B /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E0132EC1920F47F0015682B /* Main_iPad.storyboard */; };
-		8E0133091920F4CD0015682B /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E0132EE1920F47F0015682B /* Main_iPhone.storyboard */; };
-		8E01330D1920F81A0015682B /* HelloWorldTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E01330C1920F81A0015682B /* HelloWorldTests.m */; };
-		8E0133111920FF080015682B /* CobaltViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8E0133101920FF080015682B /* CobaltViewController.xib */; };
-		8EF28A301982AABA00097AF4 /* CobaltAbstractPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EF28A2B1982AABA00097AF4 /* CobaltAbstractPlugin.m */; };
-		8EF28A321982AABA00097AF4 /* CobaltPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EF28A2F1982AABA00097AF4 /* CobaltPluginManager.m */; };
-		F0FB6E4419B4803900021401 /* platform in Resources */ = {isa = PBXBuildFile; fileRef = F0FB6E4319B4803900021401 /* platform */; };
-		F0FB6E4619B4804100021401 /* common in Resources */ = {isa = PBXBuildFile; fileRef = F0FB6E4519B4804100021401 /* common */; };
+		BE1B7C191AE53BBA0095B390 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1B7C181AE53BBA0095B390 /* main.m */; };
+		BE1B7C1C1AE53BBA0095B390 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1B7C1B1AE53BBA0095B390 /* AppDelegate.m */; };
+		BE1B7C1F1AE53BBA0095B390 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1B7C1E1AE53BBA0095B390 /* ViewController.m */; };
+		BE1B7C221AE53BBA0095B390 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE1B7C201AE53BBA0095B390 /* Main.storyboard */; };
+		BE1B7C241AE53BBA0095B390 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE1B7C231AE53BBA0095B390 /* Images.xcassets */; };
+		BE1B7C271AE53BBA0095B390 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE1B7C251AE53BBA0095B390 /* LaunchScreen.xib */; };
+		BE1B7C331AE53BBA0095B390 /* HelloWorldTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1B7C321AE53BBA0095B390 /* HelloWorldTests.m */; };
+		BE1B7C3F1AE53D4F0095B390 /* common in Resources */ = {isa = PBXBuildFile; fileRef = BE1B7C3D1AE53D4F0095B390 /* common */; };
+		BE1B7C401AE53D4F0095B390 /* platform in Resources */ = {isa = PBXBuildFile; fileRef = BE1B7C3E1AE53D4F0095B390 /* platform */; };
+		BE1B7C5F1AE53E0F0095B390 /* Cobalt.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1B7C4A1AE53E0F0095B390 /* Cobalt.m */; };
+		BE1B7C601AE53E0F0095B390 /* CobaltViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1B7C4D1AE53E0F0095B390 /* CobaltViewController.m */; };
+		BE1B7C611AE53E0F0095B390 /* CobaltViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE1B7C4E1AE53E0F0095B390 /* CobaltViewController.xib */; };
+		BE1B7C621AE53E0F0095B390 /* FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1B7C501AE53E0F0095B390 /* FontAwesome.m */; };
+		BE1B7C631AE53E0F0095B390 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BE1B7C511AE53E0F0095B390 /* FontAwesome.ttf */; };
+		BE1B7C641AE53E0F0095B390 /* iToast.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1B7C531AE53E0F0095B390 /* iToast.m */; };
+		BE1B7C651AE53E0F0095B390 /* ImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1B7C561AE53E0F0095B390 /* ImageManager.m */; };
+		BE1B7C661AE53E0F0095B390 /* CobaltAbstractPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1B7C591AE53E0F0095B390 /* CobaltAbstractPlugin.m */; };
+		BE1B7C671AE53E0F0095B390 /* CobaltPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1B7C5B1AE53E0F0095B390 /* CobaltPluginManager.m */; };
+		BE1B7C681AE53E0F0095B390 /* CobaltToast.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1B7C5E1AE53E0F0095B390 /* CobaltToast.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		67A4433318649B3400F5C301 /* PBXContainerItemProxy */ = {
+		BE1B7C2D1AE53BBA0095B390 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 67A4430218649B3400F5C301 /* Project object */;
+			containerPortal = BE1B7C0B1AE53BBA0095B390 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 67A4430918649B3400F5C301;
-			remoteInfo = Cobalt;
+			remoteGlobalIDString = BE1B7C121AE53BBA0095B390;
+			remoteInfo = HelloWorld;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		67A4430A18649B3400F5C301 /* HelloWorld.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloWorld.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		67A4430D18649B3400F5C301 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		67A4430F18649B3400F5C301 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		67A4431118649B3400F5C301 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		67A4432E18649B3400F5C301 /* HelloWorldTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HelloWorldTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		67A4432F18649B3400F5C301 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		71B4B1B51885C8DF0027AC4F /* Cobalt-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Cobalt-Prefix.pch"; sourceTree = "<group>"; };
-		71B4B1B61885C8DF0027AC4F /* Cobalt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cobalt.h; sourceTree = "<group>"; };
-		71B4B1B71885C8DF0027AC4F /* Cobalt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cobalt.m; sourceTree = "<group>"; };
-		71B4B1BD1885C8DF0027AC4F /* CobaltViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltViewController.h; sourceTree = "<group>"; };
-		71B4B1BE1885C8DF0027AC4F /* CobaltViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltViewController.m; sourceTree = "<group>"; };
-		71B4B1C31885C8DF0027AC4F /* iToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iToast.h; path = ../iToast.h; sourceTree = "<group>"; };
-		71B4B1C41885C8DF0027AC4F /* iToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iToast.m; path = ../iToast.m; sourceTree = "<group>"; };
-		71B4B1C61885C8DF0027AC4F /* CobaltToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltToast.h; sourceTree = "<group>"; };
-		71B4B1C71885C8DF0027AC4F /* CobaltToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltToast.m; sourceTree = "<group>"; };
-		8E0132EA1920F47F0015682B /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		8E0132EB1920F47F0015682B /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		8E0132ED1920F47F0015682B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
-		8E0132EF1920F47F0015682B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
-		8E0132F11920F47F0015682B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		8E0132F21920F47F0015682B /* HelloWorld-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "HelloWorld-Info.plist"; sourceTree = "<group>"; };
-		8E0132F31920F47F0015682B /* HelloWorld-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HelloWorld-Prefix.pch"; sourceTree = "<group>"; };
-		8E0132F41920F47F0015682B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		8E0132F51920F47F0015682B /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		8E0132F61920F47F0015682B /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		8E0132F71920F47F0015682B /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		8E0133021920F4890015682B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		8E0133031920F4890015682B /* HelloWorldTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "HelloWorldTests-Info.plist"; sourceTree = "<group>"; };
-		8E01330C1920F81A0015682B /* HelloWorldTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelloWorldTests.m; sourceTree = "<group>"; };
-		8E0133101920FF080015682B /* CobaltViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CobaltViewController.xib; sourceTree = "<group>"; };
-		8EF28A2A1982AABA00097AF4 /* CobaltAbstractPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltAbstractPlugin.h; sourceTree = "<group>"; };
-		8EF28A2B1982AABA00097AF4 /* CobaltAbstractPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltAbstractPlugin.m; sourceTree = "<group>"; };
-		8EF28A2E1982AABA00097AF4 /* CobaltPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltPluginManager.h; sourceTree = "<group>"; };
-		8EF28A2F1982AABA00097AF4 /* CobaltPluginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltPluginManager.m; sourceTree = "<group>"; };
-		F0FB6E4319B4803900021401 /* platform */ = {isa = PBXFileReference; lastKnownFileType = folder; name = platform; path = www/platform; sourceTree = "<group>"; };
-		F0FB6E4519B4804100021401 /* common */ = {isa = PBXFileReference; lastKnownFileType = folder; name = common; path = www/common; sourceTree = "<group>"; };
+		BE1B7C131AE53BBA0095B390 /* HelloWorld.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloWorld.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE1B7C171AE53BBA0095B390 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BE1B7C181AE53BBA0095B390 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		BE1B7C1A1AE53BBA0095B390 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		BE1B7C1B1AE53BBA0095B390 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		BE1B7C1D1AE53BBA0095B390 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		BE1B7C1E1AE53BBA0095B390 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		BE1B7C211AE53BBA0095B390 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		BE1B7C231AE53BBA0095B390 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		BE1B7C261AE53BBA0095B390 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		BE1B7C2C1AE53BBA0095B390 /* HelloWorldTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HelloWorldTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE1B7C311AE53BBA0095B390 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BE1B7C321AE53BBA0095B390 /* HelloWorldTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HelloWorldTests.m; sourceTree = "<group>"; };
+		BE1B7C3D1AE53D4F0095B390 /* common */ = {isa = PBXFileReference; lastKnownFileType = folder; name = common; path = www/common; sourceTree = "<group>"; };
+		BE1B7C3E1AE53D4F0095B390 /* platform */ = {isa = PBXFileReference; lastKnownFileType = folder; name = platform; path = www/platform; sourceTree = "<group>"; };
+		BE1B7C481AE53E0F0095B390 /* Cobalt-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Cobalt-Prefix.pch"; sourceTree = "<group>"; };
+		BE1B7C491AE53E0F0095B390 /* Cobalt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cobalt.h; sourceTree = "<group>"; };
+		BE1B7C4A1AE53E0F0095B390 /* Cobalt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cobalt.m; sourceTree = "<group>"; };
+		BE1B7C4C1AE53E0F0095B390 /* CobaltViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltViewController.h; sourceTree = "<group>"; };
+		BE1B7C4D1AE53E0F0095B390 /* CobaltViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltViewController.m; sourceTree = "<group>"; };
+		BE1B7C4E1AE53E0F0095B390 /* CobaltViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CobaltViewController.xib; sourceTree = "<group>"; };
+		BE1B7C4F1AE53E0F0095B390 /* FontAwesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontAwesome.h; sourceTree = "<group>"; };
+		BE1B7C501AE53E0F0095B390 /* FontAwesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontAwesome.m; sourceTree = "<group>"; };
+		BE1B7C511AE53E0F0095B390 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
+		BE1B7C521AE53E0F0095B390 /* iToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iToast.h; sourceTree = "<group>"; };
+		BE1B7C531AE53E0F0095B390 /* iToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iToast.m; sourceTree = "<group>"; };
+		BE1B7C551AE53E0F0095B390 /* ImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageManager.h; sourceTree = "<group>"; };
+		BE1B7C561AE53E0F0095B390 /* ImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageManager.m; sourceTree = "<group>"; };
+		BE1B7C581AE53E0F0095B390 /* CobaltAbstractPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltAbstractPlugin.h; sourceTree = "<group>"; };
+		BE1B7C591AE53E0F0095B390 /* CobaltAbstractPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltAbstractPlugin.m; sourceTree = "<group>"; };
+		BE1B7C5A1AE53E0F0095B390 /* CobaltPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltPluginManager.h; sourceTree = "<group>"; };
+		BE1B7C5B1AE53E0F0095B390 /* CobaltPluginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltPluginManager.m; sourceTree = "<group>"; };
+		BE1B7C5D1AE53E0F0095B390 /* CobaltToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltToast.h; sourceTree = "<group>"; };
+		BE1B7C5E1AE53E0F0095B390 /* CobaltToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltToast.m; sourceTree = "<group>"; };
+		BE1B7C691AE53F7C0095B390 /* HelloWorld-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HelloWorld-Prefix.pch"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		67A4430718649B3400F5C301 /* Frameworks */ = {
+		BE1B7C101AE53BBA0095B390 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				67A4431018649B3400F5C301 /* CoreGraphics.framework in Frameworks */,
-				67A4431218649B3400F5C301 /* UIKit.framework in Frameworks */,
-				67A4430E18649B3400F5C301 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		67A4432B18649B3400F5C301 /* Frameworks */ = {
+		BE1B7C291AE53BBA0095B390 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				67A4433018649B3400F5C301 /* XCTest.framework in Frameworks */,
-				67A4433218649B3400F5C301 /* UIKit.framework in Frameworks */,
-				67A4433118649B3400F5C301 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		67A4430118649B3400F5C301 = {
+		BE1B7C0A1AE53BBA0095B390 = {
 			isa = PBXGroup;
 			children = (
-				F0FB6E4519B4804100021401 /* common */,
-				F0FB6E4319B4803900021401 /* platform */,
-				8E0132E91920F47F0015682B /* HelloWorld */,
-				8E0133001920F4890015682B /* HelloWorldTests */,
-				67A4430C18649B3400F5C301 /* Frameworks */,
-				67A4430B18649B3400F5C301 /* Products */,
+				BE1B7C151AE53BBA0095B390 /* HelloWorld */,
+				BE1B7C461AE53DE60095B390 /* Frameworks */,
+				BE1B7C2F1AE53BBA0095B390 /* HelloWorldTests */,
+				BE1B7C141AE53BBA0095B390 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		67A4430B18649B3400F5C301 /* Products */ = {
+		BE1B7C141AE53BBA0095B390 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				67A4430A18649B3400F5C301 /* HelloWorld.app */,
-				67A4432E18649B3400F5C301 /* HelloWorldTests.xctest */,
+				BE1B7C131AE53BBA0095B390 /* HelloWorld.app */,
+				BE1B7C2C1AE53BBA0095B390 /* HelloWorldTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		67A4430C18649B3400F5C301 /* Frameworks */ = {
+		BE1B7C151AE53BBA0095B390 /* HelloWorld */ = {
 			isa = PBXGroup;
 			children = (
-				71B4B1B41885C8DF0027AC4F /* Cobalt */,
-				67A4430D18649B3400F5C301 /* Foundation.framework */,
-				67A4430F18649B3400F5C301 /* CoreGraphics.framework */,
-				67A4431118649B3400F5C301 /* UIKit.framework */,
-				67A4432F18649B3400F5C301 /* XCTest.framework */,
+				BE1B7C421AE53D720095B390 /* assets */,
+				BE1B7C431AE53D900095B390 /* Controllers */,
+				BE1B7C441AE53DA00095B390 /* AppDelegate */,
+				BE1B7C451AE53DBA0095B390 /* Design */,
+				BE1B7C161AE53BBA0095B390 /* Supporting Files */,
+			);
+			path = HelloWorld;
+			sourceTree = "<group>";
+		};
+		BE1B7C161AE53BBA0095B390 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				BE1B7C691AE53F7C0095B390 /* HelloWorld-Prefix.pch */,
+				BE1B7C171AE53BBA0095B390 /* Info.plist */,
+				BE1B7C181AE53BBA0095B390 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BE1B7C2F1AE53BBA0095B390 /* HelloWorldTests */ = {
+			isa = PBXGroup;
+			children = (
+				BE1B7C321AE53BBA0095B390 /* HelloWorldTests.m */,
+				BE1B7C301AE53BBA0095B390 /* Supporting Files */,
+			);
+			path = HelloWorldTests;
+			sourceTree = "<group>";
+		};
+		BE1B7C301AE53BBA0095B390 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				BE1B7C311AE53BBA0095B390 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BE1B7C421AE53D720095B390 /* assets */ = {
+			isa = PBXGroup;
+			children = (
+				BE1B7C3D1AE53D4F0095B390 /* common */,
+				BE1B7C3E1AE53D4F0095B390 /* platform */,
+			);
+			name = assets;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		BE1B7C431AE53D900095B390 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				BE1B7C1D1AE53BBA0095B390 /* ViewController.h */,
+				BE1B7C1E1AE53BBA0095B390 /* ViewController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		BE1B7C441AE53DA00095B390 /* AppDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				BE1B7C1A1AE53BBA0095B390 /* AppDelegate.h */,
+				BE1B7C1B1AE53BBA0095B390 /* AppDelegate.m */,
+			);
+			name = AppDelegate;
+			sourceTree = "<group>";
+		};
+		BE1B7C451AE53DBA0095B390 /* Design */ = {
+			isa = PBXGroup;
+			children = (
+				BE1B7C201AE53BBA0095B390 /* Main.storyboard */,
+				BE1B7C231AE53BBA0095B390 /* Images.xcassets */,
+				BE1B7C251AE53BBA0095B390 /* LaunchScreen.xib */,
+			);
+			name = Design;
+			sourceTree = "<group>";
+		};
+		BE1B7C461AE53DE60095B390 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BE1B7C471AE53E0F0095B390 /* Cobalt */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		71B4B1B41885C8DF0027AC4F /* Cobalt */ = {
+		BE1B7C471AE53E0F0095B390 /* Cobalt */ = {
 			isa = PBXGroup;
 			children = (
-				8EF28A291982AABA00097AF4 /* Plugin */,
-				71B4B1B51885C8DF0027AC4F /* Cobalt-Prefix.pch */,
-				71B4B1B61885C8DF0027AC4F /* Cobalt.h */,
-				71B4B1B71885C8DF0027AC4F /* Cobalt.m */,
-				71B4B1B81885C8DF0027AC4F /* Controllers */,
-				71B4B1C51885C8DF0027AC4F /* Toast */,
+				BE1B7C481AE53E0F0095B390 /* Cobalt-Prefix.pch */,
+				BE1B7C491AE53E0F0095B390 /* Cobalt.h */,
+				BE1B7C4A1AE53E0F0095B390 /* Cobalt.m */,
+				BE1B7C4B1AE53E0F0095B390 /* Controllers */,
+				BE1B7C4F1AE53E0F0095B390 /* FontAwesome.h */,
+				BE1B7C501AE53E0F0095B390 /* FontAwesome.m */,
+				BE1B7C511AE53E0F0095B390 /* FontAwesome.ttf */,
+				BE1B7C521AE53E0F0095B390 /* iToast.h */,
+				BE1B7C531AE53E0F0095B390 /* iToast.m */,
+				BE1B7C541AE53E0F0095B390 /* Model */,
+				BE1B7C571AE53E0F0095B390 /* Plugin */,
+				BE1B7C5C1AE53E0F0095B390 /* Views */,
 			);
 			name = Cobalt;
 			path = ../../../../sources/iOS/Cobalt/Cobalt;
 			sourceTree = "<group>";
 		};
-		71B4B1B81885C8DF0027AC4F /* Controllers */ = {
+		BE1B7C4B1AE53E0F0095B390 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				71B4B1BD1885C8DF0027AC4F /* CobaltViewController.h */,
-				71B4B1BE1885C8DF0027AC4F /* CobaltViewController.m */,
-				8E0133101920FF080015682B /* CobaltViewController.xib */,
+				BE1B7C4C1AE53E0F0095B390 /* CobaltViewController.h */,
+				BE1B7C4D1AE53E0F0095B390 /* CobaltViewController.m */,
+				BE1B7C4E1AE53E0F0095B390 /* CobaltViewController.xib */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		71B4B1C51885C8DF0027AC4F /* Toast */ = {
+		BE1B7C541AE53E0F0095B390 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				71B4B1C31885C8DF0027AC4F /* iToast.h */,
-				71B4B1C41885C8DF0027AC4F /* iToast.m */,
-				71B4B1C61885C8DF0027AC4F /* CobaltToast.h */,
-				71B4B1C71885C8DF0027AC4F /* CobaltToast.m */,
+				BE1B7C551AE53E0F0095B390 /* ImageManager.h */,
+				BE1B7C561AE53E0F0095B390 /* ImageManager.m */,
 			);
-			name = Toast;
-			path = Views;
+			path = Model;
 			sourceTree = "<group>";
 		};
-		8E0132E91920F47F0015682B /* HelloWorld */ = {
+		BE1B7C571AE53E0F0095B390 /* Plugin */ = {
 			isa = PBXGroup;
 			children = (
-				8E0132EA1920F47F0015682B /* AppDelegate.h */,
-				8E0132EB1920F47F0015682B /* AppDelegate.m */,
-				8E0132EC1920F47F0015682B /* Main_iPad.storyboard */,
-				8E0132EE1920F47F0015682B /* Main_iPhone.storyboard */,
-				8E0132F41920F47F0015682B /* Images.xcassets */,
-				8E0132F61920F47F0015682B /* ViewController.h */,
-				8E0132F71920F47F0015682B /* ViewController.m */,
-				8E01330B1920F7C20015682B /* Supporting Files */,
-			);
-			path = HelloWorld;
-			sourceTree = "<group>";
-		};
-		8E0133001920F4890015682B /* HelloWorldTests */ = {
-			isa = PBXGroup;
-			children = (
-				8E0133011920F4890015682B /* InfoPlist.strings */,
-				8E0133031920F4890015682B /* HelloWorldTests-Info.plist */,
-				8E01330C1920F81A0015682B /* HelloWorldTests.m */,
-			);
-			path = HelloWorldTests;
-			sourceTree = "<group>";
-		};
-		8E01330B1920F7C20015682B /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				8E0132F01920F47F0015682B /* InfoPlist.strings */,
-				8E0132F21920F47F0015682B /* HelloWorld-Info.plist */,
-				8E0132F31920F47F0015682B /* HelloWorld-Prefix.pch */,
-				8E0132F51920F47F0015682B /* main.m */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		8EF28A291982AABA00097AF4 /* Plugin */ = {
-			isa = PBXGroup;
-			children = (
-				8EF28A2A1982AABA00097AF4 /* CobaltAbstractPlugin.h */,
-				8EF28A2B1982AABA00097AF4 /* CobaltAbstractPlugin.m */,
-				8EF28A2E1982AABA00097AF4 /* CobaltPluginManager.h */,
-				8EF28A2F1982AABA00097AF4 /* CobaltPluginManager.m */,
+				BE1B7C581AE53E0F0095B390 /* CobaltAbstractPlugin.h */,
+				BE1B7C591AE53E0F0095B390 /* CobaltAbstractPlugin.m */,
+				BE1B7C5A1AE53E0F0095B390 /* CobaltPluginManager.h */,
+				BE1B7C5B1AE53E0F0095B390 /* CobaltPluginManager.m */,
 			);
 			path = Plugin;
+			sourceTree = "<group>";
+		};
+		BE1B7C5C1AE53E0F0095B390 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				BE1B7C5D1AE53E0F0095B390 /* CobaltToast.h */,
+				BE1B7C5E1AE53E0F0095B390 /* CobaltToast.m */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		67A4430918649B3400F5C301 /* HelloWorld */ = {
+		BE1B7C121AE53BBA0095B390 /* HelloWorld */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 67A4433F18649B3400F5C301 /* Build configuration list for PBXNativeTarget "HelloWorld" */;
+			buildConfigurationList = BE1B7C361AE53BBA0095B390 /* Build configuration list for PBXNativeTarget "HelloWorld" */;
 			buildPhases = (
-				67A4430618649B3400F5C301 /* Sources */,
-				67A4430718649B3400F5C301 /* Frameworks */,
-				67A4430818649B3400F5C301 /* Resources */,
+				BE1B7C0F1AE53BBA0095B390 /* Sources */,
+				BE1B7C101AE53BBA0095B390 /* Frameworks */,
+				BE1B7C111AE53BBA0095B390 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = HelloWorld;
-			productName = Cobalt;
-			productReference = 67A4430A18649B3400F5C301 /* HelloWorld.app */;
+			productName = HelloWorld;
+			productReference = BE1B7C131AE53BBA0095B390 /* HelloWorld.app */;
 			productType = "com.apple.product-type.application";
 		};
-		67A4432D18649B3400F5C301 /* HelloWorldTests */ = {
+		BE1B7C2B1AE53BBA0095B390 /* HelloWorldTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 67A4434218649B3400F5C301 /* Build configuration list for PBXNativeTarget "HelloWorldTests" */;
+			buildConfigurationList = BE1B7C391AE53BBA0095B390 /* Build configuration list for PBXNativeTarget "HelloWorldTests" */;
 			buildPhases = (
-				67A4432A18649B3400F5C301 /* Sources */,
-				67A4432B18649B3400F5C301 /* Frameworks */,
-				67A4432C18649B3400F5C301 /* Resources */,
+				BE1B7C281AE53BBA0095B390 /* Sources */,
+				BE1B7C291AE53BBA0095B390 /* Frameworks */,
+				BE1B7C2A1AE53BBA0095B390 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				67A4433418649B3400F5C301 /* PBXTargetDependency */,
+				BE1B7C2E1AE53BBA0095B390 /* PBXTargetDependency */,
 			);
 			name = HelloWorldTests;
-			productName = CobaltTests;
-			productReference = 67A4432E18649B3400F5C301 /* HelloWorldTests.xctest */;
+			productName = HelloWorldTests;
+			productReference = BE1B7C2C1AE53BBA0095B390 /* HelloWorldTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		67A4430218649B3400F5C301 /* Project object */ = {
+		BE1B7C0B1AE53BBA0095B390 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
-				ORGANIZATIONNAME = "Julien Gambier";
+				LastUpgradeCheck = 0630;
+				ORGANIZATIONNAME = Cobaltians;
 				TargetAttributes = {
-					67A4432D18649B3400F5C301 = {
-						TestTargetID = 67A4430918649B3400F5C301;
+					BE1B7C121AE53BBA0095B390 = {
+						CreatedOnToolsVersion = 6.3;
+					};
+					BE1B7C2B1AE53BBA0095B390 = {
+						CreatedOnToolsVersion = 6.3;
+						TestTargetID = BE1B7C121AE53BBA0095B390;
 					};
 				};
 			};
-			buildConfigurationList = 67A4430518649B3400F5C301 /* Build configuration list for PBXProject "HelloWorld" */;
+			buildConfigurationList = BE1B7C0E1AE53BBA0095B390 /* Build configuration list for PBXProject "HelloWorld" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -283,35 +321,33 @@
 				en,
 				Base,
 			);
-			mainGroup = 67A4430118649B3400F5C301;
-			productRefGroup = 67A4430B18649B3400F5C301 /* Products */;
+			mainGroup = BE1B7C0A1AE53BBA0095B390;
+			productRefGroup = BE1B7C141AE53BBA0095B390 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				67A4430918649B3400F5C301 /* HelloWorld */,
-				67A4432D18649B3400F5C301 /* HelloWorldTests */,
+				BE1B7C121AE53BBA0095B390 /* HelloWorld */,
+				BE1B7C2B1AE53BBA0095B390 /* HelloWorldTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		67A4430818649B3400F5C301 /* Resources */ = {
+		BE1B7C111AE53BBA0095B390 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E0133081920F4CD0015682B /* Main_iPad.storyboard in Resources */,
-				8E0133091920F4CD0015682B /* Main_iPhone.storyboard in Resources */,
-				8E0133051920F4890015682B /* InfoPlist.strings in Resources */,
-				8E0132FB1920F47F0015682B /* InfoPlist.strings in Resources */,
-				8E0133111920FF080015682B /* CobaltViewController.xib in Resources */,
-				F0FB6E4419B4803900021401 /* platform in Resources */,
-				8E0133061920F4890015682B /* HelloWorldTests-Info.plist in Resources */,
-				F0FB6E4619B4804100021401 /* common in Resources */,
-				8E0132FD1920F47F0015682B /* Images.xcassets in Resources */,
+				BE1B7C221AE53BBA0095B390 /* Main.storyboard in Resources */,
+				BE1B7C631AE53E0F0095B390 /* FontAwesome.ttf in Resources */,
+				BE1B7C271AE53BBA0095B390 /* LaunchScreen.xib in Resources */,
+				BE1B7C401AE53D4F0095B390 /* platform in Resources */,
+				BE1B7C611AE53E0F0095B390 /* CobaltViewController.xib in Resources */,
+				BE1B7C241AE53BBA0095B390 /* Images.xcassets in Resources */,
+				BE1B7C3F1AE53D4F0095B390 /* common in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		67A4432C18649B3400F5C301 /* Resources */ = {
+		BE1B7C2A1AE53BBA0095B390 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -321,77 +357,63 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		67A4430618649B3400F5C301 /* Sources */ = {
+		BE1B7C0F1AE53BBA0095B390 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E0132FF1920F47F0015682B /* ViewController.m in Sources */,
-				8EF28A301982AABA00097AF4 /* CobaltAbstractPlugin.m in Sources */,
-				71B4B1CA1885C8DF0027AC4F /* Cobalt.m in Sources */,
-				8EF28A321982AABA00097AF4 /* CobaltPluginManager.m in Sources */,
-				71B4B1D01885C8DF0027AC4F /* iToast.m in Sources */,
-				71B4B1D11885C8DF0027AC4F /* CobaltToast.m in Sources */,
-				71B4B1CD1885C8DF0027AC4F /* CobaltViewController.m in Sources */,
-				8E0132FE1920F47F0015682B /* main.m in Sources */,
-				8E0132F81920F47F0015682B /* AppDelegate.m in Sources */,
+				BE1B7C621AE53E0F0095B390 /* FontAwesome.m in Sources */,
+				BE1B7C5F1AE53E0F0095B390 /* Cobalt.m in Sources */,
+				BE1B7C641AE53E0F0095B390 /* iToast.m in Sources */,
+				BE1B7C671AE53E0F0095B390 /* CobaltPluginManager.m in Sources */,
+				BE1B7C601AE53E0F0095B390 /* CobaltViewController.m in Sources */,
+				BE1B7C1F1AE53BBA0095B390 /* ViewController.m in Sources */,
+				BE1B7C1C1AE53BBA0095B390 /* AppDelegate.m in Sources */,
+				BE1B7C661AE53E0F0095B390 /* CobaltAbstractPlugin.m in Sources */,
+				BE1B7C191AE53BBA0095B390 /* main.m in Sources */,
+				BE1B7C681AE53E0F0095B390 /* CobaltToast.m in Sources */,
+				BE1B7C651AE53E0F0095B390 /* ImageManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		67A4432A18649B3400F5C301 /* Sources */ = {
+		BE1B7C281AE53BBA0095B390 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E01330D1920F81A0015682B /* HelloWorldTests.m in Sources */,
+				BE1B7C331AE53BBA0095B390 /* HelloWorldTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		67A4433418649B3400F5C301 /* PBXTargetDependency */ = {
+		BE1B7C2E1AE53BBA0095B390 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 67A4430918649B3400F5C301 /* HelloWorld */;
-			targetProxy = 67A4433318649B3400F5C301 /* PBXContainerItemProxy */;
+			target = BE1B7C121AE53BBA0095B390 /* HelloWorld */;
+			targetProxy = BE1B7C2D1AE53BBA0095B390 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		8E0132EC1920F47F0015682B /* Main_iPad.storyboard */ = {
+		BE1B7C201AE53BBA0095B390 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				8E0132ED1920F47F0015682B /* Base */,
+				BE1B7C211AE53BBA0095B390 /* Base */,
 			);
-			name = Main_iPad.storyboard;
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		8E0132EE1920F47F0015682B /* Main_iPhone.storyboard */ = {
+		BE1B7C251AE53BBA0095B390 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				8E0132EF1920F47F0015682B /* Base */,
+				BE1B7C261AE53BBA0095B390 /* Base */,
 			);
-			name = Main_iPhone.storyboard;
-			sourceTree = "<group>";
-		};
-		8E0132F01920F47F0015682B /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8E0132F11920F47F0015682B /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		8E0133011920F4890015682B /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8E0133021920F4890015682B /* en */,
-			);
-			name = InfoPlist.strings;
+			name = LaunchScreen.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		67A4433D18649B3400F5C301 /* Debug */ = {
+		BE1B7C341AE53BBA0095B390 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -406,11 +428,15 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -420,17 +446,18 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		67A4433E18649B3400F5C301 /* Release */ = {
+		BE1B7C351AE53BBA0095B390 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -445,131 +472,118 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		67A4434018649B3400F5C301 /* Debug */ = {
+		BE1B7C371AE53BBA0095B390 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HelloWorld/HelloWorld-Prefix.pch";
-				INFOPLIST_FILE = "$(SRCROOT)/HelloWorld/HelloWorld-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				PRODUCT_NAME = HelloWorld;
-				WRAPPER_EXTENSION = app;
+				INFOPLIST_FILE = HelloWorld/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		67A4434118649B3400F5C301 /* Release */ = {
+		BE1B7C381AE53BBA0095B390 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HelloWorld/HelloWorld-Prefix.pch";
-				INFOPLIST_FILE = "$(SRCROOT)/HelloWorld/HelloWorld-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				PRODUCT_NAME = HelloWorld;
-				WRAPPER_EXTENSION = app;
+				INFOPLIST_FILE = HelloWorld/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
-		67A4434318649B3400F5C301 /* Debug */ = {
+		BE1B7C3A1AE53BBA0095B390 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Cobalt.app/Cobalt";
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Cobalt/Cobalt-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "CobaltTests/HelloWorldTests-Info.plist";
-				PRODUCT_NAME = HelloWorldTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
+				INFOPLIST_FILE = HelloWorldTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HelloWorld.app/HelloWorld";
 			};
 			name = Debug;
 		};
-		67A4434418649B3400F5C301 /* Release */ = {
+		BE1B7C3B1AE53BBA0095B390 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Cobalt.app/Cobalt";
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Cobalt/Cobalt-Prefix.pch";
-				INFOPLIST_FILE = "CobaltTests/HelloWorldTests-Info.plist";
-				PRODUCT_NAME = HelloWorldTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
+				INFOPLIST_FILE = HelloWorldTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HelloWorld.app/HelloWorld";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		67A4430518649B3400F5C301 /* Build configuration list for PBXProject "HelloWorld" */ = {
+		BE1B7C0E1AE53BBA0095B390 /* Build configuration list for PBXProject "HelloWorld" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				67A4433D18649B3400F5C301 /* Debug */,
-				67A4433E18649B3400F5C301 /* Release */,
+				BE1B7C341AE53BBA0095B390 /* Debug */,
+				BE1B7C351AE53BBA0095B390 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		67A4433F18649B3400F5C301 /* Build configuration list for PBXNativeTarget "HelloWorld" */ = {
+		BE1B7C361AE53BBA0095B390 /* Build configuration list for PBXNativeTarget "HelloWorld" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				67A4434018649B3400F5C301 /* Debug */,
-				67A4434118649B3400F5C301 /* Release */,
+				BE1B7C371AE53BBA0095B390 /* Debug */,
+				BE1B7C381AE53BBA0095B390 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		67A4434218649B3400F5C301 /* Build configuration list for PBXNativeTarget "HelloWorldTests" */ = {
+		BE1B7C391AE53BBA0095B390 /* Build configuration list for PBXNativeTarget "HelloWorldTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				67A4434318649B3400F5C301 /* Debug */,
-				67A4434418649B3400F5C301 /* Release */,
+				BE1B7C3A1AE53BBA0095B390 /* Debug */,
+				BE1B7C3B1AE53BBA0095B390 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 67A4430218649B3400F5C301 /* Project object */;
+	rootObject = BE1B7C0B1AE53BBA0095B390 /* Project object */;
 }

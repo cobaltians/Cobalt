@@ -1,9 +1,9 @@
 //
 //  ViewController.m
-//  Cobalt
+//  HelloWorld
 //
-//  Created by Julien Gambier on 20/12/2013.
-//  Copyright (c) 2013 Julien Gambier. All rights reserved.
+//  Created by Sébastien Vitard on 20/04/2015.
+//  Copyright (c) 2015 Cobaltians. All rights reserved.
 //
 
 #import "ViewController.h"
@@ -14,33 +14,37 @@
 
 @implementation ViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Do any additional setup after loading the view from its nib.
+    // Do any additional setup after loading the view, typically from a nib.
     [self setDelegate:self];
     [self.navigationController setNavigationBarHidden:YES];
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark COBALT DELEGATE METHODS
 #pragma mark -
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (BOOL)onUnhandledMessage:(NSDictionary *)message
-{
+- (BOOL)onUnhandledMessage:(NSDictionary *)message {
     return NO;
 }
 
-- (BOOL)onUnhandledEvent:(NSString *)event withData:(NSDictionary *)data andCallback:(NSString *)callback
-{
+- (BOOL)onUnhandledEvent:(NSString *)event
+                withData:(NSDictionary *)data
+             andCallback:(NSString *)callback {
     return NO;
 }
 
-- (BOOL)onUnhandledCallback:(NSString *)callback withData:(NSDictionary *)data
-{
+- (BOOL)onUnhandledCallback:(NSString *)callback
+                   withData:(NSDictionary *)data {
     return NO;
 }
 

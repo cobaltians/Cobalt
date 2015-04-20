@@ -1,9 +1,9 @@
 //
 //  AppDelegate.h
-//  Cobalt
+//  HelloWorld
 //
-//  Created by Julien Gambier on 20/12/2013.
-//  Copyright (c) 2013 Julien Gambier. All rights reserved.
+//  Created by Sébastien Vitard on 20/04/2015.
+//  Copyright (c) 2015 Cobaltians. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -12,4 +12,6 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
+
 @end
+
