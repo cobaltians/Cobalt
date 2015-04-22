@@ -1,11 +1,10 @@
-### Distribution
+## Distribution
 
-Here you will find compiled versions of the cobalt library for each platform.
-Read the readme of each platform for instructions on how to install.
+### Web
 
-warning : thoses libs do not include the web side of the lib
+Here you will find the Cobalt Web library script for each platform.
 
-find the corresponding web script in the web folder
+### Android and iOS
 
-
-
+We do not provide Android and iOS compiled libraries for Cobalt anymore.
+However, in the next version of Cobalt, you will be able to import Android and iOS libraries respectively from Maven Central and CocoaPods.

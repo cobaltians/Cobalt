@@ -1,1 +1,1 @@
-complete this with your os adapter in ../yourOS/
+Complete this script with the adapter one designed for the platform you work on in ../adapters/{{OS}}/adapter.js

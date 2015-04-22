@@ -1,22 +1,18 @@
 ### How to use ?
 
-javascript files are split into a common file for all OS and a platform adapter for each OS.
-
-Include the file corresponding to the platform you work on in your webpages.
-
+Javascript files are split into a common file for all OSes and an adapter file for each platform.
+Include the adapter file corresponding to the platform you work on in your Web pages.
 There is no all-in-one-with-autodection version yet but we think about it :)
 
+### How to update ?
 
-### how to update ?
-
-to compile all cobalt.js and cobalt.min.js for each platforms in one time, run this line in a command line :
+To build cobalt.js and cobalt.min.js files for each platform in one row, run the following command line:
 
     python compile.py
 
-#### requirements for compilation
+#### Building requirements
 
-* You will need python (we have 2.7 here but 2.6 should be fine too)
-* 'uglifyjs' should be installed first for minified versions to be built
+* You will need Python (we have 2.7 here but 2.6 should be fine too).
+* 'uglifyjs' should be installed first for minified versions to be built.
 
-you can find uglifyjs [here](https://github.com/mishoo/UglifyJS). it uses node.js I think.
-
+You can find UglifyJS [here](https://github.com/mishoo/UglifyJS). It uses node.js I think.

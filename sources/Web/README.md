@@ -1,14 +1,10 @@
 ### How to use ?
 
-**don't** use theses one if you just want to use the framework.
-
-use the concatened version in [../../distribution](../../distribution) instead.
-
-there is a minified version too.
+**Don't** use these scripts if you just want to use the framework.
+Use the concatened version in [../../distribution/web](../../distribution/web) instead.
+You can find the minified version too.
 
 ### How does it work ?
 
-javascript files are split into a common file for all OS and a platform adapter for each OS.
-
-There is no "all in one file with autodetection" yet. but we think about it.
-
+Javascript files are split into a common file for all OSes and an adapter file for each platform.
+There is no all-in-one-with-autodection version yet but we think about it :)
