@@ -114,7 +114,7 @@
 		C4D664A7171E91D5009EDE58 /* SimpleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleController.h; sourceTree = "<group>"; };
 		C4D664A8171E91D5009EDE58 /* SimpleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleController.m; sourceTree = "<group>"; };
 		C4D664A9171E91D5009EDE58 /* SimpleController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SimpleController.xib; sourceTree = "<group>"; };
-		F01A5A081716EF4C0000DD94 /* CatalogCobalt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatalogCobalt.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F01A5A081716EF4C0000DD94 /* Cobalt Catalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cobalt Catalog.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F01A5A0B1716EF4C0000DD94 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F01A5A0D1716EF4C0000DD94 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F01A5A0F1716EF4C0000DD94 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -295,7 +295,7 @@
 		F01A5A091716EF4C0000DD94 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F01A5A081716EF4C0000DD94 /* CatalogCobalt.app */,
+				F01A5A081716EF4C0000DD94 /* Cobalt Catalog.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -356,7 +356,7 @@
 			);
 			name = CatalogCobalt;
 			productName = CatalogCobalt;
-			productReference = F01A5A081716EF4C0000DD94 /* CatalogCobalt.app */;
+			productReference = F01A5A081716EF4C0000DD94 /* Cobalt Catalog.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -537,7 +537,7 @@
 				GCC_PREFIX_HEADER = "CatalogCobalt/CatalogCobalt-Prefix.pch";
 				INFOPLIST_FILE = "CatalogCobalt/CatalogCobalt-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				PRODUCT_NAME = CatalogCobalt;
+				PRODUCT_NAME = "Cobalt Catalog";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "../HPNativeBridge/HPNativeBridge/**";
@@ -556,7 +556,7 @@
 				GCC_PREFIX_HEADER = "CatalogCobalt/CatalogCobalt-Prefix.pch";
 				INFOPLIST_FILE = "CatalogCobalt/CatalogCobalt-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				PRODUCT_NAME = CatalogCobalt;
+				PRODUCT_NAME = "Cobalt Catalog";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "../HPNativeBridge/HPNativeBridge/**";
