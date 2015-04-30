@@ -12,10 +12,8 @@
 	<dict>
 		<key>7F346375E8E073B3A7CE55C31DAF342C703A9EDE</key>
 		<string>https://github.com/cobaltians/plugins.git</string>
-		<key>fc0c6543-89c8-464d-ab6c-d0866aaddc71++1587</key>
+		<key>8F924602F3C51B7A18EF94EFB8636649C2AA30B2</key>
 		<string>https://github.com/cobaltians/cobalt.git</string>
-		<key>fc0c6543-89c8-464d-ab6c-d0866aaddc71++7960</key>
-		<string>https://pluton.haploid.fr/svn/haploid/svn/Famicity</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>samples/CatalogApp/iOS/CatalogCobalt/CatalogCobalt.xcodeproj</string>
@@ -23,37 +21,23 @@
 	<dict>
 		<key>7F346375E8E073B3A7CE55C31DAF342C703A9EDE</key>
 		<string>../../../../../../../CobaltPlugins</string>
-		<key>fc0c6543-89c8-464d-ab6c-d0866aaddc71++1587</key>
+		<key>8F924602F3C51B7A18EF94EFB8636649C2AA30B2</key>
 		<string>../../../../../..</string>
-		<key>fc0c6543-89c8-464d-ab6c-d0866aaddc71++7960</key>
-		<string>../../../../../../..</string>
 	</dict>
-	<key>IDESourceControlProjectRepositoryRootDictionary</key>
-	<dict>
-		<key>fc0c6543-89c8-464d-ab6c-d0866aaddc71++7960</key>
-		<string>https://pluton.haploid.fr/svn/haploid</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/cobaltians/cobalt.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>fc0c6543-89c8-464d-ab6c-d0866aaddc71++1587</string>
+	<string>8F924602F3C51B7A18EF94EFB8636649C2AA30B2</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.subversion</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>fc0c6543-89c8-464d-ab6c-d0866aaddc71++7960</string>
-			<key>IDESourceControlWCCName</key>
-			<string></string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>fc0c6543-89c8-464d-ab6c-d0866aaddc71++1587</string>
+			<string>8F924602F3C51B7A18EF94EFB8636649C2AA30B2</string>
 			<key>IDESourceControlWCCName</key>
 			<string>cobalt</string>
 		</dict>
