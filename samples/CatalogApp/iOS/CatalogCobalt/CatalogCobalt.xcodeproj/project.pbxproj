@@ -37,10 +37,6 @@
 		8EE619AE1980074100B5767C /* CobaltAbstractPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EE619A91980074100B5767C /* CobaltAbstractPlugin.m */; };
 		8EE619B01980074100B5767C /* CobaltPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EE619AD1980074100B5767C /* CobaltPluginManager.m */; };
 		8EE619B2198007EA00B5767C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EE619B1198007EA00B5767C /* CoreLocation.framework */; };
-		BE3DEE971AC19A0F00EF45ED /* CobaltWebservicesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3DEE921AC19A0F00EF45ED /* CobaltWebservicesPlugin.m */; };
-		BE3DEE981AC19A0F00EF45ED /* NSThread+withBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3DEE941AC19A0F00EF45ED /* NSThread+withBlocks.m */; };
-		BE3DEE991AC19A0F00EF45ED /* WebServicesAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3DEE961AC19A0F00EF45ED /* WebServicesAPI.m */; };
-		BE3DEE9D1AC19A8500EF45ED /* CobaltLocationPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3DEE9C1AC19A8500EF45ED /* CobaltLocationPlugin.m */; };
 		C49597581717090B006454BA /* CallbacksController.m in Sources */ = {isa = PBXBuildFile; fileRef = C49597561717090B006454BA /* CallbacksController.m */; };
 		C49597591717090B006454BA /* CallbacksController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C49597571717090B006454BA /* CallbacksController.xib */; };
 		C4D664A2171E8D97009EDE58 /* EventsController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D664A0171E8D97009EDE58 /* EventsController.m */; };
@@ -53,6 +49,10 @@
 		F01A5A161716EF4C0000DD94 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F01A5A141716EF4C0000DD94 /* InfoPlist.strings */; };
 		F01A5A181716EF4D0000DD94 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F01A5A171716EF4D0000DD94 /* main.m */; };
 		F01A5A1C1716EF4D0000DD94 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F01A5A1B1716EF4D0000DD94 /* AppDelegate.m */; };
+		F0C788E61AF75DC000F367DF /* CobaltLocationPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C788E51AF75DC000F367DF /* CobaltLocationPlugin.m */; };
+		F0C788EE1AF75DDB00F367DF /* CobaltWebservicesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C788E91AF75DDB00F367DF /* CobaltWebservicesPlugin.m */; };
+		F0C788EF1AF75DDB00F367DF /* NSThread+withBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C788EB1AF75DDB00F367DF /* NSThread+withBlocks.m */; };
+		F0C788F01AF75DDB00F367DF /* WebServicesAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C788ED1AF75DDB00F367DF /* WebServicesAPI.m */; };
 		F0FB6E4019B45EED00021401 /* platform in Resources */ = {isa = PBXBuildFile; fileRef = F0FB6E3F19B45EED00021401 /* platform */; };
 		F0FB6E4219B45EF600021401 /* common in Resources */ = {isa = PBXBuildFile; fileRef = F0FB6E4119B45EF600021401 /* common */; };
 /* End PBXBuildFile section */
@@ -97,14 +97,6 @@
 		8EE619AC1980074100B5767C /* CobaltPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltPluginManager.h; sourceTree = "<group>"; };
 		8EE619AD1980074100B5767C /* CobaltPluginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltPluginManager.m; sourceTree = "<group>"; };
 		8EE619B1198007EA00B5767C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		BE3DEE911AC19A0F00EF45ED /* CobaltWebservicesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CobaltWebservicesPlugin.h; path = ../../../../../Cobalt_plugins/Webservices/iOs/CobaltWebservicesPlugin.h; sourceTree = "<group>"; };
-		BE3DEE921AC19A0F00EF45ED /* CobaltWebservicesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CobaltWebservicesPlugin.m; path = ../../../../../Cobalt_plugins/Webservices/iOs/CobaltWebservicesPlugin.m; sourceTree = "<group>"; };
-		BE3DEE931AC19A0F00EF45ED /* NSThread+withBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSThread+withBlocks.h"; path = "../../../../../Cobalt_plugins/Webservices/iOs/NSThread+withBlocks.h"; sourceTree = "<group>"; };
-		BE3DEE941AC19A0F00EF45ED /* NSThread+withBlocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSThread+withBlocks.m"; path = "../../../../../Cobalt_plugins/Webservices/iOs/NSThread+withBlocks.m"; sourceTree = "<group>"; };
-		BE3DEE951AC19A0F00EF45ED /* WebServicesAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebServicesAPI.h; path = ../../../../../Cobalt_plugins/Webservices/iOs/WebServicesAPI.h; sourceTree = "<group>"; };
-		BE3DEE961AC19A0F00EF45ED /* WebServicesAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebServicesAPI.m; path = ../../../../../Cobalt_plugins/Webservices/iOs/WebServicesAPI.m; sourceTree = "<group>"; };
-		BE3DEE9B1AC19A8500EF45ED /* CobaltLocationPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CobaltLocationPlugin.h; path = ../../../../../Cobalt_plugins/Location/iOS/CobaltLocationPlugin.h; sourceTree = "<group>"; };
-		BE3DEE9C1AC19A8500EF45ED /* CobaltLocationPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CobaltLocationPlugin.m; path = ../../../../../Cobalt_plugins/Location/iOS/CobaltLocationPlugin.m; sourceTree = "<group>"; };
 		C49597551717090B006454BA /* CallbacksController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CallbacksController.h; sourceTree = "<group>"; };
 		C49597561717090B006454BA /* CallbacksController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CallbacksController.m; sourceTree = "<group>"; };
 		C49597571717090B006454BA /* CallbacksController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CallbacksController.xib; sourceTree = "<group>"; };
@@ -124,6 +116,14 @@
 		F01A5A191716EF4D0000DD94 /* CatalogCobalt-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CatalogCobalt-Prefix.pch"; sourceTree = "<group>"; };
 		F01A5A1A1716EF4D0000DD94 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F01A5A1B1716EF4D0000DD94 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		F0C788E41AF75DC000F367DF /* CobaltLocationPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltLocationPlugin.h; sourceTree = "<group>"; };
+		F0C788E51AF75DC000F367DF /* CobaltLocationPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltLocationPlugin.m; sourceTree = "<group>"; };
+		F0C788E81AF75DDB00F367DF /* CobaltWebservicesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CobaltWebservicesPlugin.h; sourceTree = "<group>"; };
+		F0C788E91AF75DDB00F367DF /* CobaltWebservicesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CobaltWebservicesPlugin.m; sourceTree = "<group>"; };
+		F0C788EA1AF75DDB00F367DF /* NSThread+withBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+withBlocks.h"; sourceTree = "<group>"; };
+		F0C788EB1AF75DDB00F367DF /* NSThread+withBlocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+withBlocks.m"; sourceTree = "<group>"; };
+		F0C788EC1AF75DDB00F367DF /* WebServicesAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebServicesAPI.h; sourceTree = "<group>"; };
+		F0C788ED1AF75DDB00F367DF /* WebServicesAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebServicesAPI.m; sourceTree = "<group>"; };
 		F0FB6E3F19B45EED00021401 /* platform */ = {isa = PBXFileReference; lastKnownFileType = folder; name = platform; path = www/platform; sourceTree = "<group>"; };
 		F0FB6E4119B45EF600021401 /* common */ = {isa = PBXFileReference; lastKnownFileType = folder; name = common; path = www/common; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -223,28 +223,6 @@
 			path = Plugin;
 			sourceTree = "<group>";
 		};
-		BE3DEE901AC199E700EF45ED /* Webservices */ = {
-			isa = PBXGroup;
-			children = (
-				BE3DEE911AC19A0F00EF45ED /* CobaltWebservicesPlugin.h */,
-				BE3DEE921AC19A0F00EF45ED /* CobaltWebservicesPlugin.m */,
-				BE3DEE931AC19A0F00EF45ED /* NSThread+withBlocks.h */,
-				BE3DEE941AC19A0F00EF45ED /* NSThread+withBlocks.m */,
-				BE3DEE951AC19A0F00EF45ED /* WebServicesAPI.h */,
-				BE3DEE961AC19A0F00EF45ED /* WebServicesAPI.m */,
-			);
-			name = Webservices;
-			sourceTree = "<group>";
-		};
-		BE3DEE9A1AC19A3F00EF45ED /* Location */ = {
-			isa = PBXGroup;
-			children = (
-				BE3DEE9B1AC19A8500EF45ED /* CobaltLocationPlugin.h */,
-				BE3DEE9C1AC19A8500EF45ED /* CobaltLocationPlugin.m */,
-			);
-			name = Location;
-			sourceTree = "<group>";
-		};
 		BE3DEED01AC19B2400EF45ED /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -303,14 +281,14 @@
 		F01A5A0A1716EF4C0000DD94 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F0C788E71AF75DDB00F367DF /* CobaltWebservicePlugin */,
+				F0C788E31AF75DC000F367DF /* CobaltLocationPlugin */,
 				71B4B1D31886D9DD0027AC4F /* Cobalt */,
 				F01A5A0F1716EF4C0000DD94 /* CoreGraphics.framework */,
 				8EE619B1198007EA00B5767C /* CoreLocation.framework */,
 				F01A5A0D1716EF4C0000DD94 /* Foundation.framework */,
 				8E22E87D19DA965C00938B5B /* JavaScriptCore.framework */,
-				BE3DEE9A1AC19A3F00EF45ED /* Location */,
 				F01A5A0B1716EF4C0000DD94 /* UIKit.framework */,
-				BE3DEE901AC199E700EF45ED /* Webservices */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -337,6 +315,30 @@
 				F01A5A171716EF4D0000DD94 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F0C788E31AF75DC000F367DF /* CobaltLocationPlugin */ = {
+			isa = PBXGroup;
+			children = (
+				F0C788E41AF75DC000F367DF /* CobaltLocationPlugin.h */,
+				F0C788E51AF75DC000F367DF /* CobaltLocationPlugin.m */,
+			);
+			name = CobaltLocationPlugin;
+			path = "../../../../../Cobalt-Plugins/Location/iOS";
+			sourceTree = "<group>";
+		};
+		F0C788E71AF75DDB00F367DF /* CobaltWebservicePlugin */ = {
+			isa = PBXGroup;
+			children = (
+				F0C788E81AF75DDB00F367DF /* CobaltWebservicesPlugin.h */,
+				F0C788E91AF75DDB00F367DF /* CobaltWebservicesPlugin.m */,
+				F0C788EA1AF75DDB00F367DF /* NSThread+withBlocks.h */,
+				F0C788EB1AF75DDB00F367DF /* NSThread+withBlocks.m */,
+				F0C788EC1AF75DDB00F367DF /* WebServicesAPI.h */,
+				F0C788ED1AF75DDB00F367DF /* WebServicesAPI.m */,
+			);
+			name = CobaltWebservicePlugin;
+			path = "../../../../../Cobalt-Plugins/Webservices/iOs";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -430,10 +432,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0C788EF1AF75DDB00F367DF /* NSThread+withBlocks.m in Sources */,
 				8E3C678919FF96D2007353AC /* PluginsController.m in Sources */,
 				8E12048F19F6556900A1FBE5 /* FontAwesome.h in Sources */,
-				BE3DEE9D1AC19A8500EF45ED /* CobaltLocationPlugin.m in Sources */,
-				BE3DEE971AC19A0F00EF45ED /* CobaltWebservicesPlugin.m in Sources */,
+				F0C788EE1AF75DDB00F367DF /* CobaltWebservicesPlugin.m in Sources */,
+				F0C788F01AF75DDB00F367DF /* WebServicesAPI.m in Sources */,
 				8EE619B01980074100B5767C /* CobaltPluginManager.m in Sources */,
 				F01A5A181716EF4D0000DD94 /* main.m in Sources */,
 				F01A5A1C1716EF4D0000DD94 /* AppDelegate.m in Sources */,
@@ -442,12 +445,11 @@
 				71B4B1EC1886D9DD0027AC4F /* iToast.m in Sources */,
 				8E1070BF1987ED8800DED934 /* CustomizedPulltoRefreshViewController.m in Sources */,
 				C49597581717090B006454BA /* CallbacksController.m in Sources */,
-				BE3DEE991AC19A0F00EF45ED /* WebServicesAPI.m in Sources */,
 				C4D664A2171E8D97009EDE58 /* EventsController.m in Sources */,
 				8EE619AE1980074100B5767C /* CobaltAbstractPlugin.m in Sources */,
-				BE3DEE981AC19A0F00EF45ED /* NSThread+withBlocks.m in Sources */,
 				71B4B1E91886D9DD0027AC4F /* CobaltViewController.m in Sources */,
 				C4D664AA171E91D5009EDE58 /* SimpleController.m in Sources */,
+				F0C788E61AF75DC000F367DF /* CobaltLocationPlugin.m in Sources */,
 				71B4B1ED1886D9DD0027AC4F /* CobaltToast.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
