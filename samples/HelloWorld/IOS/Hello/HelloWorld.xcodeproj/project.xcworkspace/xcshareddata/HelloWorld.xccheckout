@@ -14,7 +14,7 @@
 		<string>https://github.com/cobaltians/cobalt.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>samples/HelloWorld/IOS/HelloWorld/HelloWorld.xcodeproj</string>
+	<string>samples/HelloWorld/IOS/Hello/HelloWorld.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>8F924602F3C51B7A18EF94EFB8636649C2AA30B2</key>
@@ -34,7 +34,7 @@
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>8F924602F3C51B7A18EF94EFB8636649C2AA30B2</string>
 			<key>IDESourceControlWCCName</key>
-			<string>Cobalt</string>
+			<string>cobalt</string>
 		</dict>
 	</array>
 </dict>
