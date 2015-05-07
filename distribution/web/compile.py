@@ -11,7 +11,7 @@ if not os.path.isfile(common_file_path):
     exit()
 
 
-for str_os in ['iOs', 'Android', 'BB10', 'Tizen']:
+for str_os in ['iOs', 'Android']:
     print "\n---building %s file" % str_os
     #print os.getcwd()
     
