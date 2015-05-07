@@ -8,8 +8,8 @@ cobalt.android_adapter={
 	// handle events sent by native side
     handleEvent:function(json){
 		cobalt.log("received event", json.event)
-        if (cobalt.userEvents && typeof cobalt.userEvents[json.event] === "function"){
-			cobalt.userEvents[json.event](json.data,json.callback);
+        if (cobalt.events && typeof cobalt.events[json.event] === "function"){
+			cobalt.events[json.event](json.data,json.callback);
 	    }else{
 	        switch (json.event){
 		        case "onBackButtonPressed":

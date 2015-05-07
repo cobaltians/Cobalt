@@ -22,8 +22,8 @@
  * THE SOFTWARE.
  */
 var cobalt={
-    version : '0.3',
-    userEvents:{}, //objects of events defined by the user
+    version : '0.4.0',
+    events:{}, //objects of events defined by the user
 	debug:false,
 	debugInBrowser:false,
 	debugInDiv:false,
@@ -45,7 +45,7 @@ var cobalt={
                 this.createLogDiv();
             }
 		    if (options.events){
-		        this.userEvents=options.events
+		        this.events=options.events
 	        }
             cobalt.storage.enable();
 
@@ -73,12 +73,12 @@ var cobalt={
     },
 	addEventListener:function(eventName, handlerFunction){
 		if (typeof eventName === "string" && typeof handlerFunction === "function"){
-			this.userEvents[eventName] = handlerFunction;
+			this.events[eventName] = handlerFunction;
 		}
 	},
 	removeEventListener:function(eventName){
-		if (typeof eventName === "string" && this.userEvents[eventName] ){
-			this.userEvents[eventName] = undefined;
+		if (typeof eventName === "string" && this.events[eventName] ){
+			this.events[eventName] = undefined;
 		}
 	},
 	/*	cobalt.log(stuff,...)
@@ -395,8 +395,8 @@ var cobalt={
     defaultBehaviors:{
 		handleEvent:function(json){
 			cobalt.log("received event", json.event)
-		    if (cobalt.userEvents && typeof cobalt.userEvents[json.event] === "function"){
-				cobalt.userEvents[json.event](json.data,json.callback);
+		    if (cobalt.events && typeof cobalt.events[json.event] === "function"){
+				cobalt.events[json.event](json.data,json.callback);
 		    }else{
                 cobalt.adapter.handleUnknown(json)
             }
