@@ -135,6 +135,7 @@ var cobalt = {
             if (typeof callback === "function") {
                 obj.callback = "" + (cobalt.lastCallbackId++);
                 cobalt.callbacks[obj.callback] = callback;
+                cobalt.callbacks.latest = callback;
             } else if (typeof callback === "string") {
                 obj.callback = "" + callback;
             }
@@ -205,6 +206,29 @@ var cobalt = {
                 if (cobalt.adapter)
                     cobalt.adapter.dismissFromModal();
                 break;
+        }
+        if (cobalt.debugInBrowser) {
+            if (window.event.altKey) {
+                switch (navigationType) {
+                    case "push":
+                    case "modal":
+                        if (page) {
+                            setTimeout(function(){
+                                window.open(page,'_blank');
+                            },0)
+                        }
+                        break;
+                    case "replace":
+                        if (page) {
+                            location.href=page;
+                        }
+                        break;
+                    case "pop":
+                    case "dismiss":
+                        window.close();
+                        break;
+                }
+            }
         }
     },
     /* sends a toast request to native */
