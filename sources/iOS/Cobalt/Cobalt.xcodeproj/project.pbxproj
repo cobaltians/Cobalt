@@ -54,7 +54,6 @@
 		BE8A3EAA1886D43C00C3B479 /* iToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iToast.m; path = Cobalt/iToast.m; sourceTree = SOURCE_ROOT; };
 		F01A59E91716EDB50000DD94 /* libCobalt.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCobalt.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F01A59EC1716EDB50000DD94 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		F055533B1718087D00454C32 /* Javascript */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Javascript; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,7 +140,6 @@
 			isa = PBXGroup;
 			children = (
 				71B4B1951885C7CE0027AC4F /* Cobalt */,
-				F055533B1718087D00454C32 /* Javascript */,
 				F01A59EB1716EDB50000DD94 /* Frameworks */,
 				F01A59EA1716EDB50000DD94 /* Products */,
 			);
