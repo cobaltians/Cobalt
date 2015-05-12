@@ -245,36 +245,58 @@ var cobalt = {
      cobalt.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", cancelable : true });
 
      */
-    alert: function (title, text, buttons, options) {
-        if (title || text) {
-            var obj = {
-                type: "ui", control: "alert", data: {
-                    message: text,
-                    title: title
-                }
-            };
-            var callback;
+    alert: function (options) {
 
-            if (buttons && cobalt.isArray(buttons) && buttons.length) {
-                obj.data.buttons = buttons;
+        var obj={};
+
+        if (options && (options.message || options.title )) {
+            if (typeof options == "string"){
+                options = { message : options };
             }
 
-            //check options
-            if (options) {
-                //add web callback if any
-                if (typeof options.callback === "string" || typeof options.callback === "function") {
-                    callback = options.callback;
-                }
-                if (options.cancelable) {
-                    obj.data.cancelable = true;
+            cobalt.utils.extend(obj,{
+                //enforce alertId presence
+                id : (options.id && cobalt.isNumber(options.id)) ? options.id : 0,
+                title : options.title,
+                message : options.message,
+                //ensure buttons is an array of strings or default to one Ok button
+                buttons : (options.buttons && cobalt.isArray(options.buttons) && options.buttons.length) ? options.buttons : ['Ok'],
+                //only supported on Android
+                cancelable : (options.cancelable) ? true : false
+            });
+
+            var callback = ( typeof options.callback === "string" || typeof options.callback === "function" ) ? options.callback : undefined;
+
+            cobalt.send({
+                type: "ui", control: "alert", data: obj
+            }, callback);
+
+            if (cobalt.debugInBrowser){
+                var btns_str = "";
+                cobalt.utils.each(obj.buttons,function(index, button){
+                    btns_str += "\t" + index + " - " + button + "\n";
+                });
+                var index = window.prompt(
+                    "Title : " + obj.title + "\n"
+                        + "Message : " + obj.message + "\n"
+                        + "Choices : \n" + btns_str ,0);
+
+                switch (typeof callback){
+                    case "function":
+                        callback({ index : index });
+                        break;
+                    case "string":
+                        var str_call = callback + "({index : " + index + "})";
+                        try{
+                            eval(str_call);
+                        }catch (e){
+                            cobalt.log('failed to call ', str_call);
+                        }
+                        break;
                 }
             }
 
-            //enforce alertId presence :
-            if (!obj.data.id || !cobalt.isNumber(obj.data.id)) {
-                obj.data.id = 0;
-            }
-            cobalt.send(obj, callback);
+
         }
     },
     pullToRefresh: {
