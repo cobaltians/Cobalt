@@ -37,9 +37,7 @@ for str_os in ['iOs', 'Android']:
     else:
         print "error : no adapter file for %s" % str_os
 
-print "\n---copying files to samples apps"
-os.chdir(os.pardir)
-os.system('./updateSamples.sh')
+print "\n---finished"
     
     
     
