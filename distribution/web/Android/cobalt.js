@@ -237,13 +237,6 @@ var cobalt = {
     },
 
     /*  Raise a native alert with options
-     See doc for guidelines.
-
-     //full web
-     cobalt.alert("Texte");
-     cobalt.alert("Title", "Texte", ["Ok"], { callback:function(data){cobalt.log('popup dismissed '+data.index) }});
-     cobalt.alert("Title", "Texte", ["Ok"], { callback:"app.popupDismissed", cancelable : true });
-
      */
     alert: function (options) {
 
@@ -255,8 +248,6 @@ var cobalt = {
             }
 
             cobalt.utils.extend(obj,{
-                //enforce alertId presence
-                id : (options.id && cobalt.isNumber(options.id)) ? options.id : 0,
                 title : options.title,
                 message : options.message,
                 //ensure buttons is an array of strings or default to one Ok button
@@ -902,7 +893,7 @@ var cobalt = {
     //ANDROID ADAPTER
     //
     init: function () {
-        cobalt.platform = "Android";
+        cobalt.platform = { is : "Android" };
     },
     // handle events sent by native side
     handleEvent: function (json) {
