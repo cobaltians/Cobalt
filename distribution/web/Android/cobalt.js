@@ -117,7 +117,7 @@ var cobalt = {
         var stringItems = [];
         //ensure arguments[0] exists?
         cobalt.utils.each(arguments[0], function (i, elem) {
-            stringItems.push(cobalt.toString(elem))
+            stringItems.push(cobalt.utils.logToString(elem))
         });
         return stringItems.join(' ');
     },
@@ -169,71 +169,90 @@ var cobalt = {
         }
     },
     //Navigate to an other page or do some special navigation actions
-    //See doc for guidelines.
-    navigate: function (navigationType, page, controller, animated) {
-        if (typeof animated === "undefined") {
-            animated = true;
-        }
-        switch (navigationType) {
-            case "push":
-                if (page) {
-                    cobalt.send({
-                        "type": "navigation",
-                        "action": "push",
-                        data: {page: page, controller: controller, animated: animated}
-                    });
+    navigate:{
+        //cobalt.navigate.push({ page : "next.html", controller:"myController", animated:false });
+        push:function(options){
+            if (options && options.page){
+                cobalt.send({
+                    "type": "navigation",
+                    "action": "push",
+                    data: {
+                        page: options.page,
+                        controller: options.controller,
+                        animated: (options.animated !== false) //default to true
+                    }
+                });
+                if (cobalt.debugInBrowser && window.event.altKey) {
+                    setTimeout(function(){
+                        window.open(options.page,'_blank');
+                    },0);
                 }
-                break;
-            case "replace":
-                if (page) {
-                    cobalt.send({
-                        "type": "navigation",
-                        "action": "replace",
-                        data: {page: page, controller: controller, animated: animated}
-                    });
+            }
+        },
+        //cobalt.navigate.pop();
+        pop:function(){
+            cobalt.send({"type": "navigation", "action": "pop"});
+
+            if (cobalt.debugInBrowser && window.event.altKey) {
+                window.close();
+            }
+        },
+        //cobalt.navigate.popTo({ page : "next.html", controller:"myController" });
+        popTo:function(options){
+            if (options && options.page && options.controller){
+                cobalt.send({
+                    "type": "navigation",
+                    "action": "pop",
+                    data: {
+                        page: options.page,
+                        controller: options.controller
+                    }
+                });
+
+                if (cobalt.debugInBrowser && window.event.altKey) {
+                    window.close();
                 }
-                break;
-            case "pop":
-                var data = (page && controller) ? {page: page, controller: controller} : undefined;
-                cobalt.send({"type": "navigation", "action": "pop", data: data});
-                break;
-            case "modal":
-                if (cobalt.adapter && page) {
-                    cobalt.adapter.navigateToModal(page, controller);
+            }
+        },
+        //cobalt.navigate.replace({ page : "next.html", controller:"myController", animated:false });
+        replace:function(options){
+            if (options && options.page && options.controller){
+                cobalt.send({
+                    "type": "navigation",
+                    "action": "replace",
+                    data: {
+                        page: options.page,
+                        controller: options.controller,
+                        animated: (options.animated !== false) //default to true
+                    }
+                });
+                if (cobalt.debugInBrowser && window.event.altKey) {
+                    location.href=options.page;
                 }
-                break;
-            case "dismiss":
-                if (cobalt.adapter)
-                    cobalt.adapter.dismissFromModal();
-                break;
-        }
-        if (cobalt.debugInBrowser) {
-            if (window.event.altKey) {
-                switch (navigationType) {
-                    case "push":
-                    case "modal":
-                        if (page) {
-                            setTimeout(function(){
-                                window.open(page,'_blank');
-                            },0)
-                        }
-                        break;
-                    case "replace":
-                        if (page) {
-                            location.href=page;
-                        }
-                        break;
-                    case "pop":
-                    case "dismiss":
-                        window.close();
-                        break;
+            }
+        },
+        modal:function(options){
+            if (options && options.page){
+                cobalt.adapter.navigateToModal(options.page, options.controller);
+
+                if (cobalt.debugInBrowser && window.event.altKey) {
+                    setTimeout(function(){
+                        window.open(options.page,'_blank');
+                    },0);
                 }
+            }
+        },
+        dismiss:function(){
+            cobalt.adapter.dismissFromModal();
+
+            if (cobalt.debugInBrowser && window.event.altKey) {
+                window.close();
             }
         }
     },
     /* sends a toast request to native */
     toast: function (text) {
-        cobalt.send({type: "ui", control: "toast", data: {message: cobalt.toString(text)}});
+        cobalt.send({type: "ui", control: "toast", data: {message: cobalt.utils.logToString(text)}});
     },
 
     /*  Raise a native alert with options
@@ -251,7 +270,7 @@ var cobalt = {
                 title : options.title,
                 message : options.message,
                 //ensure buttons is an array of strings or default to one Ok button
-                buttons : (options.buttons && cobalt.isArray(options.buttons) && options.buttons.length) ? options.buttons : ['Ok'],
+                buttons : (options.buttons && cobalt.utils.isArray(options.buttons) && options.buttons.length) ? options.buttons : ['Ok'],
                 //only supported on Android
                 cancelable : (options.cancelable) ? true : false
             });
@@ -389,7 +408,7 @@ var cobalt = {
     tryToCallCallback: function (json) {
         cobalt.divLog('trying to call web callback');
         var callbackfunction = null;
-        if (cobalt.isNumber(json.callback) && typeof cobalt.callbacks[json.callback] === "function") {
+        if (cobalt.utils.isNumber(json.callback) && typeof cobalt.callbacks[json.callback] === "function") {
             //if it's a number, a real JS callback should exist in cobalt.callbacks
             callbackfunction = cobalt.callbacks[json.callback]
 
@@ -406,40 +425,6 @@ var cobalt = {
         } else {
             cobalt.adapter.handleUnknown(json);
         }
-    },
-    // usefull functions
-    isNumber: function (n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-    },
-    isArray: function (arr) {
-        return ( Object.prototype.toString.call(arr) === '[object Array]' );
-    },
-    toString: function (stuff) {
-        switch (typeof  stuff) {
-            case "string":
-                break;
-            case "function":
-                stuff = ("" + stuff.call).replace('native', 'web'); //to avoid panic ;)
-                break;
-            default:
-                try {
-                    stuff = JSON.stringify(stuff)
-                } catch (e) {
-                    stuff = "" + stuff;
-                }
-
-        }
-        return stuff;
-    },
-    HTMLEncode: function (value) {
-        var element = document.createElement('div');
-        cobalt.utils.text(element, value || '');
-        return cobalt.utils.html(element);
-    },
-    HTMLDecode: function (value) {
-        var element = document.createElement('div');
-        cobalt.utils.html(element, value || '');
-        return cobalt.utils.text(element);
     },
     defaultBehaviors: {
         handleEvent: function (json) {
@@ -484,6 +469,23 @@ var cobalt = {
             }
         },
         toString: Object.prototype.toString,
+        logToString: function (stuff) {
+            switch (typeof  stuff) {
+                case "string":
+                    break;
+                case "function":
+                    stuff = ("" + stuff.call).replace('native', 'web'); //to avoid panic ;)
+                    break;
+                default:
+                    try {
+                        stuff = JSON.stringify(stuff)
+                    } catch (e) {
+                        stuff = "" + stuff;
+                    }
+            }
+            return stuff;
+        },
+        
         class2type: {},
         attr: function (node, attr, value) {
             node = cobalt.utils.$(node);
@@ -514,6 +516,16 @@ var cobalt = {
                     return node.innerHTML;
                 }
             }
+        },
+        HTMLEncode: function (value) {
+            var element = document.createElement('div');
+            cobalt.utils.text(element, value || '');
+            return cobalt.utils.html(element);
+        },
+        HTMLDecode: function (value) {
+            var element = document.createElement('div');
+            cobalt.utils.html(element, value || '');
+            return cobalt.utils.text(element);
         },
         likeArray: function (obj) {
             return typeof obj.length == 'number'
@@ -607,6 +619,9 @@ var cobalt = {
             } else {
                 return Array.isArray;
             }
+        },
+        isNumber: function (n) {
+            return !isNaN(parseFloat(n)) && isFinite(n);
         },
         isWindow: function (obj) {
             return obj != null && obj == obj.window
