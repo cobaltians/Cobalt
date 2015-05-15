@@ -615,7 +615,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
                     //REPLACE
                     else if (action.equals(Cobalt.JSActionNavigationReplace)) {
                         JSONObject data = jsonObj.getJSONObject(Cobalt.kJSData);
-                        String controller = data.getString(Cobalt.kJSController);
+                        String controller = data.optString(Cobalt.kJSController, null);
                         String page = data.getString(Cobalt.kJSPage);
                         boolean animated = data.optBoolean(Cobalt.kJSAnimated);
                         replace(controller, page, animated);
