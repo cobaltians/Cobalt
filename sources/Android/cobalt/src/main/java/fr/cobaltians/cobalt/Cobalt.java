@@ -213,6 +213,8 @@ public class Cobalt {
 
     private String mResourcePath = "www/";
 
+    private static String PACKAGE_NAME;
+
     private int mRunningActivities = 0;
     private boolean mFirstActivityStart = true;
 
@@ -248,6 +250,11 @@ public class Cobalt {
 
     public static Context getAppContext() {
         return mContext;
+    }
+
+    public void setPackageName(String packageName) {
+        if (packageName != null) PACKAGE_NAME = packageName;
+        else PACKAGE_NAME = getAppContext().getPackageName();
     }
 
     /**********************************************************************************************
@@ -359,6 +366,8 @@ public class Cobalt {
                 enableInfiniteScroll = controllers.getJSONObject(kDefaultController).optBoolean(kInfiniteScroll);
                 infiniteScrollOffset = controllers.getJSONObject(kDefaultController).optInt(kInfiniteScrollOffset, INFINITE_SCROLL_OFFSET_DEFAULT_VALUE);
             }
+
+            if (!activity.contains(".")) activity = PACKAGE_NAME + activity;
 
             bundle.putString(kActivity, activity);
             //if (actionBar != null) bundle.putString(kBars, actionBar.toString());
