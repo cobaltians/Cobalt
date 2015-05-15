@@ -199,7 +199,7 @@ var cobalt = {
         },
         //cobalt.navigate.popTo({ page : "next.html", controller:"myController" });
         popTo:function(options){
-            if (options && options.page && options.controller){
+            if (options && options.page){
                 cobalt.send({
                     "type": "navigation",
                     "action": "pop",
@@ -216,7 +216,7 @@ var cobalt = {
         },
         //cobalt.navigate.replace({ page : "next.html", controller:"myController", animated:false });
         replace:function(options){
-            if (options && options.page && options.controller){
+            if (options && options.page){
                 cobalt.send({
                     "type": "navigation",
                     "action": "replace",
