@@ -367,7 +367,7 @@ public class Cobalt {
                 infiniteScrollOffset = controllers.getJSONObject(kDefaultController).optInt(kInfiniteScrollOffset, INFINITE_SCROLL_OFFSET_DEFAULT_VALUE);
             }
 
-            if (!activity.contains(".")) activity = PACKAGE_NAME + activity;
+            if (activity.substring(0,1).equals(".")) activity = PACKAGE_NAME + activity;
 
             bundle.putString(kActivity, activity);
             //if (actionBar != null) bundle.putString(kBars, actionBar.toString());
