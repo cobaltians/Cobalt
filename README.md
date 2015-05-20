@@ -1,8 +1,5 @@
 #Cobalt 
 
-
-
-
 ## Installation Guide
 
 First, have a look on this brief technical [introduction to Cobalt](https://github.com/cobaltians/cobalt/wiki/cobalt-intro) to understand basic principles of the framework.
@@ -28,7 +25,7 @@ See the [sample list here](https://github.com/cobaltians/cobalt/wiki/samples), o
 
     cobaltians create myApp HelloWorld
     
-###4) Open the iOS or Android project and enjoy !
+###4) Open the generated iOS or Android project and enjoy !
 
 Alternatively you can [watch a step by step video](http://youtube.com/cobalt/installing), 
 
@@ -36,7 +33,7 @@ Or you can add Cobalt to an existing project :
 * Add Cobalt to my Android project
 * Add Cobalt to my iOS project
 
-Something not clear ? Read the [FAQ](https://github.com/cobaltians/cobalt/wiki/FAQ) or ask us on @Cobaltians
+Something not clear ? Read the [FAQ](https://github.com/cobaltians/cobalt/wiki/FAQ) or ask us in the [issues tracker](https://github.com/cobaltians/cobalt/issues).
 
 ## Where to go from here ?
 
@@ -44,4 +41,4 @@ Dive in, jump to the documentation, there is great guides to help you :
 
 * [Documentation on GitHub Wiki](https://github.com/cobaltians/cobalt/wiki)
 
-Follow [@cobaltians](https://twitter.com/cobaltians) for updates.
+Follow [@cobaltians](https://twitter.com/cobaltians) on Twitter for updates.
