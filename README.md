@@ -21,24 +21,30 @@ This assume you have [Node Package Manager](https://nodejs.org/) installed. Use 
 
 ###3) Create your app from a sample
 
-See the [sample list here](https://github.com/cobaltians/cobalt/wiki/samples), or start with the HelloWorld :
+Choose a name and a base sample to create your first app :
 
     cobaltians create myApp HelloWorld
     
+This will ask if you want to create the corresponding iOS and Android projects.
+
+Available samples are "HelloWorld" and "Catalog".
+    
 ###4) Open the generated iOS or Android project and enjoy !
 
-Alternatively you can [watch a step by step video](http://youtube.com/cobalt/installing), 
+Alternatively you can add Cobalt to an existing project :
 
-Or you can add Cobalt to an existing project :
-* Add Cobalt to my Android project
-* Add Cobalt to my iOS project
+* [Add Cobalt to my Android project](https://github.com/cobaltians/cobalt/wiki/Android-Setup)
+* [Add Cobalt to my iOS project](https://github.com/cobaltians/cobalt/wiki/iOS-Setup)
 
-Something not clear ? Read the [FAQ](https://github.com/cobaltians/cobalt/wiki/FAQ) or ask us in the [issues tracker](https://github.com/cobaltians/cobalt/issues).
+## Something not clear ? 
+
+Read the [FAQ](https://github.com/cobaltians/cobalt/wiki/FAQ) or ask us in the [issues tracker](https://github.com/cobaltians/cobalt/issues). We will be glad to help !
 
 ## Where to go from here ?
 
-Dive in, jump to the documentation, there is great guides to help you :
+Dive in, jump to the documentation wiki, there is great guides to help you :
 
-* [Documentation on GitHub Wiki](https://github.com/cobaltians/cobalt/wiki)
+* [Documentation Wiki](https://github.com/cobaltians/cobalt/wiki)
 
 Follow [@cobaltians](https://twitter.com/cobaltians) on Twitter for updates.
+
