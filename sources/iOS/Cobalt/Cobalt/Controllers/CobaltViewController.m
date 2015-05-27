@@ -1396,10 +1396,10 @@ UIColor * SKColorFromHexString(NSString * hexString) {
 {
     NSString * requestURL = [[[request URL] absoluteString] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    // if requestURL contains haploidSpecialJSKey, extracts the JSON received.
-    NSRange range = [requestURL rangeOfString:haploidSpecialJSKey];
+    // if requestURL contains cobaltSpecialJSKey, extracts the JSON received.
+    NSRange range = [requestURL rangeOfString:cobaltSpecialJSKey];
     if (range.location != NSNotFound) {
-        NSString * json = [requestURL substringFromIndex:range.location + haploidSpecialJSKey.length];
+        NSString * json = [requestURL substringFromIndex:range.location + cobaltSpecialJSKey.length];
         NSDictionary * jsonObj = [Cobalt JSONObjectWithString:json];
         
         [fromJavaScriptOperationQueue addOperationWithBlock:^{

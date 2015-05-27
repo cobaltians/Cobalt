@@ -35,7 +35,7 @@
 
 #define viewControllerDeallocatedNotification   @"viewControllerDeallocatedNotification"
 
-#define haploidSpecialJSKey     @"cob@l7#k&y"
+#define cobaltSpecialJSKey      @"cob@l7#k&y"
 
 // CONFIGURATION FILE
 #define confFileName            @"cobalt.conf"
