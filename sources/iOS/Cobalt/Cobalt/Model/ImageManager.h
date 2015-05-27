@@ -6,8 +6,9 @@
 //  Copyright (c) 2014 Haploid. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h> 
 
 @interface ImageManager : NSObject {
     int _identifierIndex;
@@ -16,8 +17,8 @@
 
 + (ImageManager *)sharedInstance;
 
--(UIImage *) imageForIdentifier: (NSNumber *) identifier;
--(ALAsset *) assetForIdentifier: (NSNumber *) identifier;
+- (UIImage *) imageForIdentifier: (NSNumber *) identifier;
+- (ALAsset *) assetForIdentifier: (NSNumber *) identifier;
 - (NSNumber *)saveImage: (UIImage *)imageToSave;
 - (NSNumber *)saveAsset: (ALAsset *)assetToSave;
 
