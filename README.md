@@ -15,7 +15,7 @@ This step can take some time. If you already have them on your computer, be sure
 
 ###2) Install Cobalt
 
-    npm install cobaltians
+    npm install -g cobaltians
        
 This assume you have [Node Package Manager](https://nodejs.org/) installed. Use sudo if needed.
 
