@@ -103,6 +103,8 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 
 	private CobaltPluginManager mPluginManager;
 
+    protected boolean mIsOustate = true;
+
     /**************************************************************************************************
 	 * LIFECYCLE
 	 **************************************************************************************************/
@@ -157,7 +159,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
 	@Override
 	public void onStart() {
 		super.onStart();
-
+        mIsOustate = false;
 		addWebView();
 		preloadContent();
 	}
@@ -185,7 +187,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
+        mIsOustate = true;
         if (mWebView != null) {
             mWebView.saveState(outState);
         }
@@ -941,7 +943,7 @@ public abstract class CobaltFragment extends Fragment implements IScrollListener
                     fragmentTransition.setTransition(FragmentTransaction.TRANSIT_NONE);
                 }
 
-                if (CobaltActivity.class.isAssignableFrom(mContext.getClass())) {
+                if (CobaltActivity.class.isAssignableFrom(mContext.getClass()) && !mIsOustate) {
                     // Dismiss current Web layer if one is already shown
                     CobaltActivity activity = (CobaltActivity) mContext;
                     Fragment currentFragment = activity.getSupportFragmentManager().findFragmentById(activity.getFragmentContainerId());

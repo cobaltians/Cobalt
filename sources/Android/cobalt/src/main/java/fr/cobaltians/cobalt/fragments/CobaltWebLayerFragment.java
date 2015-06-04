@@ -141,7 +141,7 @@ public class CobaltWebLayerFragment extends CobaltFragment {
 			}
 
             fragmentTransaction.remove(this);
-            fragmentTransaction.commit();
+			if (!mIsOustate) fragmentTransaction.commit();
 		}
 		else if (Cobalt.DEBUG) Log.e(Cobalt.TAG, TAG + " - dismissWebLayer: Web layer is not attached to an activity.");
 	}
