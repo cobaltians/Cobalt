@@ -617,7 +617,7 @@ var cobalt = {
             if (!Array.isArray) {
                 return Object.prototype.toString.call(obj) === '[object Array]';
             } else {
-                return Array.isArray;
+                return Array.isArray(obj);
             }
         },
         isNumber: function (n) {
