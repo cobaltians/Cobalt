@@ -182,7 +182,7 @@ var cobalt = {
                         animated: (options.animated !== false) //default to true
                     }
                 });
-                if (cobalt.debugInBrowser && window.event.altKey) {
+                if (cobalt.debugInBrowser && window.event && window.event.altKey) {
                     setTimeout(function(){
                         window.open(options.page,'_blank');
                     },0);
@@ -193,7 +193,7 @@ var cobalt = {
         pop:function(){
             cobalt.send({"type": "navigation", "action": "pop"});
 
-            if (cobalt.debugInBrowser && window.event.altKey) {
+            if (cobalt.debugInBrowser && window.event && window.event.altKey) {
                 window.close();
             }
         },
@@ -209,7 +209,7 @@ var cobalt = {
                     }
                 });
 
-                if (cobalt.debugInBrowser && window.event.altKey) {
+                if (cobalt.debugInBrowser && window.event && window.event.altKey) {
                     window.close();
                 }
             }
@@ -226,7 +226,7 @@ var cobalt = {
                         animated: (options.animated !== false) //default to true
                     }
                 });
-                if (cobalt.debugInBrowser && window.event.altKey) {
+                if (cobalt.debugInBrowser && window.event && window.event.altKey) {
                     location.href=options.page;
                 }
             }
@@ -235,7 +235,7 @@ var cobalt = {
             if (options && options.page){
                 cobalt.adapter.navigateToModal(options.page, options.controller);
 
-                if (cobalt.debugInBrowser && window.event.altKey) {
+                if (cobalt.debugInBrowser && window.event && window.event.altKey) {
                     setTimeout(function(){
                         window.open(options.page,'_blank');
                     },0);
@@ -245,7 +245,7 @@ var cobalt = {
         dismiss:function(){
             cobalt.adapter.dismissFromModal();
 
-            if (cobalt.debugInBrowser && window.event.altKey) {
+            if (cobalt.debugInBrowser && window.event && window.event.altKey) {
                 window.close();
             }
         }
@@ -286,14 +286,14 @@ var cobalt = {
                 cobalt.utils.each(obj.buttons,function(index, button){
                     btns_str += "\t" + index + " - " + button + "\n";
                 });
-                var index = window.prompt(
+                var index = parseInt( window.prompt(
                     "Title : " + obj.title + "\n"
-                        + "Message : " + obj.message + "\n"
-                        + "Choices : \n" + btns_str ,0);
+                    + "Message : " + obj.message + "\n"
+                    + "Choices : \n" + btns_str ,0), 10);
 
                 switch (typeof callback){
                     case "function":
-                        callback({ index : index });
+                        callback({ index : (index==NaN) ? undefined : index });
                         break;
                     case "string":
                         var str_call = callback + "({index : " + index + "})";

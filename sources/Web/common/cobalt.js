@@ -289,11 +289,11 @@ var cobalt = {
                 var index = parseInt( window.prompt(
                     "Title : " + obj.title + "\n"
                     + "Message : " + obj.message + "\n"
-                    + "Choices : \n" + btns_str ,0), 10) || undefined;
+                    + "Choices : \n" + btns_str ,0), 10);
 
                 switch (typeof callback){
                     case "function":
-                        callback({ index : index });
+                        callback({ index : (index==NaN) ? undefined : index });
                         break;
                     case "string":
                         var str_call = callback + "({index : " + index + "})";
