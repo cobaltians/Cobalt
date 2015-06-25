@@ -286,10 +286,10 @@ var cobalt = {
                 cobalt.utils.each(obj.buttons,function(index, button){
                     btns_str += "\t" + index + " - " + button + "\n";
                 });
-                var index = window.prompt(
+                var index = parseInt( window.prompt(
                     "Title : " + obj.title + "\n"
-                        + "Message : " + obj.message + "\n"
-                        + "Choices : \n" + btns_str ,0);
+                    + "Message : " + obj.message + "\n"
+                    + "Choices : \n" + btns_str ,0), 10) || undefined;
 
                 switch (typeof callback){
                     case "function":
