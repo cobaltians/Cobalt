@@ -179,12 +179,13 @@ var cobalt = {
         push:function(options){
             if (options && options.page){
                 cobalt.send({
-                    "type": "navigation",
-                    "action": "push",
-                    data: {
-                        page: options.page,
-                        controller: options.controller,
-                        animated: (options.animated !== false) //default to true
+                    type : "navigation",
+                    action : "push",
+                    data : {
+                        page : options.page,
+                        controller : options.controller,
+                        animated : (options.animated !== false), //default to true
+                        data : options.data
                     }
                 });
                 if (cobalt.debugInBrowser && window.event && window.event.altKey) {
@@ -195,8 +196,8 @@ var cobalt = {
             }
         },
         //cobalt.navigate.pop();
-        pop:function(){
-            cobalt.send({"type": "navigation", "action": "pop"});
+        pop:function(data){
+            cobalt.send({"type": "navigation", "action": "pop", data: { data : data}});
 
             if (cobalt.debugInBrowser && window.event && window.event.altKey) {
                 window.close();
@@ -206,11 +207,12 @@ var cobalt = {
         popTo:function(options){
             if (options && options.page){
                 cobalt.send({
-                    "type": "navigation",
-                    "action": "pop",
+                    type : "navigation",
+                    action : "pop",
                     data: {
-                        page: options.page,
-                        controller: options.controller
+                        page : options.page,
+                        controller : options.controller,
+                        data : options.data
                     }
                 });
 
@@ -223,12 +225,13 @@ var cobalt = {
         replace:function(options){
             if (options && options.page){
                 cobalt.send({
-                    "type": "navigation",
-                    "action": "replace",
-                    data: {
-                        page: options.page,
-                        controller: options.controller,
-                        animated: (options.animated !== false) //default to true
+                    type : "navigation",
+                    action : "replace",
+                    data : {
+                        page : options.page,
+                        controller : options.controller,
+                        animated : (options.animated !== false), //default to true
+                        data : options.data
                     }
                 });
                 if (cobalt.debugInBrowser && window.event && window.event.altKey) {
@@ -238,7 +241,7 @@ var cobalt = {
         },
         modal:function(options){
             if (options && options.page){
-                cobalt.adapter.navigateToModal(options.page, options.controller);
+                cobalt.adapter.navigateToModal(options);
 
                 if (cobalt.debugInBrowser && window.event && window.event.altKey) {
                     setTimeout(function(){
@@ -247,8 +250,8 @@ var cobalt = {
                 }
             }
         },
-        dismiss:function(){
-            cobalt.adapter.dismissFromModal();
+        dismiss:function(data){
+            cobalt.adapter.dismissFromModal(data);
 
             if (cobalt.debugInBrowser && window.event && window.event.altKey) {
                 window.close();
@@ -450,11 +453,15 @@ var cobalt = {
         handleUnknown: function (json) {
             cobalt.log('received unhandled message ', json);
         },
-        navigateToModal: function (page, controller) {
-            cobalt.send({"type": "navigation", "action": "modal", data: {page: page, controller: controller}});
+        navigateToModal: function (options) {
+            cobalt.send({"type": "navigation", "action": "modal", data: {
+                page: options.page,
+                controller: options.controller,
+                data : options.data
+            }});
         },
-        dismissFromModal: function () {
-            cobalt.send({"type": "navigation", "action": "dismiss"});
+        dismissFromModal: function (data) {
+            cobalt.send({"type": "navigation", "action": "dismiss", data:{ data : data }});
         },
         initStorage: function () {
             return cobalt.storage.enable()
