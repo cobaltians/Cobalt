@@ -131,22 +131,27 @@ var cobalt = {
     //Sends an object to native side.
     //See doc for guidelines.
     send: function (obj, callback) {
-        if (callback) {
-            if (typeof callback === "function") {
-                obj.callback = "" + (cobalt.lastCallbackId++);
-                cobalt.callbacks[obj.callback] = callback;
-                cobalt.callbacks.latest = callback;
-            } else if (typeof callback === "string") {
-                obj.callback = "" + callback;
-            }
-        }
+        if (! typeof obj === "object" ) return;
+        obj.callback = cobalt.registerCallback(callback);
         if (cobalt.debugInBrowser) {
             cobalt.log('sending', obj);
         }
-
         if (cobalt.adapter) {
             cobalt.adapter.send(obj, callback);
         }
+    },
+    registerCallback:function(callback){
+        var callbackId;
+        if (callback) {
+            if (typeof callback === "function") {
+                callbackId = "" + (cobalt.lastCallbackId++);
+                cobalt.callbacks[callbackId] = callback;
+                cobalt.callbacks.latest = callback;
+            } else if (typeof callback === "string") {
+                callbackId = callback;
+            }
+        }
+        return callbackId;
     },
     //Sends an event to native side.
     //See doc for guidelines.
