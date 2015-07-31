@@ -756,7 +756,7 @@ var cobalt = {
         },
         enhanceFieldValue: function () {
             //cobalt.log('updating date format')
-            var date = cobalt.storage.getItem('CobaltDatePickerValue_' + cobalt.utils.attr(this, 'id'), 'json');
+            var date = cobalt.storage.get('CobaltDatePickerValue_' + cobalt.utils.attr(this, 'id'));
             if (date) {
                 cobalt.log('format date=', date);
                 this.value = cobalt.datePicker.format(cobalt.datePicker.stringifyDate(date))
@@ -787,19 +787,17 @@ var cobalt = {
     storage: {
         /*	localStorage helper
 
-         cobalt.storage.setItem('town','Lannion');
-         cobalt.storage.getItem('town');
+         cobalt.storage.set('town','Lannion');
+         cobalt.storage.get('town');
          //returns 'Lannion'
 
-         cobalt.storage.setItem('age',12);
-         cobalt.storage.getItem('age');
-         //returns '12' (string)
-         cobalt.storage.getItem('age','int'); //there is also float, date, json
+         cobalt.storage.set('age',12);
+         cobalt.storage.get('age');
          //returns 12 (number)
 
          //experimental :
-         cobalt.storage.setItem('user',{name:'toto',age:6},'json');
-         cobalt.storage.getItem('user','json');
+         cobalt.storage.set('user',{name:'toto',age:6});
+         cobalt.storage.get('user','json');
          //returns {name:'toto',age:6} (object)
 
          */
@@ -829,39 +827,34 @@ var cobalt = {
                 this.storage.clear();
             }
         },
-        getItem: function (uid, type) {
+        set:function(uid, value){
             if (this.storage) {
-                var val = this.storage.getItem(uid);
+                var obj = {
+                    t : typeof value,
+                    v : value
+                };
+                if (obj.v instanceof Date){
+                    obj.t="date";
+                }
+                return this.storage.setItem(uid, JSON.stringify(obj));
+            }
+        },
+        get:function(uid){
+            if (this.storage) {
+                var val = this.storage.getItem(uid,'json');
+                val=JSON.parse(val);
                 if (val) {
-                    switch (type) {
-                        case undefined :
-                            return val;
-                        case "int":
-                            return parseInt(val, 10);
-                        case "float":
-                            return parseFloat(val);
+                    switch (val.t) {
                         case "date":
-                            return new Date(val);
-                        case "json":
-                            return JSON.parse(val)
+                            return new Date(val.v);
+                        default :
+                            return val.v;
                     }
-                    return val;
                 }
-                return undefined;
+                return;
             }
         },
-        setItem: function (uid, value, type) {
-            if (this.storage) {
-                switch (type) {
-                    case 'json' :
-                        if (typeof value == "undefined") value = {};
-                        return this.storage.setItem(uid, JSON.stringify(value));
-                    default :
-                        return this.storage.setItem(uid, "" + value);
-                }
-            }
-        },
-        removeItem: function (uid) {
+        remove: function (uid) {
             if (this.storage) {
                 return this.storage.removeItem(uid)
             }
@@ -964,7 +957,7 @@ var cobalt = {
         }, 'cobalt.adapter.storeModalInformations');
     },
     dismissFromModal: function (data) {
-        var dismissInformations = cobalt.storage.getItem("dismissInformations", "json");
+        var dismissInformations = cobalt.storage.get("dismissInformations");
         if (dismissInformations && dismissInformations.page && dismissInformations.controller) {
             cobalt.send({
                 "type": "navigation",
@@ -1011,7 +1004,7 @@ var cobalt = {
                 input.addEventListener('focus', function () {
                     cobalt.log('show formPicker date for date #', id);
                     input.blur();
-                    var previousDate = cobalt.storage.getItem('CobaltDatePickerValue_' + id, 'json');
+                    var previousDate = cobalt.storage.get('CobaltDatePickerValue_' + id);
                     if (!previousDate) {
                         var d = new Date();
                         previousDate = {
@@ -1044,7 +1037,7 @@ var cobalt = {
             });
         },
         val: function (input) {
-            var date = cobalt.storage.getItem('CobaltDatePickerValue_' + cobalt.utils.attr(input, 'id'), 'json');
+            var date = cobalt.storage.get('CobaltDatePickerValue_' + cobalt.utils.attr(input, 'id'));
             if (date) {
                 var str_date = cobalt.datePicker.stringifyDate(date);
                 cobalt.log('returning storage date ', str_date);

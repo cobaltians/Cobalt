@@ -47,7 +47,7 @@ cobalt.android_adapter = {
         }, 'cobalt.adapter.storeModalInformations');
     },
     dismissFromModal: function (data) {
-        var dismissInformations = cobalt.storage.getItem("dismissInformations", "json");
+        var dismissInformations = cobalt.storage.get("dismissInformations");
         if (dismissInformations && dismissInformations.page && dismissInformations.controller) {
             cobalt.send({
                 "type": "navigation",
@@ -94,7 +94,7 @@ cobalt.android_adapter = {
                 input.addEventListener('focus', function () {
                     cobalt.log('show formPicker date for date #', id);
                     input.blur();
-                    var previousDate = cobalt.storage.getItem('CobaltDatePickerValue_' + id, 'json');
+                    var previousDate = cobalt.storage.get('CobaltDatePickerValue_' + id);
                     if (!previousDate) {
                         var d = new Date();
                         previousDate = {
@@ -127,7 +127,7 @@ cobalt.android_adapter = {
             });
         },
         val: function (input) {
-            var date = cobalt.storage.getItem('CobaltDatePickerValue_' + cobalt.utils.attr(input, 'id'), 'json');
+            var date = cobalt.storage.get('CobaltDatePickerValue_' + cobalt.utils.attr(input, 'id'));
             if (date) {
                 var str_date = cobalt.datePicker.stringifyDate(date);
                 cobalt.log('returning storage date ', str_date);
