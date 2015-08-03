@@ -132,6 +132,9 @@ var cobalt = {
     //See doc for guidelines.
     send: function (obj, callback) {
         if (! typeof obj === "object" ) return;
+        if (callback){
+            obj.callback = cobalt.registerCallback(callback);
+        }
         obj.callback = cobalt.registerCallback(callback);
         if (cobalt.debugInBrowser) {
             cobalt.log('sending', obj);
