@@ -135,7 +135,6 @@ var cobalt = {
         if (callback){
             obj.callback = cobalt.registerCallback(callback);
         }
-        obj.callback = cobalt.registerCallback(callback);
         if (cobalt.debugInBrowser) {
             cobalt.log('sending', obj);
         }
