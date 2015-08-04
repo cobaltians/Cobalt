@@ -46,5 +46,5 @@ Dive in, jump to the documentation wiki, there is great guides to help you :
 
 * [Documentation Wiki](https://github.com/cobaltians/cobalt/wiki)
 
-Follow [@cobaltians](https://twitter.com/cobaltians) on Twitter for updates.
+Follow [@cobaltians](https://twitter.com/cobaltians) on Twitter or check out [the blog](http://cobaltians.org/blog) for updates.
 
