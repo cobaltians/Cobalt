@@ -1,15 +1,12 @@
-[submodule "cobalt_android"]
-        path = Android
-        url = git://github.com/cobaltians/Cobalt-Android.git
-		
-[submodule "cobalt_ios"]
-        path = iOS
-        url = git://github.com/cobaltians/Cobalt-iOS.git
-		
-[submodule "cobalt_web_android"]
-        path = Web/Android
-        url = git://github.com/cobaltians/Cobalt-Web-Android.git
-		
-[submodule "cobalt_web_ios"]
-        path = Web/iOS
-        url = git://github.com/cobaltians/Cobalt-Web-iOS.git
+[submodule "Android"]
+	path = Android
+	url = git://github.com/cobaltians/Cobalt-Android.git
+[submodule "iOS"]
+	path = iOS
+	url = git://github.com/cobaltians/Cobalt-iOS.git
+[submodule "Web/Android"]
+	path = Web/Android
+	url = git://github.com/cobaltians/Cobalt-Web-Android.git
+[submodule "Web/iOS"]
+	path = Web/iOS
+	url = git://github.com/cobaltians/Cobalt-Web-iOS.git
