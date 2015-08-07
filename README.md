@@ -27,7 +27,7 @@ Choose a name and a base sample to create your first app :
     
 This will ask if you want to create the corresponding iOS and Android projects.
 
-Available samples are "HelloWorld" and "Catalog".
+Available samples are "HelloWorld" and "Catalog". Read more about them [here](https://github.com/cobaltians/cobalt/wiki/Samples-list).
     
 ###4) Open the generated iOS or Android project and enjoy !
 
