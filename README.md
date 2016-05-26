@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/cobaltians/Cobalt.png?label=ready&title=Ready)](https://waffle.io/cobaltians/Cobalt)
 #Cobalt 
 
 ## Installation Guide
