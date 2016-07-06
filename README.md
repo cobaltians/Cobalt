@@ -17,7 +17,7 @@ This step can take some time. If you already have them on your computer, be sure
 
     npm install -g cobaltians
        
-This assume you have [Node Package Manager](https://nodejs.org/) installed. Use sudo if needed.
+This assume you have [Node Package Manager **LTS**](https://nodejs.org/) installed. Use sudo if needed.
 
 ###3) Create your app from a sample
 
