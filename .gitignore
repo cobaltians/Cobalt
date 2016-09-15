@@ -1,5 +1,8 @@
 # Created by http://www.gitignore.io
 
+### Mac OS X ###
+.DS_Store
+
 ### Android ###
 # built application files
 *.apk
