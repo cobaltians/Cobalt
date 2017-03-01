@@ -13,23 +13,25 @@ Then, you are ready to start.
 
 This step can take some time. If you already have them on your computer, be sure to have latest XCode version and lastest SDK and JDK for Android Studio.
 
-###2) Install Cobalt
+###2) Install Git if not already on your system
 
-    npm install -g cobaltians
+* [install Git](https://git-scm.com/)
        
-This assume you have [Node Package Manager **LTS**](https://nodejs.org/) installed. Use sudo if needed.
 
-###3) Create your app from a sample
+###3) Try out a sample
 
-Choose a name and a base sample to create your first app :
+Choose a [sample](https://github.com/cobaltians/cobalt/wiki/Samples-list) between `HelloWorld`, `SideMenu`, `Catalog` and `git clone` it for your platform :
 
-    cobaltians create myApp HelloWorld
+    git clone https://github.com/Cobaltians-Samples/Samples-HelloWorld-Android.git
+    //or
+    git clone https://github.com/Cobaltians-Samples/Samples-HelloWorld-iOS.git
     
-This will ask if you want to create the corresponding iOS and Android projects.
+Then **go to the cloned folder** and don't forget to init git submodules : 
 
-Available samples are for example "HelloWorld" or "Catalog". Read more about them [here](https://github.com/cobaltians/cobalt/wiki/Samples-list).
+    git submodule update --init
 
-###4) Open the generated iOS or Android project and enjoy !
+
+###4) Open the iOS or Android project and enjoy !
 
 Alternatively you can add Cobalt to an existing project :
 
