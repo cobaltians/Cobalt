@@ -1,10 +1,10 @@
 #Cobalt 
 
-## Installation Guide
-
 First, have a look on this brief technical [introduction to Cobalt](https://github.com/cobaltians/cobalt/wiki/cobalt-intro) to understand basic principles of the framework.
 
-Then, you are ready to start.
+The full documentation Wiki is [here](https://github.com/cobaltians/cobalt/wiki).
+
+## Prerequisites
 
 ###1) Install Android Studio or XCode
 
@@ -16,9 +16,8 @@ This step can take some time. If you already have them on your computer, be sure
 ###2) Install Git if not already on your system
 
 * [install Git](https://git-scm.com/)
-       
 
-###3) Try out a sample
+## Try the samples
 
 Choose a [sample](https://github.com/cobaltians/cobalt/wiki/Samples-list) between `HelloWorld`, `SideMenu`, `Catalog` and `git clone` it for your platform :
 
@@ -30,8 +29,7 @@ Then **go to the cloned folder** and don't forget to init git submodules :
 
     git submodule update --init
 
-
-###4) Open the iOS or Android project and enjoy !
+Then, open the iOS or Android project and enjoy !
 
 Alternatively you can add Cobalt to an existing project :
 
