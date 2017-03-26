@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/cobaltians/Cobalt.png?label=ready&title=Ready)](https://waffle.io/cobaltians/Cobalt)
 #Cobalt 
 
 First, have a look on this brief technical [introduction to Cobalt](https://github.com/cobaltians/cobalt/wiki/cobalt-intro) to understand basic principles of the framework.
