@@ -1,4 +1,4 @@
-#Cobalt 
+# Cobalt 
 
 First, have a look on this brief technical [introduction to Cobalt](https://github.com/cobaltians/cobalt/wiki/cobalt-intro) to understand basic principles of the framework.
 
@@ -6,14 +6,14 @@ The full documentation Wiki is [here](https://github.com/cobaltians/cobalt/wiki)
 
 ## Prerequisites
 
-###1) Install Android Studio or XCode
+### 1) Install Android Studio or XCode
 
 * [Android Studio](https://developer.android.com/sdk/index.html)
 * [XCode](https://itunes.apple.com/fr/app/xcode/id497799835?mt=12) (mac users only)
 
 This step can take some time. If you already have them on your computer, be sure to have latest XCode version and lastest SDK and JDK for Android Studio.
 
-###2) Install Git if not already on your system
+### 2) Install Git if not already on your system
 
 * [install Git](https://git-scm.com/)
 
