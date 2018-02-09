@@ -1,9 +1,3 @@
-[submodule "Web/Android"]
-	path = Web/Android
-	url = git://github.com/cobaltians/Cobalt-Web-Android.git
-[submodule "Web/iOS"]
-	path = Web/iOS
-	url = git://github.com/cobaltians/Cobalt-Web-iOS.git
 [submodule "iOS/distrib"]
 	path = iOS/distrib
 	url = https://github.com/cobaltians/Cobalt-iOS-Framework
