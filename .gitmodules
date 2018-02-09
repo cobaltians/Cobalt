@@ -9,3 +9,6 @@
 [submodule "Android"]
 	path = Android
 	url = https://github.com/cobaltians/Cobalt-Android.git
+[submodule "Web"]
+	path = Web
+	url = https://github.com/cobaltians/Cobalt-Web
