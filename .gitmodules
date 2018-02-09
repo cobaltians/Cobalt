@@ -12,3 +12,6 @@
 	path = iOS/src
 	url = https://github.com/cobaltians/Cobalt-iOS
 	branch = develop
+[submodule "Android"]
+	path = Android
+	url = https://github.com/cobaltians/Cobalt-Android.git
